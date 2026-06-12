@@ -1,0 +1,55 @@
+<main class="login-page">
+    <section class="login-card" aria-label="Inicio de sesión">
+        <div class="login-panel">
+            <p class="eyebrow">Simulación clínica</p>
+            <h1>Med Cases</h1>
+            <p class="intro">
+                Accede a tus casos clínicos, evaluaciones y progreso desde un entorno de práctica médica.
+            </p>
+
+            <form class="login-form" aria-label="Formulario de acceso">
+                <app-input
+                    id="correo"
+                    labelText="Correo institucional"
+                    controlType="email"
+                    placeHolderText="alumno@correo.com"
+                    autoCompleteAttr="email"
+                    [required]="true"
+                />
+
+                <app-input
+                    id="password"
+                    labelText="Contraseña"
+                    controlType="password"
+                    placeHolderText="Ingresa tu contraseña"
+                    autoCompleteAttr="current-password"
+                    [required]="true"
+                />
+
+                <app-input
+                    class="remember-row"
+                    id="remember"
+                    labelText="Recordarme"
+                    controlType="checkbox"
+                >
+                    <a href="#" class="link__password">Olvidé mi contraseña</a>
+                </app-input>
+
+                <button type="submit" class="login-btn">Iniciar sesión</button>
+
+                <p class="no-account">
+                    ¿No tienes una cuenta?
+                    <a href="#" class="link__register">Regístrate</a>
+                </p>
+            </form>
+        </div>
+
+        <aside class="login-visual" aria-label="Ilustración médica">
+            <!-- <div class="visual-copy">
+                <span>Práctica guiada</span>
+                <strong>Casos listos para resolver</strong>
+            </div> -->
+            <img src="./images/image.png" alt="Médico ilustrado en postura de meditación">
+        </aside>
+    </section>
+</main>

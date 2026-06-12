@@ -1,0 +1,43 @@
+<div
+    class="control"
+    [ngClass]="{
+        'control--input': controlType !== 'checkbox',
+        'control--checkbox': controlType === 'checkbox'
+    }"
+>
+    <ng-container *ngIf="controlType !== 'checkbox'; else checkboxControl">
+        <label [for]="id" [innerText]="labelText"></label>
+
+        <textarea
+            *ngIf="controlType === 'textarea'; else textControl"
+            [id]="id"
+            [name]="name || id"
+            [placeholder]="placeHolderText"
+            [rows]="rows"
+            [required]="required"
+        ></textarea>
+
+        <ng-template #textControl>
+            <input
+                [id]="id"
+                [name]="name || id"
+                [type]="controlType"
+                [placeholder]="placeHolderText"
+                [autocomplete]="autoCompleteAttr"
+                [required]="required"
+            >
+        </ng-template>
+    </ng-container>
+
+    <ng-template #checkboxControl>
+        <span class="checkbox-field">
+            <input
+                [id]="id"
+                [name]="name || id"
+                type="checkbox"
+            >
+            <label [for]="id" [innerText]="labelText"></label>
+        </span>
+        <ng-content></ng-content>
+    </ng-template>
+</div>
