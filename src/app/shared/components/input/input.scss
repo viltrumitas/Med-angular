@@ -22,14 +22,14 @@
     input:not([type="checkbox"]),
     textarea {
         width: 100%;
-        min-height: 50px;
-        border: 1px solid var(--line);
-        border-radius: 10px;
-        padding: 0 14px;
+        padding: 13px 50px 13px 20px;
         background: var(--surface-soft);
-        color: var(--text);
-        font: inherit;
+        border-radius: 10px;
+        border: none;
         outline: none;
+        font-size: 16px;
+        color: var(--text);
+        font-weight: 500;
         transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
 
         &:focus {
@@ -39,7 +39,8 @@
         }
 
         &::placeholder {
-            color: #94a3b8;
+            color: #888;
+            font-weight: 400;
         }
     }
 

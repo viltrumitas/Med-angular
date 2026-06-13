@@ -1,55 +1,65 @@
-<main class="login-page">
-    <section class="login-card" aria-label="Inicio de sesión">
-        <div class="login-panel">
-            <p class="eyebrow">Simulación clínica</p>
-            <h1>Med Cases</h1>
-            <p class="intro">
-                Accede a tus casos clínicos, evaluaciones y progreso desde un entorno de práctica médica.
-            </p>
-
-            <form class="login-form" aria-label="Formulario de acceso">
-                <app-input
-                    id="correo"
-                    labelText="Correo institucional"
-                    controlType="email"
-                    placeHolderText="alumno@correo.com"
-                    autoCompleteAttr="email"
-                    [required]="true"
-                />
-
-                <app-input
-                    id="password"
-                    labelText="Contraseña"
-                    controlType="password"
-                    placeHolderText="Ingresa tu contraseña"
-                    autoCompleteAttr="current-password"
-                    [required]="true"
-                />
-
-                <app-input
-                    class="remember-row"
-                    id="remember"
-                    labelText="Recordarme"
-                    controlType="checkbox"
-                >
-                    <a href="#" class="link__password">Olvidé mi contraseña</a>
-                </app-input>
-
-                <button type="submit" class="login-btn">Iniciar sesión</button>
-
-                <p class="no-account">
-                    ¿No tienes una cuenta?
-                    <a href="#" class="link__register">Regístrate</a>
-                </p>
+<div class="body">
+    <div class="container" [class.active]="isActive">
+        <!-- LOGIN -->
+        <div class="form-box login">
+            <form action="">
+                <h1>Login</h1>
+                <div class="input-box">
+                    <app-input id="username" controlType="text" labelText="" placeHolderText="Matricula" [required]="true" />
+                    <i class="bx bx-user"></i>
+                </div>
+                <div class="input-box">
+                    <app-input id="password" controlType="password" labelText="" placeHolderText="Contraseña" [required]="true" />
+                    <i class="bx bx-lock"></i>
+                </div>
+                <div class="forgot-link">
+                    <a href="#">Olvidaste tu contraseña?</a>
+                </div>
+                <app-button type="submit" text="Login" variant="primary"/>
+                <p>o ingresa con tu correo institucional</p>
+                <div class="social-icons">
+                    <a href="#"><i class="bx bxl-google"></i></a>
+                </div>
             </form>
         </div>
 
-        <aside class="login-visual" aria-label="Ilustración médica">
-            <!-- <div class="visual-copy">
-                <span>Práctica guiada</span>
-                <strong>Casos listos para resolver</strong>
-            </div> -->
-            <img src="./images/image.png" alt="Médico ilustrado en postura de meditación">
-        </aside>
-    </section>
-</main>
+        <!-- REGISTER -->
+        <div class="form-box register">
+            <form action="">
+                <h1>Registrar</h1>
+                <div class="input-box">
+                    <app-input id="matricula" controlType="text" labelText="" placeHolderText="Matricula" [required]="true" />
+                    <i class="bx bx-user"></i>
+                </div>
+                <div class="input-box">
+                    <app-input id="email" controlType="email" labelText="" placeHolderText="Correo" [required]="true" />
+                    <i class="bx bx-envelope"></i>
+                </div>
+                <div class="input-box">
+                    <app-input id="password" controlType="password" labelText="" placeHolderText="Contraseña" [required]="true" />
+                    <i class="bx bx-lock"></i>
+                </div>
+                <app-button type="submit" text="Registrar" variant="primary"/>
+                <p>o registrate con tu correo institucional</p>
+                <div class="social-icons">
+                    <a href="#"><i class="bx bxl-google"></i></a>
+                </div>
+            </form>
+        </div>
+
+        <!-- MENU BIENVENIDA -->
+         <div class="toggle-box">
+            <div class="toggle-panel toggle-left">
+                <h1>Hola, Bienvenido</h1>
+                <p>No tienes cuenta?</p>
+                <app-button type="button" text="Registrate" variant="secondary" (clicked)="showRegister()" />
+            </div>
+
+            <div class="toggle-panel toggle-right">
+                <h1>Bienvenido de nuevo</h1>
+                <p>Ya tienes cuenta?</p>
+                <app-button type="button" text="Inicia sesion" variant="secondary" (clicked)="showLogin()"/>
+            </div>
+         </div>
+    </div>
+</div>

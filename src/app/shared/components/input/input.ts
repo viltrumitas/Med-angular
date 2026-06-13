@@ -15,9 +15,12 @@ export class InputComponent {
 	@Input() name: string = "";
 	@Input() required: boolean = false;
 
+	@Input() variant: "primary" | "login" | "general" = "primary";
+
 	@Input() controlType:
 		| "text"
 		| "checkbox"
+		| "number"
 		| "email"
 		| "password"
 		| "textarea" = "text";
