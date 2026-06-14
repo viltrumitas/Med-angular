@@ -6,10 +6,10 @@ import { ButtonComponent } from "../../shared/components/button/button";
 	selector: "app-login",
 	standalone: true,
 	imports: [InputComponent, ButtonComponent],
-	templateUrl: "./login.html",
-	styleUrl: "./login.scss",
+	templateUrl: "./auth.html",
+	styleUrl: "./auth.scss",
 })
-export class Login {
+export class Auth {
 	isActive = false;
 
 	showRegister() {
