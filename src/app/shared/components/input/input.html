@@ -1,43 +1,55 @@
 <div
-    class="control"
-    [ngClass]="{
-        'control--input': controlType !== 'checkbox',
-        'control--checkbox': controlType === 'checkbox'
-    }"
+  class="control"
+  [ngClass]="{
+    'control--input': controlType !== 'checkbox',
+    'control--checkbox': controlType === 'checkbox',
+  }"
 >
-    <ng-container *ngIf="controlType !== 'checkbox'; else checkboxControl">
-        <label [for]="id" [innerText]="labelText"></label>
+  <ng-container *ngIf="controlType !== 'checkbox'; else checkboxControl">
+    <label [for]="id">{{ labelText }}</label>
 
-        <textarea
-            *ngIf="controlType === 'textarea'; else textControl"
-            [id]="id"
-            [name]="name || id"
-            [placeholder]="placeHolderText"
-            [rows]="rows"
-            [required]="required"
-        ></textarea>
+    <textarea
+      *ngIf="controlType === 'textarea'; else textControl"
+      [id]="id"
+      [name]="name || id"
+      [placeholder]="placeHolderText"
+      [rows]="rows"
+      [required]="required"
+      [disabled]="disabled"
+      [value]="value"
+      (input)="updateValue($any($event.target).value)"
+    >
+    </textarea>
 
-        <ng-template #textControl>
-            <input
-                [id]="id"
-                [name]="name || id"
-                [type]="controlType"
-                [placeholder]="placeHolderText"
-                [autocomplete]="autoCompleteAttr"
-                [required]="required"
-            >
-        </ng-template>
-    </ng-container>
-
-    <ng-template #checkboxControl>
-        <span class="checkbox-field">
-            <input
-                [id]="id"
-                [name]="name || id"
-                type="checkbox"
-            >
-            <label [for]="id" [innerText]="labelText"></label>
-        </span>
-        <ng-content></ng-content>
+    <ng-template #textControl>
+      <input
+        [id]="id"
+        [name]="name || id"
+        [type]="controlType"
+        [placeholder]="placeHolderText"
+        [autocomplete]="autoCompleteAttr"
+        [required]="required"
+        [disabled]="disabled"
+        [value]="value"
+        (input)="updateValue($any($event.target).value)"
+      />
     </ng-template>
+  </ng-container>
+
+  <ng-template #checkboxControl>
+    <span class="checkbox-field">
+      <input
+        [id]="id"
+        [name]="name || id"
+        type="checkbox"
+        [disabled]="disabled"
+        [checked]="value"
+        (change)="updateValue($any($event.target).checked)"
+      />
+
+      <label [for]="id">{{ labelText }}</label>
+    </span>
+
+    <ng-content></ng-content>
+  </ng-template>
 </div>

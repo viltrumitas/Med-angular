@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DataGrid } from './data-grid';
+import { Topbar } from './topbar';
 
-describe('DataGrid', () => {
-  let component: DataGrid;
-  let fixture: ComponentFixture<DataGrid>;
+describe('Topbar', () => {
+  let component: Topbar;
+  let fixture: ComponentFixture<Topbar>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DataGrid],
+      imports: [Topbar],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(DataGrid);
+    fixture = TestBed.createComponent(Topbar);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

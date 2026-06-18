@@ -1,0 +1,92 @@
+.clinical-layout {
+  width: min(1500px, 100%);
+  margin: 0 auto;
+  padding: 18px clamp(16px, 3vw, 24px);
+  background: rgba(0, 0, 0, 0.09);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(20px);
+  overflow-y: auto;
+  min-width: 0;
+}
+
+h2 {
+  margin: 4px 0 18px;
+  color: var(--text);
+  font-size: 1.25rem;
+  line-height: 1.2;
+}
+
+.crear-caso {
+  position: sticky;
+  top: 0;
+}
+
+.escenario {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin-bottom: 18px;
+
+  app-input {
+    width: 100%;
+    max-width: 600px;
+  }
+}
+
+.info-paciente {
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+    margin-bottom: 18px;
+
+    app-input {
+      width: 100%;
+      max-width: 300px;
+    }
+  }
+}
+
+.button {
+  display: flex;
+  justify-content: flex-end;
+
+  app-button {
+    width: 100%;
+    max-width: 200px;
+  }
+}
+
+/* ========================= */
+/* TABLET */
+/* ========================= */
+
+@media (max-width: 1024px) {
+  .info-paciente .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ========================= */
+/* MOBILE */
+/* ========================= */
+
+@media (max-width: 768px) {
+  .escenario,
+  .info-paciente .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .escenario app-input,
+  .info-paciente .grid app-input {
+    max-width: 100%;
+  }
+
+  .button {
+    app-button {
+      max-width: 100%;
+    }
+  }
+}

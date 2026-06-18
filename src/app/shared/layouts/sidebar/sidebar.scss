@@ -1,0 +1,176 @@
+.sidebar {
+  width: 100%;
+  height: 100%;
+  /* Mantenemos tu elegante gradiente azul/gris */
+  background: linear-gradient(135deg, #7b8db6 0%, #66789f 50%, #52627f 100%);
+  color: white;
+  padding: 28px 20px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: 0.3s ease;
+}
+
+/* ========================= */
+/* LOGO */
+/* ========================= */
+.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 30px;
+  white-space: nowrap;
+}
+
+/* ========================= */
+/* MENU */
+/* ========================= */
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+
+.menu a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 12px;
+  color: white;
+  text-decoration: none;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+  white-space: nowrap;
+
+  .material-icons {
+    font-size: 22px;
+    flex-shrink: 0;
+    color: inherit; /* CORRECCIÓN: Garantiza que el ícono cambie de color junto con el texto */
+  }
+
+  span:last-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateX(3px);
+  }
+
+  &.active {
+    background: rgba(255, 255, 255, 0.2);
+  }
+}
+
+/* ========================= */
+/* TABLET (Menú horizontal arriba) */
+/* ========================= */
+@media (max-width: 900px) {
+  .sidebar {
+    height: auto; /* CORRECCIÓN: Evita que ocupe todo el alto de la pantalla */
+    padding: 15px 20px;
+  }
+
+  .logo {
+    margin-bottom: 15px;
+  }
+
+  .menu {
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  .menu a {
+    min-width: max-content;
+    flex-shrink: 0;
+
+    &:hover {
+      transform: translateY(
+        -2px
+      ); /* CORRECCIÓN: En horizontal queda mejor mover hacia arriba que a la derecha */
+    }
+  }
+}
+
+@media (max-width: 770px) {
+  .sidebar {
+    position: fixed; /* Asegura que flote abajo */
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100vw;
+    height: 65px;
+    background: rgba($color: #000000, $alpha: 0.09);
+    backdrop-filter: blur(20px);
+    color: #333333;
+    padding: 0 5px;
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.08);
+    z-index: 100;
+
+    border-radius: 0;
+  }
+
+  .logo {
+    display: none;
+  }
+
+  .menu {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between; /* Distribuye equitativamente */
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    gap: 0; /* Quitamos el gap para controlar el espacio con flex-basis */
+
+    a {
+      display: flex;
+      flex-direction: column; /* Alinea el icono al centro */
+      align-items: center;
+      justify-content: center;
+      flex: 1; /* ¡ESTA ES LA MAGIA! Hace que cada botón ocupe exactamente el mismo espacio equitativo */
+      height: 100%;
+      color: #555555;
+      padding: 0; /* Eliminamos el padding que deformaba la caja */
+      border-radius: 0;
+      white-space: normal; /* Rompemos el nowrap que empujaba la pantalla */
+
+      .material-icons {
+        font-size: 24px; /* Un pelín más grande para que sea cómodo al dedo */
+        color: inherit;
+      }
+
+      .text {
+        display: none; /* Asegura que el texto no afecte en nada */
+      }
+
+      &:hover {
+        background: transparent; /* En móvil el hover se ve raro, mejor quitarlo */
+        transform: none;
+      }
+
+      &.active {
+        background: transparent;
+        color: #66789f; /* Color de tu gradiente para resaltar el botón activo */
+
+        /* Opcional: una pequeña línea arriba o abajo para denotar el activo */
+        .material-icons {
+          background: rgba(102, 120, 159, 0.12);
+          padding: 8px 16px;
+          border-radius: 16px;
+          transform: scale(1.1); /* Sutil feedback visual */
+          transition: transform 0.2s ease;
+        }
+      }
+    }
+  }
+}

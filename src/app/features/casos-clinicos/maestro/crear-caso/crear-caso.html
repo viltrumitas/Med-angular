@@ -1,1 +1,37 @@
-<p>crear-caso works!</p>
+<main class="clinical-layout">
+  <section class="crear-caso">
+    <h2>Escenario</h2>
+    <div class="escenario grid">
+      <app-input labelText="Motivo de atencion" controlType="textarea" variant="primary" />
+      <app-input labelText="Escenario" controlType="textarea" variant="primary" />
+    </div>
+
+    <h2>Informacion del paciente</h2>
+    <div class="info-paciente">
+      <div class="general grid">
+        <app-input labelText="Nombre" controlType="text" />
+        <app-input labelText="Genero" controlType="text" />
+        <app-input labelText="Edad" controlType="number" />
+        <app-input labelText="Antecedentes" controlType="textarea" />
+        <app-input labelText="Medicamento" controlType="textarea" />
+      </div>
+
+      <h2>Signos Vitales</h2>
+      <div class="signos-vitales grid">
+        <app-input labelText="FC" controlType="number" variant="number" />
+        <app-input labelText="TA" controlType="number" />
+        <app-input labelText="FR" controlType="number" />
+        <app-input labelText="Sp0₂" controlType="number" />
+        <app-input labelText="Glucosa" controlType="number" />
+        <app-input labelText="Temperatura" controlType="number" />
+        <app-input labelText="Llenado Capilar" controlType="number" />
+        <app-input labelText="Cincinnati" controlType="number" />
+        <app-input labelText="Glasgow" controlType="number" />
+      </div>
+    </div>
+
+    <div class="button">
+      <app-button text="Enviar" type="submit" />
+    </div>
+  </section>
+</main>

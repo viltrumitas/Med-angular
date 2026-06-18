@@ -1,0 +1,9 @@
+<div
+  class="menu-item"
+  [style.transform]="expanded ? 'translateY(' + (index + 1) * 48 + 'px)' : 'translateY(0px)'"
+  [style.opacity]="expanded ? '1' : '0'"
+>
+  <button class="menu-button">
+    <ng-content></ng-content>
+  </button>
+</div>

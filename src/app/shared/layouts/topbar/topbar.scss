@@ -1,0 +1,143 @@
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ========================= */
+/* TOPBAR */
+/* ========================= */
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  width: 100%;
+  padding: 0;
+  flex-wrap: wrap;
+}
+
+/* ========================= */
+/* SEARCH */
+/* ========================= */
+
+.search {
+  flex: 1;
+  min-width: 240px;
+  max-width: 420px;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 12px 16px;
+
+  background: #fff;
+  border-radius: 14px;
+
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+
+  transition: 0.2s ease;
+
+  &:focus-within {
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+  }
+
+  input {
+    width: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+
+    font-size: 0.95rem;
+  }
+}
+
+/* ========================= */
+/* PROFILE */
+/* ========================= */
+
+.profile {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 14px;
+
+  flex-shrink: 0;
+}
+
+.name-user {
+  display: flex;
+  flex-direction: column;
+
+  span:first-child {
+    font-weight: 600;
+  }
+
+  span:last-child {
+    font-size: 0.85rem;
+    opacity: 0.7;
+  }
+}
+
+/* ========================= */
+/* AVATAR */
+/* ========================= */
+
+.avatar {
+  width: 45px;
+  height: 45px;
+
+  border-radius: 50%;
+  overflow: hidden;
+
+  flex-shrink: 0;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+
+    display: block;
+  }
+}
+
+/* ========================= */
+/* TABLET */
+/* ========================= */
+
+@media (max-width: 900px) {
+  .topbar {
+    gap: 15px;
+  }
+
+  .search {
+    max-width: 100%;
+  }
+
+  .name-user {
+    display: none;
+  }
+}
+
+/* ========================= */
+/* MOBILE */
+/* ========================= */
+
+@media (max-width: 400px) {
+  .topbar {
+    justify-content: center;
+    align-items: stretch;
+    gap: 14px;
+  }
+
+  .search {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .profile {
+    width: 100%;
+    justify-content: space-between;
+  }
+}

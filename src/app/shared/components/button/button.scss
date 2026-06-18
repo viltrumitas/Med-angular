@@ -1,3 +1,9 @@
+$azul-medico-light: #2575fc;
+$azul-medico-dark: #1a56db;
+$azul-borde: rgba(15, 64, 175, 0.4);
+$blanco-cristal: rgba(255, 255, 255, 0.2);
+
+
 :host {
     --primary: #1769e0;
     --primary-dark: #1152b5;
@@ -8,18 +14,18 @@
     width: 100%;
     border: 0;
     border-radius: 8px;
-    background: linear-gradient(135deg, var(--primary), #0d7f8f);
-    color: #fff;
+    background: rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(20px);
+    color: #000;
     font-size: 1rem;
     font-weight: 900;
     cursor: pointer;
-    box-shadow: 0 12px 26px rgba(23, 105, 224, .22);
-    transition: background .2s ease, transform .2s ease, box-shadow .2s ease;
+    box-shadow: 0 12px 26px rgba(0, 0, 0, .2);
+    transition: transform .2s ease, box-shadow .2s ease;
 
     &:hover {
-        background: linear-gradient(135deg, var(--primary-dark), #0b6a76);
         transform: translateY(-1px);
-        box-shadow: 0 16px 32px rgba(17, 82, 181, .26);
+        box-shadow: 0 16px 32px rgba(0, 0, 0, .26);
     }
 
     &:focus-visible {
@@ -32,9 +38,10 @@
 .secondary {
     width: 160px;
     height: 46px;
-    background: transparent;
-    border: 2px solid #fff;
+    background: rgba(255, 255, 255, .05);
+    border: 1px solid #fff;
     box-shadow: none;
+    color: #fff;
 
     &:hover {
         background: none;

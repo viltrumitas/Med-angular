@@ -1,1 +1,65 @@
-<p>caso works!</p>
+<main class="clinical-layout">
+  <section class="caso" aria-label="Alumno activo">
+    <div class="section-header">
+      <p class="eyebrow">Informacion del caso</p>
+    </div>
+
+    <article class="clinical-note">
+      <app-cards
+        title="Motivo de atencion"
+        value="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quam porro magni magnam.
+        Reprehenderit voluptate accusamus praesentium mollitia molestias qui repudiandae iusto quo
+        eaque tenetur non fugiat placeat, quidem facilis. Nostrum!"
+      />
+    </article>
+
+    <article class="clinical-note">
+      <app-cards
+        title="Escenario"
+        value="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quam porro magni magnam.
+        Reprehenderit voluptate accusamus praesentium mollitia molestias qui repudiandae iusto quo
+        eaque tenetur non fugiat placeat, quidem facilis. Nostrum!
+        "
+      />
+    </article>
+
+    <div class="section-title">
+      <h2>Informacion del paciente</h2>
+    </div>
+    <div class="patient-grid">
+      <app-cards title="Nombre" value="Alejandro"></app-cards>
+      <app-cards title="Genero" value="Masculino"></app-cards>
+      <app-cards title="Edad" value="20 años"></app-cards>
+      <app-cards title="Antecedentes" value="HAS, DM2"></app-cards>
+    </div>
+
+    <div class="section-title">
+      <h2>Hallazgos generales</h2>
+    </div>
+    <div class="vitales">
+      <app-cards title="FC" value="84" />
+      <app-cards title="TA" value="180/90" />
+      <app-cards title="FR" value="18" />
+      <app-cards title="Sp0₂" value="98%" />
+      <app-cards title="Glucosa" value="50" />
+    </div>
+  </section>
+
+  <section class="respuesta" aria-label="titulo-respuesta">
+    <div class="section-header">
+      <p class="eyebrow">Respuesta del alumno</p>
+    </div>
+
+    <form class="clinical-form">
+      <app-input labelText="Manejo de la escena" variant="primary" controlType="textarea" />
+      <app-input labelText="SSS" variant="primary" controlType="textarea" />
+      <app-input labelText="Evaluación Primaria" variant="primary" controlType="textarea" />
+      <app-input labelText="Evaluación Secundaria" variant="primary" controlType="textarea" />
+      <app-input labelText="Diagnostico presuntivo" variant="primary" controlType="textarea" />
+
+      <div class="button">
+        <app-button text="Enviar" type="submit" />
+      </div>
+    </form>
+  </section>
+</main>

@@ -1,0 +1,47 @@
+<div class="topbar">
+  <div class="search">
+    <span class="material-icons">search</span>
+
+    <input type="text" placeholder="Buscar actividad..." />
+  </div>
+
+  <div class="profile">
+    <div class="name-user">
+      <strong>Alejandro</strong>
+    </div>
+
+    <div class="avatar">
+      <img src="/images/image.png" alt="user profile" />
+    </div>
+
+    <app-menu-container #menu>
+      <div main-button>
+        @if (!menu.isExpanded()) {
+          <span class="material-icons">menu</span>
+        } @else {
+          <span class="material-icons">close</span>
+        }
+      </div>
+
+      <app-menu-items [index]="0" [expanded]="menu.isExpanded()">
+        <a routerLink="/">
+          <span class="material-icons">home</span>
+        </a>
+      </app-menu-items>
+
+      <app-menu-items [index]="1" [expanded]="menu.isExpanded()">
+        <span class="material-icons">mail</span>
+      </app-menu-items>
+
+      <app-menu-items [index]="2" [expanded]="menu.isExpanded()">
+        <a routerLink="/dashboard">
+          <span class="material-icons">work</span>
+        </a>
+      </app-menu-items>
+
+      <app-menu-items [index]="3" [expanded]="menu.isExpanded()">
+        <span class="material-icons">person</span>
+      </app-menu-items>
+    </app-menu-container>
+  </div>
+</div>

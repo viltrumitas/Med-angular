@@ -1,0 +1,49 @@
+.menu-container {
+  position: relative;
+  width: 64px;
+}
+
+.menu-wrapper {
+  position: relative;
+}
+
+.main-button {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  background: rgba($color: #000000, $alpha: 0.05);
+  backdrop-filter: blur(20px);
+
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 50;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: 0.3s;
+
+  &.disabled {
+    background: transparent;
+  }
+}
+
+.dark .main-button {
+  background: #1f2937;
+}
+
+.items-container.disabled {
+  pointer-events: none;
+}
+
+@media (max-width: 900px) {
+  .menu-container {
+    width: 50px;
+  }
+
+  .main-button {
+    width: 50px;
+    height: 50px;
+  }
+}
