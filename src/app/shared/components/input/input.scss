@@ -19,8 +19,7 @@
     font-weight: 800;
   }
 
-  input:not([type='checkbox']),
-  textarea {
+  input {
     width: 100%;
     padding: 13px 50px 13px 20px;
     background: var(--surface-soft);
@@ -45,12 +44,6 @@
       color: #888;
       font-weight: 400;
     }
-  }
-
-  textarea {
-    min-height: 120px;
-    padding: 14px;
-    resize: vertical;
   }
 }
 

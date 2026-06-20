@@ -1,26 +1,23 @@
-import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, forwardRef, Input, Output } from '@angular/core';
-
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Component, forwardRef, Input } from '@angular/core';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
-  selector: 'app-input',
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: './input.html',
-  styleUrl: './input.scss',
+  selector: 'app-text-area',
+  imports: [],
+  templateUrl: './text-area.html',
+  styleUrl: './text-area.scss',
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => InputComponent),
+      useExisting: forwardRef(() => TextareaComponent),
       multi: true,
     },
   ],
 })
-export class InputComponent implements ControlValueAccessor {
+export class TextareaComponent {
   @Input() labelText!: string;
-  @Input() type: 'text' | 'number' | 'email' | 'password' = 'text';
   @Input() placeHolderText = '';
+  @Input() rows = 4;
 
   value: any = '';
   disabled = false;

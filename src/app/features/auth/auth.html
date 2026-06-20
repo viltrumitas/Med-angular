@@ -1,65 +1,89 @@
 <div class="body">
-    <div class="container" [class.active]="isActive">
-        <!-- LOGIN -->
-        <div class="form-box login">
-            <form action="">
-                <h1>Login</h1>
-                <div class="input-box">
-                    <app-input id="username" controlType="text" labelText="" placeHolderText="Matricula" [required]="true" />
-                    <i class="bx bx-user"></i>
-                </div>
-                <div class="input-box">
-                    <app-input id="password" controlType="password" labelText="" placeHolderText="Contraseña" [required]="true" />
-                    <i class="bx bx-lock"></i>
-                </div>
-                <div class="forgot-link">
-                    <a href="#">Olvidaste tu contraseña?</a>
-                </div>
-                <app-button type="submit" text="Login" variant="primary"/>
-                <p>o ingresa con tu correo institucional</p>
-                <div class="social-icons">
-                    <a href="#"><i class="bx bxl-google"></i></a>
-                </div>
-            </form>
+  <div class="container" [class.active]="isActive">
+    <!-- LOGIN -->
+    <div class="form-box login">
+      <form (ngSubmit)="onLogin()" [formGroup]="loginForm">
+        <h1>Login</h1>
+        <div class="input-box">
+          <app-input placeHolderText="Matricula" type="number" formControlName="matricula" />
+          <i class="bx bx-user"></i>
         </div>
 
-        <!-- REGISTER -->
-        <div class="form-box register">
-            <form action="">
-                <h1>Registrar</h1>
-                <div class="input-box">
-                    <app-input id="matricula" controlType="text" labelText="" placeHolderText="Matricula" [required]="true" />
-                    <i class="bx bx-user"></i>
-                </div>
-                <div class="input-box">
-                    <app-input id="email" controlType="email" labelText="" placeHolderText="Correo" [required]="true" />
-                    <i class="bx bx-envelope"></i>
-                </div>
-                <div class="input-box">
-                    <app-input id="password" controlType="password" labelText="" placeHolderText="Contraseña" [required]="true" />
-                    <i class="bx bx-lock"></i>
-                </div>
-                <app-button type="submit" text="Registrar" variant="primary"/>
-                <p>o registrate con tu correo institucional</p>
-                <div class="social-icons">
-                    <a href="#"><i class="bx bxl-google"></i></a>
-                </div>
-            </form>
+        <div class="input-box">
+          <app-input placeHolderText="Contraseña" type="password" formControlName="password" />
+          <i class="bx bx-lock"></i>
         </div>
 
-        <!-- MENU BIENVENIDA -->
-         <div class="toggle-box">
-            <div class="toggle-panel toggle-left">
-                <h1>Hola, Bienvenido</h1>
-                <p>No tienes cuenta?</p>
-                <app-button type="button" text="Registrate" variant="secondary" (clicked)="showRegister()" />
-            </div>
+        <div class="forgot-link">
+          <a href="#">Olvidaste tu contraseña?</a>
+        </div>
 
-            <div class="toggle-panel toggle-right">
-                <h1>Bienvenido de nuevo</h1>
-                <p>Ya tienes cuenta?</p>
-                <app-button type="button" text="Inicia sesion" variant="secondary" (clicked)="showLogin()"/>
-            </div>
-         </div>
+        <app-button type="submit" text="Login" variant="primary" />
+        <p>o ingresa con tu correo institucional</p>
+
+        <div class="social-icons">
+          <a href="#"><i class="bx bxl-google"></i></a>
+        </div>
+      </form>
     </div>
+
+    <!-- REGISTER -->
+    <div class="form-box register">
+      <form (ngSubmit)="onRegister()" [formGroup]="registerForm">
+        <h1>Registrar</h1>
+        <div class="input-box">
+          <app-input placeHolderText="Matricula" type="number" formControlName="matricula" />
+          <i class="bx bx-user"></i>
+        </div>
+
+        <div class="input-box">
+          <app-input placeHolderText="Nombre(s)" type="text" formControlName="firstName" />
+          <i class="bx bx-lock"></i>
+        </div>
+
+        <div class="input-box">
+          <app-input placeHolderText="Apellido(s)" type="text" formControlName="lastName" />
+          <i class="bx bx-lock"></i>
+        </div>
+
+        <div class="input-box">
+          <app-input placeHolderText="Contraseña" type="password" formControlName="password" />
+          <i class="bx bx-lock"></i>
+        </div>
+
+        <app-button type="submit" text="Registrar" variant="primary" />
+
+        <p>o registrate con tu correo institucional</p>
+
+        <div class="social-icons">
+          <a href="#"><i class="bx bxl-google"></i></a>
+        </div>
+      </form>
+    </div>
+
+    <!-- MENU BIENVENIDA -->
+    <div class="toggle-box">
+      <div class="toggle-panel toggle-left">
+        <h1>Hola, Bienvenido</h1>
+        <p>No tienes cuenta?</p>
+        <app-button
+          type="button"
+          text="Registrate"
+          variant="secondary"
+          (clicked)="showRegister()"
+        />
+      </div>
+
+      <div class="toggle-panel toggle-right">
+        <h1>Bienvenido de nuevo</h1>
+        <p>Ya tienes cuenta?</p>
+        <app-button
+          type="button"
+          text="Inicia sesion"
+          variant="secondary"
+          (clicked)="showLogin()"
+        />
+      </div>
+    </div>
+  </div>
 </div>
