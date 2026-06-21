@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Service, signal } from '@angular/core';
-import { environment } from '../../../environments/environments';
+import { environment } from '../../../../environments/environments';
 import { Observable, tap } from 'rxjs';
 import { RegisterData } from '../modules/register';
 import { LoginData } from '../modules/login';

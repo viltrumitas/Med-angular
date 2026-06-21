@@ -1,13 +1,13 @@
 import { Component, inject } from '@angular/core';
-import { InputComponent } from '../../shared/components/input/input';
-import { ButtonComponent } from '../../shared/components/button/button';
-import { AuthService } from '../../core/services/auth';
+import { InputComponent } from '../../../shared/components/input/input';
+import { ButtonComponent } from '../../../shared/components/button/button';
+import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
-import { RegisterData } from '../../core/modules/register';
-import { LoginData } from '../../core/modules/login';
+import { RegisterData } from '../modules/register';
+import { LoginData } from '../modules/login';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RegsiterForm } from './forms/registerForm';
-import { LoginForm } from './forms/loginForm';
+import { RegsiterForm } from '../forms/registerForm';
+import { LoginForm } from '../forms/loginForm';
 
 @Component({
   selector: 'app-login',

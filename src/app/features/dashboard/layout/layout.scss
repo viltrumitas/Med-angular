@@ -1,35 +1,19 @@
 .dashboard-layout {
   height: 100vh;
-  display: grid;
-  grid-template-columns: 260px minmax(0, 1fr);
-  grid-template-rows: auto 1fr;
-  grid-template-areas:
-    'sidebar topbar'
-    'sidebar content';
+  display: flex;
+  flex-direction: column;
   overflow-x: hidden;
 }
 
 /* ========================= */
 /* AREAS */
 /* ========================= */
-
-.sidebar {
-  grid-area: sidebar;
-  min-width: 0;
-  height: 100vh;
-  position: sticky;
-  top: 0;
-  overflow-y: auto;
-}
-
 .topbar {
-  grid-area: topbar;
   padding: 10px 20px;
   min-width: 0;
 }
 
 .content {
-  grid-area: content;
   padding: 0;
   min-width: 0;
 }
@@ -37,13 +21,6 @@
 /* ========================= */
 /* GRID INTERNO */
 /* ========================= */
-
-.dashboard-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(300px, 1fr);
-  gap: 20px;
-  align-items: start;
-}
 
 @media (max-width: 900px) {
   .dashboard-layout {
