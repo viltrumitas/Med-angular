@@ -1,0 +1,10 @@
+<div class="control--input">
+  <textarea
+    [rows]="rows"
+    [placeholder]="placeHolderText"
+    [disabled]="disabled"
+    [value]="value"
+    (input)="change($any($event.target).value)"
+    (blur)="onTouched()"
+  ></textarea>
+</div>
