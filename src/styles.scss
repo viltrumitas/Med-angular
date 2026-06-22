@@ -26,32 +26,14 @@ html {
 
 body {
   color-scheme: light;
-
   color: var(--mat-sys-on-surface);
   font: var(--mat-sys-body-medium);
-
   min-height: 100vh;
   margin: 0;
-
-  color: #152033;
-  font-family: Inter, 'Segoe UI', Arial, Helvetica, sans-serif;
-
-  background:
-    radial-gradient(circle at 18% 12%, rgba(23, 105, 224, 0.1), transparent 30%),
-    radial-gradient(circle at 84% 80%, rgba(15, 118, 110, 0.1), transparent 32%),
-    linear-gradient(135deg, #f7fbff 0%, #eef4fa 100%);
-
-  background-attachment: fixed;
 }
 
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-}
-
-button,
-input,
-textarea {
-  font: inherit;
 }
