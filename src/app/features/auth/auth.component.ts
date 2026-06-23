@@ -20,13 +20,14 @@ export class AuthComponent {
   private readonly router = inject(Router);
   loginForm = createLoginForm();
   registerForm = createRegisterForm();
+  errorMessage = '';
 
   onLogin(): void {
     if (this.loginForm.invalid) return;
 
-    const v = this.loginForm.getRawValue();
-    const matricula = Number(v.matricula);
+    this.errorMessage = '';
 
+    const v = this.loginForm.getRawValue();
     const data: LoginModel = {
       matricula: Number(v.matricula),
       password: v.password,
@@ -38,7 +39,12 @@ export class AuthComponent {
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {
-        console.error('Error backend: ', err);
+        if (err.status === 401) {
+          this.errorMessage = 'Matricula o password incorrecta';
+        } else {
+          this.errorMessage = 'Ocurrio un error inesperado';
+        }
+        console.log('Error backend:', err);
       },
     });
   }
@@ -69,10 +75,12 @@ export class AuthComponent {
   // ESTO ES DE LA ANIMACION
   isActive = false;
   showRegister() {
+    this.errorMessage = '';
     this.isActive = true;
   }
 
   showLogin() {
+    this.errorMessage = '';
     this.isActive = false;
   }
 }

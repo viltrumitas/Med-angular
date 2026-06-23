@@ -14,6 +14,12 @@
           <i class="bx bx-lock"></i>
         </div>
 
+        @if (errorMessage) {
+          <div class="error-message">
+            {{ errorMessage }}
+          </div>
+        }
+
         <div class="forgot-link">
           <a href="#">Olvidaste tu contraseña?</a>
         </div>
@@ -29,7 +35,7 @@
 
     <!-- REGISTER -->
     <div class="form-box register">
-      <form (ngSumbit)="(onRegister)" [formGroup]="registerForm">
+      <form (ngSubmit)="onRegister()" [formGroup]="registerForm">
         <h1>Registrar</h1>
         <div class="input-box">
           <app-input placeHolderText="Matricula" type="number" formControlName="matricula" />

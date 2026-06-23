@@ -31,6 +31,16 @@
   overflow: hidden;
   margin: 20px;
 
+  h1 {
+    font-size: 36px;
+    margin: -10px 0;
+  }
+
+  p {
+    font-size: 14.5px;
+    margin: 15px 0;
+  }
+
   &.active {
     .toggle-box {
       &::before {
@@ -89,18 +99,6 @@ form {
   width: 100%;
 }
 
-.container {
-  h1 {
-    font-size: 36px;
-    margin: -10px 0;
-  }
-
-  p {
-    font-size: 14.5px;
-    margin: 15px 0;
-  }
-}
-
 .input-box {
   position: relative;
   margin: 30px 0;
@@ -113,6 +111,16 @@ form {
     font-size: 20px;
     color: #888;
   }
+}
+
+.error-message {
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 8px;
+  color: #000;
+  background-color: #3d5fc4;
+  font-size: 14px;
+  text-align: center;
 }
 
 .forgot-link {
