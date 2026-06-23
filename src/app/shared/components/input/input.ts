@@ -22,13 +22,13 @@ export class InputComponent implements ControlValueAccessor {
   @Input() type: 'text' | 'number' | 'email' | 'password' = 'text';
   @Input() placeHolderText = '';
 
-  value: any = '';
+  value: string | number | null = '';
   disabled = false;
 
-  onChange = (value: string) => {};
-  onTouched = () => {};
+  private onChange: (value: any) => void = () => {};
+  private onTouched: () => void = () => {};
 
-  writeValue(value: string): void {
+  writeValue(value: any): void {
     this.value = value ?? '';
   }
 
@@ -44,8 +44,14 @@ export class InputComponent implements ControlValueAccessor {
     this.disabled = value;
   }
 
-  change(value: string) {
+  onInput(event: Event) {
+    const value = (event.target as HTMLInputElement).value;
+
     this.value = value;
     this.onChange(value);
+  }
+
+  onBlur() {
+    this.onTouched();
   }
 }

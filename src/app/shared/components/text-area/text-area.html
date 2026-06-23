@@ -4,7 +4,7 @@
     [placeholder]="placeHolderText"
     [disabled]="disabled"
     [value]="value"
-    (input)="change($any($event.target).value)"
-    (blur)="onTouched()"
+    (input)="onInput($event)"
+    (blur)="onBlur()"
   ></textarea>
 </div>

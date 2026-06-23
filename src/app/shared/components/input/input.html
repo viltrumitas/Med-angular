@@ -3,10 +3,10 @@
 
   <input
     [type]="type"
+    [value]="value"
     [placeholder]="placeHolderText"
     [disabled]="disabled"
-    [value]="value"
-    (input)="change($any($event.target).value)"
-    (blur)="onTouched()"
+    (input)="onInput($event)"
+    (blur)="onBlur()"
   />
 </div>

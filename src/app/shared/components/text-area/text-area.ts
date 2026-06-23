@@ -1,5 +1,5 @@
 import { Component, forwardRef, Input } from '@angular/core';
-import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
   selector: 'app-text-area',
@@ -14,35 +14,40 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
     },
   ],
 })
-export class TextareaComponent {
+export class TextareaComponent implements ControlValueAccessor {
   @Input() labelText!: string;
   @Input() placeHolderText = '';
   @Input() rows = 4;
 
-  value: any = '';
+  value: string = '';
   disabled = false;
 
-  onChange = (value: string) => {};
-  onTouched = () => {};
+  private onChange: (value: string) => void = () => {};
+  private onTouched: () => void = () => {};
 
   writeValue(value: string): void {
     this.value = value ?? '';
   }
 
-  registerOnChange(fn: any): void {
+  registerOnChange(fn: (value: string) => void): void {
     this.onChange = fn;
   }
 
-  registerOnTouched(fn: any): void {
+  registerOnTouched(fn: () => void): void {
     this.onTouched = fn;
   }
 
-  setDisabledState(value: boolean): void {
-    this.disabled = value;
+  setDisabledState(isDisabled: boolean): void {
+    this.disabled = isDisabled;
   }
 
-  change(value: string) {
+  onInput(event: Event) {
+    const value = (event.target as HTMLTextAreaElement).value;
     this.value = value;
     this.onChange(value);
+  }
+
+  onBlur() {
+    this.onTouched();
   }
 }
