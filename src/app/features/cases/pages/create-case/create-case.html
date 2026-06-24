@@ -1,17 +1,39 @@
-<form [formGroup]="caseForm" (ngSubmit)="submitCase()">
-  <app-general-section [group]="caseForm.controls.general" />
+<div class="create-case-container">
+  <div class="page-header">
+    <h1>Crear Caso Clínico</h1>
+    <p>Completa la información del paciente y del caso.</p>
+  </div>
 
-  <app-patient-section [group]="caseForm.controls.patient" />
+  <form [formGroup]="caseForm" (ngSubmit)="submitCase()">
 
-  <app-findings [group]="caseForm.controls.findings" />
+    <div class="section-card">
+      <app-general-section [group]="caseForm.controls.general" />
+    </div>
 
-  <app-vital-signs [group]="caseForm.controls.vitalSigns" />
+    <div class="section-card">
+      <app-patient-section [group]="caseForm.controls.patient" />
+    </div>
 
-  <app-neurological [group]="caseForm.controls.neurological" />
+    <div class="section-card">
+      <app-findings [group]="caseForm.controls.findings" />
+    </div>
 
-  <app-feedback [control]="caseForm.controls.feedback" />
+    <div class="section-card">
+      <app-vital-signs [group]="caseForm.controls.vitalSigns" />
+    </div>
 
-  <app-publish-case [group]="caseForm.controls.publishCase" />
+    <div class="section-card">
+      <app-neurological [group]="caseForm.controls.neurological" />
+    </div>
 
-  <app-button type="submit" text="Guardar Case" />
-</form>
+    <div class="section-card">
+      <app-feedback [control]="caseForm.controls.feedback" />
+    </div>
+
+    <div class="actions">
+      <app-button text="Guardar Caso" (click)="submitCase()" />
+      <app-button text="Publicar Caso" (click)="publishCase()" />
+    </div>
+
+  </form>
+</div>

@@ -11,7 +11,7 @@ export class CasesApi {
     return this.http.post(`${this.apiUrl}/cases`, data);
   }
 
-  publishCase(data: any) {
-    return this.http.post(`${this.apiUrl}:id/publish`, data);
+  publishCase(id: string) {
+    return this.http.patch(`${this.apiUrl}/cases/${id}/publish`, {});
   }
 }

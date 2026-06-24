@@ -49,7 +49,7 @@ export function mapCreateCase(form: CaseFormValue): CreateCaseModel {
     },
 
     publishCase: {
-      ...form.publishCase,
+      isPublished: form.publishCase.isPublished,
     },
 
     feedback: form.feedback ?? '',

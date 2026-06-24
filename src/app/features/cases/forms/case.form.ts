@@ -81,6 +81,5 @@ export type PatientForm = CaseForm['controls']['patient'];
 export type FindingsForm = CaseForm['controls']['findings'];
 export type VitalSignsForm = CaseForm['controls']['vitalSigns'];
 export type NeurologicalForm = CaseForm['controls']['neurological'];
-export type PublishCaseForm = CaseForm['controls']['publishCase'];
 
 export type CaseFormValue = ReturnType<CaseForm['getRawValue']>;

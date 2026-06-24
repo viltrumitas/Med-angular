@@ -7,7 +7,6 @@ import { Findings } from '../../components/findings/findings';
 import { ButtonComponent } from '../../../../shared/components/button/button';
 import { VitalSigns } from '../../components/vital-signs/vital-signs';
 import { Neurological } from '../../components/neurological/neurological';
-import { PublishCase } from '../../components/publish-case/publish-case';
 import { Feedback } from '../../components/feedback/feedback';
 import { CasesApi } from '../../services/cases-api';
 import { mapCreateCase } from '../../mappers/create-case.mapper';
@@ -22,7 +21,6 @@ import { mapCreateCase } from '../../mappers/create-case.mapper';
     ButtonComponent,
     VitalSigns,
     Neurological,
-    PublishCase,
     Feedback,
   ],
   templateUrl: './create-case.html',
@@ -31,7 +29,7 @@ import { mapCreateCase } from '../../mappers/create-case.mapper';
 export class CreateCase {
   caseForm = createCaseForm();
   caseService = inject(CasesApi);
-
+  createdCaseId: string | null = null;
   submitCase() {
     if (this.caseForm.invalid) {
       this.caseForm.markAllAsTouched();
@@ -41,12 +39,29 @@ export class CreateCase {
     console.log('enviado', data);
 
     this.caseService.createCase(data).subscribe({
-      next: (res) => {
+      next: (res: any) => {
         console.log('Caso Creado', res);
+        this.createdCaseId = res.id;
       },
       error: (err) => {
         console.log('Error', err);
       },
     });
+  }
+
+  publishCase() {
+    if (!this.createdCaseId) {
+      console.warn('Primero debes crear el caso');
+      return;
+    }
+
+    this.caseService.publishCase(this.createdCaseId).subscribe({
+      next: () => {
+        console.log('Caso publicado correctamente');
+      },
+      error: (err) => {
+        console.log('Error al publicar', err);
+      }
+    })
   }
 }
