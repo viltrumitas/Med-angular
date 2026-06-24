@@ -34,7 +34,9 @@ export function createCaseForm() {
     }),
 
     findings: new FormGroup({
-      generalFindings: new FormGroup(''),
+      generalFindings: new FormControl('', {
+        nonNullable: true,
+      }),
     }),
 
     vitalSigns: new FormGroup({
@@ -64,3 +66,10 @@ export function createCaseForm() {
     feedback: new FormControl(''),
   });
 }
+
+export type CaseForm = ReturnType<typeof createCaseForm>;
+
+export type GeneralForm = CaseForm['controls']['general'];
+export type PatientForm = CaseForm['controls']['patient'];
+export type FindingsForm = CaseForm['controls']['findings'];
+export type VitalSignsForm = CaseForm['controls']['vitalSigns'];

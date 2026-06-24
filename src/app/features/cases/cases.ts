@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-cases',
   standalone: true,
-  imports: [],
+  imports: [RouterOutlet],
   templateUrl: './cases.html',
   styleUrl: './cases.scss',
 })

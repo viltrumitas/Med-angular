@@ -1,1 +1,15 @@
-<p>patient-section works!</p>
+<div [formGroup]="group" class="section">
+  <app-input formControlName="patientName" type="text" />
+
+  <select formControlName="gender">
+    <option value="MALE"></option>
+    <option value="FEMALE"></option>
+    <option value="OTHER"></option>
+  </select>
+
+  <app-input formControlName="age" type="number" />
+
+  <app-input formControlName="medicalHistory" type="text" />
+
+  <app-text-area formControlName="medications" />
+</div>

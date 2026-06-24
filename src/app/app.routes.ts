@@ -4,5 +4,5 @@ import { dashboardRoutes } from './features/dashboard/dashboard.routes';
 
 export const routes: Routes = [
   { path: 'auth', children: authRoutes },
-  { path: 'dashboard ', children: dashboardRoutes },
+  { path: 'dashboard', children: dashboardRoutes },
 ];

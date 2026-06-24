@@ -1,1 +1,11 @@
-<p>create-case works!</p>
+<form [formGroup]="caseForm" (ngSubmit)="submitCase()">
+  <app-general-section [group]="caseForm.controls.general" />
+
+  <app-patient-section [group]="caseForm.controls.patient" />
+
+  <app-findings [group]="caseForm.controls.findings" />
+
+  <app-vital-signs [group]="caseForm.controls.vitalSigns" />
+
+  <app-button type="submit" text="Guardar Case" />
+</form>

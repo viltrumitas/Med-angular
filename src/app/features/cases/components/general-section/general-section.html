@@ -1,3 +1,5 @@
-<app-input [formControl]="group.controls.title" type="text" />
-<app-text-area [formControl]="group.controls.consult" />
-<app-input [formControl]="group.controls.scenary" type="text" />
+<div class="section" [formGroup]="group">
+  <app-input formControlName="title" type="text" labelText="Titulo" />
+  <app-text-area labelText="Consulta" formControlName="consult" />
+  <app-input formControlName="scenary" type="text" labelText="Escenario" />
+</div>
