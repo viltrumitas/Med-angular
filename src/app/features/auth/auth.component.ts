@@ -24,14 +24,11 @@ export class AuthComponent {
   registerError = '';
 
   onLogin(): void {
-    console.log('CLICK LOGIN');
-    if (this.loginForm.invalid) {
-      console.log('FORM INVALID');
-      return;
-    }
-
-    console.log('FORM VALID');
     this.loginError = '';
+    this.registerError = '';
+  
+    if (this.loginForm.invalid) return;
+
 
     const v = this.loginForm.getRawValue();
 
@@ -64,9 +61,10 @@ export class AuthComponent {
   }
 
   onRegister(): void {
+    this.loginError = '';
+    this.registerError = '';
     if (this.registerForm.invalid) return;
 
-    this.registerError = '';
 
     const v = this.registerForm.getRawValue();
 
