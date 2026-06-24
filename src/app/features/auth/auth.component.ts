@@ -50,15 +50,15 @@ export class AuthComponent {
 
         if (err.status === 401) {
           this.loginError = 'Matrícula o contraseña incorrecta';
-        } else if (err.status === 500) {
-          this.loginError = 'Error interno del servidor';
-        } else {
-          this.loginError = err.message || 'Error desconocido';
+          return;
         }
 
-        console.log('LOGIN ERROR FINAL:', this.loginError);
-        this.loginError = 'TEST ERROR FIXO';
-        console.log('LOGIN ERROR SET:', this.loginError);
+        if (err.status === 500) {
+          this.loginError = 'Error interno del servidor';
+          return;
+        }
+
+        this.loginError = err.message || 'Error desconocido';
       },
     });
   }
@@ -83,7 +83,19 @@ export class AuthComponent {
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {
-        this.registerError = err.message;
+        console.log('COMPONENTE ERROR:', err);
+
+        if (err.status === 401) {
+          this.loginError = 'Matrícula o contraseña incorrecta';
+          return;
+        }
+
+        if (err.status === 500) {
+          this.loginError = 'Error interno del servidor';
+          return;
+        }
+
+        this.loginError = err.message || 'Error desconocido';
       },
     });
   }
