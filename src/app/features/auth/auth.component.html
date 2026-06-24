@@ -17,9 +17,11 @@
           <i class="bx bx-lock"></i>
         </div>
 
+        @if (loginError) {
         <div class="error-message">
           {{ loginError }}
         </div>
+        }
 
         <div class="forgot-link">
           <a href="#">Olvidaste tu contraseña?</a>
