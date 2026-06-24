@@ -1,4 +1,3 @@
-<h2>{{ errorMessage }}</h2>
 <div class="body">
   <div class="container" [class.active]="isActive">
     <!-- LOGIN -->
@@ -15,9 +14,9 @@
           <i class="bx bx-lock"></i>
         </div>
 
-        @if (errorMessage) {
+        @if (loginError) {
           <div class="error-message">
-            {{ errorMessage }}
+            {{ loginError }}
           </div>
         }
 
@@ -43,9 +42,9 @@
           <i class="bx bx-user"></i>
         </div>
 
-        @if (errorMessage) {
+        @if (registerError) {
           <div class="error-message">
-            {{ errorMessage }}
+            {{ registerError }}
           </div>
         }
 

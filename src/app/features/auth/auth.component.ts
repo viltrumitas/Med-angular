@@ -20,12 +20,13 @@ export class AuthComponent {
   private readonly router = inject(Router);
   loginForm = createLoginForm();
   registerForm = createRegisterForm();
-  errorMessage = '';
+  loginError = '';
+  registerError = ''
 
   onLogin(): void {
     if (this.loginForm.invalid) return;
 
-    this.errorMessage = '';
+    this.loginError = '';
 
     const v = this.loginForm.getRawValue();
 
@@ -43,13 +44,13 @@ export class AuthComponent {
         console.log('COMPONENTE', err);
         switch (err.status) {
           case 401:
-            this.errorMessage = 'Matrícula o contraseña incorrecta';
+            this.loginError = 'Matrícula o contraseña incorrecta';
             break;
           case 500:
-            this.errorMessage = 'Error interno del servidor';
+            this.loginError = 'Error interno del servidor';
             break;
           default:
-            this.errorMessage = err.message;
+            this.loginError = err.message;
         }
       },
     });
@@ -58,7 +59,7 @@ export class AuthComponent {
   onRegister(): void {
     if (this.registerForm.invalid) return;
 
-    this.errorMessage = '';
+    this.registerError = '';
 
     const v = this.registerForm.getRawValue();
 
@@ -75,7 +76,7 @@ export class AuthComponent {
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {
-        this.errorMessage = err.message;
+        this.registerError = err.message;
       },
     });
   }
@@ -83,12 +84,12 @@ export class AuthComponent {
   // ESTO ES DE LA ANIMACION
   isActive = false;
   showRegister() {
-    this.errorMessage = '';
+    this.registerError = '';
     this.isActive = true;
   }
 
   showLogin() {
-    this.errorMessage = '';
+    this.registerError = '';
     this.isActive = false;
   }
 }
