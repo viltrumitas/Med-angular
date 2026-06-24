@@ -84,12 +84,10 @@ export class AuthComponent {
   // ESTO ES DE LA ANIMACION
   isActive = false;
   showRegister() {
-    this.registerError = '';
     this.isActive = true;
   }
 
   showLogin() {
-    this.registerError = '';
     this.isActive = false;
   }
 }
