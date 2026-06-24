@@ -85,17 +85,17 @@ export class AuthComponent {
       error: (err) => {
         console.log('COMPONENTE ERROR:', err);
 
-        if (err.status === 401) {
-          this.loginError = 'Matrícula o contraseña incorrecta';
+        if (err.status === 409) {
+          this.registerError = 'La matrícula ya existe';
           return;
         }
 
         if (err.status === 500) {
-          this.loginError = 'Error interno del servidor';
+          this.registerError = 'Error interno del servidor';
           return;
         }
 
-        this.loginError = err.message || 'Error desconocido';
+        this.registerError = err.message || 'Error desconocido';
       },
     });
   }
