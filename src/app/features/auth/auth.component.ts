@@ -104,9 +104,13 @@ export class AuthComponent {
   isActive = false;
   showRegister() {
     this.isActive = true;
+    this.loginError = '';
+    this.registerError = '';
   }
 
   showLogin() {
     this.isActive = false;
+    this.loginError = '';
+    this.registerError = '';
   }
 }

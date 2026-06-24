@@ -122,16 +122,6 @@ form {
   font-size: 14px;
   text-align: center;
   font-weight: bold;
-  &.active{
-    .form-box {
-      &.register {
-        visibility: visible;
-      }
-      &.login {
-        visibility: hidden;
-      }
-    }
-  }
 }
 
 .forgot-link {
