@@ -37,9 +37,7 @@ export class CreateCase {
       this.caseForm.markAllAsTouched();
       return;
     }
-    console.log('FORM:', this.caseForm.getRawValue().patient.medicalHistory);
     const data = mapCreateCase(this.caseForm.getRawValue());
-    console.log('REQUEST:', data.patient.medicalHistory);
     console.log('enviado', data);
 
     this.caseService.createCase(data).subscribe({

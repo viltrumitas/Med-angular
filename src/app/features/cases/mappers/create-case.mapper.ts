@@ -15,7 +15,7 @@ export function mapCreateCase(form: CaseFormValue): CreateCaseModel {
 
       age: Number(form.patient.age),
 
-      medicalHistory: form.patient.medicalHistory ?? [],
+      medicalHistory: form.patient.medicalHistory ? [form.patient.medicalHistory] : [],
 
       medications: form.patient.medications ?? '',
     },

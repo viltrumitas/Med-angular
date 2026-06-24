@@ -33,7 +33,7 @@ export function createCaseForm() {
         validators: [Validators.required, Validators.min(1)],
       }),
 
-      medicalHistory: new FormControl<string[]>([]),
+      medicalHistory: new FormControl<string>(''),
 
       medications: new FormControl(''),
     }),
