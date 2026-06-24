@@ -1,1 +1,24 @@
-<p>neurological works!</p>
+<div class="section" [formGroup]="group">
+  <h3>Escala cincinnati</h3>
+  <div class="cincinnati" formGroupName="cincinnati">
+    <label>Facial </label>
+    <select formControlName="facialDroop">
+      <option value="NORMAL">Normal</option>
+      <option value="ABNORMAL">Anormal</option>
+    </select>
+
+    <label>Brazo</label>
+    <select formControlName="armDrift">
+      <option value="NORMAL">Normal</option>
+      <option value="ABNORMAL">Anormal</option>
+    </select>
+
+    <label>Habla</label>
+    <select formControlName="speech">
+      <option value="NORMAL">Normal</option>
+      <option value="ABNORMAL">Anormal</option>
+    </select>
+  </div>
+
+  <app-input labelText="Glasgow" formControlName="glasgow" />
+</div>

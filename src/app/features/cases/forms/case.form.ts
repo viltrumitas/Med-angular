@@ -12,7 +12,7 @@ export function createCaseForm() {
         nonNullable: true,
       }),
 
-      scenary: new FormControl('', {
+      scenery: new FormControl('', {
         nonNullable: true,
       }),
     }),
@@ -73,3 +73,5 @@ export type GeneralForm = CaseForm['controls']['general'];
 export type PatientForm = CaseForm['controls']['patient'];
 export type FindingsForm = CaseForm['controls']['findings'];
 export type VitalSignsForm = CaseForm['controls']['vitalSigns'];
+export type NeurologicalForm = CaseForm['controls']['neurological'];
+export type PublishCaseForm = CaseForm['controls']['publishCase'];

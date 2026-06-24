@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { GeneralSection } from '../../components/general-section/general-section';
 import { createCaseForm } from '../../forms/case.form';
@@ -6,6 +6,10 @@ import { PatientSection } from '../../components/patient-section/patient-section
 import { Findings } from '../../components/findings/findings';
 import { ButtonComponent } from '../../../../shared/components/button/button';
 import { VitalSigns } from '../../components/vital-signs/vital-signs';
+import { Neurological } from '../../components/neurological/neurological';
+import { PublishCase } from '../../components/publish-case/publish-case';
+import { Feedback } from '../../components/feedback/feedback';
+import { CasesApi } from '../../services/cases-api';
 
 @Component({
   selector: 'app-create-case',
@@ -16,12 +20,16 @@ import { VitalSigns } from '../../components/vital-signs/vital-signs';
     Findings,
     ButtonComponent,
     VitalSigns,
+    Neurological,
+    PublishCase,
+    Feedback,
   ],
   templateUrl: './create-case.html',
   styleUrl: './create-case.scss',
 })
 export class CreateCase {
   caseForm = createCaseForm();
+  caseService = inject(CasesApi);
 
   submitCase() {
     if (this.caseForm.invalid) {
@@ -29,11 +37,21 @@ export class CreateCase {
       return;
     }
 
-    const data = this.caseForm.value;
+    const rawData = this.caseForm.getRawValue();
 
-    console.log(data);
+    const data = {
+      ...rawData,
+    };
 
-    // aquí después:
-    // this.caseService.createCase(data)
+    console.log('enviado', rawData);
+
+    this.caseService.createCase(rawData).subscribe({
+      next: (res) => {
+        console.log('Caso Creado', rawData);
+      },
+      error: (err) => {
+        console.log('Error', err);
+      },
+    });
   }
 }

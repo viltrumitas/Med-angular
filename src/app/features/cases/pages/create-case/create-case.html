@@ -7,5 +7,11 @@
 
   <app-vital-signs [group]="caseForm.controls.vitalSigns" />
 
+  <app-neurological [group]="caseForm.controls.neurological" />
+
+  <app-publish-case [group]="caseForm.controls.publishCase" />
+
+  <app-feedback [control]="caseForm.controls.feedback" />
+
   <app-button type="submit" text="Guardar Case" />
 </form>

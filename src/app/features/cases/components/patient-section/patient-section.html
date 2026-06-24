@@ -1,15 +1,16 @@
 <div [formGroup]="group" class="section">
-  <app-input formControlName="patientName" type="text" />
+  <app-input labelText="Nombre del paciente" formControlName="patientName" type="text" />
 
+  <label>Genero</label>
   <select formControlName="gender">
-    <option value="MALE"></option>
-    <option value="FEMALE"></option>
-    <option value="OTHER"></option>
+    <option value="MALE">Hombre</option>
+    <option value="FEMALE">Mujer</option>
+    <option value="OTHER">Otro</option>
   </select>
 
-  <app-input formControlName="age" type="number" />
+  <app-input labelText="Edad" formControlName="age" type="number" />
 
-  <app-input formControlName="medicalHistory" type="text" />
+  <app-input labelText="Historial Medico" formControlName="medicalHistory" type="text" />
 
-  <app-text-area formControlName="medications" />
+  <app-text-area labelText="Medicamentos" formControlName="medications" />
 </div>
