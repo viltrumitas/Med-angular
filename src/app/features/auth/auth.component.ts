@@ -28,6 +28,7 @@ export class AuthComponent {
     this.errorMessage = '';
 
     const v = this.loginForm.getRawValue();
+
     const data: LoginModel = {
       matricula: Number(v.matricula),
       password: v.password,
@@ -39,12 +40,11 @@ export class AuthComponent {
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {
-        if (err.status === 401) {
-          this.errorMessage = 'Matricula o password incorrecta';
-        } else {
-          this.errorMessage = 'Ocurrio un error inesperado';
+        switch (err.status) {
+          case 401:
+            this.errorMessage = 'Matrícula o contraseña incorrecta';
         }
-        console.log('Error backend:', err);
+        this.errorMessage = err.message;
       },
     });
   }
@@ -67,7 +67,7 @@ export class AuthComponent {
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {
-        console.error('Error', err);
+        this.errorMessage = err.message;
       },
     });
   }
