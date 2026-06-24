@@ -1,14 +1,9 @@
 <div class="body">
-  <h2>{{ registerError }}</h2>
-  <h2>{{ loginError }}</h2>
   <div class="container" [class.active]="isActive">
     <!-- LOGIN -->
     <div class="form-box login">
       <form (ngSubmit)="onLogin()" [formGroup]="loginForm">
         <h1>Login</h1>
-        <h2 style="color:red">
-          {{ loginError }}
-        </h2>
         <div class="input-box">
           <app-input placeHolderText="Matricula" type="number" formControlName="matricula" />
           <i class="bx bx-user"></i>
@@ -19,11 +14,9 @@
           <i class="bx bx-lock"></i>
         </div>
 
-        @if (loginError) {
         <div class="error-message">
           {{ loginError }}
         </div>
-        }
 
         <div class="forgot-link">
           <a href="#">Olvidaste tu contraseña?</a>
@@ -47,11 +40,9 @@
           <i class="bx bx-user"></i>
         </div>
 
-        @if (registerError) {
         <div class="error-message">
           {{ registerError }}
         </div>
-        }
 
         <div class="input-box">
           <app-input placeHolderText="Nombre(s)" type="text" formControlName="firstName" />
