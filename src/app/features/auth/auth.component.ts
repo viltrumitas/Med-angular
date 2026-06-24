@@ -43,14 +43,21 @@ export class AuthComponent {
         switch (err.status) {
           case 401:
             this.errorMessage = 'Matrícula o contraseña incorrecta';
+            break;
+          case 500:
+            this.errorMessage = 'Error interno del servidor';
+            break;
+          default:
+            this.errorMessage = err.message;
         }
-        this.errorMessage = err.message;
       },
     });
   }
 
   onRegister(): void {
     if (this.registerForm.invalid) return;
+
+    this.errorMessage = '';
 
     const v = this.registerForm.getRawValue();
 
