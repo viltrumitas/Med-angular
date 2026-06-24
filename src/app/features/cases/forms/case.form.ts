@@ -1,4 +1,5 @@
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, NonNullableFormBuilder } from '@angular/forms';
+import { Gender } from '../models/patient.model';
 
 export function createCaseForm() {
   return new FormGroup({
@@ -22,11 +23,15 @@ export function createCaseForm() {
         nonNullable: true,
       }),
 
-      gender: new FormControl<'MALE' | 'FEMALE' | 'OTHER' | null>(null, {
+      gender: new FormControl<Gender>('OTHER', {
+        nonNullable: true,
         validators: [Validators.required],
       }),
 
-      age: new FormControl<number | null>(null),
+      age: new FormControl<number>(0, {
+        nonNullable: true,
+        validators: [Validators.required, Validators.min(1)],
+      }),
 
       medicalHistory: new FormControl<string[]>([]),
 
@@ -60,7 +65,9 @@ export function createCaseForm() {
     }),
 
     publishCase: new FormGroup({
-      isPublished: new FormControl(false),
+      isPublished: new FormControl<boolean>(false, {
+        nonNullable: true,
+      }),
     }),
 
     feedback: new FormControl(''),

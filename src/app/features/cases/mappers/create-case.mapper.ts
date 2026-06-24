@@ -1,6 +1,8 @@
 import { CaseFormValue } from '../forms/case.form';
+import { CreateCaseModel } from '../models/create-case.model';
+import { Gender } from '../models/patient.model';
 
-export function mapCreateCase(form: CaseFormValue) {
+export function mapCreateCase(form: CaseFormValue): CreateCaseModel {
   return {
     general: {
       ...form.general,
@@ -9,9 +11,11 @@ export function mapCreateCase(form: CaseFormValue) {
     patient: {
       ...form.patient,
 
-      age: form.patient.age ? Number(form.patient.age) : null,
+      gender: form.patient.gender,
 
-      medicalHistory: form.patient.medicalHistory ? [form.patient.medicalHistory] : [],
+      age: Number(form.patient.age),
+
+      medicalHistory: form.patient.medicalHistory ?? [],
 
       medications: form.patient.medications ?? '',
     },

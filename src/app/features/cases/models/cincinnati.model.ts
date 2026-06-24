@@ -1,5 +1,5 @@
 export interface CincinnatiModel {
-  facialDroop: 'NORMAL' | 'ABNORMAL';
-  armDrift: 'NORMAL' | 'ABNORMAL';
-  speech: 'NORMAL' | 'ABNORMAL';
+  facialDroop: 'NORMAL' | 'ABNORMAL' | null;
+  armDrift: 'NORMAL' | 'ABNORMAL' | null;
+  speech: 'NORMAL' | 'ABNORMAL' | null;
 }
