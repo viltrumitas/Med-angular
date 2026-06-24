@@ -48,14 +48,13 @@ export class AuthComponent {
       error: (err) => {
         console.log('COMPONENTE ERROR:', err);
 
-        const msg =
-          err.status === 401
-            ? 'Matrícula o contraseña incorrecta'
-            : err.status === 500
-              ? 'Error interno del servidor'
-              : err.message;
-
-        this.loginError = msg;
+        if (err.status === 401) {
+          this.loginError = 'Matrícula o contraseña incorrecta';
+        } else if (err.status === 500) {
+          this.loginError = 'Error interno del servidor';
+        } else {
+          this.loginError = err.message || 'Error desconocido';
+        }
 
         console.log('LOGIN ERROR FINAL:', this.loginError);
       },
