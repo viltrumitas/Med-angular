@@ -10,7 +10,10 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         ? error.error.message.join(', ')
         : error.error?.message || 'Error inesperado';
 
-      return throwError(() => new Error(message));
+      return throwError(() => ({
+        status: error.status,
+        message,
+      }));
     }),
   );
 };
