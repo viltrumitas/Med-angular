@@ -21,14 +21,14 @@ export class AuthComponent {
   loginForm = createLoginForm();
   registerForm = createRegisterForm();
   loginError = '';
-  registerError = ''
+  registerError = '';
 
   onLogin(): void {
     console.log('CLICK LOGIN');
     if (this.loginForm.invalid) {
       console.log('FORM INVALID');
-      return
-    };
+      return;
+    }
 
     console.log('FORM VALID');
     this.loginError = '';
