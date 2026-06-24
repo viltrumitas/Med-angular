@@ -14,6 +14,7 @@ export class AuthApi {
   private readonly authService = inject(AuthService);
 
   login(data: LoginModel): Observable<AuthResponse> {
+    console.log('CALLING API LOGIN');
     return this.http.post<AuthResponse>(`${this.apiUrl}/auth/login`, data).pipe(
       tap(({ access_token }) => {
         this.authService.setToken(access_token);
