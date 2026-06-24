@@ -42,6 +42,7 @@ export class AuthComponent {
       },
       error: (err) => {
         console.log('COMPONENTE', err);
+        this.loginError = err.message ?? 'sin mensaje';
         switch (err.status) {
           case 401:
             this.loginError = 'Matrícula o contraseña incorrecta';
