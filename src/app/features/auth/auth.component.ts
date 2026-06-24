@@ -46,20 +46,18 @@ export class AuthComponent {
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {
-        console.log('COMPONENTE', err);
-        console.log('ENTRÓ AL ERROR');
-        console.log(err);
-        this.loginError = err.message ?? 'sin mensaje';
-        switch (err.status) {
-          case 401:
-            this.loginError = 'Matrícula o contraseña incorrecta';
-            break;
-          case 500:
-            this.loginError = 'Error interno del servidor';
-            break;
-          default:
-            this.loginError = err.message;
-        }
+        console.log('COMPONENTE ERROR:', err);
+
+        const msg =
+          err.status === 401
+            ? 'Matrícula o contraseña incorrecta'
+            : err.status === 500
+              ? 'Error interno del servidor'
+              : err.message;
+
+        this.loginError = msg;
+
+        console.log('LOGIN ERROR FINAL:', this.loginError);
       },
     });
   }
