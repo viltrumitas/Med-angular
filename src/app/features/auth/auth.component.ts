@@ -57,6 +57,8 @@ export class AuthComponent {
         }
 
         console.log('LOGIN ERROR FINAL:', this.loginError);
+        this.loginError = 'TEST ERROR FIXO';
+        console.log('LOGIN ERROR SET:', this.loginError);
       },
     });
   }
