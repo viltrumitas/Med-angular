@@ -6,6 +6,9 @@
     <div class="form-box login">
       <form (ngSubmit)="onLogin()" [formGroup]="loginForm">
         <h1>Login</h1>
+        <h2 style="color:red">
+          {{ loginError }}
+        </h2>
         <div class="input-box">
           <app-input placeHolderText="Matricula" type="number" formControlName="matricula" />
           <i class="bx bx-user"></i>
@@ -17,9 +20,9 @@
         </div>
 
         @if (loginError) {
-          <div class="error-message">
-            {{ loginError }}
-          </div>
+        <div class="error-message">
+          {{ loginError }}
+        </div>
         }
 
         <div class="forgot-link">
@@ -45,9 +48,9 @@
         </div>
 
         @if (registerError) {
-          <div class="error-message">
-            {{ registerError }}
-          </div>
+        <div class="error-message">
+          {{ registerError }}
+        </div>
         }
 
         <div class="input-box">
@@ -80,23 +83,13 @@
       <div class="toggle-panel toggle-left">
         <h1>Hola, Bienvenido</h1>
         <p>No tienes cuenta?</p>
-        <app-button
-          type="button"
-          text="Registrate"
-          variant="secondary"
-          (clicked)="showRegister()"
-        />
+        <app-button type="button" text="Registrate" variant="secondary" (clicked)="showRegister()" />
       </div>
 
       <div class="toggle-panel toggle-right">
         <h1>Bienvenido de nuevo</h1>
         <p>Ya tienes cuenta?</p>
-        <app-button
-          type="button"
-          text="Inicia sesion"
-          variant="secondary"
-          (clicked)="showLogin()"
-        />
+        <app-button type="button" text="Inicia sesion" variant="secondary" (clicked)="showLogin()" />
       </div>
     </div>
   </div>
