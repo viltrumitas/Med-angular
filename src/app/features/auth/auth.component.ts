@@ -40,6 +40,7 @@ export class AuthComponent {
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {
+        console.log('COMPONENTE', err);
         switch (err.status) {
           case 401:
             this.errorMessage = 'Matrícula o contraseña incorrecta';
