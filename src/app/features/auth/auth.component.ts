@@ -24,8 +24,13 @@ export class AuthComponent {
   registerError = ''
 
   onLogin(): void {
-    if (this.loginForm.invalid) return;
+    console.log('CLICK LOGIN');
+    if (this.loginForm.invalid) {
+      console.log('FORM INVALID');
+      return
+    };
 
+    console.log('FORM VALID');
     this.loginError = '';
 
     const v = this.loginForm.getRawValue();
@@ -42,6 +47,8 @@ export class AuthComponent {
       },
       error: (err) => {
         console.log('COMPONENTE', err);
+        console.log('ENTRÓ AL ERROR');
+        console.log(err);
         this.loginError = err.message ?? 'sin mensaje';
         switch (err.status) {
           case 401:
