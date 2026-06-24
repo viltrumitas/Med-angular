@@ -60,7 +60,7 @@ export function createCaseForm() {
     }),
 
     publishCase: new FormGroup({
-      isPublish: new FormControl(false),
+      isPublished: new FormControl(false),
     }),
 
     feedback: new FormControl(''),
@@ -75,3 +75,5 @@ export type FindingsForm = CaseForm['controls']['findings'];
 export type VitalSignsForm = CaseForm['controls']['vitalSigns'];
 export type NeurologicalForm = CaseForm['controls']['neurological'];
 export type PublishCaseForm = CaseForm['controls']['publishCase'];
+
+export type CaseFormValue = ReturnType<CaseForm['getRawValue']>;

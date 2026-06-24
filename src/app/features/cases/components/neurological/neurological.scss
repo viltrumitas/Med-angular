@@ -1,0 +1,16 @@
+.section {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 25px;
+  padding: 18px;
+
+  .cincinnati {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+  }
+
+  label {
+  }
+}

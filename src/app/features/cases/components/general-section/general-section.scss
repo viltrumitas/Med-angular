@@ -1,0 +1,15 @@
+.section {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 25px;
+  padding: 18px;
+
+  app-input {
+    width: 100%;
+  }
+
+  app-text-area {
+    width: 100%;
+  }
+}

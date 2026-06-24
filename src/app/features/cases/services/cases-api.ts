@@ -10,4 +10,8 @@ export class CasesApi {
   createCase(data: any) {
     return this.http.post(`${this.apiUrl}/cases`, data);
   }
+
+  publishCase(data: any) {
+    return this.http.post(`${this.apiUrl}:id/publish`, data);
+  }
 }

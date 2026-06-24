@@ -10,6 +10,7 @@ import { Neurological } from '../../components/neurological/neurological';
 import { PublishCase } from '../../components/publish-case/publish-case';
 import { Feedback } from '../../components/feedback/feedback';
 import { CasesApi } from '../../services/cases-api';
+import { mapCreateCase } from '../../mappers/create-case.mapper';
 
 @Component({
   selector: 'app-create-case',
@@ -36,18 +37,14 @@ export class CreateCase {
       this.caseForm.markAllAsTouched();
       return;
     }
+    console.log('FORM:', this.caseForm.getRawValue().patient.medicalHistory);
+    const data = mapCreateCase(this.caseForm.getRawValue());
+    console.log('REQUEST:', data.patient.medicalHistory);
+    console.log('enviado', data);
 
-    const rawData = this.caseForm.getRawValue();
-
-    const data = {
-      ...rawData,
-    };
-
-    console.log('enviado', rawData);
-
-    this.caseService.createCase(rawData).subscribe({
+    this.caseService.createCase(data).subscribe({
       next: (res) => {
-        console.log('Caso Creado', rawData);
+        console.log('Caso Creado', res);
       },
       error: (err) => {
         console.log('Error', err);

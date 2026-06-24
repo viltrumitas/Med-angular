@@ -5,14 +5,14 @@ import { VitalSignsModel } from './vital-signs.model';
 import { NeurologicalModel } from './neurological.model';
 import { PublishModel } from './publish.model';
 
-export interface CaseModel {
-  general: GeneralInfoModel;
-  patient: PatientModel;
+export interface CreateCaseModel {
+  general: GeneralInfoModel | null;
+  patient: PatientModel | null;
   findings: GeneralFindingsModel;
   vitalSigns: VitalSignsModel;
   neurological: NeurologicalModel;
   publishCase: PublishModel;
 
   feedback: string;
-  createdAt: string;
+  // createdAt: string;
 }
