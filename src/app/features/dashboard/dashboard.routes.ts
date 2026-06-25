@@ -1,7 +1,17 @@
 import { Routes } from '@angular/router';
-import { casesRouter } from '../cases/cases.routes';
+import { casesRoutes } from '../cases/cases.routes';
+import { authGuard } from '../../core/guard/auth-guard';
 
 export const dashboardRoutes: Routes = [
-  { path: '', loadComponent: () => import('./dashboard').then((c) => c.Dashboard) },
-  { path: 'cases', children: casesRouter },
+  {
+    path: '',
+    canActivate: [authGuard],
+    loadComponent: () => import('./dashboard').then((c) => c.Dashboard),
+    children: [
+      {
+        path: 'cases',
+        loadChildren: () => import('../cases/cases.routes').then((c) => c.casesRoutes),
+      },
+    ],
+  },
 ];
