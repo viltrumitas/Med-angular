@@ -3,10 +3,11 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { PatientForm } from '../../forms/case.form';
 import { InputComponent } from '../../../../shared/components/input/input';
 import { TextareaComponent } from '../../../../shared/components/text-area/text-area';
+import { SelectComponent } from '../../../../shared/components/select/select';
 
 @Component({
   selector: 'app-patient-section',
-  imports: [ReactiveFormsModule, InputComponent, TextareaComponent],
+  imports: [ReactiveFormsModule, InputComponent, TextareaComponent, SelectComponent],
   templateUrl: './patient-section.html',
   styleUrl: './patient-section.scss',
 })

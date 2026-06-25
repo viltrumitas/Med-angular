@@ -1,0 +1,39 @@
+.section {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 1rem;
+}
+
+select {
+  width: 100%;
+
+  padding: .75rem 1rem;
+
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+
+  background: white;
+
+  font-size: .95rem;
+
+  outline: none;
+
+  transition: .2s;
+
+  cursor: pointer;
+}
+
+select:hover {
+  border-color: #9ca3af;
+}
+
+select:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, .15);
+}
+
+@media (max-width: 768px) {
+  .section {
+    grid-template-columns: 1fr;
+  }
+}

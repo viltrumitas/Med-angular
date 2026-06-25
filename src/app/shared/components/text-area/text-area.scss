@@ -21,6 +21,7 @@
 
   textarea {
     min-height: 120px;
+    max-height: 250px;
     padding: 14px;
     resize: vertical;
     width: 100%;
@@ -32,6 +33,7 @@
     font-size: 16px;
     color: var(--text);
     font-weight: 500;
+    resize: none;
     transition:
       border-color 0.2s ease,
       box-shadow 0.2s ease,

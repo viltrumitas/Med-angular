@@ -1,9 +1,11 @@
 <div class="section" [formGroup]="group">
-  <app-input labelText="ta" formControlName="ta" type="text" />
-  <app-input labelText="fc" formControlName="fc" type="number" />
-  <app-input labelText="fr" formControlName="fr" type="number" />
-  <app-input labelText="spo2" formControlName="spo2" type="number" />
-  <app-input labelText="Glucosa" formControlName="glucose" type="number" />
-  <app-input labelText="Temperatura" formControlName="temperature" type="number" />
-  <app-input labelText="Filtro Capilar" formControlName="capillaryFiller" type="number" />
+  <div class="vital-grid">
+    <app-input labelText="TA" formControlName="ta" type="text" />
+    <app-input labelText="FC" formControlName="fc" type="number" />
+    <app-input labelText="FR" formControlName="fr" type="number" />
+    <app-input labelText="SPO2" formControlName="spo2" type="number" />
+    <app-input labelText="Glucosa" formControlName="glucose" type="number" />
+    <app-input labelText="Temperatura" formControlName="temperature" type="number" />
+    <app-input labelText="Filtro Capilar" formControlName="capillaryFiller" type="number" />
+  </div>
 </div>

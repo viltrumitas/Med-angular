@@ -1,0 +1,16 @@
+<div class="select-container">
+  <label>{{ labelText() }}</label>
+
+  <select
+    [value]="value"
+    (change)="setValue($any($event.target).value)"
+  >
+    <option value="">Seleccione una opción</option>
+
+    @for(option of options(); track option.value) {
+      <option [value]="option.value">
+        {{ option.label }}
+      </option>
+    }
+  </select>
+</div>

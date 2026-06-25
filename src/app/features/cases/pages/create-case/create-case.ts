@@ -18,7 +18,6 @@ import { mapCreateCase } from '../../mappers/create-case.mapper';
     GeneralSection,
     PatientSection,
     Findings,
-    ButtonComponent,
     VitalSigns,
     Neurological,
     Feedback,

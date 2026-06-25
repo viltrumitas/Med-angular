@@ -1,38 +1,48 @@
 <div class="create-case-container">
   <div class="page-header">
-    <h1>Crear Caso Clínico</h1>
-    <p>Completa la información del paciente y del caso.</p>
+    <h1>Nuevo Caso Clinico</h1>
+    <p>Complete la información clinica del paciente para registrar el caso.</p>
   </div>
 
   <form [formGroup]="caseForm" (ngSubmit)="submitCase()">
 
     <div class="section-card">
+      <h2>Informacion General</h2>
       <app-general-section [group]="caseForm.controls.general" />
     </div>
 
     <div class="section-card">
+      <h2>Paciente</h2>
       <app-patient-section [group]="caseForm.controls.patient" />
     </div>
 
     <div class="section-card">
+      <h2>Hallazgos generales</h2>
       <app-findings [group]="caseForm.controls.findings" />
     </div>
 
     <div class="section-card">
+      <h2>Signos vitales</h2>
       <app-vital-signs [group]="caseForm.controls.vitalSigns" />
     </div>
 
     <div class="section-card">
+      <h2>Neurologia</h2>
       <app-neurological [group]="caseForm.controls.neurological" />
     </div>
 
     <div class="section-card">
+      <h2>Retroalimentacion</h2>
       <app-feedback [control]="caseForm.controls.feedback" />
     </div>
 
     <div class="actions">
-      <app-button text="Guardar Caso" (click)="submitCase()" />
-      <app-button text="Publicar Caso" (click)="publishCase()" />
+      <button class="btn btn-secondary" type="button" (click)="submitCase()">
+        Guardar Caso
+      </button>
+      <button class="btn btn-primary" type="button" (click)="publishCase()">
+        Publicar Caso
+      </button>
     </div>
 
   </form>

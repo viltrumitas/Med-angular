@@ -1,12 +1,11 @@
 <div [formGroup]="group" class="section">
   <app-input labelText="Nombre del paciente" formControlName="patientName" type="text" />
 
-  <label>Genero</label>
-  <select formControlName="gender">
-    <option value="MALE">Hombre</option>
-    <option value="FEMALE">Mujer</option>
-    <option value="OTHER">Otro</option>
-  </select>
+  <app-select formControlName="gender" labelText="Género" [options]="[
+    { label: 'Hombre', value: 'MALE' },
+    { label: 'Mujer', value: 'FEMALE' },
+    { label: 'Otro', value: 'OTHER' }
+  ]" />
 
   <app-input labelText="Edad" formControlName="age" type="number" />
 

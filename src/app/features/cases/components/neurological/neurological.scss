@@ -1,16 +1,17 @@
+.cincinnati {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
 .section {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  gap: 25px;
-  padding: 18px;
+  gap: 15px;
+}
 
+@media (max-width: 768px) {
   .cincinnati {
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
-  }
-
-  label {
+    grid-template-columns: 1fr;
   }
 }

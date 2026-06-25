@@ -1,23 +1,10 @@
 <div class="section" [formGroup]="group">
   <div class="cincinnati" formGroupName="cincinnati">
-    <label>Facial </label>
-    <select formControlName="facialDroop">
-      <option value="NORMAL">Normal</option>
-      <option value="ABNORMAL">Anormal</option>
-    </select>
+    <app-select formControlName="facialDroop" labelText="Facial" [options]="cincinnatiOptions" />
 
-    <label>Brazo</label>
-    <select formControlName="armDrift">
-      <option value="NORMAL">Normal</option>
-      <option value="ABNORMAL">Anormal</option>
-    </select>
+    <app-select formControlName="armDrift" labelText="Brazo" [options]="cincinnatiOptions" />
 
-    <label>Habla</label>
-    <select formControlName="speech">
-      <option value="NORMAL">Normal</option>
-      <option value="ABNORMAL">Anormal</option>
-    </select>
+    <app-select formControlName="speech" labelText="Habla" [options]="cincinnatiOptions" />
   </div>
-
-  <app-input labelText="Glasgow" formControlName="glasgow" />
+  <app-input labelText="Glasgow" formControlName="glasgow" type="number" />
 </div>
