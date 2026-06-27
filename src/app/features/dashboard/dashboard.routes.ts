@@ -1,6 +1,4 @@
 import { Routes } from '@angular/router';
-import { casesRoutes } from '../cases/cases.routes';
-import { authGuard } from '../../core/guard/auth-guard';
 import { roleGuard } from '../../core/guard/role-guard';
 import { UserRole } from '../../core/models/user-role';
 
