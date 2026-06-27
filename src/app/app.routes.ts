@@ -1,10 +1,24 @@
 import { Routes } from '@angular/router';
-import { authRoutes } from './features/auth/auth.routes';
-import { dashboardRoutes } from './features/dashboard/dashboard.routes';
-import { homeRoute } from './features/home/home.routes';
+import { guestGuard } from './core/guard/guest-guard';
+import { authGuard } from './core/guard/auth-guard';
 
 export const routes: Routes = [
-  { path: 'auth', children: authRoutes },
-  { path: 'home', children: homeRoute },
-  { path: 'dashboard', children: dashboardRoutes },
+  {
+    path: '',
+    canActivate: [guestGuard],
+    loadChildren: () => import('./features/home/home.routes').then((e) => e.homeRoute),
+  },
+
+  {
+    path: 'auth',
+    canActivate: [guestGuard],
+    loadChildren: () => import('./features/auth/auth.routes').then((e) => e.authRoutes),
+  },
+
+  {
+    path: 'dashboard',
+    canActivate: [authGuard],
+    loadChildren: () =>
+      import('./features/dashboard/dashboard.routes').then((e) => e.dashboardRoutes),
+  },
 ];

@@ -26,9 +26,8 @@ export class AuthComponent {
   onLogin(): void {
     this.loginError = '';
     this.registerError = '';
-  
-    if (this.loginForm.invalid) return;
 
+    if (this.loginForm.invalid) return;
 
     const v = this.loginForm.getRawValue();
 
@@ -64,7 +63,6 @@ export class AuthComponent {
     this.loginError = '';
     this.registerError = '';
     if (this.registerForm.invalid) return;
-
 
     const v = this.registerForm.getRawValue();
 

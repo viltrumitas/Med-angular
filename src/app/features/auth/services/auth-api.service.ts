@@ -22,7 +22,11 @@ export class AuthApi {
     );
   }
 
-  register(userData: RegisterModel): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/auth/register`, userData);
+  register(data: RegisterModel): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.apiUrl}/auth/register`, data).pipe(
+      tap(({ access_token }) => {
+        this.authService.setToken(access_token);
+      }),
+    );
   }
 }
