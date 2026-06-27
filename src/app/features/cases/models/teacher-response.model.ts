@@ -1,4 +1,4 @@
-export type UserRole = 'TEACHER' | 'STUDENT' | 'ADMIN';
+import { UserRole } from '../../../core/models/user-role';
 
 export interface TeacherModel {
   id: string;

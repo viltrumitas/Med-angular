@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { ButtonComponent } from '../../shared/components/button/button';
 import { InputComponent } from '../../shared/components/input/input';
 import { AuthApi } from './services/auth-api.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { LoginModel } from './models/login.model';
 import { RegisterModel } from './models/register.model';
 import { createLoginForm, createRegisterForm } from './forms/auth.forms';
@@ -17,7 +17,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 })
 export class AuthComponent {
   private readonly authService = inject(AuthApi);
+  private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+
   loginForm = createLoginForm();
   registerForm = createRegisterForm();
   loginError = '';
@@ -26,6 +28,7 @@ export class AuthComponent {
   onLogin(): void {
     this.loginError = '';
     this.registerError = '';
+    const returnUrl = this.route.snapshot.queryParams['returnUrl'] ?? '/dashboard';
 
     if (this.loginForm.invalid) return;
 
