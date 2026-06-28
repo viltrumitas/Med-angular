@@ -17,11 +17,11 @@ export const TEACHER_MENU: SidebarItem[] = [
   },
   {
     name: 'Actividades',
-    path: '/dashboard/teacher',
+    path: '/dashboard/teacher/assignments',
     icon: 'clipboard-plus',
     children: [
-      { name: 'Nueva Actividad', path: '' },
-      { name: 'Mis Actividades', path: '' },
+      { name: 'Nueva Actividad', path: '/dashboard/teacher/assignments/crear-assignment' },
+      { name: 'Mis Actividades', path: '/dashboard/teacher/assignments' },
     ],
   },
   {

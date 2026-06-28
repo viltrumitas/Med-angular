@@ -1,4 +1,5 @@
-import { TeacherModel } from "../../cases/models/teacher-response.model";
+import { TeacherModel } from "../../cases/dto/teacher-response.dto";
+
 
 export interface Assignment {
   id: string;

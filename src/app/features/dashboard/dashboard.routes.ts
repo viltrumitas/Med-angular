@@ -17,6 +17,10 @@ export const dashboardRoutes: Routes = [
             path: 'cases',
             loadChildren: () => import('../cases/cases.routes').then((e) => e.casesRoutes),
           },
+          {
+            path: 'assignments',
+            loadChildren: () => import('../assignments/assignments.routes').then((e) => e.assignmentsRoutes),
+          },
         ],
       },
 
