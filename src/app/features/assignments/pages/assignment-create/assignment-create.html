@@ -1,0 +1,44 @@
+<form [formGroup]="assignmentForm" (ngSubmit)="submitAssignment()">
+
+  <div>
+    <app-input
+      formControlName="title"
+      type="text"
+      placeHolderText="Ej. Actividad 1"
+      labelText="Título"
+    />
+
+    @if (
+      assignmentForm.controls.title.invalid &&
+      assignmentForm.controls.title.touched
+    ) {
+      <small>El título es obligatorio.</small>
+    }
+  </div>
+
+  <div>
+    <app-text-area
+      formControlName="description"
+      labelText="Descripción"
+      placeHolderText="Descripción de la actividad"
+    />
+  </div>
+
+  <app-button
+    type="submit"
+    text="Crear actividad"
+  />
+
+</form>
+
+@if (createdAssignmentId) {
+
+  <hr />
+
+  <app-button
+    type="button"
+    text="Publicar actividad"
+    (clicked)="publishAssignment()"
+  />
+
+}
