@@ -124,8 +124,15 @@
         </section>
       </main>
     </article>
-  }
 
-  <app-button text="Publicar Caso" type="button" (clicked)="publishCase()" />
-  <app-button text="Editar Caso" type="button" (clicked)="editCase()" />
+    <div class="actions-container">
+      <app-button
+        text="Publicar Caso"
+        variant="secondary"
+        type="button"
+        (clicked)="publishCase()"
+      />
+      <app-button text="Editar Caso" variant="secondary" type="button" (clicked)="editCase()" />
+    </div>
+  }
 </div>

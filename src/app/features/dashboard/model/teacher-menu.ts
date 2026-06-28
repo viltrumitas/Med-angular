@@ -48,7 +48,7 @@ export const TEACHER_MENU: SidebarItem[] = [
   },
   {
     name: 'Cerrar Sesion',
-    path: '/dashboard',
+    action: 'logout',
     icon: 'log-out',
   },
 ];

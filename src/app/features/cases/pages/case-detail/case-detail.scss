@@ -7,8 +7,9 @@ $border-color: rgba(226, 232, 240, 0.8);
 
 .case-container {
   display: flex;
+  flex-direction: column;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
   min-height: 100vh;
   padding: 3rem 2rem; /* Un poco más de espacio exterior */
   font-family: inherit;
@@ -233,6 +234,15 @@ $border-color: rgba(226, 232, 240, 0.8);
   border-top-color: $teal-primary;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
+}
+
+.actions-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: 3rem;
 }
 
 @keyframes spin {

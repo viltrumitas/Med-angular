@@ -2,6 +2,7 @@ import { AfterViewInit, Component, effect, inject, input, signal } from '@angula
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { createIcons, icons } from 'lucide';
 import { SidebarItem } from '../../model/menu.types';
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -11,16 +12,16 @@ import { SidebarItem } from '../../model/menu.types';
   styleUrl: './sidebar.scss',
 })
 export class Sidebar implements AfterViewInit {
+  private readonly aurhService = inject(AuthService);
+  private readonly router = inject(Router);
+
   collapsed = signal(true);
   items = input.required<SidebarItem[]>();
   activeSubmenu = signal<SidebarItem | null>(null);
   submenuPosition = signal<{ x: number; y: number } | null>(null);
+
   private renderIcons() {
     createIcons({ icons });
-  }
-
-  ngAfterViewInit() {
-    this.renderIcons();
   }
 
   constructor() {
@@ -28,6 +29,17 @@ export class Sidebar implements AfterViewInit {
       this.items();
       queueMicrotask(() => this.renderIcons());
     });
+  }
+
+  handleAction(action: string): void {
+    if (action === 'logout') {
+      this.aurhService.removeToken();
+      this.router.navigate(['/auth']);
+    }
+  }
+
+  ngAfterViewInit() {
+    this.renderIcons();
   }
 
   toggle(open: boolean) {

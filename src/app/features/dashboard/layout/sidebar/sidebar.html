@@ -19,6 +19,15 @@
     @for (item of items(); track item.name) {
       @if (item.separator) {
         <div class="divider" aria-hidden="true"></div>
+      } @else if (item.action) {
+        <a class="item" (click)="handleAction(item.action)">
+          @if (item.icon) {
+            <i class="icon" [attr.data-lucide]="item.icon" aria-hidden="true"></i>
+          }
+          @if (collapsed()) {
+            <span class="label">{{ item.name }}</span>
+          }
+        </a>
       } @else {
         <div class="menu-item-wrapper">
           <a

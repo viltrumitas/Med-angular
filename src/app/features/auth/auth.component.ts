@@ -2,11 +2,12 @@ import { Component, inject } from '@angular/core';
 import { ButtonComponent } from '../../shared/components/button/button';
 import { InputComponent } from '../../shared/components/input/input';
 import { AuthApi } from './services/auth-api.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { LoginModel } from './models/login.model';
 import { RegisterModel } from './models/register.model';
 import { createLoginForm, createRegisterForm } from './forms/auth.forms';
 import { ReactiveFormsModule } from '@angular/forms';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -16,8 +17,8 @@ import { ReactiveFormsModule } from '@angular/forms';
   styleUrl: './auth.component.scss',
 })
 export class AuthComponent {
-  private readonly authService = inject(AuthApi);
-  private readonly route = inject(ActivatedRoute);
+  private readonly authApi = inject(AuthApi);
+  private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
 
   loginForm = createLoginForm();
@@ -28,7 +29,6 @@ export class AuthComponent {
   onLogin(): void {
     this.loginError = '';
     this.registerError = '';
-    const returnUrl = this.route.snapshot.queryParams['returnUrl'] ?? '/dashboard';
 
     if (this.loginForm.invalid) return;
 
@@ -39,7 +39,7 @@ export class AuthComponent {
       password: v.password,
     };
 
-    this.authService.login(data).subscribe({
+    this.authApi.login(data).subscribe({
       next: (res) => {
         console.log('Incio de sasion exitoso', res.user);
         this.router.navigate(['/dashboard']);
@@ -76,7 +76,7 @@ export class AuthComponent {
       password: v.password,
     };
 
-    this.authService.register(data).subscribe({
+    this.authApi.register(data).subscribe({
       next: (res) => {
         console.log('Usuario creado', res);
         this.router.navigate(['/dashboard']);
@@ -97,6 +97,11 @@ export class AuthComponent {
         this.registerError = err.message || 'Error desconocido';
       },
     });
+  }
+
+  logOut(): void {
+    this.authService.removeToken();
+    this.router.navigate(['/auth']);
   }
 
   // ESTO ES DE LA ANIMACION

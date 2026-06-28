@@ -6,4 +6,5 @@ export interface SidebarItem {
   icon?: string;
   children?: SidebarItem[];
   separator?: boolean;
+  action?: 'logout';
 }

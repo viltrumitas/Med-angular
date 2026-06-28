@@ -1,49 +1,63 @@
-$azul-medico-light: #2575fc;
-$azul-medico-dark: #1a56db;
-$azul-borde: rgba(15, 64, 175, 0.4);
-$blanco-cristal: rgba(255, 255, 255, 0.2);
-
+$teal-primary: #0d9488;
+$teal-hover: #11a89a;
+$bg-glass: rgba(255, 255, 255, 0.7);
+$border-glass: rgba(255, 255, 255, 0.3);
 
 :host {
-    --primary: #1769e0;
-    --primary-dark: #1152b5;
+  --primary: #1769e0;
+  --primary-dark: #1152b5;
+  --btn-height: 52px;
+  --border-radius: 12px;
 }
 
 .btn {
-    min-height: 52px;
-    width: 100%;
-    border: 0;
-    border-radius: 8px;
-    background: rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(20px);
-    color: #000;
-    font-size: 1rem;
-    font-weight: 900;
-    cursor: pointer;
-    box-shadow: 0 12px 26px rgba(0, 0, 0, .2);
-    transition: transform .2s ease, box-shadow .2s ease;
+  min-height: 52px;
+  width: 100%;
+  border: 0;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(20px);
+  color: #000;
+  font-size: 1rem;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.2);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 
-    &:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 16px 32px rgba(0, 0, 0, .26);
-    }
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.26);
+  }
 
-    &:focus-visible {
-        outline: 4px solid rgba(23, 105, 224, .18);
-        outline-offset: 3px;
-    }
-
+  &:focus-visible {
+    outline: 4px solid rgba(23, 105, 224, 0.18);
+    outline-offset: 3px;
+  }
 }
 
 .secondary {
-    width: 160px;
-    height: 46px;
-    background: rgba(255, 255, 255, .05);
-    border: 1px solid #fff;
-    box-shadow: none;
-    color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--btn-height);
+  padding: 0 1.5rem;
+  border: 1px solid $border-glass;
+  border-radius: var(--border-radius);
 
-    &:hover {
-        background: none;
-    }
+  // Gradiente sutil para darle volumen profesional
+  background: linear-gradient(135deg, $teal-primary, #0f766e);
+  color: white;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(13, 148, 136, 0.2);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:hover {
+    background: $teal-hover;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(13, 148, 136, 0.35);
+  }
 }

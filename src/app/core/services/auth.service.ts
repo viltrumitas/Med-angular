@@ -6,8 +6,8 @@ import { UserRole } from '../models/user-role.enum';
 export class AuthService {
   private readonly router = inject(Router);
 
-  private readonly _token = signal<string | null>(localStorage.getItem('token'));
-  private readonly _role = signal<UserRole | null>(this.decodeRole(this.getStoredToken()));
+  private readonly _token = signal<string | null>(this.getStoredToken());
+  private readonly _role = signal<UserRole | null>(this.decodeRole(this._token()));
 
   readonly tokeValue = this._token.asReadonly();
   readonly role = this._role.asReadonly();
@@ -23,7 +23,7 @@ export class AuthService {
     localStorage.removeItem('token');
     this._token.set(null);
     this._role.set(null);
-    this.router.navigate(['/auth']);
+    // this.router.navigate(['/auth']);
   }
 
   private getStoredToken(): string | null {
