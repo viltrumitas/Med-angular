@@ -1,22 +1,27 @@
 import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { GetCasesApi } from '../../services/get-cases-api.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CaseResponseDto } from '../../dto/case-response.dto';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { CasesApi } from '../../services/cases-api.service';
+import { ButtonComponent } from '../../../../shared/components/button/button';
 
 @Component({
   selector: 'app-case-detail',
-  imports: [],
+  imports: [ButtonComponent],
   templateUrl: './case-detail.html',
   styleUrl: './case-detail.scss',
 })
 export class CaseDetail implements OnInit {
-  private readonly caseService = inject(GetCasesApi);
+  private readonly getCaseService = inject(GetCasesApi);
+  private readonly casesApi = inject(CasesApi);
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
 
   case = signal<CaseResponseDto | null>(null);
   isLoading = signal(false);
+  isPublishing = signal(false);
   error = signal<string | null>(null);
 
   ngOnInit() {
@@ -26,7 +31,7 @@ export class CaseDetail implements OnInit {
 
     this.isLoading.set(true);
 
-    this.caseService
+    this.getCaseService
       .getCaseById(id)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
@@ -40,5 +45,35 @@ export class CaseDetail implements OnInit {
           this.isLoading.set(false);
         },
       });
+  }
+
+  publishCase() {
+    const id = this.case()?.id;
+    if (!id) return;
+
+    this.isPublishing.set(true);
+
+    this.casesApi
+      .publishCase(id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (response) => {
+          this.case.set(response);
+          this.isPublishing.set(false);
+        },
+        error: (err) => {
+          console.error('[CaseDetail] Error al publicar: ', err);
+          this.isLoading.set(false);
+        },
+      });
+  }
+
+  editCase() {
+    const id = this.case()?.id;
+    if (!id) return;
+
+    this.router.navigate(['/dashboard/teacher/cases/crear-caso'], {
+      queryParams: { id },
+    });
   }
 }

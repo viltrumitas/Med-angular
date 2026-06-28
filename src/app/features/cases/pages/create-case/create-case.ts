@@ -10,6 +10,7 @@ import { Feedback } from '../../components/feedback/feedback';
 import { CasesApi } from '../../services/cases-api.service';
 import { mapCreateCase } from '../../mappers/create-case.mapper';
 import { MedicalArea } from '../../components/medical-area/medical-area';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-create-case',
@@ -28,8 +29,12 @@ import { MedicalArea } from '../../components/medical-area/medical-area';
 })
 export class CreateCase {
   caseForm = createCaseForm();
-  caseService = inject(CasesApi);
-  createdCaseId: string | null = null;
+
+  private readonly caseService = inject(CasesApi);
+  private readonly reouter = inject(Router);
+
+  private createdCaseId: string | null = null;
+
   submitCase() {
     if (this.caseForm.invalid) {
       this.caseForm.markAllAsTouched();
@@ -42,25 +47,10 @@ export class CreateCase {
       next: (res: any) => {
         console.log('Caso Creado', res);
         this.createdCaseId = res.id;
+        this.reouter.navigate(['/dashboard/teacher/cases']);
       },
       error: (err) => {
         console.log('Error', err);
-      },
-    });
-  }
-
-  publishCase() {
-    if (!this.createdCaseId) {
-      console.warn('Primero debes crear el caso');
-      return;
-    }
-
-    this.caseService.publishCase(this.createdCaseId).subscribe({
-      next: () => {
-        console.log('Caso publicado correctamente');
-      },
-      error: (err) => {
-        console.log('Error al publicar', err);
       },
     });
   }
