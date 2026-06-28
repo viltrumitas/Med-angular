@@ -1,1 +1,28 @@
-<p>assignment-card works!</p>
+<article class="assignment-card">
+  <h2>{{ assignment.title }}</h2>
+
+  <p>
+    <strong>Docente:</strong>
+    {{ assignment.teacher.firstName }}
+    {{ assignment.teacher.lastName }}
+  </p>
+
+  <p>
+    <strong>Estado:</strong>
+    @if (assignment.isPublished) {
+      <span>Publicada</span>
+    } @else {
+      <span>Borrador</span>
+    }
+  </p>
+
+  <p>
+    <strong>Creada:</strong>
+    {{ assignment.createdAt | date:'shortDate' }}
+  </p>
+
+  <app-button 
+    text="Ver actividad"
+    (clicked)="open()" 
+  />
+</article>

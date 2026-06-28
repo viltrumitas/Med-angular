@@ -1,1 +1,22 @@
-<p>assignment-list works!</p>
+<h1>Mis actividades</h1>
+
+@if (assignments.length === 0) {
+
+  <p>No has creado actividades.</p>
+
+} @else {
+
+  <div class="cards">
+
+    @for (assignment of assignments; track assignment.id) {
+
+      <app-assignment-card
+        [assignment]="assignment"
+        (viewAssignment)="openAssignment($event)"
+      />
+
+    }
+
+  </div>
+
+}
