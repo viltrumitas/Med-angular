@@ -1,0 +1,74 @@
+<aside
+  class="sidebar glass-sidebar"
+  [class.closed]="collapsed()"
+  (mouseenter)="toggle(true)"
+  (mouseleave)="toggle(false)"
+>
+  <div class="header">
+    <button type="button" class="org">
+      <div class="avatar">M</div>
+
+      @if (!collapsed()) {
+        <span class="brand">ed<span class="accent">Land</span></span>
+        <i class="chevron" data-lucide="chevrons-up-down" aria-hidden="true"></i>
+      }
+    </button>
+  </div>
+
+  <nav class="nav">
+    @for (item of items(); track item.name) {
+      @if (item.separator) {
+        <div class="divider" aria-hidden="true"></div>
+      } @else {
+        <div class="menu-item-wrapper">
+          <a
+            class="item"
+            [routerLink]="item.path"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+          >
+            @if (item.icon) {
+              <i class="icon" [attr.data-lucide]="item.icon" aria-hidden="true"></i>
+            }
+
+            @if (!collapsed()) {
+              <span class="label">
+                {{ item.name }}
+              </span>
+            }
+
+            @if (item.children?.length && !collapsed()) {
+              <button
+                type="button"
+                class="submenu-button"
+                (click)="openSubmenu($event, item)"
+                aria-label="Abrir submenú"
+              >
+                <i data-lucide="chevron-right" aria-hidden="true"></i>
+              </button>
+            }
+          </a>
+        </div>
+      }
+    }
+  </nav>
+
+  @if (activeSubmenu()) {
+    <div
+      class="submenu floating-menu"
+      [style.top.px]="submenuPosition()?.y"
+      [style.left.px]="submenuPosition()?.x"
+      (mouseleave)="closeSubmenu()"
+    >
+      <div class="submenu-title">{{ activeSubmenu()?.name }}</div>
+
+      <div class="submenu-content">
+        @for (child of activeSubmenu()?.children; track child.name) {
+          <a class="submenu-item" [routerLink]="child.path" routerLinkActive="active-sub">
+            {{ child.name }}
+          </a>
+        }
+      </div>
+    </div>
+  }
+</aside>

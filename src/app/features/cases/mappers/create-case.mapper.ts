@@ -1,6 +1,5 @@
 import { CaseFormValue } from '../forms/case.form';
 import { CreateCaseModel } from '../models/create-case.model';
-import { Gender } from '../models/patient.model';
 
 export function mapCreateCase(form: CaseFormValue): CreateCaseModel {
   return {

@@ -4,7 +4,6 @@ import { GeneralSection } from '../../components/general-section/general-section
 import { createCaseForm } from '../../forms/case.form';
 import { PatientSection } from '../../components/patient-section/patient-section';
 import { Findings } from '../../components/findings/findings';
-import { ButtonComponent } from '../../../../shared/components/button/button';
 import { VitalSigns } from '../../components/vital-signs/vital-signs';
 import { Neurological } from '../../components/neurological/neurological';
 import { Feedback } from '../../components/feedback/feedback';
@@ -60,7 +59,7 @@ export class CreateCase {
       },
       error: (err) => {
         console.log('Error al publicar', err);
-      }
-    })
+      },
+    });
   }
 }

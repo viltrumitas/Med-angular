@@ -44,15 +44,4 @@ export class AuthService {
       return null;
     }
   }
-
-  // readonly userId = computed(() => {
-  //   const token = this._token();
-  //   if (!token) return null;
-  //   try {
-  //     const payload = JSON.parse(atob(token.split('.')[1]));
-  //     return payload?.sub ?? null;
-  //   } catch {
-  //     return null;
-  //   }
-  // });
 }

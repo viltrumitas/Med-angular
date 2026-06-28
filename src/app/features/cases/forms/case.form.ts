@@ -1,4 +1,4 @@
-import { FormGroup, FormControl, Validators, NonNullableFormBuilder } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Gender } from '../models/patient.model';
 
 export function createCaseForm() {
@@ -75,11 +75,10 @@ export function createCaseForm() {
 }
 
 export type CaseForm = ReturnType<typeof createCaseForm>;
+export type CaseFormValue = ReturnType<CaseForm['getRawValue']>;
 
 export type GeneralForm = CaseForm['controls']['general'];
 export type PatientForm = CaseForm['controls']['patient'];
 export type FindingsForm = CaseForm['controls']['findings'];
 export type VitalSignsForm = CaseForm['controls']['vitalSigns'];
 export type NeurologicalForm = CaseForm['controls']['neurological'];
-
-export type CaseFormValue = ReturnType<CaseForm['getRawValue']>;

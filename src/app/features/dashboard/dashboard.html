@@ -1,3 +1,7 @@
 <div class="layout">
-  <app-sidebar />
+  <app-sidebar [items]="menu()" />
+
+  <main>
+    <router-outlet></router-outlet>
+  </main>
 </div>

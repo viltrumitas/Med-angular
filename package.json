@@ -24,6 +24,7 @@
     "boxicons": "^2.1.4",
     "lucide": "^1.21.0",
     "rxjs": "~7.8.0",
+    "tailwind": "^4.0.0",
     "tslib": "^2.3.0"
   },
   "devDependencies": {
