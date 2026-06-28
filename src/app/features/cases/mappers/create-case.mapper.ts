@@ -1,6 +1,5 @@
 import { CaseFormValue } from '../forms/case.form';
-import { CreateCaseModel } from '../models/create-case.model';
-
+import { CreateCaseModel } from '../dto/create-case.dto';
 export function mapCreateCase(form: CaseFormValue): CreateCaseModel {
   return {
     general: {
@@ -46,6 +45,8 @@ export function mapCreateCase(form: CaseFormValue): CreateCaseModel {
 
       glasgow: form.neurological.glasgow ? Number(form.neurological.glasgow) : null,
     },
+
+    area: form.medicalArea.area,
 
     publishCase: {
       isPublished: form.publishCase.isPublished,

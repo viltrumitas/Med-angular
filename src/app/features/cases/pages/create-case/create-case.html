@@ -5,7 +5,6 @@
   </div>
 
   <form [formGroup]="caseForm" (ngSubmit)="submitCase()">
-
     <div class="section-card">
       <h2>Informacion General</h2>
       <app-general-section [group]="caseForm.controls.general" />
@@ -32,18 +31,18 @@
     </div>
 
     <div class="section-card">
+      <h2>Area</h2>
+      <app-medical-area [group]="caseForm.controls.medicalArea" />
+    </div>
+
+    <div class="section-card">
       <h2>Retroalimentacion</h2>
       <app-feedback [control]="caseForm.controls.feedback" />
     </div>
 
     <div class="actions">
-      <button class="btn btn-secondary" type="button" (click)="submitCase()">
-        Guardar Caso
-      </button>
-      <button class="btn btn-primary" type="button" (click)="publishCase()">
-        Publicar Caso
-      </button>
+      <button class="btn btn-secondary" type="button" (click)="submitCase()">Guardar Caso</button>
+      <button class="btn btn-primary" type="button" (click)="publishCase()">Publicar Caso</button>
     </div>
-
   </form>
 </div>

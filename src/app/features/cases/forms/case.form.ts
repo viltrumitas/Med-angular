@@ -1,5 +1,6 @@
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Gender } from '../models/patient.model';
+import { Area } from '../models/area.model';
 
 export function createCaseForm() {
   return new FormGroup({
@@ -64,6 +65,13 @@ export function createCaseForm() {
       glasgow: new FormControl<number | null>(null),
     }),
 
+    medicalArea: new FormGroup({
+      area: new FormControl<Area>('PEDIATRICS', {
+        nonNullable: true,
+        validators: Validators.required,
+      }),
+    }),
+
     publishCase: new FormGroup({
       isPublished: new FormControl<boolean>(false, {
         nonNullable: true,
@@ -82,3 +90,4 @@ export type PatientForm = CaseForm['controls']['patient'];
 export type FindingsForm = CaseForm['controls']['findings'];
 export type VitalSignsForm = CaseForm['controls']['vitalSigns'];
 export type NeurologicalForm = CaseForm['controls']['neurological'];
+export type MedicalAreaForm = CaseForm['controls']['medicalArea'];

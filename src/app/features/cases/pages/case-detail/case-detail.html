@@ -1,1 +1,128 @@
-<p>case-detail works!</p>
+<div class="case-container">
+  @if (isLoading()) {
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>Cargando caso clínico...</p>
+    </div>
+  } @else if (error()) {
+    <div class="error-state">
+      <span class="error-icon">⚠️</span>
+      <p class="error">{{ error() }}</p>
+    </div>
+  } @else if (case(); as item) {
+    <article class="case-card">
+      <header class="case-header">
+        <div class="meta-top">
+          <span class="badge">{{ item.area }}</span>
+          <span class="status-badge" [class.published]="item.isPublished">
+            {{ item.isPublished ? 'Publicado' : 'Borrador' }}
+          </span>
+        </div>
+        <h1>{{ item.title }}</h1>
+        <p class="date-text">Creado el: {{ item.createdAt }}</p>
+      </header>
+
+      <hr class="divider" />
+
+      <main class="case-body">
+        <section class="info-section highlight-box">
+          <div class="field-group">
+            <label>Motivo de Consulta</label>
+            <p>{{ item.consult }}</p>
+          </div>
+          <div class="field-group">
+            <label>Escenario</label>
+            <p>{{ item.scenery }}</p>
+          </div>
+        </section>
+
+        <section class="info-section">
+          <h2 class="section-title">Datos del Paciente</h2>
+          <div class="grid-2">
+            <div class="field-group">
+              <label>Nombre del Paciente</label>
+              <p class="patient-name">{{ item.patientName }}</p>
+            </div>
+            <div class="field-group">
+              <label>Género</label>
+              <p>{{ item.gender }}</p>
+            </div>
+            <div class="field-group">
+              <label>Edad</label>
+              <p>{{ item.age }}</p>
+            </div>
+          </div>
+          <div class="field-group mt-1">
+            <label>Antecedentes Médicos</label>
+            <p>{{ item.medicalHistory }}</p>
+          </div>
+          <div class="field-group mt-1">
+            <label>Medicamentos Actuales</label>
+            <p>{{ item.medications }}</p>
+          </div>
+        </section>
+
+        <hr class="divider-light" />
+
+        <section class="info-section">
+          <h2 class="section-title">Signos Vitales</h2>
+          <div class="vital-signs-grid">
+            <div class="vital-card">
+              <label>TA</label>
+              <p>{{ item.ta }}</p>
+            </div>
+            <div class="vital-card">
+              <label>FC</label>
+              <p>{{ item.fc }}</p>
+            </div>
+            <div class="vital-card">
+              <label>FR</label>
+              <p>{{ item.fr }}</p>
+            </div>
+            <div class="vital-card">
+              <label>SpO2</label>
+              <p>{{ item.spo2 }}</p>
+            </div>
+            <div class="vital-card">
+              <label>Glucosa</label>
+              <p>{{ item.glucose }}</p>
+            </div>
+            <div class="vital-card">
+              <label>Temp.</label>
+              <p>{{ item.temperature }}</p>
+            </div>
+            <div class="vital-card">
+              <label>Llenado Capilar</label>
+              <p>{{ item.capillaryFiller }}</p>
+            </div>
+          </div>
+        </section>
+
+        <hr class="divider-light" />
+
+        <section class="info-section">
+          <h2 class="section-title">Evaluación Neurológica</h2>
+          <div class="grid-2">
+            <div class="field-group">
+              <label>Escala de Cincinnati</label>
+              <p>{{ item.cincinnati }}</p>
+            </div>
+            <div class="field-group">
+              <label>Escala de Glasgow</label>
+              <p>{{ item.glasgow }}</p>
+            </div>
+          </div>
+        </section>
+
+        <hr class="divider-light" />
+
+        <section class="info-section">
+          <h2 class="section-title">Hallazgos Generales</h2>
+          <div class="field-group">
+            <p class="text-block">{{ item.generalFindings }}</p>
+          </div>
+        </section>
+      </main>
+    </article>
+  }
+</div>

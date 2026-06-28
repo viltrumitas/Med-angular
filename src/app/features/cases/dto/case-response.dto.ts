@@ -1,9 +1,9 @@
-import { TeacherModel } from './teacher-response.model';
-import { CincinnatiModel } from './cincinnati.model';
+import { TeacherModel } from './teacher-response.dto';
+import { CincinnatiModel } from '../models/cincinnati.model';
+import { Gender } from '../models/patient.model';
+import { Area } from '../models/area.model';
 
-export type Gender = 'MALE' | 'FEMALE' | 'OTHER';
-
-export interface CaseModel {
+export interface CaseResponseDto {
   id: string;
 
   title: string | null;
@@ -33,6 +33,8 @@ export interface CaseModel {
   cincinnati: CincinnatiModel | null;
 
   glasgow: number | null;
+
+  area: Area;
 
   isPublished: boolean | null;
 

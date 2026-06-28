@@ -1,6 +1,6 @@
 import { computed, inject, Service, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { UserRole } from '../models/user-role';
+import { UserRole } from '../models/user-role.enum';
 
 @Service()
 export class AuthService {

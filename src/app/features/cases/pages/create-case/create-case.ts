@@ -7,8 +7,9 @@ import { Findings } from '../../components/findings/findings';
 import { VitalSigns } from '../../components/vital-signs/vital-signs';
 import { Neurological } from '../../components/neurological/neurological';
 import { Feedback } from '../../components/feedback/feedback';
-import { CasesApi } from '../../services/cases-api';
+import { CasesApi } from '../../services/cases-api.service';
 import { mapCreateCase } from '../../mappers/create-case.mapper';
+import { MedicalArea } from '../../components/medical-area/medical-area';
 
 @Component({
   selector: 'app-create-case',
@@ -20,6 +21,7 @@ import { mapCreateCase } from '../../mappers/create-case.mapper';
     VitalSigns,
     Neurological,
     Feedback,
+    MedicalArea,
   ],
   templateUrl: './create-case.html',
   styleUrl: './create-case.scss',

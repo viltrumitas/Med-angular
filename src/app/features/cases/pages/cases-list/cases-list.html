@@ -1,1 +1,38 @@
-<p>cases-list works!</p>
+<div class="cases-container">
+  @if (isLoading()) {
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>Cargando casos clínicos...</p>
+    </div>
+  } @else if (error()) {
+    <div class="error-state">
+      <span class="error-icon">⚠️</span>
+      <p class="error">{{ error() }}</p>
+    </div>
+  } @else if (cases().length === 0) {
+    <div class="empty-state">
+      <span class="empty-icon">📁</span>
+      <p>No tienes casos creados aún.</p>
+    </div>
+  } @else {
+    <ul class="cases-list">
+      @for (caso of cases(); track caso.id) {
+        <li class="case-item">
+          <a [routerLink]="['/dashboard/teacher/cases', caso.id]" class="case-link">
+            <div class="case-info">
+              <strong class="case-title">{{ caso.title }}</strong>
+              <span class="case-consult">{{ caso.consult }}</span>
+            </div>
+
+            <div class="case-status-wrapper">
+              <span class="status-badge" [class.published]="caso.isPublished">
+                {{ caso.isPublished ? 'Publicado' : 'Borrador' }}
+              </span>
+              <span class="arrow-indicator">→</span>
+            </div>
+          </a>
+        </li>
+      }
+    </ul>
+  }
+</div>

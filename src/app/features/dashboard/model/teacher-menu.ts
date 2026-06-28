@@ -12,7 +12,7 @@ export const TEACHER_MENU: SidebarItem[] = [
     icon: 'folder',
     children: [
       { name: 'Crear Caso', path: '/dashboard/teacher/cases/crear-caso' },
-      { name: 'Mis Casos', path: '' },
+      { name: 'Mis Casos', path: '/dashboard/teacher/cases' },
     ],
   },
   {
@@ -25,9 +25,13 @@ export const TEACHER_MENU: SidebarItem[] = [
     ],
   },
   {
-    name: 'Revisiones',
+    name: 'Evaluacion',
     path: '/dashboard/teacher',
     icon: 'list-check',
+    children: [
+      { name: 'Mis evaluaciones', path: '' },
+      { name: 'Pendientes', path: '' },
+    ],
   },
   {
     separator: true,

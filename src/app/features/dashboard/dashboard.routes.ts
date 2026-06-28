@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { roleGuard } from '../../core/guard/role-guard';
-import { UserRole } from '../../core/models/user-role';
+import { UserRole } from '../../core/models/user-role.enum';
 
 export const dashboardRoutes: Routes = [
   {

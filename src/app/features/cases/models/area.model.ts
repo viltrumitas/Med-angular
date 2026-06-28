@@ -1,0 +1,1 @@
+export type Area = 'PEDIATRICS' | 'TRAUMA' | 'GYNECO_OBSTETRICS' | 'ADULT_EMERGENCY';
