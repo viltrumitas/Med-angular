@@ -1,0 +1,187 @@
+@if (loading()) {
+
+<p>Cargando actividad...</p>
+
+} @else if (assignment(); as assignment) {
+
+<div class="assignment-detail">
+
+  <section class="hero">
+
+    <div>
+
+      <h1>{{ assignment.title }}</h1>
+
+      @if (assignment.description) {
+
+      <p class="description">
+        {{ assignment.description }}
+      </p>
+
+      }
+
+    </div>
+
+    <div>
+
+      @if (assignment.isPublished) {
+
+      <span class="badge published">
+        Publicada
+      </span>
+
+      } @else {
+
+      <span class="badge draft">
+        Borrador
+      </span>
+
+      }
+
+    </div>
+
+  </section>
+
+  <section class="stats">
+
+    <div class="stat-card">
+
+      <h4>Docente</h4>
+
+      <p>
+
+        {{ assignment.teacher.firstName }}
+        {{ assignment.teacher.lastName }}
+
+      </p>
+
+    </div>
+
+    <div class="stat-card">
+
+      <h4>Casos asignados</h4>
+
+      <p>{{ assignment.assignedCases.length }}</p>
+
+    </div>
+
+    <div class="stat-card">
+
+      <h4>Creada</h4>
+
+      <p>{{ assignment.createdAt | date:'short' }}</p>
+
+    </div>
+
+    <div class="stat-card">
+
+      <h4>Actualizada</h4>
+
+      <p>{{ assignment.updatedAt | date:'short' }}</p>
+
+    </div>
+
+  </section>
+
+  <section class="cases">
+
+    <h2>Casos asignados</h2>
+
+    @if (assignment.assignedCases.length === 0) {
+
+    <p>
+      Todavía no existen asignaciones.
+    </p>
+
+    } @else {
+
+    <table>
+
+      <thead>
+
+        <tr>
+
+          <th>Alumno</th>
+
+          <th>Caso clínico</th>
+
+          <th>Estado</th>
+
+          <th>Asignado</th>
+
+        </tr>
+
+      </thead>
+
+      <tbody>
+
+        @for (assigned of assignment.assignedCases; track assigned.id) {
+
+        <tr>
+
+          <td>
+
+            {{ assigned.student.firstName }}
+            {{ assigned.student.lastName }}
+
+          </td>
+
+          <td>
+
+            {{ assigned.case.title }}
+
+          </td>
+
+          <td>
+
+            @if (assigned.submissionId) {
+
+            <span class="completed">
+              Entregado
+            </span>
+
+            } @else {
+
+            <span class="pending">
+              Pendiente
+            </span>
+
+            }
+
+          </td>
+
+          <td>
+
+            {{ assigned.assignedAt | date:'short' }}
+
+          </td>
+
+        </tr>
+
+        }
+
+      </tbody>
+
+    </table>
+
+    }
+
+  </section>
+
+  <section class="actions">
+
+    @if (!assignment.isPublished) {
+
+    <app-button text="Publicar actividad" (clicked)="publish()" />
+
+    }
+
+    <app-button variant="secondary" text="Editar" />
+
+    <app-button variant="danger" text="Eliminar" (clicked)="delete()" />
+
+  </section>
+
+</div>
+
+}

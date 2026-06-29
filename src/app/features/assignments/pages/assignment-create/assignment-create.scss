@@ -1,0 +1,35 @@
+.cases-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.case-card {
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 12px;
+  cursor: pointer;
+  transition: 0.2s ease;
+  background: white;
+}
+
+.case-card:hover {
+  transform: scale(1.02);
+  border-color: #888;
+}
+
+.case-card.selected {
+  border: 2px solid #4f46e5;
+  background: #eef2ff;
+}
+
+.badge {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: #4f46e5;
+  color: white;
+}

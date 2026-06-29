@@ -1,5 +1,27 @@
 <form [formGroup]="assignmentForm" (ngSubmit)="submitAssignment()">
 
+  <div class="cases-container">
+
+    @for (c of cases; track c.id) {
+
+      <div
+        class="case-card"
+        [class.selected]="(assignmentForm.value.caseIds ?? []).includes(c.id)"
+        (click)="toggleCase(c.id)"
+      >
+        <h3>{{ c.title }}</h3>
+        <p>{{ c.patientName }}</p>
+        <small>{{ c.area }}</small>
+
+        @if ((assignmentForm.value.caseIds ?? []).includes(c.id)) {
+          <span class="badge">Seleccionado</span>
+        }
+      </div>
+
+    }
+
+  </div>
+
   <div>
     <app-input
       formControlName="title"
@@ -24,21 +46,6 @@
     />
   </div>
 
-  <app-button
-    type="submit"
-    text="Crear actividad"
-  />
+  <app-button type="submit" text="Crear actividad" />
 
 </form>
-
-@if (createdAssignmentId) {
-
-  <hr />
-
-  <app-button
-    type="button"
-    text="Publicar actividad"
-    (clicked)="publishAssignment()"
-  />
-
-}

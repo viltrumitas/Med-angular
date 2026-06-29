@@ -1,5 +1,5 @@
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Component, inject, OnInit } from '@angular/core';
 
 import { AssignmentCard } from '../../components/assignment-card/assignment-card';
 import { AssignmentApi } from '../../services/assignment-api';
@@ -17,19 +17,24 @@ export class AssignmentList implements OnInit {
   private readonly router = inject(Router);
   private readonly assignmentService = inject(AssignmentApi);
 
-  assignments: AssignmentListItem[] = [];
+  assignments = signal<AssignmentListItem[]>([]);
+  loading = signal<boolean>(false);
 
   ngOnInit() {
     this.loadAssignments();
   }
 
   loadAssignments() {
+    this.loading.set(true);
+
     this.assignmentService.findMyAssignments().subscribe({
       next: (data) => {
-        this.assignments = data;
+        this.assignments.set(data);
+        this.loading.set(false);
       },
       error: (err) => {
         console.error(err);
+        this.loading.set(false);
       },
     });
   }

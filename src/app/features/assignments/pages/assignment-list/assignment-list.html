@@ -1,22 +1,30 @@
-<h1>Mis actividades</h1>
+<div class="page">
 
-@if (assignments.length === 0) {
+  <header class="header">
+    <h1>Mis actividades</h1>
+    <p class="subtitle">Gestiona las actividades creadas para tus estudiantes</p>
+  </header>
 
-  <p>No has creado actividades.</p>
+  @if (loading()) {
+    <div class="state">Cargando actividades...</div>
+  }
 
-} @else {
+  @if (!loading() && assignments().length === 0) {
+    <div class="state empty">
+      <h3>No tienes actividades aún</h3>
+      <p>Crea tu primera actividad para comenzar</p>
+    </div>
+  }
 
-  <div class="cards">
+  @if (!loading() && assignments().length > 0) {
+    <div class="cards">
+      @for (assignment of assignments(); track assignment.id) {
+        <app-assignment-card
+          [assignment]="assignment"
+          (viewAssignment)="openAssignment($event)"
+        />
+      }
+    </div>
+  }
 
-    @for (assignment of assignments; track assignment.id) {
-
-      <app-assignment-card
-        [assignment]="assignment"
-        (viewAssignment)="openAssignment($event)"
-      />
-
-    }
-
-  </div>
-
-}
+</div>

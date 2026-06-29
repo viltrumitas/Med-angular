@@ -11,6 +11,6 @@ export const assignmentsRoutes: Routes = [
   },
   {
     path: ':id',
-    loadComponent: () => import('./pages/assignment-detail/assignment-detail').then((c) => c.AssignmentDetail),
+    loadComponent: () => import('./pages/assignment-detail/assignment-detail').then((c) => c.AssignmentDetailPage),
   },
 ]

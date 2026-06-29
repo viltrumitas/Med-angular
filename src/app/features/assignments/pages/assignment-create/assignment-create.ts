@@ -1,12 +1,14 @@
 import { Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { createAssignmentForm } from '../../forms/create-assignment-form'; 
+import { createAssignmentForm } from '../../forms/create-assignment-form';
 import { mapCreateAssignment } from '../../mappers/create-assignment.mapper';
 import { AssignmentApi } from '../../services/assignment-api';
 import { InputComponent } from "../../../../shared/components/input/input";
 import { TextareaComponent } from "../../../../shared/components/text-area/text-area";
 import { ButtonComponent } from "../../../../shared/components/button/button";
+import { Router } from '@angular/router';
+import { CaseResponseDto } from '../../../cases/dto/case-response.dto';
 
 @Component({
   selector: 'app-assignment-create',
@@ -15,7 +17,7 @@ import { ButtonComponent } from "../../../../shared/components/button/button";
     InputComponent,
     TextareaComponent,
     ButtonComponent
-],
+  ],
   templateUrl: './assignment-create.html',
   styleUrl: './assignment-create.scss',
 })
@@ -23,51 +25,54 @@ export class AssignmentCreate {
 
   assignmentForm = createAssignmentForm();
 
+  cases: CaseResponseDto[] = [];
+
   assignmentService = inject(AssignmentApi);
 
-  createdAssignmentId: string | null = null;
+  private readonly router = inject(Router)
+
+  ngOnInit() {
+    this.assignmentService.findMyPublishedCases().subscribe({
+      next: (data) => {
+        this.cases = data;
+      },
+    });
+  }
+
+  toggleCase(caseId: string) {
+    const current = this.assignmentForm.getRawValue().caseIds;
+
+    const updated = current.includes(caseId)
+      ? current.filter(id => id !== caseId)
+      : [...current, caseId];
+
+    this.assignmentForm.patchValue({
+      caseIds: updated,
+    });
+  }
 
   submitAssignment() {
+    const value = this.assignmentForm.getRawValue();
+
+    if (!value.caseIds || value.caseIds.length === 0) {
+      console.log('Selecciona al menos un caso');
+      return;
+    }
+
     if (this.assignmentForm.invalid) {
       this.assignmentForm.markAllAsTouched();
       return;
     }
 
-    const data = mapCreateAssignment(
-      this.assignmentForm.getRawValue(),
-    );
-
-    console.log('Enviado', data);
+    const data = mapCreateAssignment(value);
 
     this.assignmentService.create(data).subscribe({
-      next: (assignment) => {
-        console.log('Actividad creada', assignment);
-
-        this.createdAssignmentId = assignment.id;
+      next: () => {
+        this.router.navigate(['/dashboard/teacher/assignments'], {
+          replaceUrl: true,
+        });
       },
-
-      error: (err) => {
-        console.log('Error', err);
-      },
+      error: (err) => console.log(err),
     });
-  }
-
-  publishAssignment() {
-    if (!this.createdAssignmentId) {
-      console.warn('Primero debes crear la actividad');
-      return;
-    }
-
-    this.assignmentService
-      .publish(this.createdAssignmentId)
-      .subscribe({
-        next: (assignment) => {
-          console.log('Actividad publicada', assignment);
-        },
-
-        error: (err) => {
-          console.log('Error al publicar', err);
-        },
-      });
   }
 }

@@ -1,9 +1,6 @@
-export interface CreateAssignment {
+export interface AssignmentFormValue {
   title: string;
-
-  description?: string;
-
+  description: string;
   isPublished: boolean;
-
   caseIds: string[];
 }

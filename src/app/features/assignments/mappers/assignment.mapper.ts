@@ -63,10 +63,10 @@ export class AssignmentMapper {
     dto: AssignmentDetailResponseDto,
   ): AssignmentDetail {
     return {
-      ...this.toModel(dto),
+      ...AssignmentMapper.toModel(dto),
 
       assignedCases: dto.assignedCases.map(
-        this.toAssignedCase,
+        AssignmentMapper.toAssignedCase,
       ),
     };
   }

@@ -1,0 +1,234 @@
+.assignment-detail {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* ===========================
+   HERO
+=========================== */
+
+.hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 2rem;
+
+  margin-bottom: 2rem;
+}
+
+.hero h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: .5rem;
+}
+
+.description {
+  color: #6b7280;
+  max-width: 700px;
+  line-height: 1.6;
+}
+
+/* ===========================
+   BADGES
+=========================== */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+
+  padding: .45rem .9rem;
+
+  border-radius: 999px;
+
+  font-weight: 600;
+
+  font-size: .85rem;
+}
+
+.badge.published {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.badge.draft {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+/* ===========================
+   STATS
+=========================== */
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: white;
+
+  border-radius: 14px;
+
+  padding: 1.2rem;
+
+  border: 1px solid #e5e7eb;
+
+  box-shadow: 0 2px 10px rgba(0,0,0,.03);
+}
+
+.stat-card h4 {
+  color: #6b7280;
+  font-size: .9rem;
+  margin-bottom: .5rem;
+}
+
+.stat-card p {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+/* ===========================
+   TABLE
+=========================== */
+
+.cases {
+
+  background: white;
+
+  border-radius: 16px;
+
+  padding: 1.5rem;
+
+  border: 1px solid #e5e7eb;
+
+  box-shadow: 0 2px 10px rgba(0,0,0,.03);
+
+  margin-bottom: 2rem;
+
+}
+
+.cases h2{
+    margin-bottom:1rem;
+}
+
+table {
+
+  width:100%;
+
+  border-collapse: collapse;
+
+}
+
+thead{
+
+  background:#f9fafb;
+
+}
+
+th{
+
+  text-align:left;
+
+  padding:1rem;
+
+  color:#6b7280;
+
+  font-weight:600;
+
+}
+
+td{
+
+  padding:1rem;
+
+  border-top:1px solid #f1f5f9;
+
+}
+
+tbody tr:hover{
+
+  background:#fafafa;
+
+}
+
+/* ===========================
+   STATUS
+=========================== */
+
+.completed{
+
+  color:#15803d;
+
+  font-weight:600;
+
+}
+
+.pending{
+
+  color:#dc2626;
+
+  font-weight:600;
+
+}
+
+/* ===========================
+   ACTIONS
+=========================== */
+
+.actions{
+
+  display:flex;
+
+  justify-content:flex-end;
+
+  gap:1rem;
+
+}
+
+/* ===========================
+   RESPONSIVE
+=========================== */
+
+@media(max-width:900px){
+
+  .hero{
+
+    flex-direction:column;
+
+  }
+
+  .stats{
+
+    grid-template-columns:repeat(2,1fr);
+
+  }
+
+}
+
+@media(max-width:600px){
+
+  .stats{
+
+    grid-template-columns:1fr;
+
+  }
+
+  .actions{
+
+    flex-direction:column;
+
+  }
+
+  table{
+
+    display:block;
+
+    overflow-x:auto;
+
+  }
+
+}

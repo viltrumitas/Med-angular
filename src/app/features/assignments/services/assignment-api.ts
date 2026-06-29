@@ -11,6 +11,7 @@ import { AssignmentResponseDto } from '../dto/assignment-response.dto';
 import { AssignmentListResponseDto } from '../dto/assignment-list-response.dto';
 import { AssignmentDetailResponseDto } from '../dto/assignment-detail-response.dto';
 import { AssignmentMapper } from '../mappers/assignment.mapper';
+import { CaseResponseDto } from '../../cases/dto/case-response.dto';
 
 @Service()
 export class AssignmentApi {
@@ -34,6 +35,12 @@ export class AssignmentApi {
           assignments.map(AssignmentMapper.toListItem),
         ),
       );
+  }
+
+  findMyPublishedCases(): Observable<CaseResponseDto[]> {
+    return this.http.get<CaseResponseDto[]>(
+      `${environment.apiUrl}/assignments/my/published-cases`
+    );
   }
 
   findOne(id: string): Observable<AssignmentDetail> {
