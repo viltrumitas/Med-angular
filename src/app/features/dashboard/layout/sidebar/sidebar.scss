@@ -1,13 +1,39 @@
-// Variables globales para animaciones
-$transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+// ==========================================================================
+// Variables SCSS & Mixins
+// ==========================================================================
+$mobile-bp: 768px;
 $transition-fast: 0.2s ease;
+$transition-sidebar: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
-a,
-button {
-  cursor: pointer;
-  outline: none; // Manejado por :focus-visible
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
+@mixin mobile {
+  @media (max-width: #{$mobile-bp}) {
+    @content;
+  }
+}
+
+@mixin focus-ring {
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: -2px;
+  }
+}
+
+// ==========================================================================
+// Base & Utils
+// ==========================================================================
+a {
+  cursor: pointer;
+}
+
+// ==========================================================================
+// Hamburger Menu
+// ==========================================================================
 .hamburger {
   display: none;
   position: fixed;
@@ -16,55 +42,56 @@ button {
   z-index: 1100;
   background: var(--bg, #ffffff);
   border: 1px solid var(--border, #e2e8f0);
-  border-radius: 10px; // Un poco más redondeado (tendencia moderna)
-  width: 44px; // Hitbox más grande para móviles (a11y)
-  height: 44px;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  transition:
-    transform $transition-fast,
-    box-shadow $transition-fast;
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: background-color $transition-fast;
 
-  &:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  @include focus-ring;
+
+  @include mobile {
+    @include flex-center;
   }
 
-  &:focus-visible {
-    box-shadow: 0 0 0 3px var(--primary-light, rgba(37, 99, 235, 0.3));
+  &:hover {
+    background: var(--hover, #f8fafc);
   }
 
   i {
-    width: 22px;
-    height: 22px;
+    width: 20px;
+    height: 20px;
     color: var(--text, #334155);
-  }
-
-  @media (max-width: 768px) {
-    display: flex;
   }
 }
 
+// ==========================================================================
+// Mobile Overlay
+// ==========================================================================
 .mobile-overlay {
   display: none;
 
-  @media (max-width: 768px) {
+  @include mobile {
     display: block;
     position: fixed;
     inset: 0;
-    background: rgba(15, 23, 42, 0.4); // Tono más azulado/moderno
-    backdrop-filter: blur(4px); // Efecto Glassmorphism
+    background: rgba(0, 0, 0, 0.4);
     z-index: 999;
-    animation: fadeIn $transition-fast forwards;
+    animation: fadeIn $transition-fast;
+    backdrop-filter: blur(2px); // Toque moderno extra
   }
 }
 
+// ==========================================================================
+// Sidebar Component
+// ==========================================================================
 .sidebar {
-  --width: 16rem; // Ligeramente más ancho para respirar mejor
-  --collapsed: 4.5rem; // Más espacio para los iconos centrados
+  // CSS Variables locales
+  --width: 15rem;
+  --collapsed: 3.8rem;
   --bg: #ffffff;
-  --border: #f1f5f9; // Borde más sutil
+  --border: #e2e8f0;
   --text: #334155;
   --muted: #64748b;
   --hover: #f8fafc;
@@ -80,53 +107,46 @@ button {
   border-right: 1px solid var(--border);
   display: flex;
   flex-direction: column;
-  transition: width $transition-smooth;
+  transition: width $transition-sidebar;
+  overflow: visible;
   z-index: 1000;
-  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.02); // Sombra más difuminada y elegante
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.02);
+  will-change: transform, width; // Optimiza animaciones
 
-  // Mobile: oculto por defecto
-  @media (max-width: 768px) {
+  // Comportamiento Mobile
+  @include mobile {
     width: var(--width) !important;
     transform: translateX(-100%);
     transition:
-      transform $transition-smooth,
-      width $transition-smooth;
+      transform $transition-sidebar,
+      width $transition-sidebar;
+    overflow-y: auto;
 
     &.mobile-open {
       transform: translateX(0);
-      box-shadow: 4px 0 32px rgba(0, 0, 0, 0.1); // Sombra más fuerte en móvil
     }
   }
 
+  // Estado Colapsado
   &.closed {
     width: var(--collapsed);
 
     .label,
     .brand,
-    .chevron-icon,
+    .chevron,
+    .submenu-button,
     .profile-role,
     .profile-info {
       opacity: 0;
-      visibility: hidden;
+      pointer-events: none;
       display: none;
-    }
-
-    .org {
-      justify-content: center;
-      padding: 0;
-    }
-
-    .item {
-      justify-content: center;
-      grid-template-columns: 24px; // Solo el espacio del icono
-      padding: 0;
     }
   }
 
-  // HEADER
+  // 1. Header
   .header {
-    height: 72px; // Más alto para mejor presencia
-    padding: 1rem;
+    height: 64px;
+    padding: 0.75rem;
     border-bottom: 1px solid var(--border);
     display: flex;
     align-items: center;
@@ -136,21 +156,19 @@ button {
     width: 100%;
     display: flex;
     align-items: center;
-    gap: 0.875rem;
+    gap: 0.75rem;
     padding: 0.25rem;
 
     .avatar {
-      width: 36px;
-      height: 36px;
+      width: 32px;
+      height: 32px;
       flex-shrink: 0;
-      border-radius: 10px;
-      background: linear-gradient(135deg, var(--active), #dbeafe); // Gradiente sutil
+      border-radius: 8px;
+      background: var(--active);
       color: var(--primary);
-      display: grid;
-      place-items: center;
+      @include flex-center;
       font-weight: 700;
-      font-size: 1rem;
-      box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.1);
+      font-size: 0.9rem;
     }
 
     .profile-info {
@@ -162,10 +180,9 @@ button {
     }
 
     .brand {
-      font-weight: 700;
-      font-size: 1.05rem;
+      font-weight: 600;
+      font-size: 1rem;
       color: var(--text);
-      letter-spacing: -0.01em;
 
       .accent {
         color: var(--primary);
@@ -175,98 +192,65 @@ button {
     .profile-role {
       font-size: 0.75rem;
       color: var(--muted);
-      font-weight: 500;
     }
   }
 
-  // NAV
+  // 2. Navegación
   .nav {
-    padding: 1.25rem 1rem;
+    padding: 1rem 0.75rem;
     display: flex;
     flex-direction: column;
-    gap: 0.35rem;
+    gap: 0.25rem;
     overflow-y: auto;
     overflow-x: hidden;
     flex: 1;
-
-    // Scrollbar estilizado (Webkit)
-    &::-webkit-scrollbar {
-      width: 4px;
-    }
-    &::-webkit-scrollbar-track {
-      background: transparent;
-    }
-    &::-webkit-scrollbar-thumb {
-      background: var(--border);
-      border-radius: 4px;
-    }
   }
 
-  // ITEMS
   .item {
     width: 100%;
-    height: 44px; // Más alto para clicks táctiles
+    height: 40px;
     display: grid;
     grid-template-columns: 24px 1fr 24px;
     align-items: center;
-    padding: 0 0.75rem;
-    border-radius: 10px;
+    padding: 0 0.5rem;
+    border-radius: 8px;
     text-decoration: none;
     color: var(--muted);
     background: transparent;
     border: none;
+    cursor: pointer;
     transition: all $transition-fast;
     font-size: 0.95rem;
-    font-weight: 500;
     text-align: left;
 
-    &:hover {
+    @include focus-ring;
+
+    &:hover,
+    &:focus-visible {
       background: var(--hover);
       color: var(--text);
-      transform: translateX(4px); // Micro-interacción
-    }
-
-    &:focus-visible {
-      box-shadow: 0 0 0 2px var(--primary);
-      background: var(--hover);
     }
 
     &.active {
       background: var(--active);
       color: var(--primary);
-      font-weight: 600;
-
-      // Detalle de línea activa en el lado izquierdo
-      position: relative;
-      &::before {
-        content: '';
-        position: absolute;
-        left: -1rem; // Ajustado al padding del contenedor nav
-        top: 15%;
-        height: 70%;
-        width: 4px;
-        background: var(--primary);
-        border-radius: 0 4px 4px 0;
-      }
+      font-weight: 500;
     }
 
     .icon {
       width: 20px;
       height: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: transform $transition-fast;
+      @include flex-center;
     }
 
     .label {
       white-space: nowrap;
-      padding-left: 0.75rem;
+      padding-left: 0.5rem;
       transition: opacity $transition-fast;
     }
   }
 
-  // SUBMENÚ INLINE
+  // 3. Submenús
   .submenu-group {
     display: flex;
     flex-direction: column;
@@ -274,7 +258,6 @@ button {
 
   .chevron-icon {
     transition: transform $transition-fast;
-    opacity: 0.7;
 
     &.rotated {
       transform: rotate(90deg);
@@ -284,37 +267,31 @@ button {
   .inline-submenu {
     display: flex;
     flex-direction: column;
-    gap: 0.2rem;
-    padding: 0.5rem 0 0.5rem 2.75rem; // Alineado visualmente con el texto
-    animation: expandDown $transition-fast forwards;
+    gap: 0.15rem;
+    padding: 0.25rem 0 0.25rem 2rem;
+    animation: expandDown $transition-fast;
 
     .submenu-item {
       display: block;
-      padding: 0.5rem 0.75rem;
+      padding: 0.4rem 0.75rem;
       border-radius: 8px;
       color: var(--muted);
       text-decoration: none;
       font-size: 0.875rem;
-      font-weight: 500;
       transition: all $transition-fast;
 
-      &:hover {
+      @include focus-ring;
+
+      &:hover,
+      &:focus-visible {
         background: var(--hover);
         color: var(--text);
-        transform: translateX(3px);
       }
 
       &.active-sub {
         color: var(--primary);
-        background: transparent; // Queda mejor sin fondo continuo
-        font-weight: 600;
-
-        &::before {
-          content: '•';
-          position: absolute;
-          left: 1.5rem;
-          color: var(--primary);
-        }
+        background: var(--active);
+        font-weight: 500;
       }
     }
   }
@@ -322,25 +299,20 @@ button {
   .divider {
     height: 1px;
     background: var(--border);
-    margin: 1rem 0;
-    opacity: 0.7;
+    margin: 0.75rem 0;
   }
 
-  // FOOTER
+  // 4. Footer
   .footer {
-    padding: 1rem;
+    padding: 0.75rem;
     border-top: 1px solid var(--border);
-    background: var(--bg); // Previene que el scroll pase por debajo si hay transparencias
 
     .footer-brand {
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      @include flex-center;
       font-size: 0.85rem;
       font-weight: 600;
       color: var(--muted);
       height: 32px;
-      letter-spacing: 0.02em;
 
       .accent {
         color: var(--primary);
@@ -350,11 +322,13 @@ button {
   }
 }
 
+// ==========================================================================
 // Keyframes
+// ==========================================================================
 @keyframes expandDown {
   from {
     opacity: 0;
-    transform: translateY(-8px);
+    transform: translateY(-4px);
   }
   to {
     opacity: 1;
