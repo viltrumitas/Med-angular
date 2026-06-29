@@ -1,83 +1,114 @@
+<!-- HAMBURGUESA MOBILE -->
+<button type="button" class="hamburger" (click)="toggleMobile()" aria-label="Abrir menú">
+  <i [attr.data-lucide]="mobileOpen() ? 'x' : 'menu'" aria-hidden="true"></i>
+</button>
+
+<!-- OVERLAY MOBILE -->
+@if (mobileOpen()) {
+  <div class="mobile-overlay" (click)="closeMobile()"></div>
+}
+
+<!-- SIDEBAR -->
 <aside
   class="sidebar glass-sidebar"
   [class.closed]="collapsed()"
+  [class.mobile-open]="mobileOpen()"
   (mouseenter)="toggle(true)"
   (mouseleave)="toggle(false)"
 >
+  <!-- HEADER / PERFIL -->
   <div class="header">
-    <button type="button" class="org">
+    <div class="org">
       <div class="avatar">M</div>
-
-      @if (!collapsed()) {
-        <span class="brand">ed<span class="accent">Land</span></span>
-        <i class="chevron" data-lucide="chevrons-up-down" aria-hidden="true"></i>
+      @if (!collapsed() || mobileOpen()) {
+        <div class="profile-info">
+          <span class="brand">ed<span class="accent">Land</span></span>
+          <span class="profile-role">Maestro</span>
+        </div>
       }
-    </button>
+    </div>
   </div>
 
+  <!-- NAV -->
   <nav class="nav">
     @for (item of items(); track item.name) {
       @if (item.separator) {
         <div class="divider" aria-hidden="true"></div>
       } @else if (item.action) {
-        <a class="item" (click)="handleAction(item.action)">
+        <button type="button" class="item" (click)="handleAction(item.action)">
           @if (item.icon) {
             <i class="icon" [attr.data-lucide]="item.icon" aria-hidden="true"></i>
           }
-          @if (collapsed()) {
+          @if (!collapsed() || mobileOpen()) {
             <span class="label">{{ item.name }}</span>
           }
-        </a>
-      } @else {
-        <div class="menu-item-wrapper">
-          <a
+        </button>
+      } @else if (item.children?.length) {
+        <!-- ITEM CON SUBMENÚ INLINE -->
+        <div class="submenu-group">
+          <button
+            type="button"
             class="item"
-            [routerLink]="item.path"
-            routerLinkActive="active"
-            [routerLinkActiveOptions]="{ exact: true }"
+            [class.active]="isSubmenuOpen(item)"
+            (click)="toggleSubmenu(item)"
           >
             @if (item.icon) {
               <i class="icon" [attr.data-lucide]="item.icon" aria-hidden="true"></i>
             }
-
-            @if (!collapsed()) {
-              <span class="label">
-                {{ item.name }}
-              </span>
+            @if (!collapsed() || mobileOpen()) {
+              <span class="label">{{ item.name }}</span>
+              <i
+                class="icon chevron-icon"
+                [class.rotated]="isSubmenuOpen(item)"
+                data-lucide="chevron-right"
+                aria-hidden="true"
+              ></i>
             }
+          </button>
 
-            @if (item.children?.length && !collapsed()) {
-              <button
-                type="button"
-                class="submenu-button"
-                (click)="openSubmenu($event, item)"
-                aria-label="Abrir submenú"
-              >
-                <i data-lucide="chevron-right" aria-hidden="true"></i>
-              </button>
-            }
-          </a>
+          @if (isSubmenuOpen(item) && (!collapsed() || mobileOpen())) {
+            <div class="inline-submenu">
+              @for (child of item.children; track child.name) {
+                <a
+                  class="submenu-item"
+                  [routerLink]="child.path"
+                  routerLinkActive="active-sub"
+                  (click)="closeMobile()"
+                >
+                  {{ child.name }}
+                </a>
+              }
+            </div>
+          }
         </div>
+      } @else {
+        <!-- ITEM NORMAL -->
+        <a
+          class="item"
+          [routerLink]="item.path"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          (click)="closeMobile()"
+        >
+          @if (item.icon) {
+            <i class="icon" [attr.data-lucide]="item.icon" aria-hidden="true"></i>
+          }
+          @if (!collapsed() || mobileOpen()) {
+            <span class="label">{{ item.name }}</span>
+          }
+        </a>
       }
     }
   </nav>
 
-  @if (activeSubmenu()) {
-    <div
-      class="submenu floating-menu"
-      [style.top.px]="submenuPosition()?.y"
-      [style.left.px]="submenuPosition()?.x"
-      (mouseleave)="closeSubmenu()"
-    >
-      <div class="submenu-title">{{ activeSubmenu()?.name }}</div>
-
-      <div class="submenu-content">
-        @for (child of activeSubmenu()?.children; track child.name) {
-          <a class="submenu-item" [routerLink]="child.path" routerLinkActive="active-sub">
-            {{ child.name }}
-          </a>
-        }
-      </div>
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-brand">
+      @if (!collapsed() || mobileOpen()) {
+        <span>Med <span class="accent">Cases</span></span>
+      } @else {
+        <span class="accent">M</span>
+      }
     </div>
-  }
+  </div>
 </aside>

@@ -1,12 +1,70 @@
-a {
+// Variables globales para animaciones
+$transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+$transition-fast: 0.2s ease;
+
+a,
+button {
   cursor: pointer;
+  outline: none; // Manejado por :focus-visible
 }
+
+.hamburger {
+  display: none;
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 1100;
+  background: var(--bg, #ffffff);
+  border: 1px solid var(--border, #e2e8f0);
+  border-radius: 10px; // Un poco más redondeado (tendencia moderna)
+  width: 44px; // Hitbox más grande para móviles (a11y)
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition:
+    transform $transition-fast,
+    box-shadow $transition-fast;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  }
+
+  &:focus-visible {
+    box-shadow: 0 0 0 3px var(--primary-light, rgba(37, 99, 235, 0.3));
+  }
+
+  i {
+    width: 22px;
+    height: 22px;
+    color: var(--text, #334155);
+  }
+
+  @media (max-width: 768px) {
+    display: flex;
+  }
+}
+
+.mobile-overlay {
+  display: none;
+
+  @media (max-width: 768px) {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.4); // Tono más azulado/moderno
+    backdrop-filter: blur(4px); // Efecto Glassmorphism
+    z-index: 999;
+    animation: fadeIn $transition-fast forwards;
+  }
+}
+
 .sidebar {
-  /* VARIABLES (Mantenemos tus colores) */
-  --width: 15rem;
-  --collapsed: 3.8rem;
+  --width: 16rem; // Ligeramente más ancho para respirar mejor
+  --collapsed: 4.5rem; // Más espacio para los iconos centrados
   --bg: #ffffff;
-  --border: #e2e8f0;
+  --border: #f1f5f9; // Borde más sutil
   --text: #334155;
   --muted: #64748b;
   --hover: #f8fafc;
@@ -22,29 +80,53 @@ a {
   border-right: 1px solid var(--border);
   display: flex;
   flex-direction: column;
-  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  overflow: visible;
+  transition: width $transition-smooth;
   z-index: 1000;
-  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.02);
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.02); // Sombra más difuminada y elegante
 
-  /* ESTADOS DEL SIDEBAR */
+  // Mobile: oculto por defecto
+  @media (max-width: 768px) {
+    width: var(--width) !important;
+    transform: translateX(-100%);
+    transition:
+      transform $transition-smooth,
+      width $transition-smooth;
+
+    &.mobile-open {
+      transform: translateX(0);
+      box-shadow: 4px 0 32px rgba(0, 0, 0, 0.1); // Sombra más fuerte en móvil
+    }
+  }
+
   &.closed {
     width: var(--collapsed);
 
     .label,
     .brand,
-    .chevron,
-    .submenu-button {
+    .chevron-icon,
+    .profile-role,
+    .profile-info {
       opacity: 0;
-      pointer-events: none;
-      display: none; // Opcional: oculta completamente para evitar desbordes
+      visibility: hidden;
+      display: none;
+    }
+
+    .org {
+      justify-content: center;
+      padding: 0;
+    }
+
+    .item {
+      justify-content: center;
+      grid-template-columns: 24px; // Solo el espacio del icono
+      padding: 0;
     }
   }
 
-  /* HEADER & LOGO */
+  // HEADER
   .header {
-    height: 64px; // Un poco más despacio para respirar
-    padding: 0.75rem;
+    height: 72px; // Más alto para mejor presencia
+    padding: 1rem;
     border-bottom: 1px solid var(--border);
     display: flex;
     align-items: center;
@@ -54,84 +136,118 @@ a {
     width: 100%;
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    background: transparent;
-    border: none;
+    gap: 0.875rem;
     padding: 0.25rem;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-    text-align: left;
-
-    &:hover {
-      background: var(--hover);
-    }
 
     .avatar {
-      width: 32px;
-      height: 32px;
+      width: 36px;
+      height: 36px;
       flex-shrink: 0;
-      border-radius: 8px;
-      background: var(--active);
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--active), #dbeafe); // Gradiente sutil
       color: var(--primary);
       display: grid;
       place-items: center;
       font-weight: 700;
-      font-size: 0.9rem;
+      font-size: 1rem;
+      box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.1);
+    }
+
+    .profile-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+      white-space: nowrap;
+      overflow: hidden;
     }
 
     .brand {
-      flex: 1;
-      font-weight: 600;
-      font-size: 1.1rem;
+      font-weight: 700;
+      font-size: 1.05rem;
       color: var(--text);
-      white-space: nowrap;
+      letter-spacing: -0.01em;
 
       .accent {
         color: var(--primary);
       }
     }
 
-    .chevron {
+    .profile-role {
+      font-size: 0.75rem;
       color: var(--muted);
-      width: 16px;
-      height: 16px;
+      font-weight: 500;
     }
   }
 
-  /* NAVEGACIÓN */
+  // NAV
   .nav {
-    padding: 1rem 0.75rem;
+    padding: 1.25rem 1rem;
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: 0.35rem;
     overflow-y: auto;
     overflow-x: hidden;
     flex: 1;
+
+    // Scrollbar estilizado (Webkit)
+    &::-webkit-scrollbar {
+      width: 4px;
+    }
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 4px;
+    }
   }
 
-  /* ITEMS DE NAVEGACIÓN */
+  // ITEMS
   .item {
-    height: 40px;
+    width: 100%;
+    height: 44px; // Más alto para clicks táctiles
     display: grid;
     grid-template-columns: 24px 1fr 24px;
     align-items: center;
-    padding: 0 0.5rem;
-    border-radius: 8px;
+    padding: 0 0.75rem;
+    border-radius: 10px;
     text-decoration: none;
     color: var(--muted);
-    transition: all 0.2s ease;
+    background: transparent;
+    border: none;
+    transition: all $transition-fast;
     font-size: 0.95rem;
+    font-weight: 500;
+    text-align: left;
 
     &:hover {
       background: var(--hover);
       color: var(--text);
+      transform: translateX(4px); // Micro-interacción
+    }
+
+    &:focus-visible {
+      box-shadow: 0 0 0 2px var(--primary);
+      background: var(--hover);
     }
 
     &.active {
       background: var(--active);
       color: var(--primary);
-      font-weight: 500;
+      font-weight: 600;
+
+      // Detalle de línea activa en el lado izquierdo
+      position: relative;
+      &::before {
+        content: '';
+        position: absolute;
+        left: -1rem; // Ajustado al padding del contenedor nav
+        top: 15%;
+        height: 70%;
+        width: 4px;
+        background: var(--primary);
+        border-radius: 0 4px 4px 0;
+      }
     }
 
     .icon {
@@ -140,109 +256,117 @@ a {
       display: flex;
       align-items: center;
       justify-content: center;
+      transition: transform $transition-fast;
     }
 
     .label {
       white-space: nowrap;
-      padding-left: 0.5rem;
-      transition: opacity 0.2s ease;
+      padding-left: 0.75rem;
+      transition: opacity $transition-fast;
     }
   }
 
-  .submenu-button {
-    border: none;
-    background: transparent;
-    cursor: pointer;
-    color: var(--muted);
-    display: grid;
-    place-items: center;
-    border-radius: 4px;
-    width: 24px;
-    height: 24px;
-    transition:
-      background-color 0.2s ease,
-      color 0.2s ease;
+  // SUBMENÚ INLINE
+  .submenu-group {
+    display: flex;
+    flex-direction: column;
+  }
 
-    &:hover {
-      background: rgba(0, 0, 0, 0.05);
-      color: var(--text);
+  .chevron-icon {
+    transition: transform $transition-fast;
+    opacity: 0.7;
+
+    &.rotated {
+      transform: rotate(90deg);
     }
+  }
 
-    i {
-      width: 16px;
-      height: 16px;
+  .inline-submenu {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    padding: 0.5rem 0 0.5rem 2.75rem; // Alineado visualmente con el texto
+    animation: expandDown $transition-fast forwards;
+
+    .submenu-item {
+      display: block;
+      padding: 0.5rem 0.75rem;
+      border-radius: 8px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all $transition-fast;
+
+      &:hover {
+        background: var(--hover);
+        color: var(--text);
+        transform: translateX(3px);
+      }
+
+      &.active-sub {
+        color: var(--primary);
+        background: transparent; // Queda mejor sin fondo continuo
+        font-weight: 600;
+
+        &::before {
+          content: '•';
+          position: absolute;
+          left: 1.5rem;
+          color: var(--primary);
+        }
+      }
     }
   }
 
   .divider {
     height: 1px;
     background: var(--border);
-    margin: 0.75rem 0;
-  }
-}
-
-/* SUBMENÚ FLOTANTE (Fuera de .sidebar para que funcione bien su posición fija) */
-.submenu {
-  position: fixed;
-  min-width: 200px;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 0.5rem;
-  box-shadow:
-    0 10px 25px -5px rgba(0, 0, 0, 0.1),
-    0 8px 10px -6px rgba(0, 0, 0, 0.1);
-  z-index: 1050;
-  animation: fadeInSlide 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-
-  .submenu-title {
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--muted);
-    padding: 0.5rem 0.75rem;
-    margin-bottom: 0.25rem;
-    border-bottom: 1px solid var(--border);
+    margin: 1rem 0;
+    opacity: 0.7;
   }
 
-  .submenu-content {
-    display: flex;
-    flex-direction: column;
-    gap: 0.15rem;
-    margin-top: 0.5rem;
-  }
+  // FOOTER
+  .footer {
+    padding: 1rem;
+    border-top: 1px solid var(--border);
+    background: var(--bg); // Previene que el scroll pase por debajo si hay transparencias
 
-  .submenu-item {
-    display: block;
-    padding: 0.5rem 0.75rem;
-    border-radius: 8px;
-    color: var(--muted);
-    text-decoration: none;
-    font-size: 0.9rem;
-    transition: all 0.2s ease;
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--muted);
+      height: 32px;
+      letter-spacing: 0.02em;
 
-    &:hover {
-      background: var(--hover);
-      color: var(--text);
-    }
-
-    &.active-sub {
-      color: var(--primary);
-      background: var(--active);
-      font-weight: 500;
+      .accent {
+        color: var(--primary);
+        margin-left: 0.25rem;
+      }
     }
   }
 }
 
-/* Animación sutil para el submenu */
-@keyframes fadeInSlide {
+// Keyframes
+@keyframes expandDown {
   from {
     opacity: 0;
-    transform: translateY(5px) translateX(-5px);
+    transform: translateY(-8px);
   }
   to {
     opacity: 1;
-    transform: translateY(0) translateX(0);
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }

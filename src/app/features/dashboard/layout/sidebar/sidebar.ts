@@ -1,4 +1,13 @@
-import { AfterViewInit, Component, effect, inject, input, signal } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  DestroyRef,
+  effect,
+  HostListener,
+  inject,
+  input,
+  signal,
+} from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { createIcons, icons } from 'lucide';
 import { SidebarItem } from '../../model/menu.types';
@@ -16,9 +25,9 @@ export class Sidebar implements AfterViewInit {
   private readonly router = inject(Router);
 
   collapsed = signal(true);
-  items = input.required<SidebarItem[]>();
+  mobileOpen = signal(false);
   activeSubmenu = signal<SidebarItem | null>(null);
-  submenuPosition = signal<{ x: number; y: number } | null>(null);
+  items = input.required<SidebarItem[]>();
 
   private renderIcons() {
     createIcons({ icons });
@@ -27,8 +36,36 @@ export class Sidebar implements AfterViewInit {
   constructor() {
     effect(() => {
       this.items();
-      queueMicrotask(() => this.renderIcons());
+      queueMicrotask(() => {
+        this.renderIcons();
+      });
     });
+  }
+
+  ngAfterViewInit() {
+    this.renderIcons();
+  }
+
+  toggle(open: boolean) {
+    this.collapsed.set(!open);
+    if (!open) this.activeSubmenu.set(null);
+  }
+
+  toggleMobile() {
+    this.mobileOpen.update((e) => !e);
+  }
+
+  closeMobile() {
+    this.mobileOpen.set(false);
+  }
+
+  toggleSubmenu(item: SidebarItem) {
+    const current = this.activeSubmenu();
+    this.activeSubmenu.set(current === item ? null : item);
+  }
+
+  isSubmenuOpen(item: SidebarItem): boolean {
+    return this.activeSubmenu() === item;
   }
 
   handleAction(action: string): void {
@@ -38,29 +75,8 @@ export class Sidebar implements AfterViewInit {
     }
   }
 
-  ngAfterViewInit() {
-    this.renderIcons();
-  }
-
-  toggle(open: boolean) {
-    this.collapsed.set(!open);
-  }
-
-  openSubmenu(event: MouseEvent, item: SidebarItem) {
-    event.preventDefault();
-    event.stopPropagation();
-
-    const element = event.currentTarget as HTMLElement;
-    const rect = element.getBoundingClientRect();
-
-    this.activeSubmenu.set(item);
-    this.submenuPosition.set({
-      x: rect.right + 12,
-      y: rect.top,
-    });
-  }
-
-  closeSubmenu() {
-    this.activeSubmenu.set(null);
+  @HostListener('document:keydown.escape')
+  onEscape() {
+    this.mobileOpen.set(false);
   }
 }
