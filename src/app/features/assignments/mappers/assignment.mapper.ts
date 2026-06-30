@@ -43,6 +43,7 @@ export class AssignmentMapper {
     };
   }
 
+  // error al idiota del ale
   static toAssignedCase(
     dto: AssignedCaseResponseDto,
   ): AssignedCase {
