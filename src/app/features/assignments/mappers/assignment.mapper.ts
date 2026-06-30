@@ -53,7 +53,12 @@ export class AssignmentMapper {
 
       case: dto.case,
 
-      submissionId: dto.submissionId,
+      submission: dto.submission
+        ? {
+          id: dto.submission.id,
+          status: dto.submission.status,
+        }
+        : null,
 
       assignedAt: dto.assignedAt,
     };

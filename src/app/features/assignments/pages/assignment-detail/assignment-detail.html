@@ -59,9 +59,33 @@
 
     <div class="stat-card">
 
-      <h4>Casos asignados</h4>
+      <h4>Estudiantes</h4>
 
-      <p>{{ assignment.assignedCases.length }}</p>
+      <p>{{ totalStudents() }}</p>
+
+    </div>
+
+    <div class="stat-card">
+
+      <h4>Casos utilizados</h4>
+
+      <p>{{ totalCases() }}</p>
+
+    </div>
+
+    <div class="stat-card">
+
+      <h4>Entregados</h4>
+
+      <p>{{ totalCompleted() }}</p>
+
+    </div>
+
+    <div class="stat-card">
+
+      <h4>Pendientes</h4>
+
+      <p>{{ totalPending() }}</p>
 
     </div>
 
@@ -83,91 +107,90 @@
 
   </section>
 
-  <section class="cases">
+  <section class="progress-section">
 
-    <h2>Casos asignados</h2>
+    <div class="progress-header">
+      <span>Progreso de la actividad</span>
+      <strong>{{ progress() }}%</strong>
+    </div>
+
+    <div class="progress-bar">
+      <div class="progress-fill" [style.width.%]="progress()"></div>
+    </div>
+  </section>
+
+  <section class="assignments">
+
+    <div class="section-header">
+      <h2>Asignaciones</h2>
+      <span>{{ assignment.assignedCases.length }} estudiantes</span>
+    </div>
 
     @if (assignment.assignedCases.length === 0) {
 
-    <p>
-      Todavía no existen asignaciones.
-    </p>
+    <div class="empty-state">
+      <p>No hay estudiantes asignados todavía.</p>
+    </div>
 
     } @else {
 
-    <table>
+    <div class="assignment-list">
 
-      <thead>
+      @for (assigned of assignment.assignedCases; track assigned.id) {
 
-        <tr>
+      <div class="assignment-card">
 
-          <th>Alumno</th>
+        <div class="card-header">
 
-          <th>Caso clínico</th>
+          <div>
 
-          <th>Estado</th>
+            <h3>
+              {{ assigned.student.firstName }}
+              {{ assigned.student.lastName }}
+            </h3>
 
-          <th>Asignado</th>
+            <p class="case-title">
+              {{ assigned.case.title }}
+            </p>
 
-        </tr>
+          </div>
 
-      </thead>
+          @if (!assigned.submission) {
+          <span class="status pending">
+            Pendiente
+          </span>
+          } @else if (assigned.submission.status === 'DRAFT'){
 
-      <tbody>
+          <span class="status in-progress">
+            En progreso
+          </span>
+          } @else if (assigned.submission.status === 'SUBMITTED') {
 
-        @for (assigned of assignment.assignedCases; track assigned.id) {
+          <span class="status completed">
+            Entregado
+          </span>
 
-        <tr>
+          }
 
-          <td>
+        </div>
 
-            {{ assigned.student.firstName }}
-            {{ assigned.student.lastName }}
+        <div class="card-footer">
 
-          </td>
+          <span>
+            {{ assigned.assignedAt | date:'medium' }}
+          </span>
 
-          <td>
+        </div>
 
-            {{ assigned.case.title }}
+      </div>
 
-          </td>
+      }
 
-          <td>
-
-            @if (assigned.submissionId) {
-
-            <span class="completed">
-              Entregado
-            </span>
-
-            } @else {
-
-            <span class="pending">
-              Pendiente
-            </span>
-
-            }
-
-          </td>
-
-          <td>
-
-            {{ assigned.assignedAt | date:'short' }}
-
-          </td>
-
-        </tr>
-
-        }
-
-      </tbody>
-
-    </table>
+    </div>
 
     }
 
   </section>
-
   <section class="actions">
 
     @if (!assignment.isPublished) {

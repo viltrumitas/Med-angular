@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, computed } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -19,6 +19,46 @@ export class AssignmentDetailPage {
   private readonly api = inject(AssignmentApi);
 
   assignment = signal<AssignmentDetailModel | null>(null);
+
+  readonly totalStudents = computed(() => {
+    return this.assignment()?.assignedCases.length ?? 0;
+  });
+
+  readonly totalCases = computed(() => {
+    const assignment = this.assignment();
+
+    if (!assignment) return 0;
+
+    return new Set(
+      assignment.assignedCases.map(a => a.case.id)
+    ).size;
+  });
+
+  readonly totalCompleted = computed(() => {
+    const assignment = this.assignment();
+    if (!assignment) return 0;
+
+    return assignment.assignedCases.filter(
+      a => a.submission?.status === 'SUBMITTED'
+    ).length;
+  });
+
+  readonly totalPending = computed(() => {
+    const assignment = this.assignment();
+    if (!assignment) return 0;
+
+    return assignment.assignedCases.filter(
+      a => !a.submission
+    ).length;
+  });
+
+  readonly progress = computed(() => {
+    const total = this.totalStudents();
+
+    if (total === 0) return 0;
+
+    return Math.round((this.totalCompleted() / total) * 100);
+  });
 
   loading = signal(true);
 

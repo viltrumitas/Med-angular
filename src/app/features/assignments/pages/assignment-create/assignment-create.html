@@ -1,51 +1,59 @@
-<form [formGroup]="assignmentForm" (ngSubmit)="submitAssignment()">
+<form [formGroup]="assignmentForm" (ngSubmit)="submitAssignment()" class="create-form-container">
+  <div class="form-header">
+    <h2>Crear actividad</h2>
+    <p>Selecciona los casos clínicos que formarán parte de la actividad.</p>
+  </div>
 
-  <div class="cases-container">
+  <div class="cases-section">
+    <h3>Casos disponibles
 
-    @for (c of cases; track c.id) {
+      <span class="counter">
+        {{ assignmentForm.value.caseIds?.length || 0 }}
+        seleccionados
+      </span>
+    </h3>
 
-      <div
-        class="case-card"
-        [class.selected]="(assignmentForm.value.caseIds ?? []).includes(c.id)"
-        (click)="toggleCase(c.id)"
-      >
-        <h3>{{ c.title }}</h3>
-        <p>{{ c.patientName }}</p>
-        <small>{{ c.area }}</small>
+    <div class="cases-container">
+      @for (c of cases; track c.id) {
+
+      <div class="case-card" [class.selected]="(assignmentForm.value.caseIds ?? []).includes(c.id)"
+        (click)="toggleCase(c.id)">
+        <div class="case-content">
+          <h3>{{ c.title }}</h3>
+
+          <p>{{ c.patientName }}</p>
+
+          <small>{{ c.area }}</small>
+        </div>
 
         @if ((assignmentForm.value.caseIds ?? []).includes(c.id)) {
-          <span class="badge">Seleccionado</span>
+        <span class="badge">
+          ✓ Seleccionado
+        </span>
         }
       </div>
 
-    }
-
+      }
+    </div>
   </div>
 
-  <div>
-    <app-input
-      formControlName="title"
-      type="text"
-      placeHolderText="Ej. Actividad 1"
-      labelText="Título"
-    />
+  <div class="form-fields">
+
+    <app-input formControlName="title" type="text" placeHolderText="Ej. Actividad 1" labelText="Título" />
 
     @if (
-      assignmentForm.controls.title.invalid &&
-      assignmentForm.controls.title.touched
+    assignmentForm.controls.title.invalid &&
+    assignmentForm.controls.title.touched
     ) {
-      <small>El título es obligatorio.</small>
+    <small class="error">
+      El título es obligatorio.
+    </small>
     }
+
+    <app-text-area formControlName="description" labelText="Descripción"
+      placeHolderText="Descripción de la actividad" />
+
+    <app-button type="submit" text="Crear actividad" />
+
   </div>
-
-  <div>
-    <app-text-area
-      formControlName="description"
-      labelText="Descripción"
-      placeHolderText="Descripción de la actividad"
-    />
-  </div>
-
-  <app-button type="submit" text="Crear actividad" />
-
 </form>
