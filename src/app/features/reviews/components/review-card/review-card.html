@@ -1,0 +1,39 @@
+<article class="submission-card">
+  <h2>
+    {{ submission.student.firstName }}
+    {{ submission.student.lastName }}
+  </h2>
+
+  <h3>
+    {{ submission.assignment.title }}
+  </h3>
+
+  @if (submission.assignment.description) {
+  <p class="description">
+    {{ submission.assignment.description }}
+  </p>
+}
+
+  <h4>
+    {{ submission.case.title }}
+  </h4>
+
+
+  <p>
+    <strong>Estado:</strong>
+    @if (submission.status === 'SUBMITTED') {
+      <span>Entregado</span>
+    }
+  </p>
+
+  <p>
+    <strong>Enviado</strong>
+    {{ submission.createdAt | date:'medium' }}
+  </p>
+
+  <app-button
+    text="Ver entrega"
+    (clicked)="open()"
+  />
+
+</article>

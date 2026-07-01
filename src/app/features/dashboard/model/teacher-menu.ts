@@ -41,8 +41,8 @@ export const TEACHER_MENU: SidebarItem[] = [
     path: '/dashboard/teacher',
     icon: 'list-check',
     children: [
-      { name: 'Mis evaluaciones', path: '' },
-      { name: 'Pendientes', path: '' },
+      { name: 'Mis evaluaciones', path: '/dashboard/teacher/reviews/crear-review' },
+      { name: 'Pendientes', path: '/dashboard/teacher/reviews' },
     ],
   },
   {
