@@ -9,17 +9,11 @@
       <span class="error-icon">⚠️</span>
       <p class="error">{{ error() }}</p>
     </div>
-  } @else if (case(); as item) {
-    <app-case-content [case]="item"></app-case-content>
+  } @else if (assignedCase(); as item) {
+    <app-case-content [case]="item.case" />
 
     <div class="actions-container">
-      <app-button
-        text="Publicar Caso"
-        variant="secondary"
-        type="button"
-        (clicked)="publishCase()"
-      />
-      <app-button text="Editar Caso" variant="secondary" type="button" (clicked)="editCase()" />
+      <app-button type="submit" text="Iniciar resouesta" variant="secondary"></app-button>
     </div>
   }
 </div>

@@ -1,0 +1,61 @@
+<div class="assigned-cases-container">
+  <header class="header">
+    <h1>Mis actividades</h1>
+    <p class="subtitle">Gestiona, responde las actividades asignadas por tu maestro</p>
+  </header>
+
+  @if (isLoading()) {
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>Cargando casos asignados...</p>
+    </div>
+  } @else if (error()) {
+    <div class="error-state">
+      <span class="error-icon">⚠️</span>
+      <p class="error">{{ error() }}</p>
+    </div>
+    <div class="empty-state">
+      <span class="empty-icon">📁</span>
+      <p>No tienes casos asignados aún.</p>
+    </div>
+  } @else {
+    <ul class="assigned-cases-list">
+      @for (assigned of assignedCase(); track assigned.id) {
+        <li class="assigned-case-item">
+          <a [routerLink]="['/dashboard/student/assigned', assigned.id]" class="assigned-case-link">
+            <div class="assigned-case-info">
+              <strong class="assigned-case-title">{{ assigned.assignment.title }}</strong>
+              <span class="assigned-case-consult">{{ assigned.assignment.description }}</span>
+              <strong>Caso: {{ assigned.case.title }}</strong>
+              <p>{{ assigned.assignment.teacher.firstName }}</p>
+            </div>
+            <div class="assigned-case-status-wrapper">
+              <span
+                class="status-badge"
+                [class.draft]="assigned.submission?.status === 'DRAFT'"
+                [class.submitted]="assigned.submission?.status === 'SUBMITTED'"
+                [class.reviewed]="assigned.submission?.status === 'REVIEWED'"
+              >
+                @switch (assigned.submission?.status) {
+                  @case ('DRAFT') {
+                    En progreso
+                  }
+                  @case ('SUBMITTED') {
+                    Enviado
+                  }
+                  @case ('REVIEWED') {
+                    Revisado
+                  }
+                  @default {
+                    Sin iniciar
+                  }
+                }
+              </span>
+              <span class="arrow-indicator">→</span>
+            </div>
+          </a>
+        </li>
+      }
+    </ul>
+  }
+</div>

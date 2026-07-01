@@ -11,8 +11,13 @@ $error-color: #ef4444;
 .case-container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
+  min-height: calc(100vh - 4rem); // Descuenta espacio de barras externas
+  width: 100%;
+  padding: 2rem;
+  font-family: 'Inter', system-ui, sans-serif;
+  box-sizing: border-box;
 }
 
 // --- ESTADO DE CARGA (LOADING STATE) ---

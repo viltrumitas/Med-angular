@@ -1,11 +1,9 @@
 import { computed, inject, Service, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { UserRole } from '../models/user-role.enum';
+import { UserRole } from '../enum/user-role.enum';
 
 @Service()
 export class AuthService {
-  private readonly router = inject(Router);
-
   private readonly _token = signal<string | null>(this.getStoredToken());
   private readonly _role = signal<UserRole | null>(this.decodeRole(this._token()));
 

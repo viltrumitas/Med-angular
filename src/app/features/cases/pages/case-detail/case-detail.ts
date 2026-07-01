@@ -5,10 +5,11 @@ import { CaseResponseDto } from '../../dto/case-response.dto';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CasesApi } from '../../services/cases-api.service';
 import { ButtonComponent } from '../../../../shared/components/button/button';
+import { CaseContent } from '../case-content/case-content';
 
 @Component({
   selector: 'app-case-detail',
-  imports: [ButtonComponent],
+  imports: [ButtonComponent, CaseContent],
   templateUrl: './case-detail.html',
   styleUrl: './case-detail.scss',
 })
@@ -60,6 +61,7 @@ export class CaseDetail implements OnInit {
         next: (response) => {
           this.case.set(response);
           this.isPublishing.set(false);
+          this.router.navigate(['/dashboard/teacher/cases']);
         },
         error: (err) => {
           console.error('[CaseDetail] Error al publicar: ', err);

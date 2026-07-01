@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { roleGuard } from '../../core/guard/role-guard';
-import { UserRole } from '../../core/models/user-role.enum';
+import { UserRole } from '../../core/enum/user-role.enum';
 
 export const dashboardRoutes: Routes = [
   {
@@ -19,7 +19,8 @@ export const dashboardRoutes: Routes = [
           },
           {
             path: 'assignments',
-            loadChildren: () => import('../assignments/assignments.routes').then((e) => e.assignmentsRoutes),
+            loadChildren: () =>
+              import('../assignments/assignments.routes').then((e) => e.assignmentsRoutes),
           },
         ],
       },
@@ -29,7 +30,13 @@ export const dashboardRoutes: Routes = [
         canActivate: [roleGuard],
         data: { roles: [UserRole.STUDENT] },
         loadComponent: () => import('./roles/student/student').then((c) => c.Student),
-        children: [],
+        children: [
+          {
+            path: 'assigned',
+            loadChildren: () =>
+              import('../assigned-case/assigned-case.routes').then((e) => e.assignedRoutes),
+          },
+        ],
       },
     ],
   },

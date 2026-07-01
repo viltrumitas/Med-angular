@@ -1,0 +1,236 @@
+// --- VARIABLES MÉDICAS ---
+$teal-primary: #0d9488;
+$teal-light: #f0fdfa;
+$text-main: #1e293b;
+$text-muted: #64748b;
+$bg-glass: rgba(255, 255, 255, 0.75);
+$border-color: rgba(226, 232, 240, 0.8);
+$success: #10b981;
+$warning: #f59e0b;
+
+// --- CONTENEDOR PRINCIPAL ---
+.case-card {
+  background: $bg-glass;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid $border-color;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+  padding: 3.5rem;
+  width: 100vh;
+  margin: 0 auto;
+  font-family: 'Inter', system-ui, sans-serif;
+  color: $text-main;
+}
+
+// --- CABECERA Y ETIQUETAS ---
+.case-header {
+  margin-bottom: 2rem;
+
+  .meta-top {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+
+    span {
+      padding: 0.4rem 1.2rem;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .badge {
+      background: $teal-light;
+      color: $teal-primary;
+      border: 1px solid rgba($teal-primary, 0.2);
+    }
+
+    .status-badge {
+      background: rgba($warning, 0.1);
+      color: $warning;
+      border: 1px solid rgba($warning, 0.2);
+
+      &.published {
+        background: rgba($success, 0.1);
+        color: $success;
+        border-color: rgba($success, 0.2);
+      }
+    }
+  }
+
+  h1 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    margin: 0 0 0.5rem 0;
+    line-height: 1.2;
+  }
+
+  .date-text {
+    color: $text-muted;
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+}
+
+// --- DIVISORES ---
+.divider {
+  border: none;
+  height: 3px;
+  background: linear-gradient(to right, rgba($teal-primary, 0.5), transparent);
+  border-radius: 5px;
+  margin: 2rem 0;
+}
+
+.divider-light {
+  border: none;
+  height: 1px;
+  background: $border-color;
+  margin: 2.5rem 0;
+}
+
+// --- SECCIONES Y TEXTOS ---
+.info-section {
+  margin-bottom: 2rem;
+
+  .section-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: $teal-primary;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    // Pequeño adorno al lado del título
+    &::before {
+      content: '';
+      display: block;
+      width: 6px;
+      height: 22px;
+      background: $teal-primary;
+      border-radius: 4px;
+    }
+  }
+}
+
+// --- CAJA DE RESALTE (Motivo de Consulta) ---
+.highlight-box {
+  background: $teal-light;
+  border-left: 4px solid $teal-primary;
+  padding: 1.5rem 2rem;
+  border-radius: 0 16px 16px 0;
+  margin-bottom: 3rem;
+  box-shadow: 0 4px 6px -1px rgba($teal-primary, 0.05);
+
+  .field-group:not(:last-child) {
+    margin-bottom: 1.25rem;
+  }
+}
+
+// --- GRUPOS DE CAMPOS (Labels y Párrafos) ---
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+
+  label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: $text-muted;
+    letter-spacing: 0.5px;
+  }
+
+  p {
+    margin: 0;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: $text-main;
+
+    &.patient-name {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: $teal-primary;
+    }
+  }
+}
+
+.mt-1 {
+  margin-top: 1.5rem;
+}
+
+// --- SISTEMA DE GRIDS ---
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+// --- SIGNOS VITALES (Tarjetas interactivas) ---
+.vital-signs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1.25rem;
+
+  .vital-card {
+    background: #ffffff;
+    border: 1px solid $border-color;
+    border-radius: 16px;
+    padding: 1.25rem 1rem;
+    text-align: center;
+    transition: all 0.25s ease;
+
+    label {
+      display: block;
+      font-size: 0.75rem;
+      color: $text-muted;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    p {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: $teal-primary;
+      margin: 0;
+    }
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 20px rgba($teal-primary, 0.1);
+      border-color: rgba($teal-primary, 0.4);
+    }
+  }
+}
+
+// --- TEXTO LARGO (Hallazgos) ---
+.text-block {
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid $border-color;
+  border-radius: 16px;
+  padding: 1.5rem;
+  line-height: 1.8;
+}
+
+// --- RESPONSIVE (Móviles) ---
+@media (max-width: 768px) {
+  .case-card {
+    padding: 1.5rem;
+    border-radius: 16px;
+  }
+
+  .case-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .highlight-box {
+    padding: 1.25rem;
+  }
+
+  .vital-signs-grid {
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  }
+}

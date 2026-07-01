@@ -1,0 +1,227 @@
+// --- VARIABLES ESTÉTICAS (Ajusta si ya las tienes globales) ---
+$teal-primary: #0d9488;
+$teal-light: #f0fdfa;
+$text-main: #1e293b;
+$text-muted: #64748b;
+$bg-glass: rgba(255, 255, 255, 0.75);
+$border-color: rgba(226, 232, 240, 0.8);
+
+$status-draft: #f59e0b; // Naranja suave
+$status-draft-bg: #fffbeb;
+$status-submitted: #3b82f6; // Azul médico
+$status-submitted-bg: #eff6ff;
+$status-reviewed: #10b981; // Verde éxito
+$status-reviewed-bg: #ecfdf5;
+
+// --- CONTENEDOR PRINCIPAL ---
+.assigned-cases-container {
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 2rem 2rem;
+  font-family: inherit;
+  border-radius: 20px;
+  background: rgba($color: #000000, $alpha: 0.02);
+  backdrop-filter: blur(20px);
+}
+
+.header {
+  margin-bottom: 40px;
+
+  h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1f2937;
+  }
+
+  .subtitle {
+    color: #6b7280;
+    font-size: 14px;
+    margin-top: 4px;
+  }
+}
+
+// --- ESTADOS (Cargando, Vacío, Error) ---
+.loading-state,
+.error-state,
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  background: $bg-glass;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px dashed $border-color;
+  border-radius: 20px;
+  text-align: center;
+  color: $text-muted;
+
+  p {
+    margin-top: 1rem;
+    font-size: 1.1rem;
+    font-weight: 500;
+  }
+}
+
+.error-state {
+  border-color: #fca5a5;
+  background: #fef2f2;
+  color: #ef4444;
+  .error-icon {
+    font-size: 2.5rem;
+  }
+}
+
+.empty-state {
+  .empty-icon {
+    font-size: 3rem;
+    opacity: 0.5;
+  }
+}
+
+// --- SPINNER DE CARGA ---
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba($teal-primary, 0.2);
+  border-top-color: $teal-primary;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// --- LISTA DE CASOS ---
+.assigned-cases-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+}
+
+// --- TARJETA INDIVIDUAL (Glassmorphism) ---
+.assigned-case-item {
+  display: flex;
+  flex-direction: column;
+  max-width: 500px;
+  width: 100%;
+  background: $bg-glass;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid $border-color;
+  border-radius: 16px;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.02),
+    0 2px 4px -1px rgba(0, 0, 0, 0.01);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:hover {
+    transform: translateY(-4px); // Efecto de flotar
+    box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.08);
+    border-color: rgba($teal-primary, 0.3);
+
+    .arrow-indicator {
+      transform: translateX(6px); // La flecha se mueve a la derecha
+      color: $teal-primary;
+    }
+  }
+}
+
+// --- ENLACE DENTRO DE LA TARJETA ---
+.assigned-case-link {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 1.75rem;
+  text-decoration: none;
+  color: inherit;
+
+  // Responsive: En celulares se apila
+  @media (max-width: 640px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.25rem;
+  }
+}
+
+// --- INFORMACIÓN DEL CASO ---
+.assigned-case-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+
+  .assigned-case-title {
+    font-size: 1.15rem;
+    color: $text-main;
+    font-weight: 600;
+  }
+
+  .assigned-case-consult {
+    font-size: 0.95rem;
+    color: $text-muted;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; // Corta el texto si es muy largo (máximo 2 líneas)
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+// --- CONTENEDOR DE ESTADO Y FLECHA ---
+.assigned-case-status-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+
+  @media (max-width: 640px) {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+// --- BADGES (Pastillas de estado) ---
+.status-badge {
+  padding: 0.4rem 1rem;
+  border-radius: 9999px; // Forma de pastilla completa
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+
+  // Estilo por defecto (Sin iniciar)
+  background: #f1f5f9;
+  color: #64748b;
+
+  &.draft {
+    background: $status-draft-bg;
+    color: $status-draft;
+    border: 1px solid rgba($status-draft, 0.2);
+  }
+
+  &.submitted {
+    background: $status-submitted-bg;
+    color: $status-submitted;
+    border: 1px solid rgba($status-submitted, 0.2);
+  }
+
+  &.reviewed {
+    background: $status-reviewed-bg;
+    color: $status-reviewed;
+    border: 1px solid rgba($status-reviewed, 0.2);
+  }
+}
+
+// --- FLECHA INDICADORA ---
+.arrow-indicator {
+  font-size: 1.2rem;
+  color: #cbd5e1;
+  transition:
+    transform 0.3s ease,
+    color 0.3s ease;
+}

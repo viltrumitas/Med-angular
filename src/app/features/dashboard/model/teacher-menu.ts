@@ -11,8 +11,14 @@ export const TEACHER_MENU: SidebarItem[] = [
     path: '/dashboard/teacher/cases',
     icon: 'folder',
     children: [
-      { name: 'Crear Caso', path: '/dashboard/teacher/cases/crear-caso' },
-      { name: 'Mis Casos', path: '/dashboard/teacher/cases' },
+      {
+        name: 'Crear Caso',
+        path: '/dashboard/teacher/cases/crear-caso',
+      },
+      {
+        name: 'Mis Casos',
+        path: '/dashboard/teacher/cases',
+      },
     ],
   },
   {
@@ -20,8 +26,14 @@ export const TEACHER_MENU: SidebarItem[] = [
     path: '/dashboard/teacher/assignments',
     icon: 'clipboard-plus',
     children: [
-      { name: 'Nueva Actividad', path: '/dashboard/teacher/assignments/crear-assignment' },
-      { name: 'Mis Actividades', path: '/dashboard/teacher/assignments' },
+      {
+        name: 'Nueva Actividad',
+        path: '/dashboard/teacher/assignments/crear-assignment',
+      },
+      {
+        name: 'Mis Actividades',
+        path: '/dashboard/teacher/assignments',
+      },
     ],
   },
   {

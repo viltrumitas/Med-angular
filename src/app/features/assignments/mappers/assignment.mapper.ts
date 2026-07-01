@@ -8,7 +8,6 @@ import { AssignmentDetail } from '../models/assignment-detail.model';
 import { AssignedCase } from '../models/assigned-case.model';
 
 export class AssignmentMapper {
-
   static toModel(dto: AssignmentResponseDto): Assignment {
     return {
       id: dto.id,
@@ -42,11 +41,7 @@ export class AssignmentMapper {
       updatedAt: dto.updatedAt,
     };
   }
-
-  // error al idiota del ale
-  static toAssignedCase(
-    dto: AssignedCaseResponseDto,
-  ): AssignedCase {
+  static toAssignedCase(dto: AssignedCaseResponseDto): AssignedCase {
     return {
       id: dto.id,
 
@@ -56,24 +51,20 @@ export class AssignmentMapper {
 
       submission: dto.submission
         ? {
-          id: dto.submission.id,
-          status: dto.submission.status,
-        }
+            id: dto.submission.id,
+            status: dto.submission.status,
+          }
         : null,
 
       assignedAt: dto.assignedAt,
     };
   }
 
-  static toDetail(
-    dto: AssignmentDetailResponseDto,
-  ): AssignmentDetail {
+  static toDetail(dto: AssignmentDetailResponseDto): AssignmentDetail {
     return {
       ...AssignmentMapper.toModel(dto),
 
-      assignedCases: dto.assignedCases.map(
-        AssignmentMapper.toAssignedCase,
-      ),
+      assignedCases: dto.assignedCases.map(AssignmentMapper.toAssignedCase),
     };
   }
 }

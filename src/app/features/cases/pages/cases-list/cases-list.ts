@@ -12,7 +12,7 @@ import { RouterLink } from '@angular/router';
 })
 export class CasesList implements OnInit {
   private readonly casesApi = inject(GetCasesApi);
-  private readonly destroyRed = inject(DestroyRef);
+  private readonly destroyRef = inject(DestroyRef);
 
   cases = signal<CaseSummaryModel[]>([]);
   isLoading = signal(false);
@@ -23,7 +23,7 @@ export class CasesList implements OnInit {
 
     this.casesApi
       .getCases()
-      .pipe(takeUntilDestroyed(this.destroyRed))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response) => {
           this.cases.set(response);

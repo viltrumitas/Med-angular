@@ -1,0 +1,118 @@
+<article class="case-card">
+  <header class="case-header">
+    <div class="meta-top">
+      <span class="badge">{{ case().area }}</span>
+      <span class="status-badge" [class.published]="case().isPublished">
+        {{ case().isPublished ? 'Publicado' : 'Borrador' }}
+      </span>
+    </div>
+    <h1>{{ case().title }}</h1>
+    <p class="date-text">Creado el: {{ case().createdAt }}</p>
+  </header>
+
+  <hr class="divider" />
+
+  <main class="case-body">
+    <section class="info-section highlight-box">
+      <div class="field-group">
+        <label>Motivo de Consulta</label>
+        <p>{{ case().consult }}</p>
+      </div>
+      <div class="field-group">
+        <label>Escenario</label>
+        <p>{{ case().scenery }}</p>
+      </div>
+    </section>
+
+    <section class="info-section">
+      <h2 class="section-title">Datos del Paciente</h2>
+      <div class="grid-2">
+        <div class="field-group">
+          <label>Nombre del Paciente</label>
+          <p class="patient-name">{{ case().patientName }}</p>
+        </div>
+        <div class="field-group">
+          <label>Género</label>
+          <p>{{ case().gender }}</p>
+        </div>
+        <div class="field-group">
+          <label>Edad</label>
+          <p>{{ case().age }}</p>
+        </div>
+      </div>
+      <div class="field-group mt-1">
+        <label>Antecedentes Médicos</label>
+        <p>{{ case().medicalHistory }}</p>
+      </div>
+      <div class="field-group mt-1">
+        <label>Medicamentos Actuales</label>
+        <p>{{ case().medications }}</p>
+      </div>
+    </section>
+
+    <hr class="divider-light" />
+
+    <section class="info-section">
+      <h2 class="section-title">Signos Vitales</h2>
+      <div class="vital-signs-grid">
+        <div class="vital-card">
+          <label>TA</label>
+          <p>{{ case().ta }}</p>
+        </div>
+        <div class="vital-card">
+          <label>FC</label>
+          <p>{{ case().fc }}</p>
+        </div>
+        <div class="vital-card">
+          <label>FR</label>
+          <p>{{ case().fr }}</p>
+        </div>
+        <div class="vital-card">
+          <label>SpO2</label>
+          <p>{{ case().spo2 }}</p>
+        </div>
+        <div class="vital-card">
+          <label>Glucosa</label>
+          <p>{{ case().glucose }}</p>
+        </div>
+        <div class="vital-card">
+          <label>Temp.</label>
+          <p>{{ case().temperature }}</p>
+        </div>
+        <div class="vital-card">
+          <label>Llenado Capilar</label>
+          <p>{{ case().capillaryFiller }}</p>
+        </div>
+      </div>
+    </section>
+
+    <hr class="divider-light" />
+
+    <section class="info-section">
+      <h2 class="section-title">Evaluación Neurológica</h2>
+      <div class="grid-2">
+        <div class="field-group">
+          <label>Brazo </label>
+          <p>{{ case().cincinnati?.armDrift }}</p>
+          <label>Rostro</label>
+          <p>{{ case().cincinnati?.facialDroop }}</p>
+          <label>Habla</label>
+          <p>{{ case().cincinnati?.speech }}</p>
+        </div>
+        <div class="field-group">
+          <label>Escala de Glasgow</label>
+          <p>{{ case().glasgow }}</p>
+        </div>
+      </div>
+    </section>
+
+    <hr class="divider-light" />
+
+    <section class="info-section">
+      <h2 class="section-title">Hallazgos Generales</h2>
+      <div class="field-group">
+        <p class="text-block">{{ case().generalFindings }}</p>
+      </div>
+    </section>
+  </main>
+</article>
