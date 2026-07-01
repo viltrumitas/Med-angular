@@ -22,4 +22,8 @@ export class AssignedCaseApiService {
       .get<AssignedCaseDto>(`${this.api}/${id}`)
       .pipe(map(AssignedCaseMapper.toModel));
   }
+
+  startSubmission(assignedCaseId: string): Observable<{ id: string }> {
+    return this.http.post<{ id: string }>(`${this.api}/${assignedCaseId}/start-submission`, {});
+  }
 }

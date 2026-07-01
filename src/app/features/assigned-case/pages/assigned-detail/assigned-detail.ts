@@ -1,6 +1,6 @@
 import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { AssignedCaseApiService } from '../../services/assigned-case-api.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AssignedStudentCase } from '../../model/assigned-case.model';
 import { DatePipe } from '@angular/common';
@@ -17,6 +17,7 @@ export class AssignedDetail implements OnInit {
   private readonly assignedApi = inject(AssignedCaseApiService);
   private readonly route = inject(ActivatedRoute);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly router = inject(Router);
 
   assignedCase = signal<AssignedStudentCase | null>(null);
   isLoading = signal(false);
@@ -45,5 +46,21 @@ export class AssignedDetail implements OnInit {
       });
   }
 
-  startSubmission() {}
+  startSubmission(): void {
+    const id = this.assignedCase()?.id;
+    if (!id) return;
+
+    this.assignedApi
+      .startSubmission(id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (submission) => {
+          this.router.navigate(['/dashboard/student/submission', submission.id]);
+        },
+        error: (err) => {
+          console.error('[AsignedDetail] Error al iniciar submisison:', err);
+          this.error.set('No se pudo iniciar el caso. Intenta de nuevo');
+        },
+      });
+  }
 }

@@ -13,7 +13,12 @@
     <app-case-content [case]="item.case" />
 
     <div class="actions-container">
-      <app-button type="submit" text="Iniciar resouesta" variant="secondary"></app-button>
+      <app-button
+        type="submit"
+        text="Iniciar resouesta"
+        variant="secondary"
+        (clicked)="startSubmission()"
+      ></app-button>
     </div>
   }
 </div>
