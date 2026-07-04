@@ -1,4 +1,3 @@
-import { UserModel } from '../../../shared/models/user.model';
 import { TeacherModel } from '../../cases/dto/teacher-response.dto';
 
 import { SceneManagementModel } from './sceneManagment.model';
@@ -10,16 +9,16 @@ import { PhysicalExaminationModel } from './physicalExamination.model';
 import { SamplerModel } from './anamnesis.model';
 import { OpqrstModel } from './anamnesis.model';
 import { OtherInterventionsModel } from './otherInterventions.model';
+import { User } from '../../../core/models/user.model';
 
 export interface ReviewModel {
-
   id: string;
 
   caseId: string;
 
   teacher: TeacherModel;
 
-  student: UserModel;
+  student: User;
 
   sceneManagement: SceneManagementModel;
 
@@ -44,5 +43,4 @@ export interface ReviewModel {
   feedback: string | null;
 
   createdAt: Date;
-
 }

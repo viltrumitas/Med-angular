@@ -1,25 +1,17 @@
-import { UserModel } from '../../../shared/models/user.model';
-
+import { User } from '../../../core/models/user.model';
 import { Assignment } from '../../assignments/models/assignment.model';
-import { CaseResponseDto } from '../../cases/dto/case-response.dto'; 
+import { CaseResponseDto } from '../../cases/dto/case-response.dto';
 
-export type SubmissionStatus =
-  | 'DRAFT'
-  | 'SUBMITTED';
+export type SubmissionStatus = 'DRAFT' | 'SUBMITTED';
 
-export type Priority =
-  | 'GREEN'
-  | 'YELLOW'
-  | 'RED'
-  | 'BLACK';
+export type Priority = 'GREEN' | 'YELLOW' | 'RED' | 'BLACK';
 
 export interface SubmissionModel {
-
   id: string;
 
   reviewId: string | null;
 
-  student: UserModel;
+  student: User;
 
   assignment: Assignment;
 
@@ -50,5 +42,4 @@ export interface SubmissionModel {
   createdAt: Date;
 
   updatedAt: Date;
-
 }

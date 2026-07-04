@@ -11,9 +11,9 @@ export interface SubmissionResponseDto {
 
   student: StudentResponseDto;
 
-  assigment: AssignmentResponseDto;
+  assignment: AssignmentResponseDto;
   case: CaseResponseDto;
-  sceneManagement?: string | null;
+  sceneManagment?: string | null;
   sss?: string | null;
   primaryTest?: string | null;
   sample?: string | null;

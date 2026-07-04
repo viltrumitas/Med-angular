@@ -1,28 +1,20 @@
-import { UserModel } from "../../../shared/models/user.model";
-import { AssignmentResponseDto } from "../../assignments/dto/assignment-response.dto";
-import { CaseResponseDto } from "../../cases/dto/case-response.dto";
+import { User } from '../../../core/models/user.model';
+import { AssignmentResponseDto } from '../../assignments/dto/assignment-response.dto';
+import { CaseResponseDto } from '../../cases/dto/case-response.dto';
 
-export type SubmissionStatus =
-  | 'DRAFT'
-  | 'SUBMITTED';
+export type SubmissionStatus = 'DRAFT' | 'SUBMITTED';
 
-
-export type Priority =
-  | 'GREEN'
-  | 'YELLOW'
-  | 'RED'
-  | 'BLACK';
+export type Priority = 'GREEN' | 'YELLOW' | 'RED' | 'BLACK';
 
 export interface SubmissionResponseDto {
   id: string;
 
   reviewId: string;
 
-  student: UserModel;
+  student: User;
 
   assignment: AssignmentResponseDto;
   case: CaseResponseDto;
-
 
   sceneManagement: string;
   sss: string;

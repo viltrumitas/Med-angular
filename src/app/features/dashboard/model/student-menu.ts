@@ -8,19 +8,18 @@ export const STUDENT_MENU: SidebarItem[] = [
   },
   {
     name: 'Actividades',
-    path: '/dashboard/student',
+    path: '/dashboard/student/assigned',
     icon: 'folder',
-    children: [
-      {
-        name: 'Pendientes',
-        path: '',
-      },
-      {
-        name: 'Mis actividades',
-        path: '/dashboard/student/assigned',
-      },
-    ],
   },
+  {
+    name: 'Pendientes',
+    path: '/dashboard/student/submissions',
+    icon: 'clipboard-clock',
+  },
+  // {
+  //   name: 'cd',
+  //   path: '/dashboard/student/submissions/create',
+  // },
   {
     separator: true,
   },

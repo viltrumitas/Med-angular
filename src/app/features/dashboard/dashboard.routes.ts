@@ -40,6 +40,11 @@ export const dashboardRoutes: Routes = [
             loadChildren: () =>
               import('../assigned-case/assigned-case.routes').then((e) => e.assignedRoutes),
           },
+          {
+            path: 'submissions',
+            loadChildren: () =>
+              import('../submissions/submissions.routes').then((e) => e.submissionRoutes),
+          },
         ],
       },
     ],

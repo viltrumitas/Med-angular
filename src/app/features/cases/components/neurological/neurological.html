@@ -1,6 +1,10 @@
 <div class="section" [formGroup]="group">
   <div class="cincinnati" formGroupName="cincinnati">
-    <app-select formControlName="facialDroop" labelText="Facial" [options]="cincinnatiOptions" />
+    <app-select
+      formControlName="facialDroop"
+      labelText="Algo Facial"
+      [options]="cincinnatiOptions"
+    />
 
     <app-select formControlName="armDrift" labelText="Brazo" [options]="cincinnatiOptions" />
 

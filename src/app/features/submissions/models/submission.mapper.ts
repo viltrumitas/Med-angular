@@ -1,7 +1,7 @@
 import { Priority } from '../../../core/enum/priority.enum';
 
-export interface SubmissionDto {
-  scenaryManagnment: string;
+export interface Submission {
+  sceneManagment: string;
   sss: string;
   primaryTest: string;
   sample: string;

@@ -1,0 +1,7 @@
+<div class="section" [formGroup]="group">
+  <div class="priority">
+    <app-select formControlName="priority" labelText="Prioridad" [options]="priority" />
+  </div>
+
+  <app-input formArrayName="presumptiveDiagnosis" labelText="Diagnosticos" type="text" />
+</div>
