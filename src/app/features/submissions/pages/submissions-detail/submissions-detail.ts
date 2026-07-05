@@ -12,7 +12,7 @@ import { Clinical } from '../../components/clinical/clinical';
 import { Diagnostic } from '../../components/diagnostic/diagnostic';
 import { Treatment } from '../../components/treatment/treatment';
 import { SubmissionStatus } from '../../../../core/models/submission-status.enum';
-import { toSubmissionFormValue } from '../../mappers/submission-form.mapper';
+import { mapSubmissionFormValue } from '../../mappers/submission-form.mapper';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
@@ -54,7 +54,7 @@ export class SubmissionsDetail implements OnInit {
       .subscribe({
         next: (respose) => {
           this.submissions.set(respose);
-          this.form.patchValue(toSubmissionFormValue(respose));
+          this.form.patchValue(mapSubmissionFormValue(respose));
           if (!this.isReadonly()) {
             this.form.disable;
           }

@@ -1,7 +1,7 @@
 import { SubmissionResponseDto } from '../dto/submission-response.dto';
 import { SubmissionFormValue } from '../form/submission-form.factory';
 
-export function toSubmissionFormValue(submission: SubmissionResponseDto): SubmissionFormValue {
+export function mapSubmissionFormValue(submission: SubmissionResponseDto): SubmissionFormValue {
   return {
     clinical: {
       sceneManagnment: submission.sceneManagment ?? '',

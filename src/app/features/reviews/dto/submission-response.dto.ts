@@ -1,10 +1,8 @@
 import { Priority } from '../../../core/enum/priority.enum';
+import { SubmissionStatus } from '../../../core/models/submission-status.enum';
 import { User } from '../../../core/models/user.model';
 import { AssignmentResponseDto } from '../../assignments/dto/assignment-response.dto';
 import { CaseResponseDto } from '../../cases/dto/case-response.dto';
-
-export type SubmissionStatus = 'DRAFT' | 'SUBMITTED';
-
 export interface SubmissionResponseDto {
   id: string;
 

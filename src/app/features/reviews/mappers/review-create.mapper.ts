@@ -1,7 +1,7 @@
-import { ReviewResponseDto } from "../dto/review-response.dto";
-import { SubmissionResponseDto } from "../dto/submission-response.dto";
-import { ReviewModel } from "../models/review.model";
-import { SubmissionModel } from "../models/submission.model";
+import { ReviewResponseDto } from '../dto/review-response.dto';
+import { SubmissionResponseDto } from '../dto/submission-response.dto';
+import { ReviewModel } from '../models/review.model';
+import { SubmissionModel } from '../models/submission.model';
 
 export class ReviewMapper {
   static toModel(dto: ReviewResponseDto): ReviewModel {
@@ -55,4 +55,3 @@ export class ReviewMapper {
     };
   }
 }
-

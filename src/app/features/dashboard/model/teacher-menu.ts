@@ -22,6 +22,11 @@ export const TEACHER_MENU: SidebarItem[] = [
     ],
   },
   {
+    name: 'Classroom',
+    path: '/dashboard/teacher/classroom',
+    icon: 'shapes',
+  },
+  {
     name: 'Actividades',
     path: '/dashboard/teacher/assignments',
     icon: 'clipboard-plus',
