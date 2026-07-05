@@ -1,7 +1,7 @@
-<div class="section" [formGroup]="group">
+<div class="section" [formGroup]="group()">
   <div class="tranfer-checkbox">
-    <label for="Transferiri"></label>
-    <input placeholder="Requeriodo" type="checkbox" formControlName="transferrDecision" />
+    <input type="checkbox" formControlName="transferDecision" />
+    <label for="Transferir">Requiere trnasferir?</label>
   </div>
   <app-text-area formControlName="treatmentPlan" labelText="Plan de Tratamientos" />
   <app-input formControlName="reportPatient" labelText="Reporte del Paciente" type="text" />

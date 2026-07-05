@@ -1,9 +1,9 @@
 import { SubmissionFormValue } from '../form/submission-form.factory';
-import { UpdateSubmisson } from '../models/update-submission.model';
+import { UpdateSubmissionDto } from '../dto/update-submission.dto';
 
-export function SubmissionMapper(form: SubmissionFormValue): UpdateSubmisson {
+export function toUpdateSubmissionDto(form: SubmissionFormValue): UpdateSubmissionDto {
   return {
-    scenaryManagnment: form.clinical.scenaryManagnment,
+    sceneManagnment: form.clinical.sceneManagnment,
     sss: form.clinical.sss,
     primaryTest: form.clinical.primaryTest,
     sample: form.clinical.sample,

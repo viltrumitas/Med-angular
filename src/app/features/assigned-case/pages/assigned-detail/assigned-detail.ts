@@ -55,7 +55,7 @@ export class AssignedDetail implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (submission) => {
-          this.router.navigate(['/dashboard/student/submission', submission.id]);
+          this.router.navigate(['/dashboard/student/submissions', submission.id]);
         },
         error: (err) => {
           console.error('[AsignedDetail] Error al iniciar submisison:', err);

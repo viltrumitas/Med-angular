@@ -1,7 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { TreatmentForm } from '../../form/submission-form.factory';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Teacher } from '../../../dashboard/roles/teacher/teacher';
 import { TextareaComponent } from '../../../../shared/components/text-area/text-area';
 import { InputComponent } from '../../../../shared/components/input/input';
 
@@ -12,6 +11,5 @@ import { InputComponent } from '../../../../shared/components/input/input';
   styleUrl: './treatment.scss',
 })
 export class Treatment {
-  @Input({ required: true })
-  group!: TreatmentForm;
+  group = input.required<TreatmentForm>();
 }

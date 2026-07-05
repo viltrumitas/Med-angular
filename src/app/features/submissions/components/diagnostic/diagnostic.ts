@@ -1,8 +1,11 @@
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { DiagnosticForm } from '../../form/submission-form.factory';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { SelectComponent } from '../../../../shared/components/select/select';
 import { InputComponent } from '../../../../shared/components/input/input';
+import { Treatment } from '../treatment/treatment';
+import { PriorityOption } from '../../models/priority-option.model';
+import { Priority } from '../../../../core/enum/priority.enum';
 
 @Component({
   selector: 'app-diagnostic',
@@ -11,25 +14,12 @@ import { InputComponent } from '../../../../shared/components/input/input';
   styleUrl: './diagnostic.scss',
 })
 export class Diagnostic {
-  @Input({ required: true })
-  group!: DiagnosticForm;
+  group = input.required<DiagnosticForm>();
 
-  readonly priority = [
-    {
-      label: 'Verde',
-      value: 'GREEN',
-    },
-    {
-      label: 'Amarillo',
-      value: 'YELLOW',
-    },
-    {
-      label: 'ROjo',
-      value: 'RED',
-    },
-    {
-      label: 'Negro',
-      value: 'BLACK',
-    },
+  readonly priorityOption: PriorityOption[] = [
+    { label: 'Verde', value: Priority.GREEN },
+    { label: 'Amarillo', value: Priority.YELLOW },
+    { label: 'Rojo', value: Priority.RED },
+    { label: 'Negro', value: Priority.BLACK },
   ];
 }

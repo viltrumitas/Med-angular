@@ -4,7 +4,7 @@ import { Priority } from '../../../core/enum/priority.enum';
 export function createSubmissionForm() {
   return new FormGroup({
     clinical: new FormGroup({
-      scenaryManagnment: new FormControl('', {
+      sceneManagnment: new FormControl('', {
         nonNullable: true,
       }),
       sss: new FormControl('', {

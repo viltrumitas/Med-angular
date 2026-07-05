@@ -4,23 +4,22 @@
       <div class="spinner"></div>
       <p>Cargando submission...</p>
     </div>
-  } @else if (error()) {
+  } @else if (loadError()) {
     <div class="error-state">
       <span class="error-icon">⚠️</span>
-      <p class="error">{{ error() }}</p>
+      <p class="error">{{ loadError() }}</p>
     </div>
   } @else if (submissions(); as item) {
     <div class="header">
-      <h2>Submission #{{ item.id }}</h2>
+      <h2>{{ item.case.title }}</h2>
 
       <div class="status">
-        <span>{{ item.status }}</span>
+        <span>{{ statusLabels[item.status ?? 'DRAFT'] }}</span>
       </div>
     </div>
 
     <!-- FORM -->
-    \
-    <form [formGroup]="form" (ngSubmit)="save()">
+    <form [formGroup]="form">
       <div class="clinical-card">
         <h2>Area Clinical</h2>
         <app-clinical [group]="form.controls.clinical"></app-clinical>
@@ -35,11 +34,26 @@
       </div>
     </form>
 
+    @if (saveError()) {
+      <p class="error">{{ saveError() }}</p>
+    }
     <!-- ACTIONS -->
     <div class="actions-container">
-      <app-button text="Guardar cambios" variant="secondary" (clicked)="save()"></app-button>
+      <app-button
+        text="Guardar cambios"
+        variant="secondary"
+        [disabled]="isSaving()"
+        (clicked)="save()"
+      ></app-button>
 
-      <app-button text="Enviar submission" variant="primary" (clicked)="submit()"></app-button>
+      <app-button
+        text="Enviar submission"
+        variant="primary"
+        [disabled]="isSubmitting() || isReadonly()"
+        (clicked)="submit()"
+      ></app-button>
     </div>
+  } @else {
+    <p>No se encontro la submission solicitada</p>
   }
 </div>

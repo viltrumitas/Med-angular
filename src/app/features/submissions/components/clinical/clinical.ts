@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { ClinicalForm } from '../../form/submission-form.factory';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TextareaComponent } from '../../../../shared/components/text-area/text-area';
@@ -10,6 +10,5 @@ import { TextareaComponent } from '../../../../shared/components/text-area/text-
   styleUrl: './clinical.scss',
 })
 export class Clinical {
-  @Input({ required: true })
-  group!: ClinicalForm;
+  group = input.required<ClinicalForm>();
 }

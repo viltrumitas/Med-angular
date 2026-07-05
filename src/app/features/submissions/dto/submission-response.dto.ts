@@ -1,15 +1,15 @@
 import { Priority } from '../../../core/enum/priority.enum';
 import { SubmissionStatus } from '../../../core/models/submission-status.enum';
+import { User } from '../../../core/models/user.model';
 import { AssignmentResponseDto } from '../../assignments/dto/assignment-response.dto';
 import { CaseResponseDto } from '../../cases/dto/case-response.dto';
-import { StudentResponseDto } from '../models/student.response.model';
 
 export interface SubmissionResponseDto {
   id: string;
 
-  reviewed: string;
+  reviewId: string;
 
-  student: StudentResponseDto;
+  student: User;
 
   assignment: AssignmentResponseDto;
   case: CaseResponseDto;
@@ -23,8 +23,8 @@ export interface SubmissionResponseDto {
   transferDecision?: boolean | null;
   treatmentPlan?: string | null;
   reportPatient?: string | null;
-  status?: SubmissionStatus | null;
+  status: SubmissionStatus | null;
 
   createdAt: Date;
-  updateAt: Date;
+  updatedAt: Date;
 }
