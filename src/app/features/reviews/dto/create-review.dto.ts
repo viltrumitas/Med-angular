@@ -17,5 +17,6 @@ export interface CreateReviewModel {
   sampler: SamplerModel;
   opqrst: OpqrstModel;
   otherInterventions: OtherInterventionsModel;
+  
   feedback?: string;
 }

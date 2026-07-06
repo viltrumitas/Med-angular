@@ -2,24 +2,33 @@
 
   <header class="header">
     <h1>Mis pendientes</h1>
-    <p class="subtitle">Gestiona tus pendientes</p>
+    <p class="subtitle">
+      Revisa y evalúa las entregas asignadas.
+    </p>
   </header>
 
   @if (loading()) {
-  <div class="state">Cargando entregas...</div>
+    <div class="state">
+      Cargando entregas...
+    </div>
   }
 
   @if (!loading() && submissions().length === 0) {
-  <div class="state empty">
-    <h3>No tienes entregas pendientes</h3>
-  </div>
+    <div class="state empty">
+      <h3>No tienes entregas pendientes</h3>
+      <p>Todas las entregas han sido evaluadas.</p>
+    </div>
   }
 
   @if (!loading() && submissions().length > 0) {
-  <div class="cards">
-    @for (submission of submissions(); track submission.id) {
-    <app-review-card [submission]="submission" (viewSubmissions)="openSubmission($event)" />
-    }
-  </div>
+    <div class="cards">
+      @for (submission of submissions(); track submission.id) {
+        <app-review-card
+          [submission]="submission"
+          (viewSubmissions)="openSubmission($event)"
+        />
+      }
+    </div>
   }
+
 </div>

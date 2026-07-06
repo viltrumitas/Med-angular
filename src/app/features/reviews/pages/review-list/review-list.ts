@@ -40,7 +40,7 @@ export class ReviewList implements OnInit {
 
   openSubmission(id: string) {
     this.router.navigate([
-      '/dashboard/teacher/reviews',
+      '/dashboard/teacher/reviews/crear',
       id,
     ]);
   }

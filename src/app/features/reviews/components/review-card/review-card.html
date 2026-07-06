@@ -1,39 +1,45 @@
 <article class="submission-card">
-  <h2>
-    {{ submission.student.firstName }}
-    {{ submission.student.lastName }}
-  </h2>
 
-  <h3>
-    {{ submission.assignment.title }}
-  </h3>
+  <div class="case-submission-info">
+    <h2>
+      {{ submission.student.firstName }}
+      {{ submission.student.lastName }}
+    </h2>
+
+    <h3>{{ submission.assignment.title }}</h3>
+
+    <h4>{{ submission.case.title }}</h4>
+  </div>
 
   @if (submission.assignment.description) {
   <p class="description">
     {{ submission.assignment.description }}
   </p>
-}
+  }
 
-  <h4>
-    {{ submission.case.title }}
-  </h4>
+  <div class="info">
 
+    <div class="row">
+      <span class="label">Estado</span>
 
-  <p>
-    <strong>Estado:</strong>
-    @if (submission.status === 'SUBMITTED') {
-      <span>Entregado</span>
-    }
-  </p>
+      @if (submission.status === 'SUBMITTED') {
+      <span class="status">
+        ✓ Entregado
+      </span>
+      }
+    </div>
 
-  <p>
-    <strong>Enviado</strong>
-    {{ submission.createdAt | date:'medium' }}
-  </p>
+    <div class="row">
+      <span class="label">Enviado</span>
+      <span class="value">
+        {{ submission.createdAt | date:'medium' }}
+      </span>
+    </div>
 
-  <app-button
-    text="Ver entrega"
-    (clicked)="open()"
-  />
+  </div>
+
+  <div class="actions">
+    <app-button text="Evaluar entrega" (clicked)="open()" />
+  </div>
 
 </article>

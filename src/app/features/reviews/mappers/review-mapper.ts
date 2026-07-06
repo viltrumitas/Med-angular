@@ -43,7 +43,7 @@ export function mapCreateReview(
       ...form.otherInterventions,
     },
 
-    feedback: form.feedback ?? '',
+    feedback: form.feedback,
 
   };
 

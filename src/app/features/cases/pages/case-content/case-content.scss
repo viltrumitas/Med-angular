@@ -16,9 +16,10 @@ $warning: #f59e0b;
   border: 1px solid $border-color;
   border-radius: 20px;
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
-  padding: 3.5rem;
-  width: 100vh;
-  margin: 0 auto;
+  padding: 1.5rem;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
   font-family: 'Inter', system-ui, sans-serif;
   color: $text-main;
 }

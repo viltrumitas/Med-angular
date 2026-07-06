@@ -1,7 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, forwardRef, Input } from '@angular/core';
-
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import {
+  ControlValueAccessor,
+  NG_VALUE_ACCESSOR,
+} from '@angular/forms';
 
 @Component({
   selector: 'app-input',
@@ -18,40 +20,51 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   ],
 })
 export class InputComponent implements ControlValueAccessor {
+
   @Input() labelText!: string;
+
   @Input() type: 'text' | 'number' | 'email' | 'password' = 'text';
+
   @Input() placeHolderText = '';
 
   value: string | number | null = '';
+
   disabled = false;
 
-  private onChange: (value: any) => void = () => {};
-  private onTouched: () => void = () => {};
+  private onChange: (value: string | number | null) => void = () => { };
 
-  writeValue(value: any): void {
+  private onTouched: () => void = () => { };
+
+  writeValue(value: string | number | null): void {
     this.value = value ?? '';
   }
 
-  registerOnChange(fn: any): void {
+  registerOnChange(fn: (value: string | number | null) => void): void {
     this.onChange = fn;
   }
 
-  registerOnTouched(fn: any): void {
+  registerOnTouched(fn: () => void): void {
     this.onTouched = fn;
   }
 
-  setDisabledState(value: boolean): void {
-    this.disabled = value;
+  setDisabledState(disabled: boolean): void {
+    this.disabled = disabled;
   }
 
-  onInput(event: Event) {
-    const value = (event.target as HTMLInputElement).value;
+  onInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+
+    const value =
+      this.type === 'number'
+        ? (input.value === '' ? null : input.valueAsNumber)
+        : input.value;
 
     this.value = value;
     this.onChange(value);
   }
 
-  onBlur() {
+  onBlur(): void {
     this.onTouched();
   }
+
 }

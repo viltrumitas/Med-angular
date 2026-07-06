@@ -41,4 +41,12 @@ export class ReviewApi {
   getMyPending(): Observable<SubmissionResponseDto[]> {
     return this.http.get<SubmissionResponseDto[]>(`${this.apiUrl}/submissions/pending`)
   }
+
+  getSubmissionById(id: string): Observable<SubmissionResponseDto> {
+    return this.http.get<SubmissionResponseDto>(`${this.apiUrl}/submissions/${id}`)
+  }
+
+  getMyReviews() {
+    return this.http.get<ReviewResponseDto[]>(`${this.apiUrl}/reviews`)
+  }
 }

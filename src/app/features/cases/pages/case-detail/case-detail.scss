@@ -9,10 +9,15 @@ $error-color: #ef4444;
 
 // --- CONTENEDOR DE LA VISTA ---
 .case-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  width: 100%;
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+app-case-content {
+  display: block;
+  width: 100%;
 }
 
 // --- ESTADO DE CARGA (LOADING STATE) ---

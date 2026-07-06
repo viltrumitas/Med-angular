@@ -5,7 +5,7 @@ import {
 } from '@angular/forms';
 
 function scoreControl() {
-  return new FormControl(0, {
+  return new FormControl<number>(0, {
     nonNullable: true,
     validators: [
       Validators.min(0),
@@ -181,7 +181,9 @@ export function createReviewForm() {
 
     }),
 
-    feedback: new FormControl(''),
+    feedback: new FormControl('', {
+      nonNullable: true,
+    }),
 
   });
 }

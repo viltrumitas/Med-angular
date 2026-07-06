@@ -1,1 +1,83 @@
-<p>review-create works!</p>
+@if (loading()) {
+
+<p>Cargando entrega...</p>
+
+} @else if (submission()) {
+
+@let s = submission()!;
+
+<div class="review-layout">
+
+  <aside class="case-panel">
+    <app-case-content [case]="s.case" />
+  </aside>
+
+  <main class="form-panel">
+
+    <header class="review-header">
+
+      <h1>Evaluar entrega</h1>
+
+      <h2>
+        {{ s.student.firstName }}
+        {{ s.student.lastName }}
+      </h2>
+
+      <p>
+        {{ s.assignment.title }}
+      </p>
+
+    </header>
+
+    <!-- RESPUESTA DEL ESTUDIANTE -->
+    <app-submission-content class="submission-section" [submission]="s" />
+
+    <!-- FORMULARIO DE EVALUACIÓN -->
+    <form [formGroup]="reviewForm" (ngSubmit)="save()">
+
+      <app-scene-management [group]="reviewForm.controls.sceneManagement" />
+      <app-primary-assessment [group]="reviewForm.controls.primaryAssessment" class="section"/>
+      <app-patient-priority [group]="reviewForm.controls.patientPriority" />
+      <app-vital-signs [group]="reviewForm.controls.vitalSigns" />
+      <app-focused-assessment [group]="reviewForm.controls.focusedAssessment" />
+      <app-physical-examination [group]="reviewForm.controls.physicalExamination" />
+      <app-sampler [group]="reviewForm.controls.sampler" />
+      <app-opqrst [group]="reviewForm.controls.opqrst" />
+      <app-other-interventions [group]="reviewForm.controls.otherInterventions" />
+
+      <div class="score-card">
+
+        <span class="score-label">
+          Puntaje total
+        </span>
+
+        <span class="score-value">
+          {{ totalScore() }} puntos
+        </span>
+
+      </div>
+
+      <div class="feedback-section">
+
+        <h3>Retroalimentación</h3>
+
+        <p class="feedback-description">
+          Escribe observaciones para el estudiante, fortalezas, errores y recomendaciones.
+        </p>
+
+        <app-text-area formControlName="feedback" labelText="Feedback"
+          placeHolderText="Escribe aquí la retroalimentación del estudiante..." />
+
+      </div>
+
+      <div class="form-actions">
+        <app-button type="submit" text="Guardar evaluación" />
+      </div>
+
+    </form>
+
+  </main>
+
+</div>
+
+}
