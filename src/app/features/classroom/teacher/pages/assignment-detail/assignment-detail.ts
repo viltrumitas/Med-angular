@@ -1,9 +1,8 @@
 import { Component, inject, signal, computed, AfterViewInit, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-
-import { AssignmentApi } from '../../../assignments/services/assignment-api';
-import { AssignmentDetail as AssignmentDetailModel } from '../../models/assignment-detail.model';
+import { AssignmentApi } from '../../../../assignments/services/assignment-api';
+import { AssignmentDetail as AssignmentDetailModel } from '../../../models/assignment-detail.model';
 import { createIcons, icons } from 'lucide';
 
 @Component({

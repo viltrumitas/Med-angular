@@ -1,0 +1,66 @@
+<form class="create-classroom-form" [formGroup]="form" (ngSubmit)="submit()">
+  <!-- =========================
+       NAME
+  ========================== -->
+
+  <div class="form-group">
+    <label for="classroom-name">
+      Nombre de la clase
+
+      <span class="required">*</span>
+    </label>
+
+    <input
+      id="classroom-name"
+      type="text"
+      formControlName="name"
+      placeholder="Ej. Urgencias Médicas 2026"
+      autocomplete="off"
+    />
+
+    @if (form.controls.name.invalid && form.controls.name.touched) {
+      <small class="field-error"> El nombre es obligatorio. </small>
+    }
+  </div>
+
+  <!-- =========================
+       DESCRIPTION
+  ========================== -->
+
+  <div class="form-group">
+    <div class="label-row">
+      <label for="classroom-description"> Descripción </label>
+
+      <span class="optional"> Opcional </span>
+    </div>
+
+    <textarea
+      id="classroom-description"
+      rows="5"
+      formControlName="description"
+      placeholder="Describe brevemente el propósito de esta clase..."
+    ></textarea>
+  </div>
+
+  <!-- =========================
+       ACTIONS
+  ========================== -->
+
+  <div class="actions">
+    <button type="button" class="secondary" [disabled]="loading()" (click)="cancelled.emit()">
+      Cancelar
+    </button>
+
+    <button type="submit" class="primary" [disabled]="loading()">
+      @if (loading()) {
+        <span class="button-spinner"></span>
+
+        <span>Creando...</span>
+      } @else {
+        <i data-lucide="plus"></i>
+
+        <span>Crear clase</span>
+      }
+    </button>
+  </div>
+</form>

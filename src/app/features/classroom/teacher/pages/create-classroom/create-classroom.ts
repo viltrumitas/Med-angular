@@ -1,11 +1,9 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, output, signal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-
-import { createClassroomForm } from '../../forms/classroom.form';
-import { mapCreateClassroom } from '../../mappers/map-clasroom.mapper';
-
-import { ClassroomApi } from '../../service/clasroom-api.service';
+import { createClassroomForm } from '../../../forms/classroom.form';
+import { mapCreateClassroom } from '../../../mappers/map-clasroom.mapper';
+import { ClassroomApi } from '../../../service/clasroom-api.service';
 
 @Component({
   selector: 'app-create-classroom',
@@ -19,8 +17,10 @@ export class CreateClassroom {
   private readonly router = inject(Router);
 
   readonly form = createClassroomForm();
-
   readonly loading = signal(false);
+
+  created = output<void>();
+  cancelled = output<void>();
 
   submit() {
     if (this.form.invalid) {
@@ -30,10 +30,11 @@ export class CreateClassroom {
 
     this.loading.set(true);
 
-    const dto = mapCreateClassroom(this.form.getRawValue(),);
+    const dto = mapCreateClassroom(this.form.getRawValue());
 
     this.api.create(dto).subscribe({
       next: () => {
+        this.created.emit();
         this.router.navigate(['/dashboard/teacher/classroom']);
       },
       error: () => {

@@ -8,6 +8,8 @@ import { RegisterModel } from './models/register.model';
 import { createLoginForm, createRegisterForm } from './forms/auth.forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../core/services/auth.service';
+import { UserRole } from '../../core/enum/user-role.enum';
+import { User } from 'lucide';
 
 @Component({
   selector: 'app-login',
@@ -42,7 +44,7 @@ export class AuthComponent {
     this.authApi.login(data).subscribe({
       next: (res) => {
         console.log('Incio de sasion exitoso', res.user);
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(this.authService.getDashboardRoute());
       },
       error: (err) => {
         console.log('COMPONENTE ERROR:', err);
@@ -79,7 +81,7 @@ export class AuthComponent {
     this.authApi.register(data).subscribe({
       next: (res) => {
         console.log('Usuario creado', res);
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(this.authService.getDashboardRoute());
       },
       error: (err) => {
         console.log('COMPONENTE ERROR:', err);

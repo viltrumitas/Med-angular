@@ -5,6 +5,5 @@ import { RouterOutlet } from '../../../../node_modules/@angular/router/types/_ro
   selector: 'app-classroom',
   imports: [RouterOutlet],
   templateUrl: './classroom.html',
-  styleUrl: './classroom.scss',
 })
 export class Classroom {}

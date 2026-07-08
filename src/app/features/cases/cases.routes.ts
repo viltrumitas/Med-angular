@@ -6,7 +6,7 @@ export const casesRoutes: Routes = [
     loadComponent: () => import('./pages/cases-list/cases-list').then((c) => c.CasesList),
   },
   {
-    path: 'crear-caso',
+    path: 'create',
     loadComponent: () => import('./pages/create-case/create-case').then((c) => c.CreateCase),
   },
   {

@@ -1,9 +1,9 @@
 import { AfterViewInit, Component, inject, Input, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ClassroomApi } from '../../service/clasroom-api.service';
-import { ClassroomDetailModel } from '../../models/classroom-detail.model';
-import { AssignmentCreate } from '../../components/assignment-create/assignment-create';
-import { AssignmentCard } from '../../components/assignment-card/assignment-card';
+import { ClassroomApi } from '../../../service/clasroom-api.service';
+import { ClassroomDetailModel } from '../../../models/classroom-detail.model';
+import { AssignmentCreate } from '../../../components/assignment-create/assignment-create';
+import { AssignmentCard } from '../../../components/assignment-card/assignment-card';
 import { createIcons, icons } from 'lucide';
 
 @Component({
@@ -52,7 +52,7 @@ export class ClassroomDetail implements AfterViewInit, OnInit {
     const classroomId = this.classroom()!.id;
 
     this.router.navigate([
-      '/dashboard/teacher/classroom',
+      '/dashboard/teacher/classrooms',
       classroomId,
       'assignments',
       assignmentId,

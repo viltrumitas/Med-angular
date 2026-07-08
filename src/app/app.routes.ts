@@ -21,4 +21,8 @@ export const routes: Routes = [
     loadChildren: () =>
       import('./features/dashboard/dashboard.routes').then((e) => e.dashboardRoutes),
   },
+  {
+    path: '**',
+    redirectTo: '',
+  },
 ];

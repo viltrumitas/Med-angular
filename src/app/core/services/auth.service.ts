@@ -42,4 +42,22 @@ export class AuthService {
       return null;
     }
   }
+
+  getDashboardRoute(): string[] {
+    const role = this.role();
+
+    switch (role) {
+      case UserRole.TEACHER:
+        return ['/dashboard/teacher'];
+
+      case UserRole.STUDENT:
+        return ['/dashboard/students'];
+
+      case UserRole.ADMIN:
+        return ['/dashboard/admin'];
+
+      default:
+        return ['/'];
+    }
+  }
 }
