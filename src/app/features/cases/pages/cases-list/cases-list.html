@@ -1,38 +1,305 @@
 <div class="cases-container">
-  @if (isLoading()) {
-    <div class="loading-state">
-      <div class="spinner"></div>
-      <p>Cargando casos clínicos...</p>
-    </div>
-  } @else if (error()) {
-    <div class="error-state">
-      <span class="error-icon">⚠️</span>
-      <p class="error">{{ error() }}</p>
-    </div>
-  } @else if (cases().length === 0) {
-    <div class="empty-state">
-      <span class="empty-icon">📁</span>
-      <p>No tienes casos creados aún.</p>
-    </div>
-  } @else {
-    <ul class="cases-list">
-      @for (caso of cases(); track caso.id) {
-        <li class="case-item">
-          <a [routerLink]="['/dashboard/teacher/cases', caso.id]" class="case-link">
-            <div class="case-info">
-              <strong class="case-title">{{ caso.title }}</strong>
-              <span class="case-consult">{{ caso.consult }}</span>
-            </div>
+  <!-- =========================
+       HEADER
+  ========================== -->
 
-            <div class="case-status-wrapper">
-              <span class="status-badge" [class.published]="caso.isPublished">
-                {{ caso.isPublished ? 'Publicado' : 'Borrador' }}
-              </span>
-              <span class="arrow-indicator">→</span>
-            </div>
-          </a>
-        </li>
-      }
-    </ul>
+  <header class="page-header">
+    <div class="header-content">
+      <span class="header-eyebrow">Casos clínicos</span>
+
+      <h1>Mis casos</h1>
+
+      <p>Gestiona y da seguimiento a los casos clínicos que has creado.</p>
+    </div>
+
+    <a routerLink="crear-caso" class="create-case-button">
+      <i data-lucide="plus"></i>
+
+      <span>Crear caso</span>
+    </a>
+  </header>
+
+  <!-- =========================
+       LOADING
+  ========================== -->
+
+  @if (isLoading()) {
+    <section class="state-container">
+      <div class="spinner"></div>
+
+      <div class="state-content">
+        <h2>Cargando casos</h2>
+
+        <p>Estamos obteniendo tus casos clínicos...</p>
+      </div>
+    </section>
+  }
+
+  <!-- =========================
+       ERROR
+  ========================== -->
+
+  @else if (error()) {
+    <section class="state-container error-state">
+      <div class="state-icon">
+        <i data-lucide="triangle-alert"></i>
+      </div>
+
+      <div class="state-content">
+        <h2>No pudimos cargar tus casos</h2>
+
+        <p>
+          {{ error() }}
+        </p>
+      </div>
+    </section>
+  }
+
+  <!-- =========================
+       EMPTY
+  ========================== -->
+
+  @else if (cases().length === 0) {
+    <section class="empty-state">
+      <div class="empty-icon">
+        <i data-lucide="folder-open"></i>
+      </div>
+
+      <h2>Aún no tienes casos clínicos</h2>
+
+      <p>Crea tu primer caso para comenzar a trabajar con tus estudiantes.</p>
+
+      <a routerLink="crear-caso" class="empty-action">
+        <i data-lucide="plus"></i>
+
+        <span>Crear primer caso</span>
+      </a>
+    </section>
+  }
+
+  <!-- =========================
+       CONTENT
+  ========================== -->
+
+  @else {
+    <!-- =========================
+         STATS
+    ========================== -->
+
+    <section class="stats-grid">
+      <article class="stat-card">
+        <div class="stat-icon total">
+          <i data-lucide="briefcase-medical"></i>
+        </div>
+
+        <div class="stat-content">
+          <span class="stat-label"> Total de casos </span>
+
+          <strong>
+            {{ totalCase() }}
+          </strong>
+
+          <small> Casos clínicos creados </small>
+        </div>
+      </article>
+
+      <article class="stat-card">
+        <div class="stat-icon published">
+          <i data-lucide="circle-check"></i>
+        </div>
+
+        <div class="stat-content">
+          <span class="stat-label"> Publicados </span>
+
+          <strong>
+            {{ publishedCount() }}
+          </strong>
+
+          <small> Visibles para estudiantes </small>
+        </div>
+      </article>
+
+      <article class="stat-card">
+        <div class="stat-icon draft">
+          <i data-lucide="file-pen-line"></i>
+        </div>
+
+        <div class="stat-content">
+          <span class="stat-label"> Borradores </span>
+
+          <strong>
+            {{ draftCount() }}
+          </strong>
+
+          <small> Casos aún no publicados </small>
+        </div>
+      </article>
+    </section>
+
+    <!-- =========================
+         TOOLBAR
+    ========================== -->
+
+    <section class="cases-toolbar">
+      <div class="toolbar-main">
+        <!-- BUSCADOR -->
+
+        <div class="search-field">
+          <i data-lucide="search"></i>
+
+          <input
+            type="search"
+            placeholder="Buscar por título o motivo de consulta..."
+            aria-label="Buscar casos"
+            [value]="searchTerm()"
+            (input)="onSearch($event)"
+          />
+
+          @if (searchTerm()) {
+            <button
+              type="button"
+              class="clear-search"
+              aria-label="Limpiar búsqueda"
+              (click)="clearSearch()"
+            >
+              <i data-lucide="x"></i>
+            </button>
+          }
+        </div>
+
+        <!-- FILTROS -->
+
+        <div class="status-filters" aria-label="Filtrar casos por estado">
+          <button
+            type="button"
+            class="filter-button"
+            [class.active]="statusFilter() === 'ALL'"
+            (click)="setStatusFilter('ALL')"
+          >
+            Todos
+
+            <span class="filter-count">
+              {{ totalCase() }}
+            </span>
+          </button>
+
+          <button
+            type="button"
+            class="filter-button"
+            [class.active]="statusFilter() === 'PUBLISHED'"
+            (click)="setStatusFilter('PUBLISHED')"
+          >
+            Publicados
+
+            <span class="filter-count">
+              {{ publishedCount() }}
+            </span>
+          </button>
+
+          <button
+            type="button"
+            class="filter-button"
+            [class.active]="statusFilter() === 'DRAFT'"
+            (click)="setStatusFilter('DRAFT')"
+          >
+            Borradores
+
+            <span class="filter-count">
+              {{ draftCount() }}
+            </span>
+          </button>
+        </div>
+      </div>
+
+      <!-- RESULTADOS -->
+
+      <div class="toolbar-info">
+        <strong>
+          {{ filteredCases().length }}
+        </strong>
+
+        <span>
+          {{ filteredCases().length === 1 ? 'caso' : 'casos' }}
+        </span>
+      </div>
+    </section>
+
+    <!-- =========================
+         NO RESULTS
+    ========================== -->
+
+    @if (filteredCases().length === 0) {
+      <section class="no-results">
+        <div class="no-results-icon">
+          <i data-lucide="search-x"></i>
+        </div>
+
+        @if (searchTerm()) {
+          <h2>No encontramos casos</h2>
+
+          <p>
+            No hay casos que coincidan con
+            <strong>“{{ searchTerm() }}”</strong>.
+          </p>
+        } @else {
+          <h2>No hay casos en esta categoría</h2>
+
+          <p>No tienes casos que coincidan con el filtro seleccionado.</p>
+        }
+
+        <button type="button" class="clear-results-button" (click)="clearFilters()">
+          Mostrar todos los casos
+        </button>
+      </section>
+    }
+    <!-- =========================
+         CASES GRID
+    ========================== -->
+
+    @else {
+      <section class="cases-grid">
+        @for (caso of filteredCases(); track caso.id) {
+          <article class="case-card">
+            <a [routerLink]="['/dashboard/teacher/cases', caso.id]" class="case-link">
+              <!-- CARD HEADER -->
+
+              <div class="case-card-header">
+                <div class="case-icon" [class.published]="caso.isPublished">
+                  <i data-lucide="clipboard-plus"></i>
+                </div>
+
+                <span class="status-badge" [class.published]="caso.isPublished">
+                  <span class="status-dot"></span>
+
+                  {{ caso.isPublished ? 'Publicado' : 'Borrador' }}
+                </span>
+              </div>
+
+              <!-- CARD CONTENT -->
+
+              <div class="case-content">
+                <h2>
+                  {{ caso.title }}
+                </h2>
+
+                <p class="case-consult">
+                  {{ caso.consult }}
+                </p>
+              </div>
+
+              <!-- CARD FOOTER -->
+
+              <footer class="case-footer">
+                <span class="view-case"> Ver caso clínico </span>
+
+                <span class="arrow">
+                  <i data-lucide="arrow-up-right"></i>
+                </span>
+              </footer>
+            </a>
+          </article>
+        }
+      </section>
+    }
   }
 </div>

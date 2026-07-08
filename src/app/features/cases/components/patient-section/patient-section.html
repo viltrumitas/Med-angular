@@ -1,13 +1,19 @@
 <div [formGroup]="group" class="section">
   <app-input labelText="Nombre del paciente" formControlName="patientName" type="text" />
 
-  <app-select formControlName="gender" labelText="Género" [options]="[
-    { label: 'Hombre', value: 'MALE' },
-    { label: 'Mujer', value: 'FEMALE' },
-    { label: 'Otro', value: 'OTHER' }
-  ]" />
+  <div class="general">
+    <app-input labelText="Edad" formControlName="age" type="number" />
 
-  <app-input labelText="Edad" formControlName="age" type="number" />
+    <app-select
+      formControlName="gender"
+      labelText="Género"
+      [options]="[
+        { label: 'Hombre', value: 'MALE' },
+        { label: 'Mujer', value: 'FEMALE' },
+        { label: 'Otro', value: 'OTHER' },
+      ]"
+    />
+  </div>
 
   <app-input labelText="Historial Medico" formControlName="medicalHistory" />
 

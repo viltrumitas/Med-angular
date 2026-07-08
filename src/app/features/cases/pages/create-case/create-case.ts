@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { AfterViewInit, Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { GeneralSection } from '../../components/general-section/general-section';
 import { createCaseForm } from '../../forms/case.form';
@@ -11,6 +11,7 @@ import { CasesApi } from '../../services/cases-api.service';
 import { mapCreateCase } from '../../mappers/create-case.mapper';
 import { MedicalArea } from '../../components/medical-area/medical-area';
 import { Router } from '@angular/router';
+import { createIcons, icons } from 'lucide';
 
 @Component({
   selector: 'app-create-case',
@@ -27,13 +28,15 @@ import { Router } from '@angular/router';
   templateUrl: './create-case.html',
   styleUrl: './create-case.scss',
 })
-export class CreateCase {
-  caseForm = createCaseForm();
-
+export class CreateCase implements AfterViewInit {
   private readonly caseService = inject(CasesApi);
-  private readonly reouter = inject(Router);
+  private readonly router = inject(Router);
 
-  private createdCaseId: string | null = null;
+  readonly caseForm = createCaseForm();
+
+  ngAfterViewInit(): void {
+    createIcons({ icons });
+  }
 
   submitCase() {
     if (this.caseForm.invalid) {
@@ -44,14 +47,17 @@ export class CreateCase {
     console.log('enviado', data);
 
     this.caseService.createCase(data).subscribe({
-      next: (res: any) => {
+      next: (res) => {
         console.log('Caso Creado', res);
-        this.createdCaseId = res.id;
-        this.reouter.navigate(['/dashboard/teacher/cases']);
+        this.router.navigate(['/dashboard/teacher/cases']);
       },
       error: (err) => {
-        console.log('Error', err);
+        console.log('[CreateCase] Error al crear el caso', err);
       },
     });
+  }
+
+  cancel(): void {
+    this.router.navigate(['/dashboard/teacher/cases']);
   }
 }

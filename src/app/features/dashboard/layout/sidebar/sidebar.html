@@ -31,7 +31,7 @@
 
   <!-- NAV -->
   <nav class="nav">
-    @for (item of items(); track item.name) {
+    @for (item of navItem(); track item.name) {
       @if (item.separator) {
         <div class="divider" aria-hidden="true"></div>
       } @else if (item.action) {
@@ -103,12 +103,17 @@
 
   <!-- FOOTER -->
   <div class="footer">
-    <div class="footer-brand">
-      @if (!collapsed() || mobileOpen()) {
-        <span>Med <span class="accent">Cases</span></span>
-      } @else {
-        <span class="accent">M</span>
+    @for (item of footerItem(); track item.name) {
+      @if (item.action) {
+        <button type="button" class="item" (click)="handleAction(item.action)">
+          @if (item.icon) {
+            <i class="icon" [attr.data-lucide]="item.icon" aria-hidden="true"></i>
+          }
+          @if (!collapsed() || mobileOpen()) {
+            <span class="label">{{ item.name }}</span>
+          }
+        </button>
       }
-    </div>
+    }
   </div>
 </aside>

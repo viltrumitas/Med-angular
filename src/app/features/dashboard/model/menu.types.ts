@@ -1,4 +1,5 @@
-import { Type } from '@angular/core';
+export type SidebarAction = 'logout';
+export type SidebarSection = 'nav' | 'footer';
 
 export interface SidebarItem {
   name?: string;
@@ -6,5 +7,6 @@ export interface SidebarItem {
   icon?: string;
   children?: SidebarItem[];
   separator?: boolean;
-  action?: 'logout';
+  action?: SidebarAction;
+  seciton?: SidebarSection;
 }

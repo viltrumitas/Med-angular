@@ -3,9 +3,8 @@
   grid-template-columns: repeat(1, 1fr);
   gap: 1rem;
 
-
-
   app-input {
+    min-width: 50%;
     width: 100%;
   }
 

@@ -1,8 +1,8 @@
 import {
+  afterRenderEffect,
   AfterViewInit,
   Component,
-  DestroyRef,
-  effect,
+  computed,
   HostListener,
   inject,
   input,
@@ -21,24 +21,23 @@ import { AuthService } from '../../../../core/services/auth.service';
   styleUrl: './sidebar.scss',
 })
 export class Sidebar implements AfterViewInit {
-  private readonly aurhService = inject(AuthService);
+  private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly activeSubmenuName = signal<string | null>(null);
 
   collapsed = signal(true);
   mobileOpen = signal(false);
-  activeSubmenu = signal<SidebarItem | null>(null);
   items = input.required<SidebarItem[]>();
 
-  private renderIcons() {
-    createIcons({ icons });
-  }
+  readonly navItem = computed(() =>
+    this.items().filter((item) => (item.seciton ?? 'nav') === 'nav'),
+  );
+  readonly footerItem = computed(() => this.items().filter((item) => item.seciton === 'footer'));
 
   constructor() {
-    effect(() => {
+    afterRenderEffect(() => {
       this.items();
-      queueMicrotask(() => {
-        this.renderIcons();
-      });
+      this.renderIcons();
     });
   }
 
@@ -46,13 +45,17 @@ export class Sidebar implements AfterViewInit {
     this.renderIcons();
   }
 
+  private renderIcons() {
+    createIcons({ icons });
+  }
+
   toggle(open: boolean) {
     this.collapsed.set(!open);
-    if (!open) this.activeSubmenu.set(null);
+    if (!open) this.activeSubmenuName.set(null);
   }
 
   toggleMobile() {
-    this.mobileOpen.update((e) => !e);
+    this.mobileOpen.update((open) => !open);
   }
 
   closeMobile() {
@@ -60,18 +63,21 @@ export class Sidebar implements AfterViewInit {
   }
 
   toggleSubmenu(item: SidebarItem) {
-    const current = this.activeSubmenu();
-    this.activeSubmenu.set(current === item ? null : item);
+    this.activeSubmenuName.update((current) =>
+      current === item.name ? null : (item.name ?? null),
+    );
   }
 
   isSubmenuOpen(item: SidebarItem): boolean {
-    return this.activeSubmenu() === item;
+    return this.activeSubmenuName() === item.name;
   }
 
   handleAction(action: string): void {
-    if (action === 'logout') {
-      this.aurhService.removeToken();
-      this.router.navigate(['/auth']);
+    switch (action) {
+      case 'logout':
+        this.authService.removeToken();
+        this.router.navigate(['/']);
+        break;
     }
   }
 

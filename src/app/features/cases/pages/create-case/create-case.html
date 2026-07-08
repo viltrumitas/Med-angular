@@ -1,47 +1,162 @@
 <div class="create-case-container">
-  <div class="page-header">
-    <h1>Nuevo Caso Clinico</h1>
-    <p>Complete la información clinica del paciente para registrar el caso.</p>
-  </div>
+  <!-- HEADER -->
+  <header class="page-header">
+    <div class="page-heading">
+      <span class="breadcrumb">Casos / Crear caso</span>
 
-  <form [formGroup]="caseForm" (ngSubmit)="submitCase()">
-    <div class="section-card">
-      <h2>Informacion General</h2>
-      <app-general-section [group]="caseForm.controls.general" />
+      <h1>Nuevo caso clínico</h1>
+
+      <p>Completa la información clínica del paciente para registrar el caso.</p>
     </div>
 
-    <div class="section-card">
-      <h2>Paciente</h2>
-      <app-patient-section [group]="caseForm.controls.patient" />
+    <div class="header-actions">
+      <button class="btn btn-secondary" type="button" (click)="cancel()">Cancelar</button>
+
+      <button class="btn btn-primary" type="submit" form="create-case-form" (click)="submitCase()">
+        <i data-lucide="clipboard-plus"></i>
+        Guardar caso
+      </button>
+    </div>
+  </header>
+
+  <!-- FORMULARIO -->
+  <form id="create-case-form" [formGroup]="caseForm" (ngSubmit)="submitCase()">
+    <div class="form-grid">
+      <!-- INFORMACIÓN GENERAL -->
+      <section class="section-card">
+        <div class="section-header">
+          <div class="section-icon">
+            <i data-lucide="info"></i>
+          </div>
+
+          <div>
+            <h2>Información general</h2>
+            <p>Datos principales del caso clínico.</p>
+          </div>
+        </div>
+
+        <div class="section-content">
+          <app-general-section [group]="caseForm.controls.general" />
+        </div>
+      </section>
+
+      <!-- PACIENTE -->
+      <section class="section-card">
+        <div class="section-header">
+          <div class="section-icon">
+            <i data-lucide="user-round"></i>
+          </div>
+
+          <div>
+            <h2>Paciente</h2>
+            <p>Información y antecedentes del paciente.</p>
+          </div>
+        </div>
+
+        <div class="section-content">
+          <app-patient-section [group]="caseForm.controls.patient" />
+        </div>
+      </section>
+
+      <!-- HALLAZGOS -->
+      <section class="section-card">
+        <div class="section-header">
+          <div class="section-icon">
+            <i data-lucide="user-round-search"></i>
+          </div>
+
+          <div>
+            <h2>Hallazgos generales</h2>
+            <p>Observaciones obtenidas durante la valoración.</p>
+          </div>
+        </div>
+
+        <div class="section-content">
+          <app-findings [group]="caseForm.controls.findings" />
+        </div>
+      </section>
+
+      <!-- SIGNOS VITALES -->
+      <section class="section-card">
+        <div class="section-header">
+          <div class="section-icon">
+            <i data-lucide="activity"></i>
+          </div>
+
+          <div>
+            <h2>Signos vitales</h2>
+            <p>Registra las mediciones actuales del paciente.</p>
+          </div>
+        </div>
+
+        <div class="section-content">
+          <app-vital-signs [group]="caseForm.controls.vitalSigns" />
+        </div>
+      </section>
+
+      <!-- NEUROLÓGICO -->
+      <section class="section-card">
+        <div class="section-header">
+          <div class="section-icon">
+            <i data-lucide="brain-cog"></i>
+          </div>
+
+          <div>
+            <h2>Evaluación neurológica</h2>
+            <p>Escalas y pruebas neurológicas del paciente.</p>
+          </div>
+        </div>
+
+        <div class="section-content">
+          <app-neurological [group]="caseForm.controls.neurological" />
+        </div>
+      </section>
+
+      <!-- ÁREA -->
+      <section class="section-card">
+        <div class="section-header">
+          <div class="section-icon">
+            <i data-lucide="briefcase-medical"></i>
+          </div>
+
+          <div>
+            <h2>Área médica</h2>
+            <p>Clasifica el caso dentro de un área clínica.</p>
+          </div>
+        </div>
+
+        <div class="section-content">
+          <app-medical-area [group]="caseForm.controls.medicalArea" />
+        </div>
+      </section>
+
+      <!-- RETROALIMENTACIÓN -->
+      <section class="section-card section-card--full">
+        <div class="section-header">
+          <div class="section-icon">
+            <i data-lucide="message-square-more"></i>
+          </div>
+
+          <div>
+            <h2>Retroalimentación</h2>
+            <p>Información que recibirá el estudiante después de resolver el caso.</p>
+          </div>
+        </div>
+
+        <div class="section-content">
+          <app-feedback [control]="caseForm.controls.feedback" />
+        </div>
+      </section>
     </div>
 
-    <div class="section-card">
-      <h2>Hallazgos generales</h2>
-      <app-findings [group]="caseForm.controls.findings" />
-    </div>
+    <!-- ACCIONES MÓVIL / FINAL -->
+    <div class="form-actions">
+      <button class="btn btn-secondary" type="button">Cancelar</button>
 
-    <div class="section-card">
-      <h2>Signos vitales</h2>
-      <app-vital-signs [group]="caseForm.controls.vitalSigns" />
-    </div>
-
-    <div class="section-card">
-      <h2>Neurológico</h2>
-      <app-neurological [group]="caseForm.controls.neurological" />
-    </div>
-
-    <div class="section-card">
-      <h2>Area</h2>
-      <app-medical-area [group]="caseForm.controls.medicalArea" />
-    </div>
-
-    <div class="section-card">
-      <h2>Retroalimentacion</h2>
-      <app-feedback [control]="caseForm.controls.feedback" />
-    </div>
-
-    <div class="actions">
-      <button class="btn btn-secondary" type="button" (click)="submitCase()">Guardar Caso</button>
+      <button class="btn btn-primary" type="submit">
+        <i data-lucide="clipboard-plus"></i>
+        Crear caso
+      </button>
     </div>
   </form>
 </div>

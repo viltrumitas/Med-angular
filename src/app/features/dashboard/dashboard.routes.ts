@@ -41,6 +41,11 @@ export const dashboardRoutes: Routes = [
         loadComponent: () => import('./roles/student/student').then((c) => c.Student),
         children: [
           {
+            path: 'home',
+            loadChildren: () =>
+              import('../classroom/classroom.routes').then((e) => e.classroomRoutes),
+          },
+          {
             path: 'assigned',
             loadChildren: () =>
               import('../assigned-case/assigned-case.routes').then((e) => e.assignedRoutes),
