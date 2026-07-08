@@ -1,187 +1,667 @@
-body {
-  min-height: 100vh;
-  background:
-    radial-gradient(circle at top left, #6366f1 0%, transparent 40%),
-    radial-gradient(circle at bottom right, #3b82f6 0%, transparent 40%),
-    linear-gradient(135deg, #eef2ff, #dbeafe);
-}
+$primary: #2563eb;
+$primary-hover: #1d4ed8;
+$primary-light: #eff6ff;
 
-.create-form-container {
-  max-width: 1100px;
-  margin: 40px auto;
-  padding: 35px;
-  background: rgba(255, 255, 255, .45);
+$teal: #0d9488;
+$teal-light: #f0fdfa;
 
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18p);
+$text-primary: #0f172a;
+$text-secondary: #475569;
+$text-muted: #94a3b8;
 
-  border: 1px solid rgba(255, 255, 255, .35);
+$border: #e2e8f0;
+$border-soft: #f1f5f9;
 
-  border-radius: 20px;
-  box-shadow:
-    0 20px 40px rgba(0, 0, 0, .12),
-    inset 0 1px rgba(255, 255, 255, .4);
+$surface: #ffffff;
+$background: #f8fafc;
 
+// =========================
+// FORM
+// =========================
+
+.assignment-form {
   display: flex;
   flex-direction: column;
-  gap: 30px;
+
+  gap: 1.5rem;
 }
 
-.counter {
-  margin-left: 12px;
-  background: #eef2ff;
-  color: #4f46e5;
-  padding: 5px 12px;
-  border-radius: 20px;
-  font-size: 14px;
-  font-weight: 600;
+// =========================
+// SECTIONS
+// =========================
+
+.form-section {
+  padding-bottom: 1.5rem;
+
+  border-bottom: 1px solid $border;
+
+  &:last-of-type {
+    padding-bottom: 0;
+
+    border-bottom: none;
+  }
 }
 
-.form-header h2 {
-  margin: 0;
-  font-size: 30px;
-  color: #1e293b;
+.section-heading {
+  display: flex;
+  align-items: flex-start;
 
-  text-shadow: 0 1px 2px rgba(255, 255, 255, .6);
+  gap: 0.85rem;
+
+  margin-bottom: 1rem;
+
+  h3 {
+    margin: 0;
+
+    color: $text-primary;
+
+    font-size: 0.95rem;
+    font-weight: 700;
+  }
+
+  p {
+    margin: 0.3rem 0 0;
+
+    color: $text-secondary;
+
+    font-size: 0.77rem;
+    line-height: 1.55;
+  }
 }
 
-.form-header p {
-  margin-top: 8px;
-  color: #64748b;
+.section-number {
+  display: grid;
+  place-items: center;
+
+  width: 30px;
+  height: 30px;
+
+  flex-shrink: 0;
+
+  color: $primary;
+  background: $primary-light;
+
+  border-radius: 9px;
+
+  font-size: 0.72rem;
+  font-weight: 750;
 }
 
-.cases-section h3 {
-  margin-bottom: 20px;
-  color: #334155;
+// =========================
+// FORM FIELDS
+// =========================
+
+.form-fields {
+  display: grid;
+
+  gap: 1rem;
+
+  padding-left: 2.85rem;
 }
+
+.field-group {
+  min-width: 0;
+}
+
+.field-error {
+  display: flex;
+  align-items: center;
+
+  gap: 0.4rem;
+
+  margin-top: 0.45rem;
+
+  color: #dc2626;
+
+  font-size: 0.72rem;
+
+  i {
+    width: 14px;
+    height: 14px;
+
+    flex-shrink: 0;
+  }
+}
+
+// =========================
+// CASES HEADER
+// =========================
+
+.cases-heading {
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 1rem;
+}
+
+.heading-main {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 0.85rem;
+
+  min-width: 0;
+}
+
+.selection-counter {
+  flex-shrink: 0;
+
+  padding: 0.4rem 0.65rem;
+
+  color: $text-secondary;
+  background: $background;
+
+  border-radius: 999px;
+
+  font-size: 0.7rem;
+  font-weight: 650;
+
+  white-space: nowrap;
+
+  transition:
+    color 160ms ease,
+    background-color 160ms ease;
+
+  &.has-selection {
+    color: $primary;
+    background: $primary-light;
+  }
+}
+
+// =========================
+// CASE GRID
+// =========================
 
 .cases-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 18px;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 0.75rem;
+
+  max-height: 360px;
+
+  padding: 0.1rem 0.25rem 0.25rem 2.85rem;
+
+  overflow-y: auto;
+
+  overscroll-behavior: contain;
+
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
 }
+
+// =========================
+// CASE CARD
+// =========================
 
 .case-card {
   position: relative;
 
-  background: rgba(255, 255, 255, .30);
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
 
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  align-items: center;
 
-  border: 1px solid rgba(255, 255, 255, .35);
-  border-radius: 14px;
+  gap: 0.8rem;
 
-  padding: 18px;
+  min-width: 0;
+
+  padding: 0.9rem;
+
+  text-align: left;
+
+  color: inherit;
+  background: $surface;
+
+  border: 1px solid $border;
+  border-radius: 12px;
+
+  font: inherit;
 
   cursor: pointer;
 
   transition:
-    transform .25s,
-    box-shadow .25s,
-    border-color .25s;
+    border-color 160ms ease,
+    background-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+
+  &:hover {
+    border-color: #cbd5e1;
+
+    background: #fcfdff;
+
+    transform: translateY(-1px);
+
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.04);
+  }
+
+  &.selected {
+    background: #f8fbff;
+
+    border-color: rgba(37, 99, 235, 0.5);
+
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.07);
+
+    .case-icon {
+      color: $primary;
+      background: $primary-light;
+    }
+
+    .selection-indicator {
+      color: #ffffff;
+      background: $primary;
+
+      border-color: $primary;
+    }
+  }
 }
 
-.case-card:hover {
+// =========================
+// CASE ICON
+// =========================
 
-  transform: translateY(-5px);
+.case-icon {
+  display: grid;
+  place-items: center;
 
-  background: rgba(255, 255, 255, .45);
+  width: 40px;
+  height: 40px;
 
-  border-color: #6366f1;
+  flex-shrink: 0;
 
-  box-shadow:
-    0 12px 30px rgba(99, 102, 241, .18);
+  color: $teal;
+  background: $teal-light;
+
+  border-radius: 11px;
+
+  transition:
+    color 160ms ease,
+    background-color 160ms ease;
+
+  i {
+    width: 18px;
+    height: 18px;
+  }
 }
+
+// =========================
+// CASE CONTENT
+// =========================
 
 .case-content {
+  min-width: 0;
+
+  h4 {
+    display: -webkit-box;
+
+    margin: 0;
+
+    color: $text-primary;
+
+    font-size: 0.82rem;
+    font-weight: 680;
+    line-height: 1.4;
+
+    overflow: hidden;
+
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+}
+
+.patient-info {
   display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.case-content h3 {
-  margin: 0;
-  font-size: 18px;
-  color: #1e293b;
-}
-
-.case-content p {
-  margin: 0;
-  color: #475569;
-  font-weight: 500;
-}
-
-.case-content small {
-  color: #64748b;
-}
-
-
-.case-card.selected {
-
-  background: rgba(99, 102, 241, .15);
-
-  border: 1px solid rgba(99, 102, 241, .6);
-
-  box-shadow:
-    0 0 25px rgba(99, 102, 241, .25);
-
-}
-
-.case-card.selected::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 12px;
-  box-shadow: inset 0 0 0 1px #4f46e5;
-}
-
-.badge {
-  margin-top: 16px;
-
-  display: inline-flex;
   align-items: center;
-  gap: 6px;
 
-  background: rgba(79, 70, 229, .85);
+  gap: 0.35rem;
 
-  backdrop-filter: blur(10px);
+  margin-top: 0.4rem;
 
-  border: 1px solid rgba(255, 255, 255, .2);
+  color: $text-secondary;
 
-  color: white;
+  font-size: 0.7rem;
 
-  font-size: 13px;
+  i {
+    width: 13px;
+    height: 13px;
+
+    flex-shrink: 0;
+  }
+
+  span {
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.area-badge {
+  display: inline-flex;
+
+  margin-top: 0.5rem;
+  padding: 0.25rem 0.45rem;
+
+  color: $text-secondary;
+  background: $background;
+
+  border-radius: 6px;
+
+  font-size: 0.62rem;
   font-weight: 600;
 
-  padding: 6px 12px;
-
-  border-radius: 999px;
+  text-transform: lowercase;
 }
 
-.form-fields {
+// =========================
+// SELECTION INDICATOR
+// =========================
+
+.selection-indicator {
+  display: grid;
+  place-items: center;
+
+  width: 23px;
+  height: 23px;
+
+  flex-shrink: 0;
+
+  color: transparent;
+  background: #ffffff;
+
+  border: 1.5px solid #cbd5e1;
+  border-radius: 7px;
+
+  transition:
+    color 160ms ease,
+    background-color 160ms ease,
+    border-color 160ms ease;
+
+  i {
+    width: 14px;
+    height: 14px;
+
+    stroke-width: 2.5;
+  }
+}
+
+// =========================
+// EMPTY CASES
+// =========================
+
+.cases-empty {
   display: flex;
   flex-direction: column;
-  gap: 20px;
-}
+  align-items: center;
 
-.error {
-  color: #dc2626;
-  font-size: .85rem;
-}
+  padding: 2rem;
 
-app-button {
-  align-self: flex-end;
-}
+  margin-left: 2.85rem;
 
-@media (max-width:768px) {
+  text-align: center;
 
-  .create-form-container {
-    padding: 20px;
+  background: $background;
+
+  border: 1px dashed #cbd5e1;
+  border-radius: 12px;
+
+  h4 {
+    margin: 0.8rem 0 0;
+
+    color: $text-primary;
+
+    font-size: 0.9rem;
   }
 
-  app-button {
+  p {
+    max-width: 380px;
+
+    margin: 0.4rem 0 0;
+
+    color: $text-secondary;
+
+    font-size: 0.75rem;
+    line-height: 1.55;
+  }
+}
+
+.empty-icon {
+  display: grid;
+  place-items: center;
+
+  width: 48px;
+  height: 48px;
+
+  color: $text-secondary;
+  background: #ffffff;
+
+  border-radius: 13px;
+
+  i {
+    width: 21px;
+    height: 21px;
+  }
+}
+
+// =========================
+// FOOTER
+// =========================
+
+.form-footer {
+  position: sticky;
+  bottom: -1.5rem;
+
+  z-index: 5;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 1.5rem;
+
+  padding: 1rem 0 0;
+
+  background: $surface;
+
+  border-top: 1px solid $border;
+}
+
+.footer-summary {
+  display: flex;
+  align-items: center;
+
+  gap: 0.7rem;
+
+  min-width: 0;
+
+  > div:last-child {
+    display: flex;
+    flex-direction: column;
+
+    min-width: 0;
+  }
+
+  strong {
+    color: $text-primary;
+
+    font-size: 0.78rem;
+    font-weight: 680;
+  }
+
+  span {
+    margin-top: 0.15rem;
+
+    color: $text-muted;
+
+    font-size: 0.67rem;
+  }
+}
+
+.summary-icon {
+  display: grid;
+  place-items: center;
+
+  width: 38px;
+  height: 38px;
+
+  flex-shrink: 0;
+
+  color: $primary;
+  background: $primary-light;
+
+  border-radius: 10px;
+
+  i {
+    width: 17px;
+    height: 17px;
+  }
+}
+
+// =========================
+// SUBMIT BUTTON
+// =========================
+
+.submit-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 0.5rem;
+
+  min-height: 42px;
+
+  padding: 0.65rem 0.95rem;
+
+  color: #ffffff;
+  background: $primary;
+
+  border: none;
+  border-radius: 9px;
+
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 650;
+
+  white-space: nowrap;
+
+  cursor: pointer;
+
+  transition:
+    background-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease,
+    opacity 160ms ease;
+
+  &:hover:not(:disabled) {
+    background: $primary-hover;
+
+    transform: translateY(-1px);
+
+    box-shadow: 0 7px 18px rgba(37, 99, 235, 0.2);
+  }
+
+  &:disabled {
+    opacity: 0.45;
+
+    cursor: not-allowed;
+  }
+
+  i {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+// =========================
+// RESPONSIVE
+// =========================
+
+@media (max-width: 700px) {
+  .form-fields {
+    padding-left: 0;
+  }
+
+  .cases-heading {
+    align-items: flex-start;
+  }
+
+  .selection-counter {
+    font-size: 0.65rem;
+  }
+
+  .cases-container {
+    grid-template-columns: 1fr;
+
+    max-height: none;
+
+    padding-left: 0;
+  }
+
+  .cases-empty {
+    margin-left: 0;
+  }
+
+  .form-footer {
+    align-items: stretch;
+    flex-direction: column;
+
+    gap: 0.8rem;
+  }
+
+  .submit-button {
     width: 100%;
   }
+}
+.cases-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
+  gap: 0.65rem;
+
+  min-height: 130px;
+
+  margin-left: 2.85rem;
+
+  color: $text-secondary;
+  background: $background;
+
+  border: 1px solid $border;
+  border-radius: 12px;
+
+  font-size: 0.76rem;
+}
+
+.mini-spinner {
+  width: 20px;
+  height: 20px;
+
+  border: 2px solid $border;
+  border-top-color: $primary;
+  border-radius: 50%;
+
+  animation: spin 700ms linear infinite;
+}
+.button-spinner {
+  width: 15px;
+  height: 15px;
+
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+
+  animation: spin 650ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (max-width: 700px) {
+  .cases-loading {
+    margin-left: 0;
+  }
 }

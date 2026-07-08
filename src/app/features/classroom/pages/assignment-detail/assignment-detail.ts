@@ -1,20 +1,18 @@
-import { Component, inject, signal, computed } from '@angular/core';
+import { Component, inject, signal, computed, AfterViewInit, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AssignmentApi } from '../../../assignments/services/assignment-api';
-import { AssignmentDetail as AssignmentDetailModel }
-  from '../../models/assignment-detail.model';
-import { ButtonComponent } from '../../../../shared/components/button/button';
+import { AssignmentDetail as AssignmentDetailModel } from '../../models/assignment-detail.model';
+import { createIcons, icons } from 'lucide';
 
 @Component({
   selector: 'app-assignment-detail',
-  imports: [ButtonComponent, DatePipe],
+  imports: [DatePipe],
   templateUrl: './assignment-detail.html',
   styleUrl: './assignment-detail.scss',
 })
-export class AssignmentDetailPage {
-
+export class AssignmentDetailPage implements AfterViewInit, OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly api = inject(AssignmentApi);
@@ -30,27 +28,21 @@ export class AssignmentDetailPage {
 
     if (!assignment) return 0;
 
-    return new Set(
-      assignment.assignedCases.map(a => a.case.id)
-    ).size;
+    return new Set(assignment.assignedCases.map((a) => a.case.id)).size;
   });
 
   readonly totalCompleted = computed(() => {
     const assignment = this.assignment();
     if (!assignment) return 0;
 
-    return assignment.assignedCases.filter(
-      a => a.submission?.status === 'SUBMITTED'
-    ).length;
+    return assignment.assignedCases.filter((a) => a.submission?.status === 'SUBMITTED').length;
   });
 
   readonly totalPending = computed(() => {
     const assignment = this.assignment();
     if (!assignment) return 0;
 
-    return assignment.assignedCases.filter(
-      a => !a.submission
-    ).length;
+    return assignment.assignedCases.filter((a) => !a.submission).length;
   });
 
   readonly progress = computed(() => {
@@ -63,11 +55,15 @@ export class AssignmentDetailPage {
 
   loading = signal(true);
 
+  ngAfterViewInit(): void {
+    this.renderIcon();
+  }
+
   ngOnInit() {
     const assignmentId = this.route.snapshot.paramMap.get('assignmentId')!;
 
     this.api.findOne(assignmentId).subscribe({
-      next: assignment => {
+      next: (assignment) => {
         console.log('NEXT');
         console.log(assignment);
 
@@ -76,16 +72,18 @@ export class AssignmentDetailPage {
         console.log('loading antes:', this.loading());
         this.loading.set(false);
         console.log('loading después:', this.loading());
+        this.renderIcon();
       },
 
-      error: err => {
+      error: (err) => {
         console.error('ERROR', err);
         this.loading.set(false);
+        this.renderIcon();
       },
 
       complete: () => {
         console.log('COMPLETE');
-      }
+      },
     });
   }
 
@@ -95,26 +93,29 @@ export class AssignmentDetailPage {
     if (!assignment) return;
 
     this.api.publish(assignment.id).subscribe({
-      next: updated => {
+      next: (updated) => {
         this.assignment.set(updated);
-      }
+      },
     });
   }
 
   delete() {
     const assignment = this.assignment();
 
-    const classroomId =
-      this.route.snapshot.paramMap.get('classroomId')!;
+    const classroomId = this.route.snapshot.paramMap.get('classroomId')!;
 
     if (!assignment) return;
 
     if (!confirm('¿Eliminar actividad?')) return;
 
     this.api.delete(assignment.id).subscribe(() => {
-      this.router.navigate(['/dashboard/teacher/classroom',
-        classroomId
-      ]);
+      this.router.navigate(['/dashboard/teacher/classroom', classroomId]);
+    });
+  }
+
+  private renderIcon() {
+    setTimeout(() => {
+      createIcons({ icons });
     });
   }
 }

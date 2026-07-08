@@ -1,29 +1,54 @@
 <a class="classroom-card" [routerLink]="[classroom().id]">
+  <div class="card-visual">
+    <div class="visual-circle circle-one"></div>
+    <div class="visual-circle circle-two"></div>
 
-  <div class="card-header">
-    <h2>{{ classroom().name }}</h2>
-
-    <span class="code">
-      {{ classroom().code }}
-    </span>
+    <div class="class-icon">
+      <i data-lucide="school"></i>
+    </div>
   </div>
 
-  <p>
-    {{ classroom().description || 'Sin descripción' }}
-  </p>
+  <div class="card-content">
+    <div class="card-header">
+      <div class="title-group">
+        <h2>{{ classroom().name }}</h2>
 
-  <div class="stats">
+        <span class="code">
+          {{ classroom().code }}
+        </span>
+      </div>
 
-    <div>
-      <strong>{{ classroom().studentsCount }}</strong>
-      <span>Estudiantes</span>
+      <span class="open-icon">
+        <i data-lucide="arrow-up-right"></i>
+      </span>
     </div>
 
-    <div>
-      <strong>{{ classroom().assignmentsCount }}</strong>
-      <span>Actividades</span>
-    </div>
+    <p class="description">
+      {{ classroom().description || 'Sin descripción' }}
+    </p>
 
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-icon">
+          <i data-lucide="users"></i>
+        </div>
+
+        <div class="stat-content">
+          <strong>{{ classroom().studentsCount }}</strong>
+          <span>Estudiantes</span>
+        </div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-icon">
+          <i data-lucide="clipboard-list"></i>
+        </div>
+
+        <div class="stat-content">
+          <strong>{{ classroom().assignmentsCount }}</strong>
+          <span>Actividades</span>
+        </div>
+      </div>
+    </div>
   </div>
-
 </a>

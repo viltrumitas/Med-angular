@@ -1,17 +1,37 @@
-<article class="assignment-card">
-  <h3>
-    {{ assignment.title }}
-  </h3>
+<article class="assignment-card" [class.published]="assignment.isPublished">
+  <div class="card-header">
+    <div class="assignment-icon">
+      <i data-lucide="clipboard-list"></i>
+    </div>
 
-  @if (assignment.description) {
+    <span class="status-badge">
+      <span class="status-dot"></span>
+
+      {{ assignment.isPublished ? 'Publicada' : 'Borrador' }}
+    </span>
+  </div>
+
+  <div class="card-content">
+    <h3>
+      {{ assignment.title }}
+    </h3>
+
     <p>
-      {{ assignment.description }}
+      {{ assignment.description || 'Sin descripción.' }}
     </p>
-  }
+  </div>
 
-  <span>
-    {{ assignment.isPublished ? 'Publicada' : 'Borrador' }}
-  </span>
+  <footer class="card-footer">
+    <div class="footer-info">
+      <i data-lucide="calendar-days"></i>
 
-  <app-button text="Ver actividad" (clicked)="open()" />
+      <span>Actividad de clase</span>
+    </div>
+
+    <button type="button" class="open-button" (click)="open()">
+      <span>Ver actividad</span>
+
+      <i data-lucide="arrow-up-right"></i>
+    </button>
+  </footer>
 </article>

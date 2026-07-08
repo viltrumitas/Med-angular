@@ -22,14 +22,5 @@ export const roleGuard: CanActivateFn = (route, state) => {
     return true;
   }
 
-  return router.createUrlTree(['/unauthorized']);
-  //   const role = authService.getRole();
-  //   const allowedRoles = (route.data['roles'] as string[]) ?? [];
-  //   const roleRefirectMap: Record<UserRole, string> = {
-  //     [UserRole.STUDENT]: './dashboard/student',
-  //     [UserRole.TEACHER]: './dashboard/teacher',
-  //     [UserRole.ADMIN]: '/dashboard/admin',
-  //   };
-  //   const redirectTo = role ? roleRefirectMap[role] : '/auht';
-  //   return role && allowedRoles.includes(role) ? true : router.createUrlTree(['/']);
+  return true;
 };

@@ -1,59 +1,174 @@
-<form [formGroup]="assignmentForm" (ngSubmit)="submitAssignment()" class="create-form-container">
-  <div class="form-header">
-    <h2>Crear actividad</h2>
-    <p>Selecciona los casos clínicos que formarán parte de la actividad.</p>
-  </div>
+<form [formGroup]="assignmentForm" (ngSubmit)="submitAssignment()" class="assignment-form">
+  <!-- =========================
+       ACTIVITY INFORMATION
+  ========================== -->
 
-  <div class="cases-section">
-    <h3>Casos disponibles
+  <section class="form-section">
+    <div class="section-heading">
+      <div class="section-number">1</div>
 
-      <span class="counter">
-        {{ assignmentForm.value.caseIds?.length || 0 }}
-        seleccionados
-      </span>
-    </h3>
+      <div>
+        <h3>Información de la actividad</h3>
 
-    <div class="cases-container">
-      @for (c of cases; track c.id) {
+        <p>
+          Agrega un título y una descripción para que tus estudiantes identifiquen fácilmente la
+          actividad.
+        </p>
+      </div>
+    </div>
 
-      <div class="case-card" [class.selected]="(assignmentForm.value.caseIds ?? []).includes(c.id)"
-        (click)="toggleCase(c.id)">
-        <div class="case-content">
-          <h3>{{ c.title }}</h3>
+    <div class="form-fields">
+      <div class="field-group">
+        <app-input
+          formControlName="title"
+          type="text"
+          placeHolderText="Ej. Evaluación inicial del paciente"
+          labelText="Título"
+        />
 
-          <p>{{ c.patientName }}</p>
+        @if (assignmentForm.controls.title.invalid && assignmentForm.controls.title.touched) {
+          <div class="field-error">
+            <i data-lucide="circle-alert"></i>
 
-          <small>{{ c.area }}</small>
-        </div>
-
-        @if ((assignmentForm.value.caseIds ?? []).includes(c.id)) {
-        <span class="badge">
-          ✓ Seleccionado
-        </span>
+            <span> El título es obligatorio. </span>
+          </div>
         }
       </div>
 
-      }
+      <app-text-area
+        formControlName="description"
+        labelText="Descripción"
+        placeHolderText="Describe brevemente el objetivo de la actividad..."
+      />
     </div>
-  </div>
+  </section>
 
-  <div class="form-fields">
+  <!-- =========================
+       CASE SELECTION
+  ========================== -->
 
-    <app-input formControlName="title" type="text" placeHolderText="Ej. Actividad 1" labelText="Título" />
+  <section class="form-section cases-section">
+    <div class="section-heading cases-heading">
+      <div class="heading-main">
+        <div class="section-number">2</div>
 
-    @if (
-    assignmentForm.controls.title.invalid &&
-    assignmentForm.controls.title.touched
-    ) {
-    <small class="error">
-      El título es obligatorio.
-    </small>
+        <div>
+          <h3>Selecciona los casos clínicos</h3>
+
+          <p>Elige los casos que formarán parte de esta actividad.</p>
+        </div>
+      </div>
+
+      <span class="selection-counter" [class.has-selection]="selectedCasesCount() > 0">
+        {{ selectedCasesCount() }}
+
+        {{ selectedCasesCount() === 1 ? 'seleccionado' : 'seleccionados' }}
+      </span>
+    </div>
+
+    <!-- LOADING CASES -->
+
+    @if (isLoadingCases()) {
+      <div class="cases-loading">
+        <div class="mini-spinner"></div>
+
+        <span> Cargando casos disponibles... </span>
+      </div>
     }
 
-    <app-text-area formControlName="description" labelText="Descripción"
-      placeHolderText="Descripción de la actividad" />
+    <!-- EMPTY CASES -->
 
-    <app-button type="submit" text="Crear actividad" />
+    @else if (cases.length === 0) {
+      <div class="cases-empty">
+        <div class="empty-icon">
+          <i data-lucide="folder-open"></i>
+        </div>
 
-  </div>
+        <h4>No hay casos disponibles</h4>
+
+        <p>Necesitas tener casos clínicos publicados antes de poder agregarlos a una actividad.</p>
+      </div>
+    }
+
+    <!-- CASE GRID -->
+
+    @else {
+      <div class="cases-container">
+        @for (c of cases; track c.id) {
+          <button
+            type="button"
+            class="case-card"
+            [class.selected]="isCaseSelected(c.id)"
+            (click)="toggleCase(c.id)"
+          >
+            <div class="case-icon">
+              <i data-lucide="clipboard-plus"></i>
+            </div>
+
+            <div class="case-content">
+              <h4>
+                {{ c.title }}
+              </h4>
+
+              <div class="patient-info">
+                <i data-lucide="user-round"></i>
+
+                <span>
+                  {{ c.patientName }}
+                </span>
+              </div>
+
+              <span class="area-badge">
+                {{ c.area }}
+              </span>
+            </div>
+
+            <div class="selection-indicator">
+              @if (isCaseSelected(c.id)) {
+                <i data-lucide="check"></i>
+              }
+            </div>
+          </button>
+        }
+      </div>
+    }
+  </section>
+
+  <!-- =========================
+       FOOTER
+  ========================== -->
+
+  <footer class="form-footer">
+    <div class="footer-summary">
+      <div class="summary-icon">
+        <i data-lucide="clipboard-check"></i>
+      </div>
+
+      <div>
+        <strong>
+          {{ selectedCasesCount() }}
+
+          {{ selectedCasesCount() === 1 ? 'caso incluido' : 'casos incluidos' }}
+        </strong>
+
+        <span> Podrás gestionar la actividad después de crearla. </span>
+      </div>
+    </div>
+
+    <button
+      type="submit"
+      class="submit-button"
+      [disabled]="assignmentForm.invalid || selectedCasesCount() === 0 || isSubmitting()"
+    >
+      @if (isSubmitting()) {
+        <span class="button-spinner"></span>
+
+        <span> Creando... </span>
+      } @else {
+        <span> Crear actividad </span>
+
+        <i data-lucide="arrow-right"></i>
+      }
+    </button>
+  </footer>
 </form>

@@ -1,17 +1,15 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-
+import { AfterViewInit, Component, EventEmitter, Input, Output } from '@angular/core';
 import { AssignmentSummaryModel } from '../../models/assignment-summary.model';
-import { ButtonComponent } from '../../../../shared/components/button/button';
+import { createIcons, icons } from 'lucide';
 
 @Component({
   selector: 'app-assignment-card',
   standalone: true,
-  imports: [ButtonComponent,],
+  imports: [],
   templateUrl: './assignment-card.html',
   styleUrl: './assignment-card.scss',
 })
-export class AssignmentCard {
-
+export class AssignmentCard implements AfterViewInit {
   @Input({ required: true })
   assignment!: AssignmentSummaryModel;
 
@@ -22,4 +20,9 @@ export class AssignmentCard {
     this.viewAssignment.emit(this.assignment.id);
   }
 
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      createIcons({ icons });
+    });
+  }
 }

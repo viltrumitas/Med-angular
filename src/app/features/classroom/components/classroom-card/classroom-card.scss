@@ -1,22 +1,353 @@
-.classroom-card {
+$primary: #2563eb;
+
+$text-primary: #0f172a;
+$text-secondary: #475569;
+$text-muted: #94a3b8;
+
+$border: #e2e8f0;
+$surface: #ffffff;
+
+:host {
   display: block;
+  height: 100%;
+  min-width: 0;
+}
 
-  text-decoration: none;
+.classroom-card {
+  display: flex;
+  flex-direction: column;
+
+  height: 100%;
+
   color: inherit;
+  background: $surface;
 
-  padding: 1.5rem;
-
+  border: 1px solid $border;
   border-radius: 16px;
 
-  background: white;
+  overflow: hidden;
+  text-decoration: none;
 
-  transition: .2s ease;
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.03),
+    0 6px 18px rgba(15, 23, 42, 0.05);
 
-  cursor: pointer;
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+
+  &:hover {
+    transform: translateY(-4px);
+
+    border-color: #cbd5e1;
+
+    box-shadow:
+      0 18px 38px rgba(15, 23, 42, 0.1),
+      0 4px 12px rgba(15, 23, 42, 0.05);
+  }
+}
+
+/* =========================
+   VISUAL HEADER
+========================= */
+
+.card-visual {
+  position: relative;
+
+  display: grid;
+  place-items: center;
+
+  height: 145px;
+
+  overflow: hidden;
+
+  background: linear-gradient(135deg, #34d399 0%, #14b8a6 100%);
+}
+
+.card-visual::before {
+  content: '';
+
+  position: absolute;
+  inset: 0;
+
+  background:
+    radial-gradient(circle at 20% 15%, rgba(255, 255, 255, 0.3), transparent 38%),
+    radial-gradient(circle at 90% 90%, rgba(255, 255, 255, 0.16), transparent 34%);
+
+  pointer-events: none;
+}
+
+.visual-circle {
+  position: absolute;
+
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+}
+
+.circle-one {
+  width: 150px;
+  height: 150px;
+
+  top: -85px;
+  right: -55px;
+}
+
+.circle-two {
+  width: 95px;
+  height: 95px;
+
+  bottom: -55px;
+  left: -30px;
+}
+
+.class-icon {
+  position: relative;
+  z-index: 1;
+
+  display: grid;
+  place-items: center;
+
+  width: 76px;
+  height: 76px;
+
+  color: #ffffff;
+
+  background: rgba(255, 255, 255, 0.16);
+
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+
+  box-shadow:
+    0 14px 30px rgba(15, 23, 42, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.28);
+
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+
+  transition:
+    transform 180ms ease,
+    background-color 180ms ease;
+
+  i {
+    width: 38px;
+    height: 38px;
+
+    stroke-width: 1.7;
+  }
 }
 
 .classroom-card:hover {
-  transform: translateY(-3px);
+  .class-icon {
+    transform: translateY(-3px) scale(1.04);
 
-  box-shadow: 0 12px 30px rgba(0,0,0,.08);
+    background: rgba(255, 255, 255, 0.22);
+  }
+}
+
+/* =========================
+   CONTENT
+========================= */
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+
+  min-height: 210px;
+
+  padding: 1.2rem;
+}
+
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 1rem;
+}
+
+.title-group {
+  min-width: 0;
+
+  h2 {
+    display: -webkit-box;
+
+    margin: 0;
+
+    color: $text-primary;
+
+    font-size: 1.05rem;
+    font-weight: 700;
+    line-height: 1.4;
+
+    overflow: hidden;
+
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+}
+
+.code {
+  display: inline-flex;
+
+  margin-top: 0.55rem;
+  padding: 0.28rem 0.55rem;
+
+  color: #047857;
+  background: #ecfdf5;
+
+  border-radius: 999px;
+
+  font-size: 0.72rem;
+  font-weight: 700;
+
+  letter-spacing: 0.04em;
+}
+
+.open-icon {
+  display: grid;
+  place-items: center;
+
+  width: 32px;
+  height: 32px;
+
+  flex-shrink: 0;
+
+  color: $text-secondary;
+  background: #f8fafc;
+
+  border-radius: 9px;
+
+  transition:
+    color 160ms ease,
+    background-color 160ms ease,
+    transform 160ms ease;
+
+  i {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.classroom-card:hover {
+  .open-icon {
+    color: $primary;
+    background: #eff6ff;
+
+    transform: translate(2px, -2px);
+  }
+}
+
+/* =========================
+   DESCRIPTION
+========================= */
+
+.description {
+  display: -webkit-box;
+
+  margin: 1rem 0 0;
+
+  color: $text-secondary;
+
+  font-size: 0.84rem;
+  line-height: 1.6;
+
+  overflow: hidden;
+
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+/* =========================
+   STATS
+========================= */
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 0.75rem;
+
+  margin-top: auto;
+  padding-top: 1.1rem;
+
+  border-top: 1px solid #f1f5f9;
+}
+
+.stat {
+  display: flex;
+  align-items: center;
+
+  gap: 0.65rem;
+
+  min-width: 0;
+}
+
+.stat-icon {
+  display: grid;
+  place-items: center;
+
+  width: 36px;
+  height: 36px;
+
+  flex-shrink: 0;
+
+  color: #0d9488;
+  background: #f0fdfa;
+
+  border-radius: 10px;
+
+  i {
+    width: 17px;
+    height: 17px;
+  }
+}
+
+.stat-content {
+  display: flex;
+  flex-direction: column;
+
+  min-width: 0;
+
+  strong {
+    color: $text-primary;
+
+    font-size: 0.9rem;
+    font-weight: 700;
+  }
+
+  span {
+    margin-top: 0.1rem;
+
+    color: $text-muted;
+
+    font-size: 0.7rem;
+  }
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 700px) {
+  .card-visual {
+    height: 120px;
+  }
+
+  .class-icon {
+    width: 64px;
+    height: 64px;
+
+    border-radius: 17px;
+
+    i {
+      width: 32px;
+      height: 32px;
+    }
+  }
+
+  .card-content {
+    min-height: 190px;
+  }
 }
