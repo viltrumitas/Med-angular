@@ -1,149 +1,338 @@
-// --- VARIABLES ESTÉTICAS MÉDICAS ---
-$teal-primary: #0d9488;
-$teal-light: #f0fdfa;
-$text-main: #1e293b;
-$text-muted: #64748b;
-$bg-glass: rgba(255, 255, 255, 0.75);
-$border-color: rgba(226, 232, 240, 0.8);
-$error-color: #ef4444;
+$primary: #2563eb;
+$primary-hover: #1d4ed8;
+$primary-light: #eff6ff;
 
-// --- CONTENEDOR DE LA VISTA ---
+$success: #059669;
+$success-light: #ecfdf5;
+
+$text-primary: #0f172a;
+$text-secondary: #475569;
+$text-muted: #94a3b8;
+
+$border: #e2e8f0;
+$surface: #ffffff;
+$background: #f8fafc;
+
+// =========================
+// CONTAINER
+// =========================
+
 .case-container {
   width: 100%;
-  max-width: 1300px;
-  margin: 0 auto;
-  padding: 2rem;
 }
 
-app-case-content {
-  display: block;
-  width: 100%;
-}
+// =========================
+// STATES
+// =========================
 
-// --- ESTADO DE CARGA (LOADING STATE) ---
-.loading-state {
+.state-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 1.5rem;
-  background: $bg-glass;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid $border-color;
-  border-radius: 20px;
-  padding: 4rem 2rem;
-  width: 100%;
-  max-width: 600px;
-  margin: auto 0;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.03);
 
-  // Spinner Médico Animado
-  .spinner {
-    width: 48px;
-    height: 48px;
-    border: 4px solid rgba($teal-primary, 0.15);
-    border-top-color: $teal-primary;
-    border-radius: 50%;
-    animation: spin 0.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  min-height: 380px;
+
+  padding: 3rem 2rem;
+
+  text-align: center;
+
+  background: $surface;
+
+  border: 1px solid $border;
+  border-radius: 16px;
+}
+
+.state-content {
+  h2 {
+    margin: 1rem 0 0;
+
+    color: $text-primary;
+
+    font-size: 1.2rem;
+    font-weight: 700;
   }
 
   p {
-    color: $teal-primary;
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin: 0;
-    letter-spacing: 0.3px;
+    max-width: 430px;
+
+    margin: 0.45rem 0 0;
+
+    color: $text-secondary;
+
+    font-size: 0.84rem;
+    line-height: 1.6;
   }
 }
 
-// --- ESTADO DE ERROR (ERROR STATE) ---
-.error-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1.25rem;
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba($error-color, 0.15);
-  border-radius: 20px;
-  padding: 3.5rem 2rem;
-  width: 100%;
-  max-width: 500px;
-  margin: auto 0;
-  box-shadow: 0 10px 20px -5px rgba($error-color, 0.05);
+// =========================
+// ERROR
+// =========================
 
-  .error-icon {
-    font-size: 2.5rem;
-    animation: pulseError 2s infinite;
-  }
+.state-icon {
+  display: grid;
+  place-items: center;
 
-  p.error {
-    color: #991b1b;
-    font-size: 1.05rem;
-    font-weight: 600;
-    text-align: center;
-    margin: 0;
-    line-height: 1.5;
+  width: 58px;
+  height: 58px;
+
+  color: #dc2626;
+  background: #fef2f2;
+
+  border-radius: 16px;
+
+  i {
+    width: 25px;
+    height: 25px;
   }
 }
 
-// --- CONTENEDOR DE BOTONES DE ACCIÓN ---
-.actions-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 1.5rem;
-  width: 100%;
-  max-width: 1000px; // Sincronizado con el ancho máximo de la tarjeta de contenido
-  margin-top: 2.5rem;
-  padding: 0 0.5rem;
+// =========================
+// SPINNER
+// =========================
 
-  // Ajustes custom sobre tus componentes reutilizables de botón si hiciera falta
-  app-button {
-    flex: 1;
-    max-width: 220px; // Evita que los botones se estiren infinitamente a lo ancho
-    width: 100%;
-  }
+.spinner {
+  width: 38px;
+  height: 38px;
+
+  border: 3px solid $border;
+  border-top-color: $primary;
+  border-radius: 50%;
+
+  animation: spin 700ms linear infinite;
 }
 
-// --- ANIMACIONES NATIVAS ---
 @keyframes spin {
   to {
     transform: rotate(360deg);
   }
 }
 
-@keyframes pulseError {
-  0%,
-  100% {
-    transform: scale(1);
-    opacity: 1;
+// =========================
+// CASE ACTIONS
+// =========================
+
+.case-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 2rem;
+
+  margin-top: 1rem;
+  padding: 1.2rem 1.3rem;
+
+  background: $surface;
+
+  border: 1px solid $border;
+  border-radius: 16px;
+}
+
+// =========================
+// ACTIONS INFO
+// =========================
+
+.actions-info {
+  display: flex;
+  align-items: center;
+
+  gap: 0.8rem;
+
+  min-width: 0;
+
+  > div:last-child {
+    display: flex;
+    flex-direction: column;
+
+    min-width: 0;
   }
-  50% {
-    transform: scale(1.08);
-    opacity: 0.85;
+
+  strong {
+    color: $text-primary;
+
+    font-size: 0.82rem;
+    font-weight: 700;
+  }
+
+  span {
+    margin-top: 0.2rem;
+
+    color: $text-muted;
+
+    font-size: 0.7rem;
   }
 }
 
-// --- RESPONSIVE DE LA BOTONERA (MÓVILES) ---
-@media (max-width: 576px) {
-  .case-container {
-    padding: 1rem;
+.actions-icon {
+  display: grid;
+  place-items: center;
+
+  width: 40px;
+  height: 40px;
+
+  flex-shrink: 0;
+
+  color: $text-secondary;
+  background: $background;
+
+  border-radius: 11px;
+
+  i {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+// =========================
+// BUTTON GROUP
+// =========================
+
+.actions-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  gap: 0.6rem;
+
+  flex-shrink: 0;
+}
+
+// =========================
+// ACTION BUTTON
+// =========================
+
+.action-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 0.45rem;
+
+  min-height: 40px;
+
+  padding: 0.6rem 0.85rem;
+
+  border: 1px solid transparent;
+  border-radius: 9px;
+
+  font: inherit;
+  font-size: 0.76rem;
+  font-weight: 650;
+
+  white-space: nowrap;
+
+  cursor: pointer;
+
+  transition:
+    color 160ms ease,
+    background-color 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+
+  i {
+    width: 16px;
+    height: 16px;
   }
 
-  .actions-container {
+  &:hover {
+    transform: translateY(-1px);
+  }
+}
+
+// =========================
+// EDIT BUTTON
+// =========================
+
+.action-button.secondary {
+  color: $text-primary;
+  background: $surface;
+
+  border-color: $border;
+
+  &:hover {
+    background: $background;
+
+    border-color: #cbd5e1;
+  }
+}
+
+// =========================
+// PUBLISH BUTTON
+// =========================
+
+.action-button.primary {
+  color: #ffffff;
+  background: $primary;
+
+  &:hover {
+    background: $primary-hover;
+
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.2);
+  }
+}
+
+// =========================
+// PUBLISHED STATE
+// =========================
+
+.published-state {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 0.45rem;
+
+  min-height: 40px;
+
+  padding: 0.6rem 0.85rem;
+
+  color: #047857;
+  background: $success-light;
+
+  border: 1px solid #a7f3d0;
+  border-radius: 9px;
+
+  font-size: 0.76rem;
+  font-weight: 650;
+
+  white-space: nowrap;
+
+  i {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+// =========================
+// RESPONSIVE
+// =========================
+
+@media (max-width: 750px) {
+  .case-actions {
+    align-items: stretch;
     flex-direction: column;
-    gap: 1rem;
-    margin-top: 1.75rem;
 
-    app-button {
-      max-width: 100%; // En móvil los botones se vuelven full-width uno abajo del otro
-    }
+    gap: 1rem;
   }
 
-  .loading-state,
-  .error-state {
-    padding: 3rem 1.5rem;
+  .actions-buttons {
+    width: 100%;
+  }
+
+  .action-button,
+  .published-state {
+    flex: 1;
+  }
+}
+
+@media (max-width: 500px) {
+  .actions-buttons {
+    flex-direction: column;
+  }
+
+  .action-button,
+  .published-state {
+    width: 100%;
   }
 }

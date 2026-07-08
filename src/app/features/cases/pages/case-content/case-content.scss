@@ -1,237 +1,1181 @@
-// --- VARIABLES MÉDICAS ---
-$teal-primary: #0d9488;
-$teal-light: #f0fdfa;
-$text-main: #1e293b;
-$text-muted: #64748b;
-$bg-glass: rgba(255, 255, 255, 0.75);
-$border-color: rgba(226, 232, 240, 0.8);
-$success: #10b981;
-$warning: #f59e0b;
+// =========================
+// COLORS
+// =========================
 
-// --- CONTENEDOR PRINCIPAL ---
-.case-card {
-  background: $bg-glass;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid $border-color;
-  border-radius: 20px;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
-  padding: 1.5rem;
+$primary: #2563eb;
+$primary-hover: #1d4ed8;
+$primary-light: #eff6ff;
+
+$teal: #0d9488;
+$teal-light: #f0fdfa;
+
+$success: #059669;
+$success-light: #ecfdf5;
+
+$warning: #d97706;
+$warning-light: #fff7ed;
+
+$purple: #7c3aed;
+$purple-light: #f5f3ff;
+
+$rose: #e11d48;
+$rose-light: #fff1f2;
+
+$danger: #dc2626;
+$danger-light: #fef2f2;
+
+$text-primary: #0f172a;
+$text-secondary: #475569;
+$text-muted: #94a3b8;
+
+$border: #e2e8f0;
+$border-soft: #f1f5f9;
+
+$surface: #ffffff;
+$background: #f8fafc;
+
+// =========================
+// PAGE
+// =========================
+
+.case-page {
   width: 100%;
-  max-width: 100%;
-  margin: 0;
-  font-family: 'Inter', system-ui, sans-serif;
-  color: $text-main;
+  max-width: 1450px;
+
+  margin: 0 auto;
+  padding: 2rem;
 }
 
-// --- CABECERA Y ETIQUETAS ---
+// =========================
+// HEADER
+// =========================
+
 .case-header {
-  margin-bottom: 2rem;
+  position: relative;
 
-  .meta-top {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
-    span {
-      padding: 0.4rem 1.2rem;
-      border-radius: 50px;
-      font-size: 0.85rem;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-    }
+  gap: 3rem;
 
-    .badge {
-      background: $teal-light;
-      color: $teal-primary;
-      border: 1px solid rgba($teal-primary, 0.2);
-    }
+  padding: 2rem;
+  margin-bottom: 1rem;
 
-    .status-badge {
-      background: rgba($warning, 0.1);
-      color: $warning;
-      border: 1px solid rgba($warning, 0.2);
+  background:
+    radial-gradient(circle at 90% 15%, rgba(37, 99, 235, 0.12), transparent 30%),
+    linear-gradient(135deg, #ffffff, #f8fbff);
 
-      &.published {
-        background: rgba($success, 0.1);
-        color: $success;
-        border-color: rgba($success, 0.2);
-      }
-    }
-  }
+  border: 1px solid $border;
+  border-radius: 18px;
+
+  overflow: hidden;
+}
+
+.case-header::before {
+  content: '';
+
+  position: absolute;
+
+  width: 220px;
+  height: 220px;
+
+  top: -130px;
+  right: 80px;
+
+  border: 1px solid rgba(37, 99, 235, 0.08);
+  border-radius: 50%;
+
+  pointer-events: none;
+}
+
+.header-main {
+  position: relative;
+  z-index: 1;
+
+  min-width: 0;
 
   h1 {
-    font-size: 2.2rem;
-    font-weight: 800;
-    margin: 0 0 0.5rem 0;
+    max-width: 850px;
+
+    margin: 0.8rem 0 0;
+
+    color: $text-primary;
+
+    font-size: clamp(1.8rem, 3vw, 2.4rem);
+    font-weight: 750;
     line-height: 1.2;
-  }
 
-  .date-text {
-    color: $text-muted;
-    font-size: 0.95rem;
-    font-weight: 500;
+    letter-spacing: -0.04em;
   }
 }
 
-// --- DIVISORES ---
-.divider {
-  border: none;
-  height: 3px;
-  background: linear-gradient(to right, rgba($teal-primary, 0.5), transparent);
-  border-radius: 5px;
-  margin: 2rem 0;
+.header-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+
+  gap: 0.6rem;
 }
 
-.divider-light {
-  border: none;
-  height: 1px;
-  background: $border-color;
-  margin: 2.5rem 0;
+// =========================
+// BADGES
+// =========================
+
+.area-badge {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 0.45rem;
+
+  padding: 0.4rem 0.65rem;
+
+  color: $teal;
+  background: $teal-light;
+
+  border-radius: 999px;
+
+  font-size: 0.7rem;
+  font-weight: 700;
+
+  i {
+    width: 14px;
+    height: 14px;
+  }
 }
 
-// --- SECCIONES Y TEXTOS ---
-.info-section {
-  margin-bottom: 2rem;
+.status-badge {
+  display: inline-flex;
+  align-items: center;
 
-  .section-title {
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: $teal-primary;
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+  gap: 0.4rem;
 
-    // Pequeño adorno al lado del título
-    &::before {
-      content: '';
-      display: block;
-      width: 6px;
-      height: 22px;
-      background: $teal-primary;
-      border-radius: 4px;
+  padding: 0.4rem 0.65rem;
+
+  color: #92400e;
+  background: $warning-light;
+
+  border-radius: 999px;
+
+  font-size: 0.7rem;
+  font-weight: 700;
+
+  &.published {
+    color: #047857;
+    background: $success-light;
+
+    .status-dot {
+      background: $success;
     }
   }
 }
 
-// --- CAJA DE RESALTE (Motivo de Consulta) ---
-.highlight-box {
-  background: $teal-light;
-  border-left: 4px solid $teal-primary;
-  padding: 1.5rem 2rem;
-  border-radius: 0 16px 16px 0;
-  margin-bottom: 3rem;
-  box-shadow: 0 4px 6px -1px rgba($teal-primary, 0.05);
+.status-dot {
+  width: 6px;
+  height: 6px;
 
-  .field-group:not(:last-child) {
-    margin-bottom: 1.25rem;
+  background: $warning;
+
+  border-radius: 50%;
+}
+
+// =========================
+// DATE
+// =========================
+
+.created-date {
+  display: flex;
+  align-items: center;
+
+  gap: 0.45rem;
+
+  margin-top: 1rem;
+
+  color: $text-muted;
+
+  font-size: 0.75rem;
+
+  i {
+    width: 15px;
+    height: 15px;
   }
 }
 
-// --- GRUPOS DE CAMPOS (Labels y Párrafos) ---
-.field-group {
+// =========================
+// HEADER VISUAL
+// =========================
+
+.header-visual {
+  position: relative;
+  z-index: 1;
+
+  flex-shrink: 0;
+}
+
+.case-icon {
+  display: grid;
+  place-items: center;
+
+  width: 86px;
+  height: 86px;
+
+  color: $primary;
+  background: rgba(239, 246, 255, 0.85);
+
+  border: 1px solid rgba(37, 99, 235, 0.12);
+  border-radius: 22px;
+
+  box-shadow: 0 14px 30px rgba(37, 99, 235, 0.1);
+
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+
+  i {
+    width: 40px;
+    height: 40px;
+
+    stroke-width: 1.7;
+  }
+}
+
+// =========================
+// OVERVIEW
+// =========================
+
+.clinical-overview {
+  display: grid;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 1rem;
+
+  margin-bottom: 1rem;
+}
+
+.overview-card {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 1rem;
+
+  padding: 1.2rem;
+
+  background: $surface;
+
+  border: 1px solid $border;
+  border-radius: 14px;
+
+  &.primary {
+    background: linear-gradient(135deg, #ffffff, #f8fbff);
+
+    border-color: rgba(37, 99, 235, 0.18);
+
+    .overview-icon {
+      color: $primary;
+      background: $primary-light;
+    }
+  }
+
+  > div:last-child {
+    min-width: 0;
+  }
+
+  span {
+    color: $text-muted;
+
+    font-size: 0.7rem;
+    font-weight: 650;
+
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  p {
+    margin: 0.4rem 0 0;
+
+    color: $text-primary;
+
+    font-size: 0.88rem;
+    line-height: 1.6;
+  }
+}
+
+.overview-icon {
+  display: grid;
+  place-items: center;
+
+  width: 42px;
+  height: 42px;
+
+  flex-shrink: 0;
+
+  color: $teal;
+  background: $teal-light;
+
+  border-radius: 11px;
+
+  i {
+    width: 19px;
+    height: 19px;
+  }
+}
+
+// =========================
+// CONTENT
+// =========================
+
+.case-content {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
 
-  label {
-    font-size: 0.8rem;
-    text-transform: uppercase;
+  gap: 1rem;
+}
+
+.content-section {
+  padding: 1.4rem;
+
+  background: $surface;
+
+  border: 1px solid $border;
+  border-radius: 16px;
+}
+
+// =========================
+// SECTION HEADER
+// =========================
+
+.section-header {
+  margin-bottom: 1.2rem;
+}
+
+.section-heading {
+  display: flex;
+  align-items: center;
+
+  gap: 0.8rem;
+
+  h2 {
+    margin: 0;
+
+    color: $text-primary;
+
+    font-size: 1rem;
     font-weight: 700;
+  }
+
+  p {
+    margin: 0.25rem 0 0;
+
+    color: $text-secondary;
+
+    font-size: 0.76rem;
+  }
+}
+
+.section-icon {
+  display: grid;
+  place-items: center;
+
+  width: 42px;
+  height: 42px;
+
+  flex-shrink: 0;
+
+  border-radius: 11px;
+
+  i {
+    width: 19px;
+    height: 19px;
+  }
+
+  &.patient {
+    color: $primary;
+    background: $primary-light;
+  }
+
+  &.vitals {
+    color: $rose;
+    background: $rose-light;
+  }
+
+  &.neurological {
+    color: $purple;
+    background: $purple-light;
+  }
+
+  &.findings {
+    color: $teal;
+    background: $teal-light;
+  }
+}
+
+// =========================
+// PATIENT
+// =========================
+
+.patient-summary {
+  display: flex;
+  align-items: stretch;
+
+  gap: 1rem;
+
+  margin-bottom: 1rem;
+}
+
+.patient-main {
+  display: flex;
+  align-items: center;
+
+  gap: 0.8rem;
+
+  flex: 1;
+
+  padding: 1rem;
+
+  background: $background;
+
+  border-radius: 12px;
+
+  > div:last-child {
+    display: flex;
+    flex-direction: column;
+  }
+
+  span {
     color: $text-muted;
-    letter-spacing: 0.5px;
+
+    font-size: 0.68rem;
+  }
+
+  strong {
+    margin-top: 0.2rem;
+
+    color: $text-primary;
+
+    font-size: 0.95rem;
+    font-weight: 700;
+  }
+}
+
+.patient-avatar {
+  display: grid;
+  place-items: center;
+
+  width: 42px;
+  height: 42px;
+
+  flex-shrink: 0;
+
+  color: $primary;
+  background: $primary-light;
+
+  border-radius: 11px;
+
+  i {
+    width: 19px;
+    height: 19px;
+  }
+}
+
+.patient-data {
+  display: grid;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 0.75rem;
+
+  min-width: 260px;
+}
+
+.data-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  padding: 1rem;
+
+  background: $background;
+
+  border-radius: 12px;
+
+  span {
+    color: $text-muted;
+
+    font-size: 0.68rem;
+  }
+
+  strong {
+    margin-top: 0.2rem;
+
+    color: $text-primary;
+
+    font-size: 0.9rem;
+  }
+}
+
+// =========================
+// MEDICAL INFO
+// =========================
+
+.medical-info-grid {
+  display: grid;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 1rem;
+}
+
+.medical-info-card {
+  padding: 1rem;
+
+  background: $background;
+
+  border-radius: 12px;
+
+  p {
+    margin: 0.7rem 0 0;
+
+    color: $text-secondary;
+
+    font-size: 0.8rem;
+    line-height: 1.6;
+  }
+}
+
+.medical-info-header {
+  display: flex;
+  align-items: center;
+
+  gap: 0.5rem;
+
+  color: $text-primary;
+
+  font-size: 0.75rem;
+  font-weight: 650;
+
+  i {
+    width: 16px;
+    height: 16px;
+
+    color: $teal;
+  }
+}
+
+// =========================
+// VITAL SIGNS
+// =========================
+
+.vital-signs-grid {
+  display: grid;
+
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+
+  gap: 0.75rem;
+}
+
+.vital-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  min-width: 0;
+
+  padding: 1rem 0.65rem;
+
+  text-align: center;
+
+  background: $background;
+
+  border: 1px solid transparent;
+  border-radius: 12px;
+
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    background-color 160ms ease;
+
+  &:hover {
+    transform: translateY(-2px);
+
+    background: $surface;
+    border-color: $border;
+  }
+
+  > span {
+    margin-top: 0.65rem;
+
+    color: $text-muted;
+
+    font-size: 0.67rem;
+    font-weight: 600;
+  }
+
+  > strong {
+    margin-top: 0.2rem;
+
+    color: $text-primary;
+
+    font-size: 0.9rem;
+    font-weight: 750;
+
+    word-break: break-word;
+  }
+}
+
+.vital-icon {
+  display: grid;
+  place-items: center;
+
+  width: 36px;
+  height: 36px;
+
+  color: $primary;
+  background: $primary-light;
+
+  border-radius: 10px;
+
+  i {
+    width: 16px;
+    height: 16px;
+  }
+
+  &.heart {
+    color: $rose;
+    background: $rose-light;
+  }
+
+  &.respiratory {
+    color: $teal;
+    background: $teal-light;
+  }
+
+  &.oxygen {
+    color: #0284c7;
+    background: #f0f9ff;
+  }
+
+  &.glucose {
+    color: $purple;
+    background: $purple-light;
+  }
+
+  &.temperature {
+    color: $warning;
+    background: $warning-light;
+  }
+
+  &.capillary {
+    color: $success;
+    background: $success-light;
+  }
+}
+
+// =========================
+// NEUROLOGICAL
+// =========================
+
+.neurological-grid {
+  display: grid;
+
+  grid-template-columns: 260px minmax(0, 1fr);
+
+  gap: 1rem;
+}
+
+.glasgow-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  min-height: 180px;
+
+  padding: 1.2rem;
+
+  background: linear-gradient(135deg, $purple-light, $surface);
+
+  border: 1px solid rgba(124, 58, 237, 0.15);
+  border-radius: 14px;
+}
+
+.glasgow-heading {
+  display: flex;
+  align-items: center;
+
+  gap: 0.7rem;
+
+  > div:last-child {
+    display: flex;
+    flex-direction: column;
+  }
+
+  span {
+    color: $text-primary;
+
+    font-size: 0.78rem;
+    font-weight: 650;
+  }
+
+  small {
+    margin-top: 0.15rem;
+
+    color: $text-muted;
+
+    font-size: 0.65rem;
+  }
+}
+
+.glasgow-icon {
+  display: grid;
+  place-items: center;
+
+  width: 40px;
+  height: 40px;
+
+  color: $purple;
+  background: $surface;
+
+  border-radius: 11px;
+
+  i {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.glasgow-value {
+  color: $purple;
+
+  font-size: 3rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.cincinnati-card {
+  padding: 1.2rem;
+
+  background: $background;
+
+  border-radius: 14px;
+}
+
+.card-subheader {
+  margin-bottom: 1rem;
+
+  h3 {
+    margin: 0;
+
+    color: $text-primary;
+
+    font-size: 0.9rem;
+    font-weight: 700;
+  }
+
+  p {
+    margin: 0.3rem 0 0;
+
+    color: $text-secondary;
+
+    font-size: 0.72rem;
+  }
+}
+
+.cincinnati-grid {
+  display: grid;
+
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+
+  gap: 0.75rem;
+}
+
+.neuro-item {
+  display: flex;
+  align-items: center;
+
+  gap: 0.65rem;
+
+  padding: 0.85rem;
+
+  background: $surface;
+
+  border: 1px solid $border;
+  border-radius: 11px;
+
+  > div:last-child {
+    display: flex;
+    flex-direction: column;
+
+    min-width: 0;
+  }
+
+  span {
+    color: $text-muted;
+
+    font-size: 0.65rem;
+  }
+
+  strong {
+    margin-top: 0.2rem;
+
+    color: $text-primary;
+
+    font-size: 0.75rem;
+
+    overflow-wrap: anywhere;
+  }
+}
+
+.neuro-icon {
+  display: grid;
+  place-items: center;
+
+  width: 34px;
+  height: 34px;
+
+  flex-shrink: 0;
+
+  color: $purple;
+  background: $purple-light;
+
+  border-radius: 9px;
+
+  i {
+    width: 15px;
+    height: 15px;
+  }
+}
+
+// =========================
+// FINDINGS
+// =========================
+
+.findings-box {
+  position: relative;
+
+  padding: 1.2rem 1.2rem 1.2rem 3.5rem;
+
+  background: linear-gradient(135deg, $teal-light, $surface);
+
+  border: 1px solid rgba(13, 148, 136, 0.14);
+  border-radius: 14px;
+
+  > i {
+    position: absolute;
+
+    top: 1.2rem;
+    left: 1.2rem;
+
+    width: 20px;
+    height: 20px;
+
+    color: $teal;
   }
 
   p {
     margin: 0;
-    font-size: 1.05rem;
-    line-height: 1.6;
-    color: $text-main;
 
-    &.patient-name {
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: $teal-primary;
-    }
+    color: $text-secondary;
+
+    font-size: 0.84rem;
+    line-height: 1.75;
+
+    white-space: pre-line;
   }
 }
 
-.mt-1 {
-  margin-top: 1.5rem;
-}
+// =========================
+// CASE ACTIONS
+// =========================
 
-// --- SISTEMA DE GRIDS ---
-.grid-2 {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+.case-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
   gap: 2rem;
-}
 
-// --- SIGNOS VITALES (Tarjetas interactivas) ---
-.vital-signs-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 1.25rem;
+  padding: 1.2rem 1.3rem;
 
-  .vital-card {
-    background: #ffffff;
-    border: 1px solid $border-color;
-    border-radius: 16px;
-    padding: 1.25rem 1rem;
-    text-align: center;
-    transition: all 0.25s ease;
+  background: $surface;
 
-    label {
-      display: block;
-      font-size: 0.75rem;
-      color: $text-muted;
-      margin-bottom: 0.5rem;
-      text-transform: uppercase;
-      font-weight: 700;
-    }
-
-    p {
-      font-size: 1.4rem;
-      font-weight: 800;
-      color: $teal-primary;
-      margin: 0;
-    }
-
-    &:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 10px 20px rgba($teal-primary, 0.1);
-      border-color: rgba($teal-primary, 0.4);
-    }
-  }
-}
-
-// --- TEXTO LARGO (Hallazgos) ---
-.text-block {
-  background: rgba(255, 255, 255, 0.6);
-  border: 1px solid $border-color;
+  border: 1px solid $border;
   border-radius: 16px;
-  padding: 1.5rem;
-  line-height: 1.8;
+
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
 }
 
-// --- RESPONSIVE (Móviles) ---
-@media (max-width: 768px) {
-  .case-card {
-    padding: 1.5rem;
-    border-radius: 16px;
+.actions-info {
+  display: flex;
+  align-items: center;
+
+  gap: 0.8rem;
+
+  min-width: 0;
+
+  > div:last-child {
+    display: flex;
+    flex-direction: column;
+
+    min-width: 0;
   }
 
-  .case-header h1 {
-    font-size: 1.8rem;
+  strong {
+    color: $text-primary;
+
+    font-size: 0.82rem;
+    font-weight: 700;
   }
 
-  .highlight-box {
-    padding: 1.25rem;
+  span {
+    margin-top: 0.2rem;
+
+    color: $text-muted;
+
+    font-size: 0.7rem;
+  }
+}
+
+.actions-icon {
+  display: grid;
+  place-items: center;
+
+  width: 40px;
+  height: 40px;
+
+  flex-shrink: 0;
+
+  color: $text-secondary;
+  background: $background;
+
+  border-radius: 11px;
+
+  i {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+// =========================
+// ACTION AREA
+// =========================
+
+.actions-area {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  gap: 1.5rem;
+
+  flex-shrink: 0;
+}
+
+.danger-actions,
+.main-actions {
+  display: flex;
+  align-items: center;
+
+  gap: 0.6rem;
+}
+
+// =========================
+// ACTION BUTTONS
+// =========================
+
+.action-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 0.45rem;
+
+  min-height: 40px;
+
+  padding: 0.6rem 0.85rem;
+
+  border: 1px solid transparent;
+  border-radius: 9px;
+
+  font: inherit;
+  font-size: 0.76rem;
+  font-weight: 650;
+
+  white-space: nowrap;
+
+  cursor: pointer;
+
+  transition:
+    color 160ms ease,
+    background-color 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+
+  i {
+    width: 16px;
+    height: 16px;
+  }
+
+  &:hover {
+    transform: translateY(-1px);
+  }
+}
+
+.action-button.secondary {
+  color: $text-primary;
+  background: $surface;
+
+  border-color: $border;
+
+  &:hover {
+    background: $background;
+    border-color: #cbd5e1;
+  }
+}
+
+.action-button.primary {
+  color: #ffffff;
+  background: $primary;
+
+  &:hover {
+    background: $primary-hover;
+
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.2);
+  }
+}
+
+.action-button.danger {
+  color: $danger;
+  background: $surface;
+
+  border-color: #fecaca;
+
+  &:hover {
+    background: $danger-light;
+    border-color: #fca5a5;
+  }
+}
+
+// =========================
+// RESPONSIVE
+// =========================
+
+@media (max-width: 1150px) {
+  .vital-signs-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .case-actions {
+    align-items: flex-start;
+  }
+
+  .actions-area {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 900px) {
+  .case-header {
+    align-items: flex-start;
+  }
+
+  .header-visual {
+    display: none;
+  }
+
+  .patient-summary {
+    flex-direction: column;
+  }
+
+  .patient-data {
+    min-width: 0;
+  }
+
+  .neurological-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 750px) {
+  .clinical-overview,
+  .medical-info-grid {
+    grid-template-columns: 1fr;
   }
 
   .vital-signs-grid {
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .cincinnati-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .case-actions {
+    align-items: stretch;
+    flex-direction: column;
+
+    gap: 1rem;
+  }
+
+  .actions-area {
+    width: 100%;
+  }
+
+  .danger-actions,
+  .main-actions {
+    width: 100%;
+  }
+
+  .action-button {
+    flex: 1;
+  }
+}
+
+@media (max-width: 650px) {
+  .case-page {
+    padding: 1rem;
+  }
+
+  .case-header {
+    padding: 1.3rem;
+  }
+
+  .header-main {
+    h1 {
+      font-size: 1.6rem;
+    }
+  }
+
+  .content-section {
+    padding: 1rem;
+  }
+
+  .patient-data {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .section-heading {
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 500px) {
+  .actions-area,
+  .danger-actions,
+  .main-actions {
+    flex-direction: column;
+  }
+
+  .action-button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 430px) {
+  .vital-signs-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .patient-data {
+    grid-template-columns: 1fr;
   }
 }

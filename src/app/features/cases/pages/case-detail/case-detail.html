@@ -1,25 +1,69 @@
 <div class="case-container">
   @if (isLoading()) {
-    <div class="loading-state">
+    <section class="state-container">
       <div class="spinner"></div>
-      <p>Cargando caso clínico...</p>
-    </div>
-  } @else if (error()) {
-    <div class="error-state">
-      <span class="error-icon">⚠️</span>
-      <p class="error">{{ error() }}</p>
-    </div>
-  } @else if (case(); as item) {
-    <app-case-content [case]="item"></app-case-content>
 
-    <div class="actions-container">
-      <app-button
-        text="Publicar Caso"
-        variant="secondary"
-        type="button"
-        (clicked)="publishCase()"
-      />
-      <app-button text="Editar Caso" variant="secondary" type="button" (clicked)="editCase()" />
-    </div>
+      <div class="state-content">
+        <h2>Cargando caso clínico</h2>
+
+        <p>Estamos obteniendo la información del caso...</p>
+      </div>
+    </section>
+  } @else if (error()) {
+    <section class="state-container error-state">
+      <div class="state-icon">
+        <i data-lucide="triangle-alert"></i>
+      </div>
+
+      <div class="state-content">
+        <h2>No pudimos cargar el caso</h2>
+
+        <p>
+          {{ error() }}
+        </p>
+      </div>
+    </section>
+  } @else if (case(); as item) {
+    <app-case-content [case]="item" />
+
+    <!-- =========================
+         CASE ACTIONS
+    ========================== -->
+
+    <footer class="case-actions">
+      <div class="actions-info">
+        <div class="actions-icon">
+          <i data-lucide="settings-2"></i>
+        </div>
+
+        <div>
+          <strong>Acciones del caso</strong>
+
+          <span> Edita la información o cambia el estado de publicación. </span>
+        </div>
+      </div>
+
+      <div class="actions-buttons">
+        <button type="button" class="action-button secondary" (click)="editCase()">
+          <i data-lucide="pencil"></i>
+
+          <span>Editar caso</span>
+        </button>
+
+        @if (!item.isPublished) {
+          <button type="button" class="action-button primary" (click)="publishCase()">
+            <i data-lucide="send"></i>
+
+            <span>Publicar caso</span>
+          </button>
+        } @else {
+          <div class="published-state">
+            <i data-lucide="circle-check"></i>
+
+            <span>Caso publicado</span>
+          </div>
+        }
+      </div>
+    </footer>
   }
 </div>

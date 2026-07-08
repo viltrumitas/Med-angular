@@ -1,121 +1,391 @@
-<article class="case-card">
+<section class="case-page">
+  @let c = case();
+
+  <!-- =========================
+       CASE HEADER
+  ========================== -->
+
   <header class="case-header">
-    <div class="meta-top">
-      <span class="badge">{{ case().area }}</span>
-      <span class="status-badge" [class.published]="case().isPublished">
-        {{ case().isPublished ? 'Publicado' : 'Borrador' }}
-      </span>
+    <div class="header-main">
+      <div class="header-meta">
+        <span class="area-badge">
+          <i data-lucide="stethoscope"></i>
+
+          {{ c.area }}
+        </span>
+
+        <span class="status-badge" [class.published]="c.isPublished">
+          <span class="status-dot"></span>
+
+          {{ c.isPublished ? 'Publicado' : 'Borrador' }}
+        </span>
+      </div>
+
+      <h1>
+        {{ c.title }}
+      </h1>
+
+      <div class="created-date">
+        <i data-lucide="calendar-days"></i>
+
+        <span> Creado el {{ c.createdAt }} </span>
+      </div>
     </div>
-    <h1>{{ case().title }}</h1>
-    <p class="date-text">Creado el: {{ case().createdAt }}</p>
+
+    <div class="header-visual">
+      <div class="case-icon">
+        <i data-lucide="clipboard-plus"></i>
+      </div>
+    </div>
   </header>
 
-  <hr class="divider" />
+  <!-- =========================
+       CLINICAL OVERVIEW
+  ========================== -->
 
-  <main class="case-body">
-    <section class="info-section highlight-box">
-      <div class="field-group">
-        <label>Motivo de Consulta</label>
-        <p>{{ case().consult }}</p>
+  <section class="clinical-overview">
+    <article class="overview-card primary">
+      <div class="overview-icon">
+        <i data-lucide="message-square-medical"></i>
       </div>
-      <div class="field-group">
-        <label>Escenario</label>
-        <p>{{ case().scenery }}</p>
+
+      <div>
+        <span> Motivo de consulta </span>
+
+        <p>
+          {{ c.consult }}
+        </p>
+      </div>
+    </article>
+
+    <article class="overview-card">
+      <div class="overview-icon">
+        <i data-lucide="map-pin"></i>
+      </div>
+
+      <div>
+        <span> Escenario </span>
+
+        <p>
+          {{ c.scenery }}
+        </p>
+      </div>
+    </article>
+  </section>
+
+  <!-- =========================
+       MAIN CONTENT
+  ========================== -->
+
+  <div class="case-content">
+    <!-- =========================
+         PATIENT DATA
+    ========================== -->
+
+    <section class="content-section">
+      <header class="section-header">
+        <div class="section-heading">
+          <div class="section-icon patient">
+            <i data-lucide="user-round"></i>
+          </div>
+
+          <div>
+            <h2>Datos del paciente</h2>
+
+            <p>Información general y antecedentes clínicos.</p>
+          </div>
+        </div>
+      </header>
+
+      <div class="patient-summary">
+        <article class="patient-main">
+          <div class="patient-avatar">
+            <i data-lucide="user-round"></i>
+          </div>
+
+          <div>
+            <span> Paciente </span>
+
+            <strong>
+              {{ c.patientName }}
+            </strong>
+          </div>
+        </article>
+
+        <div class="patient-data">
+          <div class="data-item">
+            <span> Género </span>
+
+            <strong>
+              {{ c.gender }}
+            </strong>
+          </div>
+
+          <div class="data-item">
+            <span> Edad </span>
+
+            <strong>
+              {{ c.age }}
+            </strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="medical-info-grid">
+        <article class="medical-info-card">
+          <div class="medical-info-header">
+            <i data-lucide="history"></i>
+
+            <span> Antecedentes médicos </span>
+          </div>
+
+          <p>
+            {{ c.medicalHistory || 'Sin antecedentes registrados.' }}
+          </p>
+        </article>
+
+        <article class="medical-info-card">
+          <div class="medical-info-header">
+            <i data-lucide="pill"></i>
+
+            <span> Medicamentos actuales </span>
+          </div>
+
+          <p>
+            {{ c.medications || 'Sin medicamentos registrados.' }}
+          </p>
+        </article>
       </div>
     </section>
 
-    <section class="info-section">
-      <h2 class="section-title">Datos del Paciente</h2>
-      <div class="grid-2">
-        <div class="field-group">
-          <label>Nombre del Paciente</label>
-          <p class="patient-name">{{ case().patientName }}</p>
-        </div>
-        <div class="field-group">
-          <label>Género</label>
-          <p>{{ case().gender }}</p>
-        </div>
-        <div class="field-group">
-          <label>Edad</label>
-          <p>{{ case().age }}</p>
-        </div>
-      </div>
-      <div class="field-group mt-1">
-        <label>Antecedentes Médicos</label>
-        <p>{{ case().medicalHistory }}</p>
-      </div>
-      <div class="field-group mt-1">
-        <label>Medicamentos Actuales</label>
-        <p>{{ case().medications }}</p>
-      </div>
-    </section>
+    <!-- =========================
+         VITAL SIGNS
+    ========================== -->
 
-    <hr class="divider-light" />
+    <section class="content-section">
+      <header class="section-header">
+        <div class="section-heading">
+          <div class="section-icon vitals">
+            <i data-lucide="activity"></i>
+          </div>
 
-    <section class="info-section">
-      <h2 class="section-title">Signos Vitales</h2>
+          <div>
+            <h2>Signos vitales</h2>
+
+            <p>Valores registrados durante la valoración inicial.</p>
+          </div>
+        </div>
+      </header>
+
       <div class="vital-signs-grid">
-        <div class="vital-card">
-          <label>TA</label>
-          <p>{{ case().ta }}</p>
-        </div>
-        <div class="vital-card">
-          <label>FC</label>
-          <p>{{ case().fc }}</p>
-        </div>
-        <div class="vital-card">
-          <label>FR</label>
-          <p>{{ case().fr }}</p>
-        </div>
-        <div class="vital-card">
-          <label>SpO2</label>
-          <p>{{ case().spo2 }}</p>
-        </div>
-        <div class="vital-card">
-          <label>Glucosa</label>
-          <p>{{ case().glucose }}</p>
-        </div>
-        <div class="vital-card">
-          <label>Temp.</label>
-          <p>{{ case().temperature }}</p>
-        </div>
-        <div class="vital-card">
-          <label>Llenado Capilar</label>
-          <p>{{ case().capillaryFiller }}</p>
-        </div>
+        <article class="vital-card">
+          <div class="vital-icon">
+            <i data-lucide="gauge"></i>
+          </div>
+
+          <span> TA </span>
+
+          <strong>
+            {{ c.ta }}
+          </strong>
+        </article>
+
+        <article class="vital-card">
+          <div class="vital-icon heart">
+            <i data-lucide="heart-pulse"></i>
+          </div>
+
+          <span> FC </span>
+
+          <strong>
+            {{ c.fc }}
+          </strong>
+        </article>
+
+        <article class="vital-card">
+          <div class="vital-icon respiratory">
+            <i data-lucide="wind"></i>
+          </div>
+
+          <span> FR </span>
+
+          <strong>
+            {{ c.fr }}
+          </strong>
+        </article>
+
+        <article class="vital-card">
+          <div class="vital-icon oxygen">
+            <i data-lucide="droplets"></i>
+          </div>
+
+          <span> SpO₂ </span>
+
+          <strong>
+            {{ c.spo2 }}
+          </strong>
+        </article>
+
+        <article class="vital-card">
+          <div class="vital-icon glucose">
+            <i data-lucide="test-tube"></i>
+          </div>
+
+          <span> Glucosa </span>
+
+          <strong>
+            {{ c.glucose }}
+          </strong>
+        </article>
+
+        <article class="vital-card">
+          <div class="vital-icon temperature">
+            <i data-lucide="thermometer"></i>
+          </div>
+
+          <span> Temperatura </span>
+
+          <strong>
+            {{ c.temperature }}
+          </strong>
+        </article>
+
+        <article class="vital-card">
+          <div class="vital-icon capillary">
+            <i data-lucide="timer"></i>
+          </div>
+
+          <span> Llenado capilar </span>
+
+          <strong>
+            {{ c.capillaryFiller }}
+          </strong>
+        </article>
       </div>
     </section>
 
-    <hr class="divider-light" />
+    <!-- =========================
+         NEUROLOGICAL
+    ========================== -->
 
-    <section class="info-section">
-      <h2 class="section-title">Evaluación Neurológica</h2>
-      <div class="grid-2">
-        <div class="field-group">
-          <label>Brazo </label>
-          <p>{{ case().cincinnati?.armDrift }}</p>
-          <label>Rostro</label>
-          <p>{{ case().cincinnati?.facialDroop }}</p>
-          <label>Habla</label>
-          <p>{{ case().cincinnati?.speech }}</p>
+    <section class="content-section">
+      <header class="section-header">
+        <div class="section-heading">
+          <div class="section-icon neurological">
+            <i data-lucide="brain"></i>
+          </div>
+
+          <div>
+            <h2>Evaluación neurológica</h2>
+
+            <p>Escala de Glasgow y valoración de Cincinnati.</p>
+          </div>
         </div>
-        <div class="field-group">
-          <label>Escala de Glasgow</label>
-          <p>{{ case().glasgow }}</p>
-        </div>
+      </header>
+
+      <div class="neurological-grid">
+        <!-- GLASGOW -->
+
+        <article class="glasgow-card">
+          <div class="glasgow-heading">
+            <div class="glasgow-icon">
+              <i data-lucide="brain"></i>
+            </div>
+
+            <div>
+              <span> Escala de Glasgow </span>
+
+              <small> Nivel de conciencia </small>
+            </div>
+          </div>
+
+          <strong class="glasgow-value">
+            {{ c.glasgow }}
+          </strong>
+        </article>
+
+        <!-- CINCINNATI -->
+
+        <article class="cincinnati-card">
+          <div class="card-subheader">
+            <h3>Escala de Cincinnati</h3>
+
+            <p>Evaluación rápida de signos neurológicos.</p>
+          </div>
+
+          <div class="cincinnati-grid">
+            <div class="neuro-item">
+              <div class="neuro-icon">
+                <i data-lucide="hand"></i>
+              </div>
+
+              <div>
+                <span> Deriva del brazo </span>
+
+                <strong>
+                  {{ c.cincinnati?.armDrift }}
+                </strong>
+              </div>
+            </div>
+
+            <div class="neuro-item">
+              <div class="neuro-icon">
+                <i data-lucide="scan-face"></i>
+              </div>
+
+              <div>
+                <span> Caída facial </span>
+
+                <strong>
+                  {{ c.cincinnati?.facialDroop }}
+                </strong>
+              </div>
+            </div>
+
+            <div class="neuro-item">
+              <div class="neuro-icon">
+                <i data-lucide="message-circle"></i>
+              </div>
+
+              <div>
+                <span> Habla </span>
+
+                <strong>
+                  {{ c.cincinnati?.speech }}
+                </strong>
+              </div>
+            </div>
+          </div>
+        </article>
       </div>
     </section>
 
-    <hr class="divider-light" />
+    <!-- =========================
+         GENERAL FINDINGS
+    ========================== -->
 
-    <section class="info-section">
-      <h2 class="section-title">Hallazgos Generales</h2>
-      <div class="field-group">
-        <p class="text-block">{{ case().generalFindings }}</p>
+    <section class="content-section">
+      <header class="section-header">
+        <div class="section-heading">
+          <div class="section-icon findings">
+            <i data-lucide="search-check"></i>
+          </div>
+
+          <div>
+            <h2>Hallazgos generales</h2>
+
+            <p>Observaciones obtenidas durante la valoración.</p>
+          </div>
+        </div>
+      </header>
+
+      <div class="findings-box">
+        <i data-lucide="quote"></i>
+
+        <p>
+          {{ c.generalFindings }}
+        </p>
       </div>
     </section>
-  </main>
-</article>
-
-
-
+  </div>
+</section>
