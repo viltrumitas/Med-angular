@@ -1,10 +1,13 @@
 import { TeacherModel } from '../../cases/dto/teacher-response.dto';
+import { ClassroomSummaryModel } from './classroom-summary.model';
 
 export interface AssignmentListItem {
   id: string;
   title: string;
 
-  teacher: TeacherModel;
+  description: string | null;
+
+  classroom: ClassroomSummaryModel;
 
   isPublished: boolean;
 

@@ -1,0 +1,22 @@
+.classroom-card {
+  display: block;
+
+  text-decoration: none;
+  color: inherit;
+
+  padding: 1.5rem;
+
+  border-radius: 16px;
+
+  background: white;
+
+  transition: .2s ease;
+
+  cursor: pointer;
+}
+
+.classroom-card:hover {
+  transform: translateY(-3px);
+
+  box-shadow: 0 12px 30px rgba(0,0,0,.08);
+}

@@ -7,8 +7,6 @@ export function mapCreateAssignment(form: AssignmentFormValue): CreateAssignment
 
     description: form.description.trim() || '',
 
-    isPublished: Boolean(form.isPublished),
-
     caseIds: form.caseIds ?? [],
   };
 }

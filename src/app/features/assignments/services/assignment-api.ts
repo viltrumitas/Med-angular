@@ -1,9 +1,9 @@
 import { Service, inject } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { environment } from '../../../../environments/environment';
-import { Assignment } from '../models/assignment.model';
-import { AssignmentDetail } from '../models/assignment-detail.model';
-import { AssignmentListItem } from '../models/assignment-list.model';
+import { Assignment } from '../../classroom/models/assignment.model';
+import { AssignmentDetail } from '../../classroom/models/assignment-detail.model';
+import { AssignmentListItem } from '../../classroom/models/assignment-list.model';
 import { CreateAssignment } from '../models/create-assignment.model';
 import { HttpClient } from '@angular/common/http';
 import { AssignmentResponseDto } from '../dto/assignment-response.dto';

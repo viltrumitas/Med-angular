@@ -5,8 +5,9 @@ export interface ClassroomResponseDto {
   name: string;
   description: string | null;
   code: string;
-  teacher: TeacherModel;
   isActive: boolean;
+  studentsCount: number;
+  assignmentsCount: number;
   createdAt: string;
   updatedAt: string;
 }

@@ -3,7 +3,5 @@ export interface CreateAssignment {
 
   description?: string;
 
-  isPublished: boolean;
-
   caseIds: string[];
 }

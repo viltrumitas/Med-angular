@@ -1,1 +1,41 @@
-<p>classroom-list works!</p>
+<section class="page">
+
+  <header class="page-header">
+
+    <div>
+      <h1>Mis clases</h1>
+      <p>Administra las clases que has creado.</p>
+    </div>
+
+    <button
+      class="create-btn"
+      routerLink="/dashboard/teacher/classroom/create">
+
+      Nueva clase
+
+    </button>
+
+  </header>
+
+  @if (loading()) {
+
+    <div class="loading">
+      Cargando clases...
+    </div>
+
+  } @else {
+
+    <div class="classroom-grid">
+
+      @for (classroom of classrooms(); track classroom.id) {
+
+        <app-classroom-card
+          [classroom]="classroom" />
+
+      }
+
+    </div>
+
+  }
+
+</section>

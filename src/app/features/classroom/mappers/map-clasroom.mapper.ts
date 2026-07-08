@@ -1,15 +1,11 @@
-import { ClassroomResponseDto } from '../dto/classroon-response.dto';
+import { ClassroomFormValue } from '../forms/classroom.form';
+import { CreateClassroomDto } from '../dto/create-classroom.dto';
 
-export function mapClassroom(dto: ClassroomResponseDto) {
+export function mapCreateClassroom(
+  form: ClassroomFormValue,
+): CreateClassroomDto {
   return {
-    ...dto,
-    createdAt: new Date(dto.createdAt),
-    update: new Date(dto.updatedAt),
+    name: form.name.trim(),
+    description: form.description.trim() || undefined,
   };
 }
-
-// getById(id: string): Observable<Classroom> {
-//   return this.http
-//     .get<ClassroomResponseDto>(...)
-//     .pipe(map(mapClassroom));
-// }

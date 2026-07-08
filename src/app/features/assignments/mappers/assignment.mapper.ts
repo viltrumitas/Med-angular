@@ -2,10 +2,11 @@ import { AssignmentResponseDto } from '../dto/assignment-response.dto';
 import { AssignmentDetailResponseDto } from '../dto/assignment-detail-response.dto';
 import { AssignedCaseResponseDto } from '../dto/asigned-case-response.dto';
 
-import { Assignment } from '../models/assignment.model';
-import { AssignmentListItem } from '../models/assignment-list.model';
-import { AssignmentDetail } from '../models/assignment-detail.model';
-import { AssignedCase } from '../models/assigned-case.model';
+import { Assignment } from '../../classroom/models/assignment.model';
+import { AssignmentListItem } from '../../classroom/models/assignment-list.model';
+import { AssignmentDetail } from '../../classroom/models/assignment-detail.model'; 
+import { AssignedCase } from '../../classroom/models/assigned-case.model';
+import { mapCreateClassroom } from '../../classroom/mappers/map-clasroom.mapper';
 
 export class AssignmentMapper {
   static toModel(dto: AssignmentResponseDto): Assignment {
@@ -16,7 +17,7 @@ export class AssignmentMapper {
 
       description: dto.description,
 
-      teacher: dto.teacher,
+      classroom: dto.classroom,
 
       isPublished: dto.isPublished,
 
@@ -32,7 +33,9 @@ export class AssignmentMapper {
 
       title: dto.title,
 
-      teacher: dto.teacher,
+      description: dto.description,
+
+      classroom: dto.classroom,
 
       isPublished: dto.isPublished,
 

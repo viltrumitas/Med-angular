@@ -1,17 +1,18 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, EventEmitter, Input, Output } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { createAssignmentForm } from '../../forms/create-assignment-form';
-import { mapCreateAssignment } from '../../mappers/create-assignment.mapper';
-import { AssignmentApi } from '../../services/assignment-api';
+import { createAssignmentForm } from '../../../assignments/forms/create-assignment-form';
+import { mapCreateAssignment } from '../../../assignments/mappers/create-assignment.mapper';
+import { AssignmentApi } from '../../../assignments/services/assignment-api';
 import { InputComponent } from "../../../../shared/components/input/input";
 import { TextareaComponent } from "../../../../shared/components/text-area/text-area";
 import { ButtonComponent } from "../../../../shared/components/button/button";
-import { Router } from '@angular/router';
 import { CaseResponseDto } from '../../../cases/dto/case-response.dto';
+import { ClassroomApi } from '../../service/clasroom-api.service';
 
 @Component({
   selector: 'app-assignment-create',
+  standalone: true,
   imports: [
     ReactiveFormsModule,
     InputComponent,
@@ -28,8 +29,13 @@ export class AssignmentCreate {
   cases: CaseResponseDto[] = [];
 
   assignmentService = inject(AssignmentApi);
+  classroomService = inject(ClassroomApi);
 
-  private readonly router = inject(Router)
+  @Input({ required: true })
+  classroomId!: string;
+
+  @Output()
+  created = new EventEmitter<void>();
 
   ngOnInit() {
     this.assignmentService.findMyPublishedCases().subscribe({
@@ -64,15 +70,16 @@ export class AssignmentCreate {
       return;
     }
 
-    const data = mapCreateAssignment(value);
+    const dto = mapCreateAssignment(value);
 
-    this.assignmentService.create(data).subscribe({
-      next: () => {
-        this.router.navigate(['/dashboard/teacher/assignments'], {
-          replaceUrl: true,
-        });
-      },
-      error: (err) => console.log(err),
-    });
+    this.classroomService
+      .createAssignment(this.classroomId, dto)
+      .subscribe({
+        next: () => {
+          this.assignmentForm.reset(createAssignmentForm().getRawValue());
+          this.created.emit();
+        },
+        error: (err) => console.error(err),
+      });
   }
 }

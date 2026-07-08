@@ -12,13 +12,9 @@ export function createAssignmentForm() {
       nonNullable: true,
     }),
 
-    isPublished: new FormControl(false, {
-      nonNullable: true,
-    }),
-
     caseIds: new FormControl<string[]>([], {
       nonNullable: true,
-      validators: [minArrayLength(1)], // 🔥 AQUÍ EL FIX REAL
+      validators: [minArrayLength(1)],
     }),
   });
 }

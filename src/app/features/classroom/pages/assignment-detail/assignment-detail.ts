@@ -2,8 +2,9 @@ import { Component, inject, signal, computed } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { AssignmentApi } from '../../services/assignment-api';
-import { AssignmentDetail as AssignmentDetailModel } from '../../models/assignment-detail.model';
+import { AssignmentApi } from '../../../assignments/services/assignment-api';
+import { AssignmentDetail as AssignmentDetailModel }
+  from '../../models/assignment-detail.model';
 import { ButtonComponent } from '../../../../shared/components/button/button';
 
 @Component({
@@ -63,9 +64,9 @@ export class AssignmentDetailPage {
   loading = signal(true);
 
   ngOnInit() {
-    const id = this.route.snapshot.paramMap.get('id')!;
+    const assignmentId = this.route.snapshot.paramMap.get('assignmentId')!;
 
-    this.api.findOne(id).subscribe({
+    this.api.findOne(assignmentId).subscribe({
       next: assignment => {
         console.log('NEXT');
         console.log(assignment);
@@ -103,12 +104,17 @@ export class AssignmentDetailPage {
   delete() {
     const assignment = this.assignment();
 
+    const classroomId =
+      this.route.snapshot.paramMap.get('classroomId')!;
+
     if (!assignment) return;
 
     if (!confirm('¿Eliminar actividad?')) return;
 
     this.api.delete(assignment.id).subscribe(() => {
-      this.router.navigate(['/dashboard/teacher/assignments']);
+      this.router.navigate(['/dashboard/teacher/classroom',
+        classroomId
+      ]);
     });
   }
 }

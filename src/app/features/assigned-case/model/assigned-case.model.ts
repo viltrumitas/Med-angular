@@ -1,4 +1,4 @@
-import { Assignment } from '../../assignments/models/assignment.model';
+import { Assignment } from '../../classroom/models/assignment.model'; 
 import { CaseResponseDto } from '../../cases/dto/case-response.dto';
 import { AssignedCaseSubmission } from '../../../core/models/assigned-case-submission.model';
 

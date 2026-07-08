@@ -1,0 +1,29 @@
+<a class="classroom-card" [routerLink]="[classroom().id]">
+
+  <div class="card-header">
+    <h2>{{ classroom().name }}</h2>
+
+    <span class="code">
+      {{ classroom().code }}
+    </span>
+  </div>
+
+  <p>
+    {{ classroom().description || 'Sin descripción' }}
+  </p>
+
+  <div class="stats">
+
+    <div>
+      <strong>{{ classroom().studentsCount }}</strong>
+      <span>Estudiantes</span>
+    </div>
+
+    <div>
+      <strong>{{ classroom().assignmentsCount }}</strong>
+      <span>Actividades</span>
+    </div>
+
+  </div>
+
+</a>

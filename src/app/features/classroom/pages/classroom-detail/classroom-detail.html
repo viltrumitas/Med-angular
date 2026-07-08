@@ -1,1 +1,180 @@
-<p>classroom-detail works!</p>
+<section class="page">
+
+  @if (loading()) {
+
+    <p>Cargando clase...</p>
+
+  } @else {
+
+    @let c = classroom()!;
+
+    <header class="header">
+
+      <div>
+
+        <h1>{{ c.name }}</h1>
+
+        <p>
+          {{ c.description || 'Sin descripción.' }}
+        </p>
+
+      </div>
+
+      <div class="code-box">
+
+        <span>Código de acceso</span>
+
+        <strong>{{ c.code }}</strong>
+
+      </div>
+
+    </header>
+
+    <section class="stats">
+
+      <div class="card">
+
+        <h3>{{ c.studentsCount }}</h3>
+
+        <p>Estudiantes</p>
+
+      </div>
+
+      <div class="card">
+
+        <h3>{{ c.assignmentsCount }}</h3>
+
+        <p>Actividades</p>
+
+      </div>
+
+      <div class="card">
+
+        <h3>
+
+          {{ c.isActive ? 'Activa' : 'Inactiva' }}
+
+        </h3>
+
+        <p>Estado</p>
+
+      </div>
+
+    </section>
+
+    <div class="toolbar">
+
+      <button
+        class="primary"
+        (click)="toggleCreateAssignment()">
+
+        @if (showCreateAssignment()) {
+
+          Cancelar
+
+        } @else {
+
+          Nueva actividad
+
+        }
+
+      </button>
+
+    </div>
+
+    @if (showCreateAssignment()) {
+
+      <section class="create-panel">
+
+        <app-assignment-create
+          [classroomId]="c.id"
+          (created)="reload()">
+        </app-assignment-create>
+
+      </section>
+
+    }
+
+    <nav class="tabs">
+
+      <button
+        [class.active]="activeTab() === 'assignments'"
+        (click)="changeTab('assignments')">
+
+        Actividades
+
+      </button>
+
+      <button
+        [class.active]="activeTab() === 'students'"
+        (click)="changeTab('students')">
+
+        Estudiantes
+
+      </button>
+
+    </nav>
+
+    <section class="content">
+
+      @if (activeTab() === 'assignments') {
+
+        <h2>Actividades</h2>
+
+        @if (c.assignments.length === 0) {
+
+          <p class="empty">
+            Todavía no hay actividades creadas.
+          </p>
+
+        } @else {
+
+          <div class="assignment-grid">
+
+            @for (assignment of c.assignments; track assignment.id) {
+
+              <app-assignment-card
+                [assignment]="assignment"
+                (viewAssignment)="openAssignment($event)">
+
+              </app-assignment-card>
+
+            }
+
+          </div>
+
+        }
+
+      }
+
+      @if (activeTab() === 'students') {
+
+        <h2>Estudiantes</h2>
+
+        @if (c.students.length === 0) {
+
+          <p class="empty">
+            No hay estudiantes inscritos.
+          </p>
+
+        } @else {
+
+          <div class="student-grid">
+
+            @for (student of c.students; track student.id) {
+
+              <!-- app-student-card -->
+
+            }
+
+          </div>
+
+        }
+
+      }
+
+    </section>
+
+  }
+
+</section>

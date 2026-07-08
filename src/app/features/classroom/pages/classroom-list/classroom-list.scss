@@ -1,0 +1,73 @@
+$page-bg: #f8fafc;
+$text-main: #1e293b;
+$text-muted: #64748b;
+
+$primary: #0d9488;
+$primary-dark: #0f766e;
+
+.page {
+  min-height: 100vh;
+  background: $page-bg;
+  padding: 2rem;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-bottom: 2rem;
+
+  h1 {
+    margin: 0;
+    font-size: 2rem;
+    color: $text-main;
+    font-weight: 700;
+  }
+
+  p {
+    margin-top: .4rem;
+    color: $text-muted;
+    font-size: .95rem;
+  }
+}
+
+.create-btn {
+  border: none;
+
+  background: $primary;
+  color: white;
+
+  padding: .9rem 1.5rem;
+
+  border-radius: 12px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: .2s;
+
+  &:hover {
+    background: $primary-dark;
+    transform: translateY(-2px);
+  }
+}
+
+.classroom-grid {
+  display: grid;
+
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+
+  gap: 1.5rem;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 4rem;
+
+  color: $text-muted;
+}

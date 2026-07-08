@@ -1,7 +1,7 @@
 import { Priority } from '../../../core/enum/priority.enum';
 import { SubmissionStatus } from '../../../core/models/submission-status.enum';
 import { User } from '../../../core/models/user.model';
-import { Assignment } from '../../assignments/models/assignment.model';
+import { Assignment } from '../../classroom/models/assignment.model';
 import { CaseResponseDto } from '../../cases/dto/case-response.dto';
 
 export interface SubmissionModel {

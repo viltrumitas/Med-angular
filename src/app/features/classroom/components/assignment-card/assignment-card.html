@@ -1,0 +1,17 @@
+<article class="assignment-card">
+  <h3>
+    {{ assignment.title }}
+  </h3>
+
+  @if (assignment.description) {
+    <p>
+      {{ assignment.description }}
+    </p>
+  }
+
+  <span>
+    {{ assignment.isPublished ? 'Publicada' : 'Borrador' }}
+  </span>
+
+  <app-button text="Ver actividad" (clicked)="open()" />
+</article>

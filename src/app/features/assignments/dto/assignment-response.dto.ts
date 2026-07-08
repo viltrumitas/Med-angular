@@ -1,4 +1,5 @@
 import { TeacherModel } from '../../cases/dto/teacher-response.dto';
+import { ClassroomResponseDto } from '../../classroom/dto/classroon-response.dto';
 
 export interface AssignmentResponseDto {
   id: string;
@@ -7,7 +8,7 @@ export interface AssignmentResponseDto {
 
   description: string | null;
 
-  teacher: TeacherModel;
+  classroom: ClassroomResponseDto;
 
   isPublished: boolean;
 
