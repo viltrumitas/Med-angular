@@ -24,9 +24,9 @@ $surface-soft: #f8fafc;
 // =========================
 
 .join-modal {
-  width: 100%;
+  width: 460px;
+  max-width: 100%;
 }
-
 // =========================
 // HEADER
 // =========================
@@ -254,10 +254,10 @@ $surface-soft: #f8fafc;
   outline: none;
 
   font: inherit;
-  font-size: 0.9rem;
-  font-weight: 600;
+  font-size: 1rem;
+  font-weight: 700;
 
-  letter-spacing: 0.05em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
 
   &::placeholder {
@@ -268,7 +268,6 @@ $surface-soft: #f8fafc;
     text-transform: none;
   }
 }
-
 // =========================
 // VALIDATION ERROR
 // =========================

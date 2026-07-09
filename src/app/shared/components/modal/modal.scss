@@ -61,7 +61,8 @@
   position: relative;
   z-index: 1;
 
-  width: min(calc(100% - 4rem), 900px);
+  width: fit-content;
+  max-width: calc(100vw - 4rem);
   max-height: calc(100dvh - 4rem);
 
   overflow-y: auto;
