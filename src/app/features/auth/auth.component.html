@@ -1,101 +1,149 @@
-<div class="body">
-  <div class="container" [class.active]="isActive">
+<div class="auth-page">
+  <div class="auth-shell" [class.auth-shell--register]="isActive">
     <!-- LOGIN -->
-    <div class="form-box login">
-      <form (ngSubmit)="onLogin()" [formGroup]="loginForm">
-        <h1>Login</h1>
-        <div class="input-box">
-          <app-input placeHolderText="Matricula" type="number" formControlName="matricula" />
-          <i class="bx bx-user"></i>
+    <section class="auth-form auth-form--login">
+      <form class="auth-form__content" (ngSubmit)="onLogin()" [formGroup]="loginForm">
+        <div class="auth-form__header">
+          <span class="auth-form__eyebrow">Med Cases</span>
+          <h1>Iniciar sesión</h1>
+          <p>Ingresa a tu cuenta para continuar con tus clases y casos clínicos.</p>
         </div>
 
-        <div class="input-box">
-          <app-input placeHolderText="Contraseña" type="password" formControlName="password" />
-          <i class="bx bx-lock"></i>
+        <div class="auth-form__fields">
+          <div class="auth-field">
+            <app-input placeHolderText="Matrícula" type="number" formControlName="matricula" />
+          </div>
+
+          <div class="auth-field">
+            <app-input placeHolderText="Contraseña" type="password" formControlName="password" />
+          </div>
         </div>
 
         @if (loginError) {
-          <div class="error-message">
-            {{ loginError }}
+          <div class="auth-error">
+            <i class="bx bx-error-circle"></i>
+            <span>{{ loginError }}</span>
           </div>
         }
 
-        <div class="forgot-link">
-          <a href="#">Olvidaste tu contraseña?</a>
+        <div class="auth-form__options">
+          <a href="#">¿Olvidaste tu contraseña?</a>
         </div>
 
-        <app-button type="submit" text="Login" variant="primary" />
-        <p>o ingresa con tu correo institucional</p>
+        <app-button type="submit" text="Iniciar sesión" variant="primary" />
 
-        <div class="social-icons">
-          <a href="#"><i class="bx bxl-google"></i></a>
+        <div class="auth-divider">
+          <span>o continúa con</span>
         </div>
+
+        <button type="button" class="institutional-button">
+          <i class="bx bxl-google"></i>
+
+          <span>Correo institucional</span>
+        </button>
       </form>
-    </div>
+    </section>
 
     <!-- REGISTER -->
-    <div class="form-box register">
-      <form (ngSubmit)="onRegister()" [formGroup]="registerForm">
-        <h1>Registrar</h1>
-        <div class="input-box">
-          <app-input placeHolderText="Matricula" type="number" formControlName="matricula" />
-          <i class="bx bx-user"></i>
+    <section class="auth-form auth-form--register">
+      <form class="auth-form__content" (ngSubmit)="onRegister()" [formGroup]="registerForm">
+        <div class="auth-form__header">
+          <span class="auth-form__eyebrow">Med Cases</span>
+          <h1>Crear cuenta</h1>
+          <p>Regístrate para comenzar a aprender mediante simulaciones clínicas.</p>
+        </div>
+
+        <div class="auth-form__fields auth-form__fields--register">
+          <div class="auth-field">
+            <app-input placeHolderText="Matrícula" type="number" formControlName="matricula" />
+          </div>
+
+          <div class="auth-form__row">
+            <div class="auth-field">
+              <app-input placeHolderText="Nombre(s)" type="text" formControlName="firstName" />
+            </div>
+
+            <div class="auth-field">
+              <app-input placeHolderText="Apellido(s)" type="text" formControlName="lastName" />
+            </div>
+          </div>
+
+          <div class="auth-field">
+            <app-input placeHolderText="Contraseña" type="password" formControlName="password" />
+          </div>
         </div>
 
         @if (registerError) {
-          <div class="error-message">
-            {{ registerError }}
+          <div class="auth-error">
+            <i class="bx bx-error-circle"></i>
+            <span>{{ registerError }}</span>
           </div>
         }
 
-        <div class="input-box">
-          <app-input placeHolderText="Nombre(s)" type="text" formControlName="firstName" />
-          <i class="bx bx-lock"></i>
+        <app-button type="submit" text="Crear cuenta" variant="primary" />
+
+        <div class="auth-divider">
+          <span>o regístrate con</span>
         </div>
 
-        <div class="input-box">
-          <app-input placeHolderText="Apellido(s)" type="text" formControlName="lastName" />
-          <i class="bx bx-lock"></i>
-        </div>
+        <button type="button" class="institutional-button">
+          <i class="bx bxl-google"></i>
 
-        <div class="input-box">
-          <app-input placeHolderText="Contraseña" type="password" formControlName="password" />
-          <i class="bx bx-lock"></i>
-        </div>
-
-        <app-button type="submit" text="Registrar" variant="primary" />
-
-        <p>o registrate con tu correo institucional</p>
-
-        <div class="social-icons">
-          <a href="#"><i class="bx bxl-google"></i></a>
-        </div>
+          <span>Correo institucional</span>
+        </button>
       </form>
-    </div>
+    </section>
 
-    <!-- MENU BIENVENIDA -->
-    <div class="toggle-box">
-      <div class="toggle-panel toggle-left">
-        <h1>Hola, Bienvenido</h1>
-        <p>No tienes cuenta?</p>
-        <app-button
-          type="button"
-          text="Registrate"
-          variant="secondary"
-          (clicked)="showRegister()"
-        />
+    <!-- PANEL VISUAL -->
+    <aside class="auth-cover">
+      <div class="auth-cover__decor auth-cover__decor--top"></div>
+      <div class="auth-cover__decor auth-cover__decor--bottom"></div>
+
+      <div class="auth-cover__panel auth-cover__panel--login">
+        <div class="auth-cover__icon">
+          <i class="bx bx-plus-medical"></i>
+        </div>
+
+        <span class="auth-cover__eyebrow"> Simulación clínica </span>
+
+        <h2>Hola, bienvenido</h2>
+
+        <p>Aprende, practica y resuelve casos clínicos en un entorno diseñado para tu formación.</p>
+
+        <div class="auth-cover__action">
+          <span>¿Aún no tienes una cuenta?</span>
+
+          <app-button
+            type="button"
+            text="Crear cuenta"
+            variant="secondary"
+            (clicked)="showRegister()"
+          />
+        </div>
       </div>
 
-      <div class="toggle-panel toggle-right">
-        <h1>Bienvenido de nuevo</h1>
-        <p>Ya tienes cuenta?</p>
-        <app-button
-          type="button"
-          text="Inicia sesion"
-          variant="secondary"
-          (clicked)="showLogin()"
-        />
+      <div class="auth-cover__panel auth-cover__panel--register">
+        <div class="auth-cover__icon">
+          <i class="bx bx-heart"></i>
+        </div>
+
+        <span class="auth-cover__eyebrow"> Bienvenido de nuevo </span>
+
+        <h2>Continúa aprendiendo</h2>
+
+        <p>Vuelve a tus clases, casos asignados y simulaciones clínicas.</p>
+
+        <div class="auth-cover__action">
+          <span>¿Ya tienes una cuenta?</span>
+
+          <app-button
+            type="button"
+            text="Iniciar sesión"
+            variant="secondary"
+            (clicked)="showLogin()"
+          />
+        </div>
       </div>
-    </div>
+    </aside>
   </div>
 </div>
