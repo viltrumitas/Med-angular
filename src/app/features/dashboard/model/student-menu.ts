@@ -3,7 +3,7 @@ import { SidebarItem } from './menu.types';
 export const STUDENT_MENU: SidebarItem[] = [
   {
     name: 'Home',
-    path: '/dashboard/student/home',
+    path: '/dashboard/student/classrooms',
     icon: 'home',
   },
   {

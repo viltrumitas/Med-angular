@@ -12,7 +12,7 @@
       <p>Gestiona y da seguimiento a los casos clínicos que has creado.</p>
     </div>
 
-    <a routerLink="crear-caso" class="create-case-button">
+    <a routerLink="create" class="create-case-button">
       <i data-lucide="plus"></i>
 
       <span>Crear caso</span>
@@ -69,7 +69,7 @@
 
       <p>Crea tu primer caso para comenzar a trabajar con tus estudiantes.</p>
 
-      <a routerLink="crear-caso" class="empty-action">
+      <a routerLink="create" class="empty-action">
         <i data-lucide="plus"></i>
 
         <span>Crear primer caso</span>
@@ -139,7 +139,6 @@
     <!-- =========================
          TOOLBAR
     ========================== -->
-
     <section class="cases-toolbar">
       <div class="toolbar-main">
         <!-- BUSCADOR -->
@@ -212,7 +211,6 @@
       </div>
 
       <!-- RESULTADOS -->
-
       <div class="toolbar-info">
         <strong>
           {{ filteredCases().length }}
@@ -227,7 +225,6 @@
     <!-- =========================
          NO RESULTS
     ========================== -->
-
     @if (filteredCases().length === 0) {
       <section class="no-results">
         <div class="no-results-icon">
@@ -255,14 +252,12 @@
     <!-- =========================
          CASES GRID
     ========================== -->
-
     @else {
       <section class="cases-grid">
         @for (caso of filteredCases(); track caso.id) {
           <article class="case-card">
             <a [routerLink]="['/dashboard/teacher/cases', caso.id]" class="case-link">
               <!-- CARD HEADER -->
-
               <div class="case-card-header">
                 <div class="case-icon" [class.published]="caso.isPublished">
                   <i data-lucide="clipboard-plus"></i>
@@ -276,7 +271,6 @@
               </div>
 
               <!-- CARD CONTENT -->
-
               <div class="case-content">
                 <h2>
                   {{ caso.title }}
@@ -288,7 +282,6 @@
               </div>
 
               <!-- CARD FOOTER -->
-
               <footer class="case-footer">
                 <span class="view-case"> Ver caso clínico </span>
 

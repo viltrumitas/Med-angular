@@ -1,0 +1,29 @@
+<section class="students-list">
+  @for (student of students(); track student.id) {
+    <article class="student-row">
+      <div class="student-main">
+        <div class="student-avatar">
+          {{ student.firstName.charAt(0) }}
+          {{ student.lastName.charAt(0) }}
+        </div>
+
+        <div class="student-info">
+          <strong>
+            {{ student.firstName }}
+            {{ student.lastName }}
+          </strong>
+
+          <span>Estudiante inscrito</span>
+        </div>
+      </div>
+
+      <div class="student-matricula">
+        <span>Matrícula</span>
+
+        <strong>
+          {{ student.matricula }}
+        </strong>
+      </div>
+    </article>
+  }
+</section>

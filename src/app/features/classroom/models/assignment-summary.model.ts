@@ -1,5 +1,4 @@
 export interface AssignmentSummaryModel {
-
   id: string;
 
   title: string;
@@ -11,5 +10,4 @@ export interface AssignmentSummaryModel {
   createdAt: string;
 
   updatedAt: string;
-
 }

@@ -1,0 +1,7 @@
+<dialog #dialog class="modal" aria-modal="true" (cancel)="onCancel($event)">
+  <div class="modal__backdrop" aria-hidden="true" (click)="requestClose()"></div>
+
+  <div class="modal__content" (click)="$event.stopPropagation()">
+    <ng-content />
+  </div>
+</dialog>

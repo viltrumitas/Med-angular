@@ -40,6 +40,8 @@ $background: #f8fafc;
     border-color 180ms ease,
     box-shadow 180ms ease;
 
+  cursor: pointer;
+
   &:hover {
     transform: translateY(-3px);
 

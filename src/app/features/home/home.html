@@ -1,22 +1,27 @@
-<div class="body">
+<div class="landing-page">
   <header class="landing-header">
-    <h1 class="brand">Med Cases</h1>
+    <a routerLink="/" class="brand">Med Cases</a>
 
-    <a routerLink="/auth" class="secondary-btn">Inciar Sesion</a>
+    <a routerLink="/auth" class="secondary-btn">Iniciar sesión</a>
   </header>
 
   <main class="hero">
-    <section class="hero-copy" aria-labelledby="hero-title">
-      <p class="eyebrow">Plataforma medica</p>
-      <h1 class="hero-tilte">Medical Landind Page</h1>
-      <p class="hero-text">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis, impedit quis cumque
-        commodi repellendus asperiores tenetur magnam debitis vero! Quam, voluptatum iste. Maiores
-        iste delectus explicabo nulla quasi veniam quod.
+    <section class="hero-content" aria-labelledby="hero-title">
+      <span class="eyebrow">Simulación clínica</span>
+
+      <h1 id="hero-title" class="hero-title">
+        Aprende a tomar decisiones clínicas con casos reales
+      </h1>
+
+      <p class="hero-description">
+        Practica, analiza y resuelve casos clínicos diseñados para fortalecer tu razonamiento y
+        preparación en escenarios médicos.
       </p>
+
+      <a routerLink="/auth" class="primary-btn">Comenzar ahora</a>
     </section>
 
-    <section class="hero-visual" aria-label="Ilustración médica">
+    <section class="hero-visual" aria-label="Ilustración de simulación clínica">
       <app-hero />
     </section>
   </main>

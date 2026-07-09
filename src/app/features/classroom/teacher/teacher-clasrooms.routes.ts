@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { Route } from 'lucide';
 
 export const teacherClassroomRoutes: Routes = [
   {

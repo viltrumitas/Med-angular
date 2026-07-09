@@ -206,7 +206,7 @@
         }
 
         <!-- STUDENTS -->
-
+        <!-- 
         @if (activeTab() === 'students') {
           <div class="section-header">
             <div>
@@ -248,8 +248,43 @@
                   [student]="student"
                 />
                 -->
-              }
+        <!-- }
             </div>
+          }
+        } -->
+        @if (activeTab() === 'students') {
+          <div class="section-header">
+            <div>
+              <h2>Estudiantes</h2>
+
+              <p>Consulta a los estudiantes inscritos en esta clase.</p>
+            </div>
+
+            <span class="section-count">
+              {{ c.studentsCount }}
+
+              {{ c.studentsCount === 1 ? 'estudiante' : 'estudiantes' }}
+            </span>
+          </div>
+
+          @if (c.students.length === 0) {
+            <section class="empty-state">
+              <div class="empty-icon students-empty">
+                <i data-lucide="user-round-x"></i>
+              </div>
+
+              <h3>No hay estudiantes inscritos</h3>
+
+              <p>
+                Comparte el código
+
+                <strong>{{ c.code }}</strong>
+
+                para que tus estudiantes puedan unirse.
+              </p>
+            </section>
+          } @else {
+            <app-student-card [students]="c.students" />
           }
         }
       </section>

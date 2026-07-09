@@ -1,0 +1,710 @@
+// =========================
+// COLORS
+// =========================
+
+$primary: #2563eb;
+$primary-hover: #1d4ed8;
+$primary-light: #eff6ff;
+
+$teal: #0d9488;
+$teal-light: #f0fdfa;
+
+$danger: #dc2626;
+$danger-light: #fef2f2;
+
+$text-primary: #0f172a;
+$text-secondary: #475569;
+$text-muted: #94a3b8;
+
+$border: #e2e8f0;
+$surface: #ffffff;
+$background: #f8fafc;
+
+// =========================
+// PAGE
+// =========================
+
+.classrooms-page {
+  width: 100%;
+  max-width: 1450px;
+
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+// =========================
+// HEADER
+// =========================
+
+.page-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+
+  gap: 2rem;
+
+  margin-bottom: 2rem;
+}
+
+.header-content {
+  min-width: 0;
+
+  h1 {
+    margin: 0.3rem 0 0;
+
+    color: $text-primary;
+
+    font-size: clamp(1.75rem, 3vw, 2.1rem);
+    font-weight: 750;
+    line-height: 1.15;
+
+    letter-spacing: -0.04em;
+  }
+
+  p {
+    max-width: 620px;
+
+    margin: 0.55rem 0 0;
+
+    color: $text-secondary;
+
+    font-size: 0.93rem;
+    line-height: 1.6;
+  }
+}
+
+.header-eyebrow {
+  color: $teal;
+
+  font-size: 0.75rem;
+  font-weight: 700;
+
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+// =========================
+// JOIN BUTTON
+// =========================
+
+.join-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 0.55rem;
+
+  min-height: 44px;
+
+  padding: 0.7rem 1.15rem;
+
+  color: #ffffff;
+  background: $primary;
+
+  border: none;
+  border-radius: 10px;
+
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 650;
+
+  white-space: nowrap;
+
+  cursor: pointer;
+
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.18);
+
+  transition:
+    background-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+
+  &:hover {
+    background: $primary-hover;
+
+    transform: translateY(-1px);
+
+    box-shadow: 0 10px 24px rgba(37, 99, 235, 0.25);
+  }
+
+  i {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+// =========================
+// CONTENT
+// =========================
+
+.classrooms-content {
+  width: 100%;
+}
+
+.list-header {
+  margin-bottom: 1rem;
+
+  h2 {
+    margin: 0;
+
+    color: $text-primary;
+
+    font-size: 1rem;
+    font-weight: 680;
+  }
+
+  p {
+    margin: 0.3rem 0 0;
+
+    color: $text-muted;
+
+    font-size: 0.78rem;
+  }
+}
+
+// =========================
+// GRID
+// =========================
+
+.classroom-grid {
+  display: grid;
+
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+
+  gap: 1.25rem;
+}
+
+// =========================
+// CLASSROOM CARD
+// =========================
+
+.classroom-card {
+  display: flex;
+  flex-direction: column;
+
+  min-width: 0;
+  height: 100%;
+
+  background: $surface;
+
+  border: 1px solid $border;
+  border-radius: 16px;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.03),
+    0 6px 18px rgba(15, 23, 42, 0.05);
+
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+
+  &:hover {
+    transform: translateY(-4px);
+
+    border-color: #cbd5e1;
+
+    box-shadow:
+      0 18px 38px rgba(15, 23, 42, 0.1),
+      0 4px 12px rgba(15, 23, 42, 0.05);
+  }
+}
+
+// =========================
+// CARD VISUAL
+// =========================
+
+.card-visual {
+  position: relative;
+
+  display: grid;
+  place-items: center;
+
+  height: 145px;
+
+  overflow: hidden;
+
+  background: linear-gradient(135deg, #34d399 0%, #14b8a6 100%);
+}
+
+.card-visual::before {
+  content: '';
+
+  position: absolute;
+  inset: 0;
+
+  background:
+    radial-gradient(circle at 20% 15%, rgba(255, 255, 255, 0.3), transparent 38%),
+    radial-gradient(circle at 90% 90%, rgba(255, 255, 255, 0.16), transparent 34%);
+
+  pointer-events: none;
+}
+
+.visual-circle {
+  position: absolute;
+
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+
+  pointer-events: none;
+}
+
+.circle-one {
+  width: 150px;
+  height: 150px;
+
+  top: -85px;
+  right: -55px;
+}
+
+.circle-two {
+  width: 95px;
+  height: 95px;
+
+  bottom: -55px;
+  left: -30px;
+}
+
+// =========================
+// CLASS ICON
+// =========================
+
+.class-icon {
+  position: relative;
+  z-index: 1;
+
+  display: grid;
+  place-items: center;
+
+  width: 76px;
+  height: 76px;
+
+  color: #ffffff;
+
+  background: rgba(255, 255, 255, 0.16);
+
+  border: 1px solid rgba(255, 255, 255, 0.3);
+
+  border-radius: 20px;
+
+  box-shadow:
+    0 14px 30px rgba(15, 23, 42, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.28);
+
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+
+  transition:
+    transform 180ms ease,
+    background-color 180ms ease;
+
+  i {
+    width: 38px;
+    height: 38px;
+
+    stroke-width: 1.7;
+  }
+}
+
+.classroom-card:hover {
+  .class-icon {
+    transform: translateY(-3px) scale(1.04);
+
+    background: rgba(255, 255, 255, 0.22);
+  }
+}
+
+// =========================
+// CARD CONTENT
+// =========================
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+
+  min-height: 215px;
+
+  padding: 1.2rem;
+}
+
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 1rem;
+}
+
+.title-group {
+  min-width: 0;
+
+  h3 {
+    display: -webkit-box;
+
+    margin: 0.2rem 0 0;
+
+    color: $text-primary;
+
+    font-size: 1.05rem;
+    font-weight: 700;
+    line-height: 1.4;
+
+    overflow: hidden;
+
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+}
+
+.card-eyebrow {
+  color: $teal;
+
+  font-size: 0.66rem;
+  font-weight: 700;
+
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+// =========================
+// OPEN ICON
+// =========================
+
+.open-icon {
+  display: grid;
+  place-items: center;
+
+  width: 32px;
+  height: 32px;
+
+  flex-shrink: 0;
+
+  color: $text-secondary;
+  background: $background;
+
+  border-radius: 9px;
+
+  transition:
+    color 160ms ease,
+    background-color 160ms ease,
+    transform 160ms ease;
+
+  i {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.classroom-card:hover {
+  .open-icon {
+    color: $primary;
+    background: $primary-light;
+
+    transform: translate(2px, -2px);
+  }
+}
+
+// =========================
+// DESCRIPTION
+// =========================
+
+.description {
+  display: -webkit-box;
+
+  margin: 0.9rem 0 0;
+
+  color: $text-secondary;
+
+  font-size: 0.84rem;
+  line-height: 1.6;
+
+  overflow: hidden;
+
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+// =========================
+// FOOTER
+// =========================
+
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 1rem;
+
+  margin-top: auto;
+  padding-top: 1rem;
+
+  border-top: 1px solid #f1f5f9;
+}
+
+.classroom-meta {
+  display: flex;
+  align-items: center;
+
+  gap: 0.65rem;
+
+  min-width: 0;
+
+  > div:last-child {
+    display: flex;
+    flex-direction: column;
+  }
+
+  strong {
+    color: $text-primary;
+
+    font-size: 0.85rem;
+    font-weight: 700;
+  }
+
+  span {
+    color: $text-muted;
+
+    font-size: 0.68rem;
+  }
+}
+
+.meta-icon {
+  display: grid;
+  place-items: center;
+
+  width: 36px;
+  height: 36px;
+
+  flex-shrink: 0;
+
+  color: $teal;
+  background: $teal-light;
+
+  border-radius: 10px;
+
+  i {
+    width: 17px;
+    height: 17px;
+  }
+}
+
+.enter-class {
+  color: $primary;
+
+  font-size: 0.74rem;
+  font-weight: 650;
+
+  white-space: nowrap;
+}
+
+// =========================
+// GENERAL STATES
+// =========================
+
+.state-container,
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 360px;
+
+  padding: 3rem 2rem;
+
+  text-align: center;
+
+  background: $surface;
+
+  border: 1px solid $border;
+  border-radius: 16px;
+}
+
+.state-content,
+.empty-state {
+  h2 {
+    margin: 1rem 0 0;
+
+    color: $text-primary;
+
+    font-size: 1.08rem;
+    font-weight: 680;
+  }
+
+  p {
+    max-width: 450px;
+
+    margin: 0.5rem 0 0;
+
+    color: $text-secondary;
+
+    font-size: 0.86rem;
+    line-height: 1.6;
+  }
+}
+
+// =========================
+// STATE ICONS
+// =========================
+
+.empty-icon,
+.state-icon {
+  display: grid;
+  place-items: center;
+
+  width: 60px;
+  height: 60px;
+
+  color: $teal;
+  background: $teal-light;
+
+  border-radius: 16px;
+
+  i {
+    width: 27px;
+    height: 27px;
+  }
+}
+
+.error-state {
+  .state-icon {
+    color: $danger;
+    background: $danger-light;
+  }
+}
+
+// =========================
+// EMPTY ACTION
+// =========================
+
+.empty-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 0.5rem;
+
+  margin-top: 1.5rem;
+
+  padding: 0.7rem 1rem;
+
+  color: #ffffff;
+  background: $primary;
+
+  border: none;
+  border-radius: 9px;
+
+  font: inherit;
+  font-size: 0.83rem;
+  font-weight: 650;
+
+  cursor: pointer;
+
+  transition:
+    background-color 160ms ease,
+    transform 160ms ease;
+
+  &:hover {
+    background: $primary-hover;
+
+    transform: translateY(-1px);
+  }
+
+  i {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+// =========================
+// SPINNER
+// =========================
+
+.spinner {
+  width: 38px;
+  height: 38px;
+
+  border: 3px solid $border;
+  border-top-color: $primary;
+  border-radius: 50%;
+
+  animation: spin 700ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// =========================
+// RESPONSIVE
+// =========================
+
+@media (max-width: 1100px) {
+  .classroom-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .classrooms-page {
+    padding: 1rem;
+  }
+
+  .page-header {
+    align-items: flex-start;
+
+    gap: 1rem;
+  }
+
+  .header-content {
+    h1 {
+      font-size: 1.55rem;
+    }
+
+    p {
+      font-size: 0.83rem;
+    }
+  }
+
+  .join-btn {
+    width: 44px;
+    height: 44px;
+
+    flex-shrink: 0;
+
+    padding: 0;
+
+    span {
+      display: none;
+    }
+  }
+
+  .classroom-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .card-visual {
+    height: 125px;
+  }
+
+  .class-icon {
+    width: 66px;
+    height: 66px;
+
+    border-radius: 17px;
+
+    i {
+      width: 33px;
+      height: 33px;
+    }
+  }
+
+  .card-content {
+    min-height: 195px;
+  }
+}

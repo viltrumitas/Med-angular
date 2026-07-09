@@ -1,0 +1,176 @@
+<section class="classrooms-page">
+  <!-- =========================
+       HEADER
+  ========================== -->
+
+  <header class="page-header">
+    <div class="header-content">
+      <span class="header-eyebrow"> Mis salones </span>
+
+      <h1>Mis clases</h1>
+
+      <p>Consulta las clases en las que estás inscrito y accede a tus actividades clínicas.</p>
+    </div>
+
+    <button type="button" class="join-btn" (click)="isJoinModalOpen.set(true)">
+      <i data-lucide="log-in"></i>
+
+      <span>Unirse a una clase</span>
+    </button>
+  </header>
+
+  <!-- =========================
+       LOADING
+  ========================== -->
+
+  @if (classroomsResource.isLoading()) {
+    <section class="state-container">
+      <div class="spinner"></div>
+
+      <div class="state-content">
+        <h2>Cargando clases</h2>
+
+        <p>Estamos obteniendo las clases en las que estás inscrito...</p>
+      </div>
+    </section>
+  }
+
+  <!-- =========================
+       ERROR
+  ========================== -->
+
+  @else if (classroomsResource.error()) {
+    <section class="state-container error-state">
+      <div class="state-icon">
+        <i data-lucide="triangle-alert"></i>
+      </div>
+
+      <div class="state-content">
+        <h2>No pudimos cargar tus clases</h2>
+
+        <p>Ocurrió un problema al obtener la información. Intenta nuevamente.</p>
+      </div>
+    </section>
+  }
+
+  <!-- =========================
+       EMPTY
+  ========================== -->
+
+  @else if (classroomsResource.value()?.length === 0) {
+    <section class="empty-state">
+      <div class="empty-icon">
+        <i data-lucide="school"></i>
+      </div>
+
+      <h2>Aún no estás inscrito en ninguna clase</h2>
+
+      <p>Usa el código que te proporcionó tu profesor para unirte a tu primera clase.</p>
+
+      <button type="button" class="empty-action" (click)="isJoinModalOpen.set(true)">
+        <i data-lucide="log-in"></i>
+
+        <span>Unirme a una clase</span>
+      </button>
+    </section>
+  }
+
+  <!-- =========================
+       CONTENT
+  ========================== -->
+
+  @else {
+    <section class="classrooms-content">
+      <div class="list-header">
+        <div>
+          <h2>Todas mis clases</h2>
+
+          <p>
+            {{ classroomsResource.value()?.length }}
+
+            {{
+              classroomsResource.value()?.length === 1 ? 'clase disponible' : 'clases disponibles'
+            }}
+          </p>
+        </div>
+      </div>
+
+      <div class="classroom-grid">
+        @for (classroom of classroomsResource.value(); track classroom.id) {
+          <article class="classroom-card">
+            <!-- =========================
+                 VISUAL
+            ========================== -->
+
+            <div class="card-visual">
+              <div class="visual-circle circle-one"></div>
+              <div class="visual-circle circle-two"></div>
+
+              <div class="class-icon">
+                <i data-lucide="stethoscope"></i>
+              </div>
+            </div>
+
+            <!-- =========================
+                 CONTENT
+            ========================== -->
+
+            <div class="card-content">
+              <div class="card-header">
+                <div class="title-group">
+                  <span class="card-eyebrow"> Clase </span>
+
+                  <h3>
+                    {{ classroom.name }}
+                  </h3>
+                </div>
+
+                <span class="open-icon">
+                  <i data-lucide="arrow-up-right"></i>
+                </span>
+              </div>
+
+              <p class="description">
+                {{ classroom.description || 'Esta clase aún no tiene una descripción.' }}
+              </p>
+
+              <!-- =========================
+                   FOOTER
+              ========================== -->
+
+              <footer class="card-footer">
+                <div class="classroom-meta">
+                  <div class="meta-icon">
+                    <i data-lucide="users"></i>
+                  </div>
+
+                  <div>
+                    <strong>
+                      {{ classroom.studentsCount }}
+                    </strong>
+
+                    <span>
+                      {{ classroom.studentsCount === 1 ? 'estudiante' : 'estudiantes' }}
+                    </span>
+                  </div>
+                </div>
+
+                <span class="enter-class"> Entrar a clase </span>
+              </footer>
+            </div>
+          </article>
+        }
+      </div>
+    </section>
+  }
+</section>
+
+<!-- =========================
+     JOIN CLASSROOM MODAL
+========================== -->
+
+<app-join-classroom
+  [isOpen]="isJoinModalOpen()"
+  (closeRequested)="isJoinModalOpen.set(false)"
+  (joined)="onClassroomJoined()"
+/>

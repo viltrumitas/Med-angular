@@ -1,4 +1,4 @@
-import { ClassroomSummaryModel } from "./classroom-summary.model";
+import { ClassroomSummaryModel } from './classroom-summary.model';
 
 export interface Assignment {
   id: string;

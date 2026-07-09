@@ -5,11 +5,12 @@ import { ClassroomDetailModel } from '../../../models/classroom-detail.model';
 import { AssignmentCreate } from '../../../components/assignment-create/assignment-create';
 import { AssignmentCard } from '../../../components/assignment-card/assignment-card';
 import { createIcons, icons } from 'lucide';
+import { StudentCard } from '../../../components/student-card/student-card';
 
 @Component({
   selector: 'app-classroom-detail',
   standalone: true,
-  imports: [AssignmentCreate, AssignmentCard],
+  imports: [AssignmentCreate, AssignmentCard, StudentCard],
   templateUrl: './classroom-detail.html',
   styleUrl: './classroom-detail.scss',
 })

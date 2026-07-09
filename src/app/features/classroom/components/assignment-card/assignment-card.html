@@ -1,4 +1,4 @@
-<article class="assignment-card" [class.published]="assignment.isPublished">
+<article class="assignment-card" [class.published]="assignment.isPublished" (click)="open()">
   <div class="card-header">
     <div class="assignment-icon">
       <i data-lucide="clipboard-list"></i>
@@ -28,7 +28,7 @@
       <span>Actividad de clase</span>
     </div>
 
-    <button type="button" class="open-button" (click)="open()">
+    <button type="button" class="open-button">
       <span>Ver actividad</span>
 
       <i data-lucide="arrow-up-right"></i>

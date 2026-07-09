@@ -1,0 +1,137 @@
+<app-modal [isOpen]="isOpen()" (closed)="onCancel()">
+  <section class="join-modal">
+    <!-- =========================
+         HEADER
+    ========================== -->
+
+    <header class="join-modal__header">
+      <div class="join-modal__heading">
+        <div class="join-modal__icon">
+          <i data-lucide="log-in"></i>
+        </div>
+
+        <div class="join-modal__heading-content">
+          <span class="join-modal__eyebrow"> Código de acceso </span>
+
+          <h2 class="join-modal__title">Unirse a una clase</h2>
+
+          <p class="join-modal__description">
+            Ingresa el código que te proporcionó tu profesor para acceder a la clase.
+          </p>
+        </div>
+      </div>
+
+      <button
+        type="button"
+        class="join-modal__close"
+        aria-label="Cerrar modal"
+        [disabled]="isSubmitting()"
+        (click)="onCancel()"
+      >
+        <i data-lucide="x"></i>
+      </button>
+    </header>
+
+    <!-- =========================
+         FORM
+    ========================== -->
+
+    <form class="join-modal__form" [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="join-modal__field">
+        <label for="code" class="join-modal__label">
+          Código de la clase
+
+          <span class="join-modal__required"> * </span>
+        </label>
+
+        <div
+          class="join-modal__input-wrapper"
+          [class.join-modal__input-wrapper--error]="
+            form.controls.code.invalid && form.controls.code.touched
+          "
+        >
+          <i data-lucide="key-round"></i>
+
+          <input
+            id="code"
+            type="text"
+            formControlName="code"
+            class="join-modal__input"
+            placeholder="Ej. AB12CD"
+            autocomplete="off"
+            maxlength="12"
+          />
+        </div>
+
+        @if (form.controls.code.invalid && form.controls.code.touched) {
+          <p class="join-modal__error">
+            <i data-lucide="circle-alert"></i>
+
+            <span> El código es obligatorio. </span>
+          </p>
+        }
+      </div>
+
+      <!-- =========================
+           HELP
+      ========================== -->
+
+      <div class="join-modal__help">
+        <div class="join-modal__help-icon">
+          <i data-lucide="info"></i>
+        </div>
+
+        <div>
+          <strong> ¿Dónde encuentro el código? </strong>
+
+          <p>Tu profesor debe compartir contigo un código único para ingresar a la clase.</p>
+        </div>
+      </div>
+
+      <!-- =========================
+           API ERROR
+      ========================== -->
+
+      @if (errorMessage()) {
+        <div class="join-modal__server-error">
+          <i data-lucide="triangle-alert"></i>
+
+          <span>
+            {{ errorMessage() }}
+          </span>
+        </div>
+      }
+
+      <!-- =========================
+           ACTIONS
+      ========================== -->
+
+      <footer class="join-modal__actions">
+        <button
+          type="button"
+          class="join-modal__button join-modal__button--secondary"
+          [disabled]="isSubmitting()"
+          (click)="onCancel()"
+        >
+          Cancelar
+        </button>
+
+        <button
+          type="submit"
+          class="join-modal__button join-modal__button--primary"
+          [disabled]="isSubmitting()"
+        >
+          @if (isSubmitting()) {
+            <span class="join-modal__spinner"></span>
+
+            <span> Uniéndote... </span>
+          } @else {
+            <i data-lucide="log-in"></i>
+
+            <span> Unirme a la clase </span>
+          }
+        </button>
+      </footer>
+    </form>
+  </section>
+</app-modal>
