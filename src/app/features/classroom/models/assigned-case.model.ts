@@ -1,10 +1,8 @@
-import { SubmissionStatusModel } from './submission-status.model'; 
+import { SubmissionStatusModel } from './submission-status.model';
 import { CaseResponseDto } from '../../cases/dto/case-response.dto';
 import { User } from '../../../core/models/user.model';
 
-
 export interface AssignedCase {
-
   id: string;
 
   student: User;
@@ -14,5 +12,4 @@ export interface AssignedCase {
   submission: SubmissionStatusModel | null;
 
   assignedAt: string;
-
 }

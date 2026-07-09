@@ -1,5 +1,5 @@
-import { ClassroomResponseDto } from "../dto/classroon-response.dto";
-import { ClassroomModel } from "../models/classroom.model";
+import { ClassroomResponseDto } from '../dto/classroon-response.dto';
+import { ClassroomModel } from '../models/classroom.model';
 
 export function mapClassroomResponse(dto: ClassroomResponseDto): ClassroomModel {
   return {
@@ -14,5 +14,5 @@ export function mapClassroomResponse(dto: ClassroomResponseDto): ClassroomModel 
 
     createdAt: dto.createdAt,
     updatedAt: dto.updatedAt,
-  }
+  };
 }
