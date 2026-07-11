@@ -10,6 +10,10 @@ import { UpdateClassroomDto } from '../dto/update-classroom.dto';
 import { JoinClassroomDto } from '../dto/join-classroom.dto';
 import { CreateAssignment } from '../../assignments/models/create-assignment.model';
 import { Assignment } from '../models/assignment.model';
+import { ClassroomTeacherModel } from '../models/classroom-teacher.model';
+import { ClassroomStudentModel } from '../models/classroom-student.model';
+import { ClassroomTeacherDetailModel } from '../models/classroom-teacher-detail.model';
+import { ClassroomStudentDetailModel } from '../models/classroom-student-detail.model';
 
 @Service()
 export class ClassroomApi {
@@ -24,18 +28,25 @@ export class ClassroomApi {
     return this.http.post<Assignment>(`${this.api}/${classroomId}/assignments`, dto);
   }
 
-  join(dto: JoinClassroomDto): Observable<ClassroomModel> {
-    return this.http.post<ClassroomModel>(`${this.api}/join`, dto);
+  join(dto: JoinClassroomDto): Observable<ClassroomStudentModel> {
+    return this.http.post<ClassroomStudentModel>(`${this.api}/join`, dto);
   }
 
-  findMy(): Observable<ClassroomModel[]> {
-    return this.http
-      .get<ClassroomModel[]>(`${this.api}/my`)
-      .pipe(tap((data) => console.log('CLASSROOMS:', data)));
+  findMy<T>(): Observable<T> {
+    return this.http.get<T>(`${this.api}/my`);
   }
 
-  findOne(id: string): Observable<ClassroomDetailModel> {
-    return this.http.get<ClassroomDetailModel>(`${this.api}/${id}`);
+
+  findTeacherDetail(id: string) {
+    return this.http.get<ClassroomTeacherDetailModel>(
+      `${this.api}/${id}`
+    )
+  }
+
+  findStudentDetail(id: string) {
+    return this.http.get<ClassroomStudentDetailModel>(
+      `${this.api}/${id}`
+    )
   }
 
   update(id: string, dto: UpdateClassroomDto): Observable<ClassroomModel> {

@@ -13,9 +13,11 @@
       <div class="title-group">
         <h2>{{ classroom().name }}</h2>
 
+        @if (teacherClassroom; as teacher) {
         <span class="code">
-          {{ classroom().code }}
+          {{ teacher.code }}
         </span>
+        }
       </div>
 
       <span class="open-icon">
@@ -28,16 +30,18 @@
     </p>
 
     <div class="stats">
-      <div class="stat">
-        <div class="stat-icon">
-          <i data-lucide="users"></i>
-        </div>
+      @if (teacherClassroom; as teacher) {
+        <div class="stat">
+          <div class="stat-icon">
+            <i data-lucide="users"></i>
+          </div>
 
-        <div class="stat-content">
-          <strong>{{ classroom().studentsCount }}</strong>
-          <span>Estudiantes</span>
+          <div class="stat-content">
+            <strong>{{ teacher.studentsCount }}</strong>
+            <span>Estudiantes</span>
+          </div>
         </div>
-      </div>
+      }
 
       <div class="stat">
         <div class="stat-icon">

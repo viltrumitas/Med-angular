@@ -7,6 +7,7 @@ import { ClassroomApi } from '../../service/clasroom-api.service';
 import { ClassroomModel } from '../../models/classroom.model';
 import { JoinClassroomForm } from '../../forms/join-class.fom';
 import { Modal } from '../../../../shared/components/modal/modal';
+import { ClassroomStudentModel } from '../../models/classroom-student.model';
 
 @Component({
   selector: 'app-join-classroom',
@@ -20,7 +21,7 @@ export class JoinClassroom {
   readonly isOpen = input.required<boolean>();
 
   readonly closeRequested = output<void>();
-  readonly joined = output<ClassroomModel>();
+  readonly joined = output<ClassroomStudentModel>();
 
   readonly isSubmitting = signal(false);
   readonly errorMessage = signal<string | null>(null);
@@ -62,7 +63,7 @@ export class JoinClassroom {
     this.closeRequested.emit();
   }
 
-  private handleSuccess(classroom: ClassroomModel): void {
+  private handleSuccess(classroom: ClassroomStudentModel): void {
     this.isSubmitting.set(false);
     this.resetForm();
     this.joined.emit(classroom);

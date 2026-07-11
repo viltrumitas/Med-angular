@@ -1,49 +1,116 @@
-import { AfterViewInit, Component, effect, inject, resource, signal } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
+import {
+  AfterViewInit,
+  Component,
+  inject,
+  OnInit,
+  signal
+} from '@angular/core';
+
+import { Router } from '@angular/router';
 import { createIcons, icons } from 'lucide';
 
 import { ClassroomApi } from '../../../service/clasroom-api.service';
-import { ClassroomModel } from '../../../models/classroom.model';
+import { ClassroomStudentModel } from '../../../models/classroom-student.model';
 import { JoinClassroom } from '../../../components/join-classroom/join-classroom';
+
 
 @Component({
   selector: 'app-classroom-list',
-  imports: [JoinClassroom],
+  standalone: true,
+  imports: [
+    JoinClassroom
+  ],
   templateUrl: './classroom-list.html',
   styleUrl: './classroom-list.scss',
 })
-export class ClassroomList implements AfterViewInit {
-  private readonly classroomApi = inject(ClassroomApi);
+export class ClassroomList implements OnInit, AfterViewInit {
+
+
+  private readonly api = inject(ClassroomApi);
+
+  private readonly router = inject(Router);
+
+
+  readonly classrooms = signal<ClassroomStudentModel[]>([]);
+
+  readonly loading = signal(true);
 
   readonly isJoinModalOpen = signal(false);
 
-  readonly classroomsResource = resource({
-    loader: () => this.fetchMyClassrooms(),
-  });
 
-  constructor() {
-    effect(() => {
-      this.classroomsResource.value();
-      this.renderIcons();
+
+  ngOnInit() {
+    this.loadClassrooms();
+  }
+
+
+
+  ngAfterViewInit() {
+    this.renderIcon();
+  }
+
+
+
+  loadClassrooms() {
+
+    this.loading.set(true);
+
+
+    this.api.findMy<ClassroomStudentModel[]>().subscribe({
+
+      next: (classrooms) => {
+
+        console.log('[Student Classroom]', classrooms);
+
+
+        this.classrooms.set(classrooms);
+
+        this.loading.set(false);
+
+        this.renderIcon();
+
+      },
+
+
+      error: () => {
+
+        this.loading.set(false);
+
+      }
+
     });
+
   }
 
-  ngAfterViewInit(): void {
-    this.renderIcons();
+
+
+  openClassroom(id: string) {
+
+    this.router.navigate([
+      '/dashboard/student/classrooms',
+      id
+    ]);
+
   }
 
-  onClassroomJoined(): void {
+
+
+  onClassroomJoined() {
+
     this.isJoinModalOpen.set(false);
-    this.classroomsResource.reload();
+
+    this.loadClassrooms();
+
   }
 
-  private fetchMyClassrooms(): Promise<ClassroomModel[]> {
-    return firstValueFrom(this.classroomApi.findMy());
-  }
 
-  private renderIcons(): void {
+
+  private renderIcon() {
+
     setTimeout(() => {
       createIcons({ icons });
     });
+
   }
+
 }

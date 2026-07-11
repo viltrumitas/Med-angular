@@ -23,7 +23,7 @@
        LOADING
   ========================== -->
 
-  @if (classroomsResource.isLoading()) {
+  @if (loading()) {
     <section class="state-container">
       <div class="spinner"></div>
 
@@ -39,7 +39,7 @@
        ERROR
   ========================== -->
 
-  @else if (classroomsResource.error()) {
+  @else if (classrooms().length === 0) {
     <section class="state-container error-state">
       <div class="state-icon">
         <i data-lucide="triangle-alert"></i>
@@ -57,7 +57,7 @@
        EMPTY
   ========================== -->
 
-  @else if (classroomsResource.value()?.length === 0) {
+  @else if (classrooms().length === 0) {
     <section class="empty-state">
       <div class="empty-icon">
         <i data-lucide="school"></i>
@@ -86,18 +86,20 @@
           <h2>Todas mis clases</h2>
 
           <p>
-            {{ classroomsResource.value()?.length }}
+            {{ classrooms().length }}
 
             {{
-              classroomsResource.value()?.length === 1 ? 'clase disponible' : 'clases disponibles'
+              classrooms().length === 1 ? 'clase disponible' : 'clases disponibles'
             }}
           </p>
         </div>
       </div>
 
       <div class="classroom-grid">
-        @for (classroom of classroomsResource.value(); track classroom.id) {
-          <article class="classroom-card">
+        @for (classroom of classrooms(); track classroom.id) {
+          <article 
+            class="classroom-card"
+            (click)="openClassroom(classroom.id)">
             <!-- =========================
                  VISUAL
             ========================== -->
@@ -146,11 +148,11 @@
 
                   <div>
                     <strong>
-                      {{ classroom.studentsCount }}
+                      {{ classroom.assignmentsCount }}
                     </strong>
 
                     <span>
-                      {{ classroom.studentsCount === 1 ? 'estudiante' : 'estudiantes' }}
+                      {{ classroom.assignmentsCount === 1 ? 'actividad' : 'actividades' }}
                     </span>
                   </div>
                 </div>

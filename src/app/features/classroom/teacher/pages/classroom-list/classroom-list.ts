@@ -4,6 +4,7 @@ import { ClassroomModel } from '../../../models/classroom.model';
 import { ClassroomCardComponent } from '../../../components/classroom-card/classroom-card';
 import { createIcons, icons } from 'lucide';
 import { CreateClassroom } from '../create-classroom/create-classroom';
+import { ClassroomTeacherModel } from '../../../models/classroom-teacher.model';
 
 @Component({
   selector: 'app-classroom-list',
@@ -14,7 +15,7 @@ import { CreateClassroom } from '../create-classroom/create-classroom';
 })
 export class ClassroomList implements OnInit, AfterViewInit {
   private readonly api = inject(ClassroomApi);
-  readonly classrooms = signal<ClassroomModel[]>([]);
+  readonly classrooms = signal<ClassroomTeacherModel[]>([]);
   readonly loading = signal(true);
   readonly showCreateClassroom = signal(false);
 
@@ -29,7 +30,7 @@ export class ClassroomList implements OnInit, AfterViewInit {
   loadClassrooms() {
     this.loading.set(true);
 
-    this.api.findMy().subscribe({
+    this.api.findMy<ClassroomTeacherModel[]>().subscribe({
       next: (classrooms) => {
         console.log('[ClassroomList] Clases recibidas:', classrooms);
         this.classrooms.set(classrooms);

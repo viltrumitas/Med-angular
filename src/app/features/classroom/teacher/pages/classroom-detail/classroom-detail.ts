@@ -6,6 +6,7 @@ import { AssignmentCreate } from '../../../components/assignment-create/assignme
 import { AssignmentCard } from '../../../components/assignment-card/assignment-card';
 import { createIcons, icons } from 'lucide';
 import { StudentCard } from '../../../components/student-card/student-card';
+import { ClassroomTeacherDetailModel } from '../../../models/classroom-teacher-detail.model';
 
 @Component({
   selector: 'app-classroom-detail',
@@ -19,7 +20,7 @@ export class ClassroomDetail implements AfterViewInit, OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
 
-  readonly classroom = signal<ClassroomDetailModel | null>(null);
+  readonly classroom = signal<ClassroomTeacherDetailModel | null>(null);
   readonly loading = signal(true);
 
   readonly activeTab = signal<'assignments' | 'students'>('assignments');
@@ -36,7 +37,7 @@ export class ClassroomDetail implements AfterViewInit, OnInit {
   loadClassroom() {
     const id = this.route.snapshot.paramMap.get('id')!;
 
-    this.api.findOne(id).subscribe({
+    this.api.findTeacherDetail(id).subscribe({
       next: (data) => {
         this.classroom.set(data);
         this.loading.set(false);
@@ -93,7 +94,7 @@ export class ClassroomDetail implements AfterViewInit, OnInit {
   reload() {
     const id = this.route.snapshot.paramMap.get('id')!;
 
-    this.api.findOne(id).subscribe((data) => {
+    this.api.findTeacherDetail(id).subscribe((data) => {
       this.classroom.set(data);
       this.showCreateAssignment.set(false);
       this.renderIcon();

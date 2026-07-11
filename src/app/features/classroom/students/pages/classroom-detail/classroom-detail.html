@@ -1,1 +1,283 @@
-<p>classroom-detail works!</p>
+<section class="classroom-page">
+
+  @if (loading()) {
+
+  <section class="state-container">
+    <div class="spinner"></div>
+
+    <div class="state-content">
+      <h2>Cargando clase</h2>
+      <p>Estamos obteniendo la información de la clase...</p>
+    </div>
+  </section>
+
+
+  } @else {
+
+  @let c = classroom()!;
+
+
+  <!-- HEADER -->
+
+  <header class="classroom-header">
+
+    <div class="header-main">
+
+      <span class="header-eyebrow">
+        Clase
+      </span>
+
+
+      <h1>
+        {{ c.name }}
+      </h1>
+
+
+      <p>
+        {{ c.description || 'Sin descripción.' }}
+      </p>
+
+
+
+      @if ('teacher' in c) {
+
+      <div class="teacher-info">
+
+        <span>
+          Profesor:
+        </span>
+
+
+        <strong>
+          {{ c.teacher.firstName }}
+          {{ c.teacher.lastName }}
+        </strong>
+
+      </div>
+
+      }
+
+
+    </div>
+
+  </header>
+
+
+
+
+  <!-- STATS -->
+
+  <section class="stats-grid">
+
+
+    <article class="stat-card">
+
+      <div class="stat-icon assignments">
+        <i data-lucide="clipboard-list"></i>
+      </div>
+
+
+      <div class="stat-content">
+
+        <span>
+          Actividades
+        </span>
+
+
+        <strong>
+          {{ c.assignmentsCount }}
+        </strong>
+
+
+        <small>
+          Casos clínicos asignados
+        </small>
+
+
+      </div>
+
+
+    </article>
+
+
+
+    <article class="stat-card">
+
+      <div class="stat-icon students">
+        <i data-lucide="graduation-cap"></i>
+      </div>
+
+
+      <div class="stat-content">
+
+        <span>
+          Profesor
+        </span>
+
+
+        <strong>
+          {{ c.teacher.firstName }}
+        </strong>
+
+
+        <small>
+          {{ c.teacher.lastName }}
+        </small>
+
+
+      </div>
+
+
+    </article>
+
+
+
+  </section>
+
+
+
+
+
+  <!-- WORKSPACE -->
+
+  <section class="workspace">
+
+
+    <div class="workspace-header">
+
+
+      <nav class="tabs">
+
+
+        <button type="button" class="active">
+
+
+          <i data-lucide="clipboard-list"></i>
+
+
+          <span>
+            Actividades
+          </span>
+
+
+          <span class="tab-count">
+            {{ c.assignmentsCount }}
+          </span>
+
+
+        </button>
+
+
+      </nav>
+
+
+    </div>
+
+
+
+
+
+    <!-- ACTIVIDADES -->
+
+
+    <section class="tab-content">
+
+
+      <div class="section-header">
+
+
+        <div>
+
+          <h2>
+            Actividades
+          </h2>
+
+
+          <p>
+            Casos clínicos asignados por tu profesor.
+          </p>
+
+
+        </div>
+
+
+
+        <span class="section-count">
+
+          {{ c.assignmentsCount }}
+
+          {{
+          c.assignmentsCount === 1
+          ? 'actividad'
+          : 'actividades'
+          }}
+
+        </span>
+
+
+      </div>
+
+
+
+
+
+      @if (c.assignments.length === 0) {
+
+
+      <section class="empty-state">
+
+
+        <div class="empty-icon">
+
+          <i data-lucide="clipboard-x"></i>
+
+        </div>
+
+
+
+        <h3>
+          No hay actividades disponibles
+        </h3>
+
+
+        <p>
+          Tu profesor todavía no ha publicado actividades.
+        </p>
+
+
+      </section>
+
+
+
+      } @else {
+
+
+
+      <div class="assignment-grid">
+
+
+        @for (assignment of c.assignments; track assignment.id) {
+
+
+        <app-assignment-card [assignment]="assignment" (viewAssignment)="openAssignment($event)" />
+
+
+        }
+
+
+      </div>
+
+
+      }
+
+
+    </section>
+
+
+
+  </section>
+
+
+  }
+
+</section>
