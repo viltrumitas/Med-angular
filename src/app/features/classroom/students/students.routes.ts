@@ -9,16 +9,16 @@ export const studentClassroomRoutes: Routes = [
   },
 
   {
+    path: ':classroomId/assignments/:assignmentId',
+    loadComponent: () =>
+      import('./pages/assignment-detail/assignment-detail')
+      .then(c => c.AssignmentDetail),
+  },
+
+  {
     path: ':id',
     loadComponent: () =>
       import('./pages/classroom-detail/classroom-detail')
         .then(c => c.ClassroomDetail),
-  },
-
-  {
-    path: 'classroomId/assignments/:assignmentId',
-    loadComponent: () =>
-      import('./pages/assignment-detail/assignment-detail')
-      .then(c => c.AssignmentDetail),
   },
 ];

@@ -17,6 +17,12 @@ export class AssignedCaseApiService {
       .pipe(map((dtos) => dtos.map(AssignedCaseMapper.toModel)));
   }
 
+  findMyAssignedCasesByAssignment(assignmentId: string) {
+    return this.http.get<AssignedStudentCase[]>(
+      `${this.api}/my-assigned-case/${assignmentId}`
+    )
+  }
+
   findById(id: string): Observable<AssignedStudentCase> {
     return this.http
       .get<AssignedCaseDto>(`${this.api}/${id}`)

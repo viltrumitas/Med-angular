@@ -14,6 +14,7 @@ import { ClassroomTeacherModel } from '../models/classroom-teacher.model';
 import { ClassroomStudentModel } from '../models/classroom-student.model';
 import { ClassroomTeacherDetailModel } from '../models/classroom-teacher-detail.model';
 import { ClassroomStudentDetailModel } from '../models/classroom-student-detail.model';
+import { AssignedStudentCase } from '../../assigned-case/model/assigned-case.model';
 
 @Service()
 export class ClassroomApi {
@@ -48,7 +49,7 @@ export class ClassroomApi {
       `${this.api}/${id}`
     )
   }
-
+  
   update(id: string, dto: UpdateClassroomDto): Observable<ClassroomModel> {
     return this.http.patch<ClassroomModel>(`${this.api}/${id}`, dto);
   }
