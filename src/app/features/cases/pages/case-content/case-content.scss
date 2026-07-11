@@ -1,1181 +1,1155 @@
-// =========================
-// COLORS
-// =========================
+// ==========================================================================
+// CASE CONTENT
+// ==========================================================================
+
+:host {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+// ==========================================================================
+// VARIABLES
+// ==========================================================================
 
 $primary: #2563eb;
-$primary-hover: #1d4ed8;
+$primary-dark: #1d4ed8;
 $primary-light: #eff6ff;
 
 $teal: #0d9488;
 $teal-light: #f0fdfa;
 
-$success: #059669;
-$success-light: #ecfdf5;
+$violet: #7c3aed;
+$violet-light: #f5f3ff;
 
-$warning: #d97706;
-$warning-light: #fff7ed;
-
-$purple: #7c3aed;
-$purple-light: #f5f3ff;
+$amber: #d97706;
+$amber-light: #fffbeb;
 
 $rose: #e11d48;
 $rose-light: #fff1f2;
 
-$danger: #dc2626;
-$danger-light: #fef2f2;
+$emerald: #059669;
+$emerald-light: #ecfdf5;
 
-$text-primary: #0f172a;
-$text-secondary: #475569;
-$text-muted: #94a3b8;
+$cyan: #0891b2;
+$cyan-light: #ecfeff;
 
-$border: #e2e8f0;
-$border-soft: #f1f5f9;
+$slate-950: #020617;
+$slate-900: #0f172a;
+$slate-800: #1e293b;
+$slate-700: #334155;
+$slate-600: #475569;
+$slate-500: #64748b;
+$slate-400: #94a3b8;
+$slate-300: #cbd5e1;
+$slate-200: #e2e8f0;
+$slate-100: #f1f5f9;
+$slate-50: #f8fafc;
 
-$surface: #ffffff;
-$background: #f8fafc;
+$white: #ffffff;
 
-// =========================
-// PAGE
-// =========================
+$radius-sm: 0.75rem;
+$radius-md: 1rem;
+$radius-lg: 1.25rem;
+$radius-xl: 1.5rem;
+$radius-2xl: 2rem;
 
-.case-page {
-  width: 100%;
-  max-width: 1450px;
+$shadow-sm: 0 10px 30px rgba(15, 23, 42, 0.06);
+$shadow-md: 0 18px 45px rgba(15, 23, 42, 0.08);
+$shadow-lg: 0 28px 70px rgba(15, 23, 42, 0.12);
 
-  margin: 0 auto;
-  padding: 2rem;
+$transition: 0.22s ease;
+
+// ==========================================================================
+// MIXINS
+// ==========================================================================
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-// =========================
-// HEADER
-// =========================
+@mixin card-base {
+  border: 1px solid rgba($slate-200, 0.9);
+  background: rgba($white, 0.92);
+  box-shadow: $shadow-sm;
+  backdrop-filter: blur(14px);
+}
+
+@mixin icon-box($bg, $color) {
+  @include flex-center;
+
+  flex: 0 0 auto;
+
+  color: $color;
+  background: radial-gradient(circle at 30% 20%, rgba($white, 0.75), transparent 35%), $bg;
+
+  i,
+  svg {
+    width: 1.15rem;
+    height: 1.15rem;
+    stroke-width: 2.2;
+  }
+}
+
+@mixin mobile {
+  @media (max-width: 48rem) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (max-width: 64rem) {
+    @content;
+  }
+}
+
+// ==========================================================================
+// WRAPPER MODES
+// ==========================================================================
+
+.case-content-view {
+  width: 100%;
+  min-width: 0;
+
+  color: $slate-900;
+}
+
+.case-content-view--full {
+  display: grid;
+  gap: clamp(1.25rem, 2vw, 1.75rem);
+
+  width: min(100%, 92rem);
+  margin-inline: auto;
+  padding: clamp(1rem, 2.5vw, 2rem);
+}
+
+.case-content-view--embedded {
+  display: grid;
+  gap: 1rem;
+
+  padding: clamp(0.875rem, 1.5vw, 1.25rem);
+}
+
+// ==========================================================================
+// HEADER - FULL MODE ONLY
+// ==========================================================================
 
 .case-header {
   position: relative;
 
   display: flex;
-  align-items: center;
+  align-items: stretch;
   justify-content: space-between;
 
-  gap: 3rem;
-
-  padding: 2rem;
-  margin-bottom: 1rem;
-
-  background:
-    radial-gradient(circle at 90% 15%, rgba(37, 99, 235, 0.12), transparent 30%),
-    linear-gradient(135deg, #ffffff, #f8fbff);
-
-  border: 1px solid $border;
-  border-radius: 18px;
+  gap: 1.5rem;
 
   overflow: hidden;
+
+  padding: clamp(1.35rem, 2.5vw, 2rem);
+
+  border: 1px solid rgba($primary, 0.12);
+  border-radius: $radius-2xl;
+
+  background:
+    radial-gradient(circle at 90% 10%, rgba($primary, 0.18), transparent 34%),
+    radial-gradient(circle at 8% 0%, rgba($teal, 0.12), transparent 30%),
+    linear-gradient(135deg, $white 0%, $slate-50 100%);
+
+  box-shadow: $shadow-md;
+
+  &::before {
+    content: '';
+
+    position: absolute;
+    inset: auto -6rem -8rem auto;
+
+    width: 18rem;
+    height: 18rem;
+
+    border-radius: 999px;
+
+    background: rgba($primary, 0.08);
+    filter: blur(2px);
+  }
 }
 
-.case-header::before {
-  content: '';
-
-  position: absolute;
-
-  width: 220px;
-  height: 220px;
-
-  top: -130px;
-  right: 80px;
-
-  border: 1px solid rgba(37, 99, 235, 0.08);
-  border-radius: 50%;
-
-  pointer-events: none;
-}
-
-.header-main {
+.case-header__main {
   position: relative;
   z-index: 1;
+
+  display: grid;
+  align-content: center;
+  gap: 1rem;
 
   min-width: 0;
-
-  h1 {
-    max-width: 850px;
-
-    margin: 0.8rem 0 0;
-
-    color: $text-primary;
-
-    font-size: clamp(1.8rem, 3vw, 2.4rem);
-    font-weight: 750;
-    line-height: 1.2;
-
-    letter-spacing: -0.04em;
-  }
 }
 
-.header-meta {
+.case-header__meta {
   display: flex;
-  align-items: center;
   flex-wrap: wrap;
-
-  gap: 0.6rem;
+  gap: 0.65rem;
 }
 
-// =========================
-// BADGES
-// =========================
-
-.area-badge {
+.case-header__area,
+.case-header__status,
+.case-header__date {
   display: inline-flex;
   align-items: center;
 
   gap: 0.45rem;
 
-  padding: 0.4rem 0.65rem;
+  width: fit-content;
+}
 
-  color: $teal;
-  background: $teal-light;
+.case-header__area {
+  padding: 0.48rem 0.75rem;
+
+  color: $primary-dark;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+
+  border: 1px solid rgba($primary, 0.14);
+  border-radius: 999px;
+  background: $primary-light;
+
+  i,
+  svg {
+    width: 0.95rem;
+    height: 0.95rem;
+  }
+}
+
+.case-header__status {
+  padding: 0.48rem 0.75rem;
+
+  color: $slate-700;
+  font-size: 0.78rem;
+  font-weight: 800;
+
+  border: 1px solid $slate-200;
+  border-radius: 999px;
+  background: $white;
+}
+
+.case-header__status--published {
+  color: $emerald;
+  border-color: rgba($emerald, 0.18);
+  background: $emerald-light;
+}
+
+.case-header__status--draft {
+  color: $amber;
+  border-color: rgba($amber, 0.2);
+  background: $amber-light;
+}
+
+.case-header__status-dot {
+  width: 0.5rem;
+  height: 0.5rem;
 
   border-radius: 999px;
+  background: currentColor;
+  box-shadow: 0 0 0 4px currentColor;
+  opacity: 0.22;
+}
 
-  font-size: 0.7rem;
-  font-weight: 700;
+.case-header h1 {
+  max-width: 52rem;
+  margin: 0;
 
-  i {
-    width: 14px;
-    height: 14px;
+  color: $slate-950;
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  font-weight: 900;
+  line-height: 0.95;
+  letter-spacing: -0.055em;
+}
+
+.case-header__date {
+  color: $slate-500;
+  font-size: 0.92rem;
+  font-weight: 650;
+
+  i,
+  svg {
+    width: 1rem;
+    height: 1rem;
   }
 }
 
-.status-badge {
-  display: inline-flex;
-  align-items: center;
-
-  gap: 0.4rem;
-
-  padding: 0.4rem 0.65rem;
-
-  color: #92400e;
-  background: $warning-light;
-
-  border-radius: 999px;
-
-  font-size: 0.7rem;
-  font-weight: 700;
-
-  &.published {
-    color: #047857;
-    background: $success-light;
-
-    .status-dot {
-      background: $success;
-    }
-  }
-}
-
-.status-dot {
-  width: 6px;
-  height: 6px;
-
-  background: $warning;
-
-  border-radius: 50%;
-}
-
-// =========================
-// DATE
-// =========================
-
-.created-date {
-  display: flex;
-  align-items: center;
-
-  gap: 0.45rem;
-
-  margin-top: 1rem;
-
-  color: $text-muted;
-
-  font-size: 0.75rem;
-
-  i {
-    width: 15px;
-    height: 15px;
-  }
-}
-
-// =========================
-// HEADER VISUAL
-// =========================
-
-.header-visual {
+.case-header__visual {
   position: relative;
   z-index: 1;
 
-  flex-shrink: 0;
+  @include flex-center;
+
+  min-width: clamp(8rem, 16vw, 13rem);
 }
 
-.case-icon {
-  display: grid;
-  place-items: center;
+.case-header__icon {
+  @include flex-center;
 
-  width: 86px;
-  height: 86px;
+  width: clamp(6.5rem, 14vw, 10rem);
+  height: clamp(6.5rem, 14vw, 10rem);
 
   color: $primary;
-  background: rgba(239, 246, 255, 0.85);
 
-  border: 1px solid rgba(37, 99, 235, 0.12);
-  border-radius: 22px;
+  border: 1px solid rgba($primary, 0.14);
+  border-radius: 2rem;
 
-  box-shadow: 0 14px 30px rgba(37, 99, 235, 0.1);
+  background:
+    radial-gradient(circle at 30% 20%, rgba($white, 0.85), transparent 36%),
+    linear-gradient(135deg, rgba($primary, 0.14), rgba($teal, 0.12));
 
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 24px 55px rgba($primary, 0.18);
 
-  i {
-    width: 40px;
-    height: 40px;
-
-    stroke-width: 1.7;
+  i,
+  svg {
+    width: 48%;
+    height: 48%;
+    stroke-width: 1.8;
   }
 }
 
-// =========================
-// OVERVIEW
-// =========================
+// ==========================================================================
+// CLINICAL OVERVIEW
+// ==========================================================================
 
 .clinical-overview {
   display: grid;
-
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-
+  grid-template-columns: 1.25fr 1fr;
   gap: 1rem;
-
-  margin-bottom: 1rem;
 }
 
 .overview-card {
-  display: flex;
-  align-items: flex-start;
+  @include card-base;
 
+  position: relative;
+
+  display: flex;
   gap: 1rem;
 
-  padding: 1.2rem;
+  min-width: 0;
+  padding: 1.1rem;
 
-  background: $surface;
+  overflow: hidden;
 
-  border: 1px solid $border;
-  border-radius: 14px;
+  border-radius: $radius-xl;
 
-  &.primary {
-    background: linear-gradient(135deg, #ffffff, #f8fbff);
+  transition:
+    transform $transition,
+    box-shadow $transition,
+    border-color $transition;
 
-    border-color: rgba(37, 99, 235, 0.18);
-
-    .overview-icon {
-      color: $primary;
-      background: $primary-light;
-    }
+  &:hover {
+    transform: translateY(-2px);
+    border-color: rgba($primary, 0.18);
+    box-shadow: $shadow-md;
   }
+}
 
-  > div:last-child {
-    min-width: 0;
-  }
+.overview-card--primary {
+  border-color: rgba($primary, 0.14);
+  background: radial-gradient(circle at 100% 0%, rgba($primary, 0.08), transparent 32%), $white;
+}
+
+.overview-card__icon {
+  @include icon-box($primary-light, $primary);
+
+  width: 2.75rem;
+  height: 2.75rem;
+
+  border-radius: 1rem;
+}
+
+.overview-card__content {
+  min-width: 0;
 
   span {
-    color: $text-muted;
+    display: block;
+    margin-bottom: 0.35rem;
 
-    font-size: 0.7rem;
-    font-weight: 650;
-
+    color: $slate-500;
+    font-size: 0.76rem;
+    font-weight: 850;
+    letter-spacing: 0.045em;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
   }
 
   p {
-    margin: 0.4rem 0 0;
+    margin: 0;
 
-    color: $text-primary;
-
-    font-size: 0.88rem;
-    line-height: 1.6;
+    color: $slate-800;
+    font-size: 0.98rem;
+    font-weight: 650;
+    line-height: 1.55;
   }
 }
 
-.overview-icon {
+// ==========================================================================
+// CLINICAL CONTENT
+// ==========================================================================
+
+.case-clinical-content {
   display: grid;
-  place-items: center;
+  gap: 1rem;
 
-  width: 42px;
-  height: 42px;
-
-  flex-shrink: 0;
-
-  color: $teal;
-  background: $teal-light;
-
-  border-radius: 11px;
-
-  i {
-    width: 19px;
-    height: 19px;
-  }
+  min-width: 0;
 }
 
-// =========================
-// CONTENT
-// =========================
+.case-section {
+  @include card-base;
 
-.case-content {
+  display: grid;
+  gap: 1rem;
+
+  min-width: 0;
+  padding: clamp(1rem, 2vw, 1.35rem);
+
+  border-radius: $radius-xl;
+}
+
+.case-section__header {
   display: flex;
-  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
 
   gap: 1rem;
 }
 
-.content-section {
-  padding: 1.4rem;
-
-  background: $surface;
-
-  border: 1px solid $border;
-  border-radius: 16px;
-}
-
-// =========================
-// SECTION HEADER
-// =========================
-
-.section-header {
-  margin-bottom: 1.2rem;
-}
-
-.section-heading {
+.case-section__heading {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
 
-  gap: 0.8rem;
+  gap: 0.85rem;
+
+  min-width: 0;
 
   h2 {
     margin: 0;
 
-    color: $text-primary;
-
-    font-size: 1rem;
-    font-weight: 700;
+    color: $slate-950;
+    font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+    font-weight: 900;
+    letter-spacing: -0.025em;
   }
 
   p {
     margin: 0.25rem 0 0;
 
-    color: $text-secondary;
-
-    font-size: 0.76rem;
+    color: $slate-500;
+    font-size: 0.9rem;
+    line-height: 1.45;
   }
 }
 
-.section-icon {
-  display: grid;
-  place-items: center;
+.case-section__icon {
+  width: 2.65rem;
+  height: 2.65rem;
 
-  width: 42px;
-  height: 42px;
-
-  flex-shrink: 0;
-
-  border-radius: 11px;
-
-  i {
-    width: 19px;
-    height: 19px;
-  }
-
-  &.patient {
-    color: $primary;
-    background: $primary-light;
-  }
-
-  &.vitals {
-    color: $rose;
-    background: $rose-light;
-  }
-
-  &.neurological {
-    color: $purple;
-    background: $purple-light;
-  }
-
-  &.findings {
-    color: $teal;
-    background: $teal-light;
-  }
+  border-radius: 1rem;
 }
 
-// =========================
-// PATIENT
-// =========================
+.case-section__icon--patient {
+  @include icon-box($teal-light, $teal);
+}
+
+.case-section__icon--vitals {
+  @include icon-box($rose-light, $rose);
+}
+
+.case-section__icon--neurological {
+  @include icon-box($violet-light, $violet);
+}
+
+.case-section__icon--findings {
+  @include icon-box($cyan-light, $cyan);
+}
+
+// ==========================================================================
+// PATIENT DATA
+// ==========================================================================
 
 .patient-summary {
   display: flex;
   align-items: stretch;
+  justify-content: space-between;
 
   gap: 1rem;
-
-  margin-bottom: 1rem;
 }
 
-.patient-main {
+.patient-summary__main,
+.patient-summary__data,
+.patient-summary__item {
+  border: 1px solid $slate-200;
+  background: $slate-50;
+}
+
+.patient-summary__main {
   display: flex;
   align-items: center;
 
-  gap: 0.8rem;
+  gap: 0.9rem;
 
+  min-width: 0;
   flex: 1;
 
   padding: 1rem;
 
-  background: $background;
-
-  border-radius: 12px;
-
-  > div:last-child {
-    display: flex;
-    flex-direction: column;
-  }
-
-  span {
-    color: $text-muted;
-
-    font-size: 0.68rem;
-  }
-
-  strong {
-    margin-top: 0.2rem;
-
-    color: $text-primary;
-
-    font-size: 0.95rem;
-    font-weight: 700;
-  }
+  border-radius: $radius-lg;
 }
 
-.patient-avatar {
-  display: grid;
-  place-items: center;
+.patient-summary__avatar {
+  @include flex-center;
 
-  width: 42px;
-  height: 42px;
+  flex: 0 0 auto;
 
-  flex-shrink: 0;
+  width: 3.25rem;
+  height: 3.25rem;
 
   color: $primary;
-  background: $primary-light;
 
-  border-radius: 11px;
+  border-radius: 1.15rem;
+  background:
+    radial-gradient(circle at 30% 20%, rgba($white, 0.8), transparent 38%), $primary-light;
 
-  i {
-    width: 19px;
-    height: 19px;
+  i,
+  svg {
+    width: 1.45rem;
+    height: 1.45rem;
   }
 }
 
-.patient-data {
-  display: grid;
-
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-
-  gap: 0.75rem;
-
-  min-width: 260px;
-}
-
-.data-item {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-
-  padding: 1rem;
-
-  background: $background;
-
-  border-radius: 12px;
+.patient-summary__identity {
+  min-width: 0;
 
   span {
-    color: $text-muted;
+    display: block;
 
-    font-size: 0.68rem;
+    color: $slate-500;
+    font-size: 0.75rem;
+    font-weight: 850;
+    letter-spacing: 0.045em;
+    text-transform: uppercase;
   }
 
   strong {
-    margin-top: 0.2rem;
+    display: block;
+    margin-top: 0.25rem;
 
-    color: $text-primary;
+    overflow: hidden;
 
-    font-size: 0.9rem;
+    color: $slate-900;
+    font-size: 1rem;
+    font-weight: 900;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 
-// =========================
-// MEDICAL INFO
-// =========================
-
-.medical-info-grid {
+.patient-summary__data {
   display: grid;
+  grid-template-columns: repeat(2, minmax(7rem, 1fr));
 
+  gap: 0.65rem;
+
+  min-width: min(100%, 18rem);
+  padding: 0.65rem;
+
+  border-radius: $radius-lg;
+}
+
+.patient-summary__item {
+  display: grid;
+  align-content: center;
+  gap: 0.25rem;
+
+  padding: 0.8rem;
+
+  border-radius: $radius-md;
+  background: $white;
+
+  span {
+    color: $slate-500;
+    font-size: 0.72rem;
+    font-weight: 850;
+    letter-spacing: 0.045em;
+    text-transform: uppercase;
+  }
+
+  strong {
+    color: $slate-900;
+    font-size: 0.95rem;
+    font-weight: 900;
+  }
+}
+
+.medical-info {
+  display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
 
   gap: 1rem;
 }
 
-.medical-info-card {
+.medical-info__card {
+  min-width: 0;
   padding: 1rem;
 
-  background: $background;
-
-  border-radius: 12px;
+  border: 1px solid $slate-200;
+  border-radius: $radius-lg;
+  background: $slate-50;
 
   p {
-    margin: 0.7rem 0 0;
+    margin: 0.75rem 0 0;
 
-    color: $text-secondary;
-
-    font-size: 0.8rem;
+    color: $slate-700;
+    font-size: 0.94rem;
     line-height: 1.6;
   }
 }
 
-.medical-info-header {
+.medical-info__header {
   display: flex;
   align-items: center;
 
-  gap: 0.5rem;
+  gap: 0.55rem;
 
-  color: $text-primary;
+  color: $slate-700;
+  font-size: 0.82rem;
+  font-weight: 900;
 
-  font-size: 0.75rem;
-  font-weight: 650;
+  i,
+  svg {
+    width: 1rem;
+    height: 1rem;
 
-  i {
-    width: 16px;
-    height: 16px;
-
-    color: $teal;
+    color: $primary;
   }
 }
 
-// =========================
-// VITAL SIGNS
-// =========================
-
-.vital-signs-grid {
+.medical-info__list {
   display: grid;
+  gap: 0.45rem;
 
-  grid-template-columns: repeat(7, minmax(0, 1fr));
+  margin: 0.75rem 0 0;
+  padding-left: 1.15rem;
 
-  gap: 0.75rem;
+  color: $slate-700;
+  font-size: 0.94rem;
+  line-height: 1.5;
+
+  li::marker {
+    color: $primary;
+  }
+}
+
+// ==========================================================================
+// VITAL SIGNS
+// ==========================================================================
+
+.vital-signs {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+
+  gap: 0.85rem;
 }
 
 .vital-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  position: relative;
+
+  display: grid;
+  align-content: start;
+  gap: 0.55rem;
 
   min-width: 0;
+  min-height: 8.25rem;
+  padding: 1rem;
 
-  padding: 1rem 0.65rem;
+  overflow: hidden;
 
-  text-align: center;
-
-  background: $background;
-
-  border: 1px solid transparent;
-  border-radius: 12px;
+  border: 1px solid $slate-200;
+  border-radius: $radius-lg;
+  background: radial-gradient(circle at 100% 0%, rgba($primary, 0.045), transparent 35%), $white;
 
   transition:
-    transform 160ms ease,
-    border-color 160ms ease,
-    background-color 160ms ease;
+    transform $transition,
+    border-color $transition,
+    box-shadow $transition;
 
   &:hover {
     transform: translateY(-2px);
-
-    background: $surface;
-    border-color: $border;
+    border-color: rgba($primary, 0.2);
+    box-shadow: $shadow-sm;
   }
 
-  > span {
-    margin-top: 0.65rem;
-
-    color: $text-muted;
-
-    font-size: 0.67rem;
-    font-weight: 600;
+  span {
+    color: $slate-500;
+    font-size: 0.76rem;
+    font-weight: 850;
+    letter-spacing: 0.045em;
+    text-transform: uppercase;
   }
 
-  > strong {
-    margin-top: 0.2rem;
-
-    color: $text-primary;
-
-    font-size: 0.9rem;
-    font-weight: 750;
-
+  strong {
+    color: $slate-950;
+    font-size: clamp(1rem, 1.8vw, 1.25rem);
+    font-weight: 950;
+    letter-spacing: -0.035em;
     word-break: break-word;
   }
 }
 
-.vital-icon {
-  display: grid;
-  place-items: center;
+.vital-card__icon {
+  @include icon-box($slate-100, $slate-600);
 
-  width: 36px;
-  height: 36px;
+  width: 2.4rem;
+  height: 2.4rem;
 
-  color: $primary;
-  background: $primary-light;
-
-  border-radius: 10px;
-
-  i {
-    width: 16px;
-    height: 16px;
-  }
-
-  &.heart {
-    color: $rose;
-    background: $rose-light;
-  }
-
-  &.respiratory {
-    color: $teal;
-    background: $teal-light;
-  }
-
-  &.oxygen {
-    color: #0284c7;
-    background: #f0f9ff;
-  }
-
-  &.glucose {
-    color: $purple;
-    background: $purple-light;
-  }
-
-  &.temperature {
-    color: $warning;
-    background: $warning-light;
-  }
-
-  &.capillary {
-    color: $success;
-    background: $success-light;
-  }
+  border-radius: 0.9rem;
 }
 
-// =========================
+.vital-card__icon--heart {
+  color: $rose;
+  background: $rose-light;
+}
+
+.vital-card__icon--respiratory {
+  color: $cyan;
+  background: $cyan-light;
+}
+
+.vital-card__icon--oxygen {
+  color: $teal;
+  background: $teal-light;
+}
+
+.vital-card__icon--glucose {
+  color: $violet;
+  background: $violet-light;
+}
+
+.vital-card__icon--temperature {
+  color: $amber;
+  background: $amber-light;
+}
+
+.vital-card__icon--capillary {
+  color: $emerald;
+  background: $emerald-light;
+}
+
+// ==========================================================================
 // NEUROLOGICAL
-// =========================
+// ==========================================================================
 
-.neurological-grid {
+.neurological {
   display: grid;
-
-  grid-template-columns: 260px minmax(0, 1fr);
+  grid-template-columns: minmax(14rem, 0.85fr) minmax(0, 1.4fr);
 
   gap: 1rem;
 }
 
-.glasgow-card {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+.glasgow-card,
+.cincinnati-card {
+  min-width: 0;
+  padding: 1rem;
 
-  min-height: 180px;
-
-  padding: 1.2rem;
-
-  background: linear-gradient(135deg, $purple-light, $surface);
-
-  border: 1px solid rgba(124, 58, 237, 0.15);
-  border-radius: 14px;
+  border: 1px solid $slate-200;
+  border-radius: $radius-lg;
+  background: $slate-50;
 }
 
-.glasgow-heading {
+.glasgow-card {
+  display: grid;
+  align-content: space-between;
+  gap: 1rem;
+
+  min-height: 13rem;
+
+  background: radial-gradient(circle at 90% 0%, rgba($violet, 0.09), transparent 35%), $slate-50;
+}
+
+.glasgow-card__heading {
   display: flex;
   align-items: center;
 
-  gap: 0.7rem;
-
-  > div:last-child {
-    display: flex;
-    flex-direction: column;
-  }
+  gap: 0.75rem;
 
   span {
-    color: $text-primary;
+    display: block;
 
-    font-size: 0.78rem;
-    font-weight: 650;
+    color: $slate-800;
+    font-size: 0.9rem;
+    font-weight: 900;
   }
 
   small {
+    display: block;
     margin-top: 0.15rem;
 
-    color: $text-muted;
-
-    font-size: 0.65rem;
+    color: $slate-500;
+    font-size: 0.78rem;
+    font-weight: 700;
   }
 }
 
-.glasgow-icon {
-  display: grid;
-  place-items: center;
+.glasgow-card__icon {
+  @include icon-box($violet-light, $violet);
 
-  width: 40px;
-  height: 40px;
+  width: 2.65rem;
+  height: 2.65rem;
 
-  color: $purple;
-  background: $surface;
-
-  border-radius: 11px;
-
-  i {
-    width: 18px;
-    height: 18px;
-  }
+  border-radius: 1rem;
 }
 
-.glasgow-value {
-  color: $purple;
+.glasgow-card__value {
+  display: block;
 
-  font-size: 3rem;
-  font-weight: 800;
-  line-height: 1;
+  color: $violet;
+  font-size: clamp(2.75rem, 7vw, 4.75rem);
+  font-weight: 950;
+  line-height: 0.9;
+  letter-spacing: -0.08em;
 }
 
 .cincinnati-card {
-  padding: 1.2rem;
-
-  background: $background;
-
-  border-radius: 14px;
+  display: grid;
+  gap: 1rem;
 }
 
-.card-subheader {
-  margin-bottom: 1rem;
-
+.cincinnati-card__header {
   h3 {
     margin: 0;
 
-    color: $text-primary;
-
-    font-size: 0.9rem;
-    font-weight: 700;
+    color: $slate-950;
+    font-size: 1rem;
+    font-weight: 900;
+    letter-spacing: -0.025em;
   }
 
   p {
-    margin: 0.3rem 0 0;
+    margin: 0.25rem 0 0;
 
-    color: $text-secondary;
-
-    font-size: 0.72rem;
+    color: $slate-500;
+    font-size: 0.86rem;
+    line-height: 1.45;
   }
 }
 
-.cincinnati-grid {
+.cincinnati-card__grid {
   display: grid;
-
   grid-template-columns: repeat(3, minmax(0, 1fr));
 
   gap: 0.75rem;
 }
 
-.neuro-item {
+.neurological-item {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
 
   gap: 0.65rem;
 
+  min-width: 0;
   padding: 0.85rem;
 
-  background: $surface;
+  border: 1px solid $slate-200;
+  border-radius: $radius-md;
+  background: $white;
+}
 
-  border: 1px solid $border;
-  border-radius: 11px;
+.neurological-item__icon {
+  @include icon-box($primary-light, $primary);
 
-  > div:last-child {
-    display: flex;
-    flex-direction: column;
+  width: 2.25rem;
+  height: 2.25rem;
 
-    min-width: 0;
-  }
+  border-radius: 0.85rem;
+}
+
+.neurological-item__content {
+  min-width: 0;
 
   span {
-    color: $text-muted;
+    display: block;
 
-    font-size: 0.65rem;
+    color: $slate-500;
+    font-size: 0.72rem;
+    font-weight: 850;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
   }
 
   strong {
-    margin-top: 0.2rem;
+    display: block;
+    margin-top: 0.25rem;
 
-    color: $text-primary;
-
-    font-size: 0.75rem;
-
-    overflow-wrap: anywhere;
+    color: $slate-900;
+    font-size: 0.9rem;
+    font-weight: 900;
+    word-break: break-word;
   }
 }
 
-.neuro-icon {
-  display: grid;
-  place-items: center;
-
-  width: 34px;
-  height: 34px;
-
-  flex-shrink: 0;
-
-  color: $purple;
-  background: $purple-light;
-
-  border-radius: 9px;
-
-  i {
-    width: 15px;
-    height: 15px;
-  }
-}
-
-// =========================
+// ==========================================================================
 // FINDINGS
-// =========================
+// ==========================================================================
 
 .findings-box {
   position: relative;
 
-  padding: 1.2rem 1.2rem 1.2rem 3.5rem;
+  display: flex;
+  align-items: flex-start;
 
-  background: linear-gradient(135deg, $teal-light, $surface);
+  gap: 0.85rem;
 
-  border: 1px solid rgba(13, 148, 136, 0.14);
-  border-radius: 14px;
+  min-width: 0;
+  padding: 1rem;
 
-  > i {
-    position: absolute;
+  border: 1px solid rgba($cyan, 0.16);
+  border-radius: $radius-lg;
+  background: radial-gradient(circle at 100% 0%, rgba($cyan, 0.08), transparent 34%), $cyan-light;
 
-    top: 1.2rem;
-    left: 1.2rem;
+  i,
+  svg {
+    flex: 0 0 auto;
 
-    width: 20px;
-    height: 20px;
+    width: 1.2rem;
+    height: 1.2rem;
+    margin-top: 0.15rem;
 
-    color: $teal;
+    color: $cyan;
   }
 
   p {
     margin: 0;
 
-    color: $text-secondary;
-
-    font-size: 0.84rem;
-    line-height: 1.75;
-
-    white-space: pre-line;
+    color: $slate-800;
+    font-size: 0.96rem;
+    font-weight: 600;
+    line-height: 1.7;
   }
 }
 
-// =========================
-// CASE ACTIONS
-// =========================
+// ==========================================================================
+// EMBEDDED MODE COMPACT
+// ==========================================================================
 
-.case-actions {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  gap: 2rem;
-
-  padding: 1.2rem 1.3rem;
-
-  background: $surface;
-
-  border: 1px solid $border;
-  border-radius: 16px;
-
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
-}
-
-.actions-info {
-  display: flex;
-  align-items: center;
-
-  gap: 0.8rem;
-
-  min-width: 0;
-
-  > div:last-child {
-    display: flex;
-    flex-direction: column;
-
-    min-width: 0;
+.case-content-view--embedded {
+  .clinical-overview {
+    grid-template-columns: 1fr;
   }
 
-  strong {
-    color: $text-primary;
-
-    font-size: 0.82rem;
-    font-weight: 700;
+  .overview-card {
+    padding: 1rem;
+    border-radius: $radius-lg;
   }
 
-  span {
-    margin-top: 0.2rem;
-
-    color: $text-muted;
-
-    font-size: 0.7rem;
-  }
-}
-
-.actions-icon {
-  display: grid;
-  place-items: center;
-
-  width: 40px;
-  height: 40px;
-
-  flex-shrink: 0;
-
-  color: $text-secondary;
-  background: $background;
-
-  border-radius: 11px;
-
-  i {
-    width: 18px;
-    height: 18px;
-  }
-}
-
-// =========================
-// ACTION AREA
-// =========================
-
-.actions-area {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-
-  gap: 1.5rem;
-
-  flex-shrink: 0;
-}
-
-.danger-actions,
-.main-actions {
-  display: flex;
-  align-items: center;
-
-  gap: 0.6rem;
-}
-
-// =========================
-// ACTION BUTTONS
-// =========================
-
-.action-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  gap: 0.45rem;
-
-  min-height: 40px;
-
-  padding: 0.6rem 0.85rem;
-
-  border: 1px solid transparent;
-  border-radius: 9px;
-
-  font: inherit;
-  font-size: 0.76rem;
-  font-weight: 650;
-
-  white-space: nowrap;
-
-  cursor: pointer;
-
-  transition:
-    color 160ms ease,
-    background-color 160ms ease,
-    border-color 160ms ease,
-    box-shadow 160ms ease,
-    transform 160ms ease;
-
-  i {
-    width: 16px;
-    height: 16px;
+  .overview-card__icon {
+    width: 2.45rem;
+    height: 2.45rem;
+    border-radius: 0.9rem;
   }
 
-  &:hover {
-    transform: translateY(-1px);
-  }
-}
-
-.action-button.secondary {
-  color: $text-primary;
-  background: $surface;
-
-  border-color: $border;
-
-  &:hover {
-    background: $background;
-    border-color: #cbd5e1;
-  }
-}
-
-.action-button.primary {
-  color: #ffffff;
-  background: $primary;
-
-  &:hover {
-    background: $primary-hover;
-
-    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.2);
-  }
-}
-
-.action-button.danger {
-  color: $danger;
-  background: $surface;
-
-  border-color: #fecaca;
-
-  &:hover {
-    background: $danger-light;
-    border-color: #fca5a5;
-  }
-}
-
-// =========================
-// RESPONSIVE
-// =========================
-
-@media (max-width: 1150px) {
-  .vital-signs-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+  .case-clinical-content {
+    gap: 0.9rem;
   }
 
-  .case-actions {
-    align-items: flex-start;
+  .case-section {
+    gap: 0.9rem;
+    padding: 1rem;
+
+    border-radius: $radius-lg;
+    box-shadow: none;
   }
 
-  .actions-area {
-    align-items: stretch;
-    flex-direction: column;
-  }
-}
+  .case-section__heading {
+    gap: 0.7rem;
 
-@media (max-width: 900px) {
-  .case-header {
-    align-items: flex-start;
+    h2 {
+      font-size: 1rem;
+    }
+
+    p {
+      display: none;
+    }
   }
 
-  .header-visual {
-    display: none;
+  .case-section__icon {
+    width: 2.35rem;
+    height: 2.35rem;
+
+    border-radius: 0.85rem;
   }
 
   .patient-summary {
     flex-direction: column;
   }
 
-  .patient-data {
+  .patient-summary__data {
+    width: 100%;
     min-width: 0;
   }
 
-  .neurological-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 750px) {
-  .clinical-overview,
-  .medical-info-grid {
+  .medical-info {
     grid-template-columns: 1fr;
   }
 
-  .vital-signs-grid {
+  .vital-signs {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .cincinnati-grid {
+  .vital-card {
+    min-height: 7.5rem;
+    padding: 0.9rem;
+  }
+
+  .neurological {
     grid-template-columns: 1fr;
   }
 
-  .case-actions {
-    align-items: stretch;
-    flex-direction: column;
-
-    gap: 1rem;
+  .glasgow-card {
+    min-height: auto;
   }
 
-  .actions-area {
-    width: 100%;
+  .glasgow-card__value {
+    font-size: 3rem;
   }
 
-  .danger-actions,
-  .main-actions {
-    width: 100%;
+  .cincinnati-card__grid {
+    grid-template-columns: 1fr;
   }
 
-  .action-button {
-    flex: 1;
+  .findings-box {
+    padding: 0.95rem;
   }
 }
 
-@media (max-width: 650px) {
-  .case-page {
+// ==========================================================================
+// RESPONSIVE
+// ==========================================================================
+
+@include tablet {
+  .case-content-view--full {
     padding: 1rem;
   }
 
   .case-header {
-    padding: 1.3rem;
+    flex-direction: column;
+
+    border-radius: $radius-xl;
   }
 
-  .header-main {
-    h1 {
-      font-size: 1.6rem;
-    }
+  .case-header__visual {
+    justify-content: flex-start;
+    min-width: 0;
   }
 
-  .content-section {
-    padding: 1rem;
+  .case-header__icon {
+    width: 5.75rem;
+    height: 5.75rem;
+    border-radius: 1.5rem;
   }
 
-  .patient-data {
-    grid-template-columns: 1fr 1fr;
+  .clinical-overview {
+    grid-template-columns: 1fr;
   }
 
-  .section-heading {
-    align-items: flex-start;
-  }
-}
-
-@media (max-width: 500px) {
-  .actions-area,
-  .danger-actions,
-  .main-actions {
+  .patient-summary {
     flex-direction: column;
   }
 
-  .action-button {
+  .patient-summary__data {
     width: 100%;
+    min-width: 0;
+  }
+
+  .medical-info {
+    grid-template-columns: 1fr;
+  }
+
+  .vital-signs {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .neurological {
+    grid-template-columns: 1fr;
+  }
+
+  .cincinnati-card__grid {
+    grid-template-columns: 1fr;
   }
 }
 
-@media (max-width: 430px) {
-  .vital-signs-grid {
-    grid-template-columns: 1fr 1fr;
+@include mobile {
+  .case-content-view--full,
+  .case-content-view--embedded {
+    padding: 0.75rem;
   }
 
-  .patient-data {
+  .case-header {
+    padding: 1.15rem;
+  }
+
+  .case-header h1 {
+    font-size: clamp(1.85rem, 11vw, 2.55rem);
+  }
+
+  .case-header__meta {
+    gap: 0.5rem;
+  }
+
+  .case-header__area,
+  .case-header__status {
+    font-size: 0.72rem;
+  }
+
+  .overview-card {
+    gap: 0.8rem;
+    padding: 0.95rem;
+  }
+
+  .overview-card__content {
+    p {
+      font-size: 0.92rem;
+    }
+  }
+
+  .case-section {
+    padding: 0.9rem;
+    border-radius: $radius-lg;
+  }
+
+  .case-section__heading {
+    h2 {
+      font-size: 0.98rem;
+    }
+  }
+
+  .patient-summary__data {
     grid-template-columns: 1fr;
+  }
+
+  .vital-signs,
+  .case-content-view--embedded .vital-signs {
+    grid-template-columns: 1fr;
+  }
+
+  .vital-card {
+    min-height: auto;
+  }
+
+  .neurological-item {
+    padding: 0.8rem;
+  }
+
+  .findings-box {
+    gap: 0.7rem;
+
+    p {
+      font-size: 0.92rem;
+    }
   }
 }

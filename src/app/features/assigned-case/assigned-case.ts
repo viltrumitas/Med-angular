@@ -5,6 +5,5 @@ import { RouterOutlet } from '../../../../node_modules/@angular/router/types/_ro
   selector: 'app-assigned-case',
   imports: [RouterOutlet],
   templateUrl: './assigned-case.html',
-  styleUrl: './assigned-case.scss',
 })
 export class AssignedCase {}

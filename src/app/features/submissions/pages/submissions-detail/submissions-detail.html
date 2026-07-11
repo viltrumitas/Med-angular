@@ -1,59 +1,147 @@
-<div class="submission-container">
+<div class="submission-detail">
   @if (isLoading()) {
-    <div class="loading-state">
-      <div class="spinner"></div>
-      <p>Cargando submission...</p>
-    </div>
+    <section class="submission-state" aria-live="polite">
+      <div class="spinner" aria-hidden="true"></div>
+
+      <div class="submission-state__content">
+        <h3>Cargando respuesta</h3>
+
+        <p>Estamos preparando la información de tu submission...</p>
+      </div>
+    </section>
   } @else if (loadError()) {
-    <div class="error-state">
-      <span class="error-icon">⚠️</span>
-      <p class="error">{{ loadError() }}</p>
-    </div>
+    <section class="submission-state submission-state--error" role="alert">
+      <div class="submission-state__icon">
+        <i data-lucide="triangle-alert"></i>
+      </div>
+
+      <div class="submission-state__content">
+        <h3>No pudimos cargar la respuesta</h3>
+
+        <p>{{ loadError() }}</p>
+      </div>
+    </section>
   } @else if (submissions(); as item) {
-    <div class="header">
-      <h2>{{ item.case.title }}</h2>
+    <div class="submission-detail__content">
+      @if (saveError()) {
+        <div class="submission-alert submission-alert--error" role="alert">
+          <div class="submission-alert__icon">
+            <i data-lucide="circle-alert"></i>
+          </div>
 
-      <div class="status">
-        <span>{{ statusLabels[item.status ?? 'DRAFT'] }}</span>
-      </div>
-    </div>
+          <div class="submission-alert__content">
+            <strong>No pudimos guardar los cambios</strong>
 
-    <!-- FORM -->
-    <form [formGroup]="form">
-      <div class="clinical-card">
-        <h2>Area Clinical</h2>
-        <app-clinical [group]="form.controls.clinical"></app-clinical>
-      </div>
-      <div class="diagnostic-card">
-        <h2>Diagnosticos</h2>
-        <app-diagnostic [group]="form.controls.diagnostic"></app-diagnostic>
-      </div>
-      <div class="treatments-card">
-        <h2>Tratamientos</h2>
-        <app-treatment [group]="form.controls.treatment"></app-treatment>
-      </div>
-    </form>
+            <p>{{ saveError() }}</p>
+          </div>
+        </div>
+      }
 
-    @if (saveError()) {
-      <p class="error">{{ saveError() }}</p>
-    }
-    <!-- ACTIONS -->
-    <div class="actions-container">
-      <app-button
-        text="Guardar cambios"
-        variant="secondary"
-        [disabled]="isSaving()"
-        (clicked)="save()"
-      ></app-button>
+      @if (isReadonly()) {
+        <div class="submission-alert submission-alert--info">
+          <div class="submission-alert__icon">
+            <i data-lucide="lock-keyhole"></i>
+          </div>
 
-      <app-button
-        text="Enviar submission"
-        variant="primary"
-        [disabled]="isSubmitting() || isReadonly()"
-        (clicked)="submit()"
-      ></app-button>
+          <div class="submission-alert__content">
+            @if (item.status === 'REVIEWED') {
+              <strong>Respuesta revisada</strong>
+
+              <p>Esta respuesta ya fue evaluada y no puede modificarse.</p>
+            } @else {
+              <strong>Respuesta enviada</strong>
+
+              <p>Tu respuesta ya fue enviada y no puede modificarse.</p>
+            }
+          </div>
+        </div>
+      }
+
+      <form class="submission-form" [formGroup]="form" autocomplete="off">
+        <!-- =========================
+             ÁREA CLÍNICA
+        ========================== -->
+
+        <section class="submission-section">
+          <header class="submission-section__header">
+            <div class="submission-section__icon">
+              <i data-lucide="stethoscope"></i>
+            </div>
+
+            <div class="submission-section__title">
+              <span>Evaluación inicial</span>
+
+              <h3>Área clínica</h3>
+
+              <p>Describe el manejo del escenario y la valoración inicial del paciente.</p>
+            </div>
+          </header>
+
+          <div class="submission-section__content">
+            <app-clinical [group]="form.controls.clinical" />
+          </div>
+        </section>
+
+        <!-- =========================
+             DIAGNÓSTICO
+        ========================== -->
+
+        <section class="submission-section">
+          <header class="submission-section__header">
+            <div class="submission-section__icon">
+              <i data-lucide="clipboard-plus"></i>
+            </div>
+
+            <div class="submission-section__title">
+              <span>Valoración médica</span>
+
+              <h3>Diagnóstico</h3>
+
+              <p>Registra el diagnóstico presuntivo y la prioridad del paciente.</p>
+            </div>
+          </header>
+
+          <div class="submission-section__content">
+            <app-diagnostic [group]="form.controls.diagnostic" />
+          </div>
+        </section>
+
+        <!-- =========================
+             TRATAMIENTO
+        ========================== -->
+
+        <section class="submission-section">
+          <header class="submission-section__header">
+            <div class="submission-section__icon">
+              <i data-lucide="heart-pulse"></i>
+            </div>
+
+            <div class="submission-section__title">
+              <span>Plan de atención</span>
+
+              <h3>Tratamiento</h3>
+
+              <p>Define el tratamiento, traslado y reporte final del paciente.</p>
+            </div>
+          </header>
+
+          <div class="submission-section__content">
+            <app-treatment [group]="form.controls.treatment" />
+          </div>
+        </section>
+      </form>
     </div>
   } @else {
-    <p>No se encontro la submission solicitada</p>
+    <section class="submission-state submission-state--empty">
+      <div class="submission-state__icon">
+        <i data-lucide="file-question"></i>
+      </div>
+
+      <div class="submission-state__content">
+        <h3>Submission no encontrada</h3>
+
+        <p>No se encontró la respuesta solicitada.</p>
+      </div>
+    </section>
   }
 </div>

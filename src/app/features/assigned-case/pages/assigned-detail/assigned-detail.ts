@@ -1,66 +1,132 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
-import { AssignedCaseApiService } from '../../services/assigned-case-api.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import {
+  AfterViewInit,
+  Component,
+  DestroyRef,
+  inject,
+  OnInit,
+  signal,
+  viewChild,
+} from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+
+import { AssignedCaseApiService } from '../../services/assigned-case-api.service';
 import { AssignedStudentCase } from '../../model/assigned-case.model';
-import { DatePipe } from '@angular/common';
+
 import { CaseContent } from '../../../cases/pages/case-content/case-content';
 import { ButtonComponent } from '../../../../shared/components/button/button';
+import { SubmissionsDetail } from '../../../submissions/pages/submissions-detail/submissions-detail';
+import { createIcons, icons } from 'lucide';
 
 @Component({
   selector: 'app-assigned-detail',
-  imports: [CaseContent, ButtonComponent],
+  imports: [CaseContent, ButtonComponent, SubmissionsDetail],
   templateUrl: './assigned-detail.html',
   styleUrl: './assigned-detail.scss',
 })
-export class AssignedDetail implements OnInit {
+export class AssignedDetail implements OnInit, AfterViewInit {
   private readonly assignedApi = inject(AssignedCaseApiService);
   private readonly route = inject(ActivatedRoute);
   private readonly destroyRef = inject(DestroyRef);
-  private readonly router = inject(Router);
 
-  assignedCase = signal<AssignedStudentCase | null>(null);
-  isLoading = signal(false);
-  error = signal<string | null>(null);
+  readonly submissionDetail = viewChild(SubmissionsDetail);
+
+  readonly assignedCase = signal<AssignedStudentCase | null>(null);
+
+  readonly isLoading = signal(false);
+  readonly isStartingSubmission = signal(false);
+
+  readonly error = signal<string | null>(null);
 
   ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    console.log('[CaseDetail] Id extraido de la ruta:', id);
-    if (!id) return;
+    const assignedCaseId = this.route.snapshot.paramMap.get('id');
 
-    this.isLoading.set(true);
+    if (!assignedCaseId) {
+      this.error.set('No se encontró el identificador del caso asignado.');
+      return;
+    }
+
+    this.loadAssignedCase(assignedCaseId);
+  }
+
+  ngAfterViewInit(): void {
+    this.renderIcon();
+  }
+
+  startSubmission(): void {
+    const assignedCaseId = this.assignedCase()?.id;
+
+    if (!assignedCaseId || this.isStartingSubmission()) {
+      return;
+    }
+
+    this.isStartingSubmission.set(true);
+    this.error.set(null);
 
     this.assignedApi
-      .findById(id)
+      .startSubmission(assignedCaseId)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (response) => {
-          this.assignedCase.set(response);
-          this.isLoading.set(false);
+        next: () => {
+          this.loadAssignedCase(assignedCaseId, false);
         },
         error: (err) => {
-          console.error('[CaseDetail] Error al cargar el caso: ', err);
-          this.error.set('No se pudo cargar el caso');
-          this.isLoading.set(false);
+          console.error('[AssignedDetail] Error al iniciar la submission:', err);
+
+          this.error.set('No se pudo iniciar la respuesta. Intenta nuevamente.');
+
+          this.isStartingSubmission.set(false);
         },
       });
   }
 
-  startSubmission(): void {
-    const id = this.assignedCase()?.id;
-    if (!id) return;
+  saveSubmission(): void {
+    const detail = this.submissionDetail();
+    if (!detail) {
+      return;
+    }
+    detail.save();
+  }
+
+  submitSubmission(): void {
+    const detail = this.submissionDetail();
+    if (!detail) {
+      return;
+    }
+    detail.submit();
+  }
+
+  private loadAssignedCase(assignedCaseId: string, showPageLoading = true): void {
+    if (showPageLoading) {
+      this.isLoading.set(true);
+    }
+
+    this.error.set(null);
 
     this.assignedApi
-      .startSubmission(id)
+      .findById(assignedCaseId)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (submission) => {
-          this.router.navigate(['/dashboard/student/submissions', submission.id]);
+        next: (response) => {
+          this.assignedCase.set(response);
+
+          this.isLoading.set(false);
+          this.isStartingSubmission.set(false);
         },
         error: (err) => {
-          console.error('[AsignedDetail] Error al iniciar submisison:', err);
-          this.error.set('No se pudo iniciar el caso. Intenta de nuevo');
+          console.error('[AssignedDetail] Error al cargar el caso asignado:', err);
+
+          this.error.set('No se pudo cargar el caso.');
+
+          this.isLoading.set(false);
+          this.isStartingSubmission.set(false);
         },
       });
+  }
+
+  private renderIcon() {
+    setTimeout(() => {
+      createIcons({ icons });
+    });
   }
 }

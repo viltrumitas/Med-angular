@@ -1,195 +1,512 @@
-// --- VARIABLES ESTÉTICAS (Tema Médico) ---
-$teal-primary: #0d9488;
-$teal-light: #f0fdfa;
-$teal-hover: #0f766e;
-$text-main: #1e293b;
-$text-muted: #64748b;
-$bg-glass: rgba(255, 255, 255, 0.75);
-$border-glass: rgba(226, 232, 240, 0.8);
-$error-bg: #fef2f2;
-$error-text: #ef4444;
-$warning-bg: #fffbeb;
-$warning-text: #d97706;
+// ==========================================================================
+// SUBMISSION DETAIL
+// ==========================================================================
 
-.submission-container {
+:host {
+  display: block;
   width: 100%;
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 2rem;
-  font-family: 'Inter', system-ui, sans-serif;
-  color: $text-main;
+  min-width: 0;
+}
+
+// ==========================================================================
+// VARIABLES
+// ==========================================================================
+
+$primary: #2563eb;
+$primary-dark: #1d4ed8;
+$primary-light: #eff6ff;
+
+$teal: #0d9488;
+$teal-light: #f0fdfa;
+
+$rose: #e11d48;
+$rose-light: #fff1f2;
+
+$amber: #d97706;
+$amber-light: #fffbeb;
+
+$emerald: #059669;
+$emerald-light: #ecfdf5;
+
+$violet: #7c3aed;
+$violet-light: #f5f3ff;
+
+$cyan: #0891b2;
+$cyan-light: #ecfeff;
+
+$slate-950: #020617;
+$slate-900: #0f172a;
+$slate-800: #1e293b;
+$slate-700: #334155;
+$slate-600: #475569;
+$slate-500: #64748b;
+$slate-400: #94a3b8;
+$slate-300: #cbd5e1;
+$slate-200: #e2e8f0;
+$slate-100: #f1f5f9;
+$slate-50: #f8fafc;
+
+$white: #ffffff;
+
+$radius-sm: 0.75rem;
+$radius-md: 1rem;
+$radius-lg: 1.25rem;
+$radius-xl: 1.5rem;
+
+$shadow-sm: 0 10px 30px rgba(15, 23, 42, 0.06);
+$shadow-md: 0 18px 45px rgba(15, 23, 42, 0.08);
+
+$transition: 0.22s ease;
+
+// ==========================================================================
+// MIXINS
+// ==========================================================================
+
+@mixin flex-center {
   display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+  align-items: center;
+  justify-content: center;
+}
 
-  // --- ESTADOS DE CARGA Y ERROR ---
-  .loading-state,
-  .error-state {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 4rem 2rem;
-    background: $bg-glass;
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid $border-glass;
-    border-radius: 16px;
-    text-align: center;
+@mixin card-base {
+  border: 1px solid rgba($slate-200, 0.92);
+  background: rgba($white, 0.94);
+  box-shadow: $shadow-sm;
+  backdrop-filter: blur(14px);
+}
 
-    p {
-      margin-top: 1rem;
-      color: $text-muted;
-      font-weight: 500;
-    }
-  }
+@mixin icon-box($bg, $color) {
+  @include flex-center;
 
-  .spinner {
-    width: 40px;
-    height: 40px;
-    border: 4px solid $teal-light;
-    border-top-color: $teal-primary;
-    border-radius: 50%;
-    animation: spin 1s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-  }
+  flex: 0 0 auto;
 
-  .error-state {
-    background: $error-bg;
-    border-color: rgba($error-text, 0.2);
+  color: $color;
+  background: radial-gradient(circle at 30% 20%, rgba($white, 0.78), transparent 38%), $bg;
 
-    .error-icon {
-      font-size: 2.5rem;
-    }
-    .error {
-      color: $error-text;
-      font-weight: 600;
-      margin: 0;
-    }
-  }
-
-  // --- CABECERA (Header y Status) ---
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-bottom: 1rem;
-    border-bottom: 2px solid $teal-light;
-    margin-bottom: 1rem;
-
-    h2 {
-      font-size: 1.75rem;
-      font-weight: 700;
-      color: $text-main;
-      margin: 0;
-    }
-
-    .status {
-      span {
-        display: inline-block;
-        padding: 0.35rem 1rem;
-        background: $warning-bg;
-        color: $warning-text;
-        font-weight: 600;
-        font-size: 0.85rem;
-        border-radius: 9999px; // Forma de pastilla (pill)
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        border: 1px solid rgba($warning-text, 0.2);
-      }
-    }
-  }
-
-  // --- FORMULARIO Y TARJETAS (Cards) ---
-  form {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem; // Espacio entre las tarjetas
-  }
-
-  .clinical-card,
-  .diagnostic-card,
-  .treatments-card {
-    background: $bg-glass;
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid $border-glass;
-    border-radius: 16px;
-    padding: 2rem;
-    box-shadow: 0 4px 15px -3px rgba(0, 0, 0, 0.05);
-    transition:
-      transform 0.2s ease,
-      box-shadow 0.2s ease;
-
-    &:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
-    }
-
-    h2 {
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: $teal-primary;
-      margin-top: 0;
-      margin-bottom: 1.5rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-
-      // Un pequeño acento visual al lado del título
-      &::before {
-        content: '';
-        display: block;
-        width: 4px;
-        height: 1.25rem;
-        background: $teal-primary;
-        border-radius: 4px;
-      }
-    }
-  }
-
-  // --- CONTENEDOR DE ACCIONES (Botones) ---
-  .actions-container {
-    display: flex;
-    justify-content: flex-end; // Botones a la derecha en escritorio
-    align-items: center;
-    gap: 1rem;
-    margin-top: 1rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid $border-glass;
+  i,
+  svg {
+    width: 1.12rem;
+    height: 1.12rem;
+    stroke-width: 2.2;
   }
 }
 
-// --- ANIMACIONES KEYFRAMES ---
+@mixin mobile {
+  @media (max-width: 48rem) {
+    @content;
+  }
+}
+
+// ==========================================================================
+// BASE
+// ==========================================================================
+
+.submission-detail {
+  width: 100%;
+  min-width: 0;
+
+  color: $slate-900;
+}
+
+.submission-detail__content {
+  display: grid;
+  gap: 1rem;
+
+  width: 100%;
+  min-width: 0;
+
+  padding: clamp(0.875rem, 1.5vw, 1.25rem);
+}
+
+// ==========================================================================
+// STATES
+// ==========================================================================
+
+.submission-state {
+  @include card-base;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 1rem;
+
+  min-height: 18rem;
+  padding: 2rem;
+
+  text-align: center;
+
+  border-radius: $radius-xl;
+}
+
+.submission-state__icon {
+  @include flex-center;
+
+  width: 3.25rem;
+  height: 3.25rem;
+
+  color: $primary;
+
+  border-radius: 1.15rem;
+  background: $primary-light;
+
+  i,
+  svg {
+    width: 1.45rem;
+    height: 1.45rem;
+  }
+}
+
+.submission-state__content {
+  display: grid;
+  gap: 0.35rem;
+
+  h3 {
+    margin: 0;
+
+    color: $slate-950;
+    font-size: 1.1rem;
+    font-weight: 900;
+    letter-spacing: -0.025em;
+  }
+
+  p {
+    margin: 0;
+
+    color: $slate-500;
+    font-size: 0.94rem;
+    line-height: 1.5;
+  }
+}
+
+.submission-state--error {
+  border-color: rgba($rose, 0.18);
+  background: radial-gradient(circle at 100% 0%, rgba($rose, 0.08), transparent 35%), $white;
+
+  .submission-state__icon {
+    color: $rose;
+    background: $rose-light;
+  }
+}
+
+.submission-state--empty {
+  border-style: dashed;
+
+  .submission-state__icon {
+    color: $slate-500;
+    background: $slate-100;
+  }
+}
+
+// ==========================================================================
+// SPINNER
+// ==========================================================================
+
+.spinner {
+  width: 2.6rem;
+  height: 2.6rem;
+
+  border: 3px solid rgba($primary, 0.16);
+  border-top-color: $primary;
+  border-radius: 999px;
+
+  animation: spin 0.85s linear infinite;
+}
+
 @keyframes spin {
   to {
     transform: rotate(360deg);
   }
 }
 
-// --- RESPONSIVO PARA MÓVILES ---
-@media (max-width: 768px) {
-  .submission-container {
-    padding: 1rem;
+// ==========================================================================
+// ALERTS
+// ==========================================================================
 
-    .header {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 1rem;
+.submission-alert {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 0.85rem;
+
+  min-width: 0;
+  padding: 1rem;
+
+  border: 1px solid $slate-200;
+  border-radius: $radius-lg;
+
+  strong {
+    display: block;
+
+    margin: 0;
+
+    color: $slate-950;
+    font-size: 0.93rem;
+    font-weight: 900;
+    letter-spacing: -0.015em;
+  }
+
+  p {
+    margin: 0.25rem 0 0;
+
+    color: $slate-600;
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+}
+
+.submission-alert__icon {
+  @include flex-center;
+
+  flex: 0 0 auto;
+
+  width: 2.35rem;
+  height: 2.35rem;
+
+  border-radius: 0.9rem;
+
+  i,
+  svg {
+    width: 1.1rem;
+    height: 1.1rem;
+  }
+}
+
+.submission-alert__content {
+  min-width: 0;
+}
+
+.submission-alert--error {
+  border-color: rgba($rose, 0.18);
+  background: radial-gradient(circle at 100% 0%, rgba($rose, 0.07), transparent 34%), $rose-light;
+
+  .submission-alert__icon {
+    color: $rose;
+    background: rgba($white, 0.78);
+  }
+}
+
+.submission-alert--info {
+  border-color: rgba($primary, 0.16);
+  background:
+    radial-gradient(circle at 100% 0%, rgba($primary, 0.08), transparent 34%), $primary-light;
+
+  .submission-alert__icon {
+    color: $primary;
+    background: rgba($white, 0.78);
+  }
+}
+
+// ==========================================================================
+// FORM
+// ==========================================================================
+
+.submission-form {
+  display: grid;
+  gap: 1rem;
+
+  width: 100%;
+  min-width: 0;
+}
+
+// ==========================================================================
+// SECTIONS
+// ==========================================================================
+
+.submission-section {
+  @include card-base;
+
+  display: grid;
+  gap: 1rem;
+
+  min-width: 0;
+  padding: clamp(1rem, 1.6vw, 1.25rem);
+
+  border-radius: $radius-xl;
+
+  transition:
+    transform $transition,
+    border-color $transition,
+    box-shadow $transition;
+
+  &:hover {
+    transform: translateY(-2px);
+    border-color: rgba($primary, 0.16);
+    box-shadow: $shadow-md;
+  }
+}
+
+.submission-section__header {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 0.85rem;
+
+  min-width: 0;
+}
+
+.submission-section__icon {
+  @include icon-box($primary-light, $primary);
+
+  width: 2.75rem;
+  height: 2.75rem;
+
+  border-radius: 1rem;
+}
+
+.submission-section:nth-of-type(2) {
+  .submission-section__icon {
+    color: $violet;
+    background: $violet-light;
+  }
+}
+
+.submission-section:nth-of-type(3) {
+  .submission-section__icon {
+    color: $teal;
+    background: $teal-light;
+  }
+}
+
+.submission-section__title {
+  min-width: 0;
+
+  span {
+    display: block;
+
+    color: $slate-500;
+    font-size: 0.74rem;
+    font-weight: 850;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  h3 {
+    margin: 0.2rem 0 0;
+
+    color: $slate-950;
+    font-size: clamp(1rem, 1.7vw, 1.18rem);
+    font-weight: 900;
+    letter-spacing: -0.025em;
+  }
+
+  p {
+    margin: 0.25rem 0 0;
+
+    color: $slate-500;
+    font-size: 0.9rem;
+    line-height: 1.45;
+  }
+}
+
+.submission-section__content {
+  min-width: 0;
+
+  padding-top: 0.15rem;
+}
+
+// ==========================================================================
+// CHILD FORM COMPONENTS SUPPORT
+// ==========================================================================
+
+.submission-section__content {
+  app-clinical,
+  app-diagnostic,
+  app-treatment {
+    display: block;
+    min-width: 0;
+  }
+}
+
+// Esto ayuda si tus componentes hijos usan grids internos.
+:host ::ng-deep {
+  .form-grid,
+  .clinical-grid,
+  .diagnostic-grid,
+  .treatment-grid {
+    min-width: 0;
+  }
+
+  textarea,
+  input,
+  select {
+    min-width: 0;
+  }
+}
+
+// ==========================================================================
+// READONLY VISUAL SUPPORT
+// ==========================================================================
+
+.submission-detail:has(.submission-alert--info) {
+  .submission-section {
+    background: linear-gradient(180deg, rgba($slate-50, 0.72), rgba($white, 0.96));
+
+    &:hover {
+      transform: none;
+      box-shadow: $shadow-sm;
+    }
+  }
+}
+
+// ==========================================================================
+// RESPONSIVE
+// ==========================================================================
+
+@include mobile {
+  .submission-detail__content {
+    gap: 0.85rem;
+    padding: 0.75rem;
+  }
+
+  .submission-state {
+    flex-direction: column;
+
+    min-height: 15rem;
+    padding: 1.25rem;
+
+    border-radius: $radius-lg;
+  }
+
+  .submission-alert {
+    padding: 0.9rem;
+    border-radius: $radius-md;
+  }
+
+  .submission-alert__icon {
+    width: 2.15rem;
+    height: 2.15rem;
+  }
+
+  .submission-section {
+    gap: 0.85rem;
+
+    padding: 0.95rem;
+    border-radius: $radius-lg;
+
+    &:hover {
+      transform: none;
+    }
+  }
+
+  .submission-section__header {
+    gap: 0.7rem;
+  }
+
+  .submission-section__icon {
+    width: 2.35rem;
+    height: 2.35rem;
+
+    border-radius: 0.85rem;
+  }
+
+  .submission-section__title {
+    h3 {
+      font-size: 1rem;
     }
 
-    .actions-container {
-      flex-direction: column; // Botones apilados en móvil
-      width: 100%;
-
-      app-button {
-        width: 100%;
-      }
-    }
-
-    .clinical-card,
-    .diagnostic-card,
-    .treatments-card {
-      padding: 1.5rem;
+    p {
+      display: none;
     }
   }
 }

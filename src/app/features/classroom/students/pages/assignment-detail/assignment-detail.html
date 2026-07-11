@@ -123,6 +123,7 @@
               class="case-card"
               [class.case-card--submitted]="item.submission?.status === 'SUBMITTED'"
               [class.case-card--reviewed]="item.submission?.status === 'REVIEWED'"
+              (click)="openCase(item.id)"
             >
               <div class="case-card__header">
                 <div class="case-icon">

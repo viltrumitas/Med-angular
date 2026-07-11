@@ -1,13 +1,20 @@
-import { Component, effect, inject, input, output, signal } from '@angular/core';
+import {
+  afterNextRender,
+  AfterViewInit,
+  Component,
+  effect,
+  inject,
+  input,
+  output,
+  signal,
+} from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { createIcons, icons } from 'lucide';
 
 import { ClassroomApi } from '../../service/clasroom-api.service';
-import { ClassroomModel } from '../../models/classroom.model';
 import { JoinClassroomForm } from '../../forms/join-class.fom';
 import { Modal } from '../../../../shared/components/modal/modal';
-import { ClassroomStudentModel } from '../../models/classroom-student.model';
 
 @Component({
   selector: 'app-join-classroom',
@@ -15,14 +22,12 @@ import { ClassroomStudentModel } from '../../models/classroom-student.model';
   templateUrl: './join-classroom.html',
   styleUrl: './join-classroom.scss',
 })
-export class JoinClassroom {
+export class JoinClassroom implements AfterViewInit {
   private readonly classroomApi = inject(ClassroomApi);
 
   readonly isOpen = input.required<boolean>();
-
   readonly closeRequested = output<void>();
-  readonly joined = output<ClassroomStudentModel>();
-
+  readonly joined = output<void>();
   readonly isSubmitting = signal(false);
   readonly errorMessage = signal<string | null>(null);
 
@@ -33,12 +38,8 @@ export class JoinClassroom {
     }),
   });
 
-  constructor() {
-    effect(() => {
-      if (this.isOpen()) {
-        this.renderIcons();
-      }
-    });
+  ngAfterViewInit(): void {
+    this.renderIcons();
   }
 
   onSubmit(): void {
@@ -52,20 +53,9 @@ export class JoinClassroom {
 
     const { code } = this.form.getRawValue();
 
-    console.log('Código enviado:', code);
-
     this.classroomApi.join({ code }).subscribe({
-      next: (classroom) => {
-        console.log('Respuesta join:', classroom);
-
-        this.handleSuccess(classroom);
-      },
-
-      error: (error: HttpErrorResponse) => {
-        console.log('Error join:', error);
-
-        this.handleError(error);
-      },
+      next: () => this.handleSuccess(),
+      error: (error: HttpErrorResponse) => this.handleError(error),
     });
   }
 
@@ -74,10 +64,10 @@ export class JoinClassroom {
     this.closeRequested.emit();
   }
 
-  private handleSuccess(classroom: ClassroomStudentModel): void {
+  private handleSuccess(): void {
     this.isSubmitting.set(false);
     this.resetForm();
-    this.joined.emit(classroom);
+    this.joined.emit();
   }
 
   private handleError(error: HttpErrorResponse): void {

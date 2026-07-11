@@ -113,7 +113,7 @@
           [disabled]="isSubmitting()"
           (click)="onCancel()"
         >
-          Cancelar
+          Cancelars
         </button>
 
         <button
@@ -121,13 +121,13 @@
           class="join-modal__button join-modal__button--primary"
           [disabled]="isSubmitting()"
         >
+          <i data-lucide="log-in"></i>
+
           @if (isSubmitting()) {
             <span class="join-modal__spinner"></span>
 
             <span> Uniéndote... </span>
           } @else {
-            <i data-lucide="log-in"></i>
-
             <span> Unirme a la clase </span>
           }
         </button>

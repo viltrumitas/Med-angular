@@ -29,8 +29,8 @@ export class ClassroomApi {
     return this.http.post<Assignment>(`${this.api}/${classroomId}/assignments`, dto);
   }
 
-  join(dto: JoinClassroomDto): Observable<ClassroomStudentModel> {
-    return this.http.post<ClassroomStudentModel>(`${this.api}/join`, dto);
+  join(dto: JoinClassroomDto): Observable<JoinClassroomDto> {
+    return this.http.post<JoinClassroomDto>(`${this.api}/join`, dto);
   }
 
   findMy<T>(): Observable<T> {

@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, input } from '@angular/core';
 import { CaseResponseDto } from '../../dto/case-response.dto';
 import { createIcons, icons } from 'lucide';
+import { CaseContentMode } from '../../models/case.content.model';
 
 @Component({
   selector: 'app-case-content',
@@ -10,6 +11,7 @@ import { createIcons, icons } from 'lucide';
 })
 export class CaseContent implements AfterViewInit {
   readonly case = input.required<CaseResponseDto>();
+  readonly mode = input<CaseContentMode>('full');
 
   ngAfterViewInit(): void {
     createIcons({ icons });

@@ -25,7 +25,6 @@ export class AssignmentDetail implements OnInit, AfterViewInit {
   readonly completedCases = computed(
     () => this.assignedCases().filter((item) => item.submission?.status === 'SUBMITTED').length,
   );
-
   readonly pendingCases = computed(
     () => this.assignedCases().filter((item) => !item.submission).length,
   );

@@ -1,480 +1,208 @@
-// =========================
-// COLORS
-// =========================
+// ==========================================================================
+// ASSIGNED CASE DETAIL / CASE PAGE
+// ==========================================================================
+
+:host {
+  display: block;
+  min-width: 0;
+}
+
+// ==========================================================================
+// VARIABLES
+// ==========================================================================
 
 $primary: #2563eb;
+$primary-dark: #1d4ed8;
 $primary-light: #eff6ff;
 
 $teal: #0d9488;
 $teal-light: #f0fdfa;
 
-$success: #059669;
-$success-light: #ecfdf5;
+$rose: #e11d48;
+$rose-light: #fff1f2;
 
-$warning: #d97706;
-$warning-light: #fff7ed;
+$amber: #d97706;
+$amber-light: #fffbeb;
 
-$danger: #dc2626;
-$danger-light: #fef2f2;
+$emerald: #059669;
+$emerald-light: #ecfdf5;
 
-$text-primary: #0f172a;
-$text-secondary: #475569;
-$text-muted: #94a3b8;
+$violet: #7c3aed;
+$violet-light: #f5f3ff;
 
-$border: #e2e8f0;
-$surface: #ffffff;
-$background: #f8fafc;
+$cyan: #0891b2;
+$cyan-light: #ecfeff;
 
-// =========================
-// PAGE
-// =========================
+$slate-950: #020617;
+$slate-900: #0f172a;
+$slate-800: #1e293b;
+$slate-700: #334155;
+$slate-600: #475569;
+$slate-500: #64748b;
+$slate-400: #94a3b8;
+$slate-300: #cbd5e1;
+$slate-200: #e2e8f0;
+$slate-100: #f1f5f9;
+$slate-50: #f8fafc;
+
+$white: #ffffff;
+
+$radius-sm: 0.75rem;
+$radius-md: 1rem;
+$radius-lg: 1.25rem;
+$radius-xl: 1.5rem;
+$radius-2xl: 2rem;
+
+$shadow-sm: 0 10px 30px rgba(15, 23, 42, 0.06);
+$shadow-md: 0 18px 45px rgba(15, 23, 42, 0.08);
+$shadow-lg: 0 28px 70px rgba(15, 23, 42, 0.12);
+
+$transition: 0.22s ease;
+
+// ==========================================================================
+// MIXINS
+// ==========================================================================
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin card-base {
+  border: 1px solid rgba($slate-200, 0.9);
+  background: rgba($white, 0.94);
+  box-shadow: $shadow-sm;
+  backdrop-filter: blur(14px);
+}
+
+@mixin icon-box($bg, $color) {
+  @include flex-center;
+
+  flex: 0 0 auto;
+
+  color: $color;
+  background: radial-gradient(circle at 30% 20%, rgba($white, 0.78), transparent 38%), $bg;
+
+  i,
+  svg {
+    width: 1.15rem;
+    height: 1.15rem;
+    stroke-width: 2.2;
+  }
+}
+
+@mixin tablet {
+  @media (max-width: 72rem) {
+    @content;
+  }
+}
+
+@mixin mobile {
+  @media (max-width: 48rem) {
+    @content;
+  }
+}
+
+// ==========================================================================
+// PAGE BASE
+// ==========================================================================
 
 .case-page {
-  width: 100%;
-  max-width: 1450px;
+  display: grid;
+  gap: clamp(1rem, 2vw, 1.4rem);
 
-  margin: 0 auto;
-  padding: 2rem;
-}
-
-// =========================
-// HEADER
-// =========================
-
-.case-header {
-  position: relative;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  gap: 2rem;
-
-  padding: 2rem;
-  margin-bottom: 1.25rem;
-
-  background:
-    radial-gradient(circle at 90% 15%, rgba(37, 99, 235, 0.12), transparent 32%),
-    linear-gradient(135deg, #ffffff, #f8fbff);
-
-  border: 1px solid $border;
-  border-radius: 18px;
-
-  overflow: hidden;
-}
-
-.case-header::before {
-  content: '';
-
-  position: absolute;
-
-  width: 230px;
-  height: 230px;
-
-  top: -135px;
-  right: 110px;
-
-  border: 1px solid rgba(37, 99, 235, 0.08);
-  border-radius: 50%;
-
-  pointer-events: none;
-}
-
-.case-header__content {
-  position: relative;
-  z-index: 1;
-
+  width: min(100%, 96rem);
   min-width: 0;
+  margin-inline: auto;
+  padding: clamp(1rem, 2.4vw, 2rem);
 
-  h1 {
-    margin: 0.3rem 0 0;
-
-    color: $text-primary;
-
-    font-size: clamp(1.7rem, 3vw, 2.25rem);
-    font-weight: 750;
-    line-height: 1.15;
-
-    letter-spacing: -0.04em;
-  }
-
-  p {
-    max-width: 650px;
-
-    margin: 0.7rem 0 0;
-
-    color: $text-secondary;
-
-    font-size: 0.92rem;
-    line-height: 1.65;
-  }
+  color: $slate-900;
 }
 
-.case-header__eyebrow {
-  color: $primary;
-
-  font-size: 0.72rem;
-  font-weight: 750;
-
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-
-// =========================
-// STATUS CARD
-// =========================
-
-.case-status-card {
-  position: relative;
-  z-index: 1;
-
-  display: flex;
-  align-items: center;
-
-  gap: 1rem;
-
-  min-width: 250px;
-
-  padding: 1rem 1.1rem;
-
-  background: rgba(255, 255, 255, 0.84);
-
-  border: 1px solid rgba(37, 99, 235, 0.14);
-  border-radius: 14px;
-
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
-
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-
-  span {
-    color: $text-secondary;
-
-    font-size: 0.72rem;
-    font-weight: 550;
-  }
-
-  strong {
-    display: block;
-
-    margin-top: 0.18rem;
-
-    color: $text-primary;
-
-    font-size: 0.95rem;
-    font-weight: 720;
-  }
-}
-
-.case-status-card__icon {
-  display: grid;
-  place-items: center;
-
-  width: 46px;
-  height: 46px;
-
-  flex-shrink: 0;
-
-  color: $primary;
-  background: $primary-light;
-
-  border-radius: 13px;
-
-  i {
-    width: 21px;
-    height: 21px;
-  }
-}
-
-// =========================
-// SINGLE LAYOUT
-// =========================
-
-.case-single-layout {
-  display: grid;
-
-  grid-template-columns: minmax(0, 1fr) 360px;
-
-  gap: 1rem;
-}
-
-.case-panel,
-.start-panel,
-.split-panel {
-  background: $surface;
-
-  border: 1px solid $border;
-  border-radius: 16px;
-
-  overflow: hidden;
-}
-
-.case-panel {
-  min-width: 0;
-}
-
-// =========================
-// START PANEL
-// =========================
-
-.start-panel {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-
-  gap: 0.9rem;
-
-  min-height: 340px;
-
-  padding: 1.5rem;
-
-  background:
-    radial-gradient(circle at 90% 10%, rgba(13, 148, 136, 0.12), transparent 35%), $surface;
-
-  h2 {
-    margin: 0;
-
-    color: $text-primary;
-
-    font-size: 1.1rem;
-    font-weight: 720;
-  }
-
-  p {
-    margin: 0;
-
-    color: $text-secondary;
-
-    font-size: 0.84rem;
-    line-height: 1.65;
-  }
-}
-
-.start-panel__icon {
-  display: grid;
-  place-items: center;
-
-  width: 58px;
-  height: 58px;
-
-  color: $teal;
-  background: $teal-light;
-
-  border-radius: 16px;
-
-  i {
-    width: 26px;
-    height: 26px;
-  }
-}
-
-// =========================
-// SPLIT LAYOUT
-// =========================
-
-.case-split-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 1rem;
-  min-height: calc(100dvh - 260px);
-}
-
-.split-panel {
-  display: flex;
-  flex-direction: column;
-
-  min-width: 0;
-  min-height: 0;
-}
-
-.split-panel--case {
-  border-color: rgba(37, 99, 235, 0.16);
-}
-
-.split-panel--submission {
-  border-color: rgba(13, 148, 136, 0.18);
-}
-
-// =========================
-// PANEL HEADER
-// =========================
-
-.panel-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  gap: 1rem;
-
-  padding: 1rem 1.1rem;
-
-  background: $surface;
-
-  border-bottom: 1px solid $border;
-
-  h2 {
-    margin: 0.2rem 0 0;
-
-    color: $text-primary;
-
-    font-size: 0.98rem;
-    font-weight: 720;
-  }
-}
-
-.panel-eyebrow {
-  color: $text-muted;
-
-  font-size: 0.66rem;
-  font-weight: 700;
-
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.panel-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  padding: 0.35rem 0.65rem;
-
-  color: $primary;
-  background: $primary-light;
-
-  border-radius: 999px;
-
-  font-size: 0.7rem;
-  font-weight: 650;
-
-  white-space: nowrap;
-
-  &--submission {
-    color: #92400e;
-    background: $warning-light;
-  }
-
-  &--submitted {
-    color: #1d4ed8;
-    background: $primary-light;
-  }
-
-  &--reviewed {
-    color: #047857;
-    background: $success-light;
-  }
-}
-
-// =========================
-// SCROLL AREAS
-// =========================
-
-.split-scroll {
-  flex: 1;
-
-  min-height: 0;
-
-  padding: 1rem;
-
-  overflow-y: auto;
-  overscroll-behavior: contain;
-
-  scrollbar-width: thin;
-  scrollbar-color: #cbd5e1 transparent;
-}
-
-.split-scroll::-webkit-scrollbar {
-  width: 6px;
-}
-
-.split-scroll::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.split-scroll::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-
-  border-radius: 999px;
-}
-
-// =========================
-// STATE CONTAINER
-// =========================
+// ==========================================================================
+// STATES
+// ==========================================================================
 
 .state-container {
+  @include card-base;
+
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
 
-  width: min(100% - 4rem, 1450px);
-  min-height: 360px;
+  gap: 1rem;
 
-  margin: 2rem auto;
-  padding: 3rem 2rem;
+  min-height: 24rem;
+  padding: 2rem;
 
   text-align: center;
 
-  background: $surface;
-
-  border: 1px solid $border;
-  border-radius: 16px;
+  border-radius: $radius-2xl;
 }
 
-.state-content {
+.state-container__icon,
+.state-icon {
+  @include flex-center;
+
+  width: 3.35rem;
+  height: 3.35rem;
+
+  color: $primary;
+
+  border-radius: 1.2rem;
+  background: $primary-light;
+
+  i,
+  svg {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+}
+
+.state-content,
+.state-container__content {
+  display: grid;
+  gap: 0.35rem;
+
   h2 {
-    margin: 1rem 0 0;
+    margin: 0;
 
-    color: $text-primary;
-
-    font-size: 1.05rem;
-    font-weight: 700;
+    color: $slate-950;
+    font-size: clamp(1.25rem, 2vw, 1.6rem);
+    font-weight: 900;
+    letter-spacing: -0.035em;
   }
 
   p {
-    margin: 0.45rem 0 0;
+    margin: 0;
 
-    color: $text-secondary;
-
-    font-size: 0.84rem;
+    color: $slate-500;
+    font-size: 0.95rem;
+    line-height: 1.5;
   }
 }
 
-.error-state {
+.state-container--error {
+  border-color: rgba($rose, 0.18);
+  background: radial-gradient(circle at 100% 0%, rgba($rose, 0.08), transparent 35%), $white;
+
+  .state-container__icon,
   .state-icon {
-    color: $danger;
-    background: $danger-light;
-  }
-}
-
-.state-icon {
-  display: grid;
-  place-items: center;
-
-  width: 58px;
-  height: 58px;
-
-  color: $primary;
-  background: $primary-light;
-
-  border-radius: 16px;
-
-  i {
-    width: 25px;
-    height: 25px;
+    color: $rose;
+    background: $rose-light;
   }
 }
 
 .spinner {
-  width: 38px;
-  height: 38px;
+  width: 2.65rem;
+  height: 2.65rem;
 
-  border: 3px solid $border;
+  border: 3px solid rgba($primary, 0.16);
   border-top-color: $primary;
-  border-radius: 50%;
+  border-radius: 999px;
 
-  animation: spin 700ms linear infinite;
+  animation: spin 0.85s linear infinite;
 }
 
 @keyframes spin {
@@ -483,29 +211,532 @@ $background: #f8fafc;
   }
 }
 
-// =========================
-// RESPONSIVE
-// =========================
+// ==========================================================================
+// MAIN HEADER
+// ==========================================================================
 
-@media (max-width: 1100px) {
-  .case-single-layout {
-    grid-template-columns: 1fr;
+.case-header {
+  position: relative;
+
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+
+  gap: 1.25rem;
+
+  overflow: hidden;
+
+  padding: clamp(1.25rem, 2.4vw, 1.85rem);
+
+  border: 1px solid rgba($primary, 0.12);
+  border-radius: $radius-2xl;
+
+  background:
+    radial-gradient(circle at 95% 0%, rgba($primary, 0.16), transparent 32%),
+    radial-gradient(circle at 0% 0%, rgba($teal, 0.1), transparent 28%),
+    linear-gradient(135deg, $white 0%, $slate-50 100%);
+
+  box-shadow: $shadow-md;
+}
+
+.case-header__content {
+  position: relative;
+  z-index: 1;
+
+  display: grid;
+  align-content: center;
+  gap: 0.6rem;
+
+  min-width: 0;
+
+  h1 {
+    margin: 0;
+
+    color: $slate-950;
+    font-size: clamp(2rem, 4vw, 3.35rem);
+    font-weight: 950;
+    line-height: 0.96;
+    letter-spacing: -0.06em;
   }
 
-  .case-split-layout {
-    grid-template-columns: 1fr;
+  p {
+    max-width: 44rem;
+    margin: 0;
 
-    min-height: auto;
-  }
-
-  .split-panel {
-    min-height: 520px;
+    color: $slate-600;
+    font-size: 1rem;
+    line-height: 1.55;
   }
 }
 
-@media (max-width: 850px) {
+.case-header__eyebrow {
+  width: fit-content;
+  padding: 0.48rem 0.75rem;
+
+  color: $primary-dark;
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+
+  border: 1px solid rgba($primary, 0.14);
+  border-radius: 999px;
+  background: $primary-light;
+}
+
+// ==========================================================================
+// STATUS CARD
+// ==========================================================================
+
+.case-status-card {
+  position: relative;
+  z-index: 1;
+
+  display: flex;
+  align-items: center;
+  align-self: center;
+
+  gap: 0.85rem;
+
+  min-width: min(100%, 16rem);
+  padding: 1rem;
+
+  border: 1px solid $slate-200;
+  border-radius: $radius-xl;
+  background: rgba($white, 0.82);
+  box-shadow: $shadow-sm;
+}
+
+.case-status-card__icon {
+  @include icon-box($slate-100, $slate-600);
+
+  width: 3rem;
+  height: 3rem;
+
+  border-radius: 1rem;
+}
+
+.case-status-card__content {
+  min-width: 0;
+
+  span {
+    display: block;
+
+    color: $slate-500;
+    font-size: 0.72rem;
+    font-weight: 850;
+    letter-spacing: 0.045em;
+    text-transform: uppercase;
+  }
+
+  strong {
+    display: block;
+    margin-top: 0.2rem;
+
+    color: $slate-950;
+    font-size: 1rem;
+    font-weight: 950;
+  }
+}
+
+.case-status-card--draft {
+  border-color: rgba($amber, 0.18);
+  background: rgba($amber-light, 0.9);
+
+  .case-status-card__icon {
+    color: $amber;
+    background: rgba($white, 0.8);
+  }
+}
+
+.case-status-card--submitted {
+  border-color: rgba($primary, 0.18);
+  background: rgba($primary-light, 0.9);
+
+  .case-status-card__icon {
+    color: $primary;
+    background: rgba($white, 0.8);
+  }
+}
+
+.case-status-card--reviewed {
+  border-color: rgba($emerald, 0.18);
+  background: rgba($emerald-light, 0.9);
+
+  .case-status-card__icon {
+    color: $emerald;
+    background: rgba($white, 0.8);
+  }
+}
+
+// ==========================================================================
+// SHARED PANEL HEADER
+// ==========================================================================
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 1rem;
+
+  min-width: 0;
+  padding: 1rem 1.1rem;
+
+  border-bottom: 1px solid $slate-200;
+  background: linear-gradient(180deg, rgba($white, 0.96), rgba($slate-50, 0.82));
+}
+
+.panel-header__content {
+  min-width: 0;
+
+  h2 {
+    margin: 0.2rem 0 0;
+
+    color: $slate-950;
+    font-size: 1.08rem;
+    font-weight: 950;
+    letter-spacing: -0.03em;
+  }
+}
+
+.panel-header__eyebrow {
+  display: block;
+
+  color: $slate-500;
+  font-size: 0.72rem;
+  font-weight: 850;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+}
+
+.panel-badge {
+  flex: 0 0 auto;
+
+  padding: 0.42rem 0.65rem;
+
+  color: $slate-600;
+  font-size: 0.72rem;
+  font-weight: 900;
+
+  border: 1px solid $slate-200;
+  border-radius: 999px;
+  background: $white;
+}
+
+.panel-badge--submission {
+  color: $amber;
+  border-color: rgba($amber, 0.18);
+  background: $amber-light;
+}
+
+.panel-badge--submitted {
+  color: $primary;
+  border-color: rgba($primary, 0.18);
+  background: $primary-light;
+}
+
+.panel-badge--reviewed {
+  color: $emerald;
+  border-color: rgba($emerald, 0.18);
+  background: $emerald-light;
+}
+
+// ==========================================================================
+// SINGLE LAYOUT - BEFORE STARTING SUBMISSION
+// ==========================================================================
+
+.case-single-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(19rem, 0.32fr);
+
+  gap: 1rem;
+
+  min-width: 0;
+  align-items: start;
+}
+
+.case-panel,
+.start-panel,
+.split-panel,
+.submission-toolbar {
+  @include card-base;
+
+  min-width: 0;
+
+  border-radius: $radius-xl;
+  overflow: hidden;
+}
+
+.case-panel {
+  display: grid;
+  min-width: 0;
+}
+
+.case-panel__content {
+  min-width: 0;
+}
+
+.start-panel {
+  position: sticky;
+  top: 1rem;
+
+  display: grid;
+  align-content: start;
+  gap: 0.85rem;
+
+  padding: clamp(1.1rem, 2vw, 1.35rem);
+
+  background: radial-gradient(circle at 100% 0%, rgba($teal, 0.1), transparent 36%), $white;
+}
+
+.start-panel__icon {
+  @include icon-box($teal-light, $teal);
+
+  width: 3.4rem;
+  height: 3.4rem;
+
+  border-radius: 1.15rem;
+
+  i,
+  svg {
+    width: 1.55rem;
+    height: 1.55rem;
+  }
+}
+
+.start-panel__eyebrow {
+  color: $teal;
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+}
+
+.start-panel {
+  h2 {
+    margin: 0;
+
+    color: $slate-950;
+    font-size: clamp(1.35rem, 2vw, 1.7rem);
+    font-weight: 950;
+    letter-spacing: -0.045em;
+  }
+
+  p {
+    margin: 0;
+
+    color: $slate-600;
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+}
+
+.start-panel__actions {
+  display: grid;
+  margin-top: 0.25rem;
+}
+
+// ==========================================================================
+// SUBMISSION WORKSPACE
+// ==========================================================================
+
+.submission-workspace {
+  display: grid;
+  gap: 1rem;
+
+  min-width: 0;
+  min-height: 0;
+}
+
+// ==========================================================================
+// TOOLBAR
+// ==========================================================================
+
+.submission-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 1rem;
+
+  padding: 1rem;
+
+  background: radial-gradient(circle at 100% 0%, rgba($primary, 0.08), transparent 32%), $white;
+}
+
+.submission-toolbar__content {
+  display: flex;
+  align-items: center;
+
+  gap: 0.85rem;
+
+  min-width: 0;
+}
+
+.submission-toolbar__icon {
+  @include icon-box($primary-light, $primary);
+
+  width: 3rem;
+  height: 3rem;
+
+  border-radius: 1rem;
+}
+
+.submission-toolbar__info {
+  min-width: 0;
+
+  h2 {
+    margin: 0.18rem 0 0;
+
+    color: $slate-950;
+    font-size: 1.15rem;
+    font-weight: 950;
+    letter-spacing: -0.035em;
+  }
+
+  p {
+    margin: 0.25rem 0 0;
+
+    color: $slate-500;
+    font-size: 0.9rem;
+    line-height: 1.45;
+  }
+}
+
+.submission-toolbar__eyebrow {
+  display: block;
+
+  color: $slate-500;
+  font-size: 0.72rem;
+  font-weight: 850;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+}
+
+.submission-toolbar__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  gap: 0.75rem;
+
+  flex: 0 0 auto;
+}
+
+// ==========================================================================
+// SPLIT LAYOUT
+// ==========================================================================
+
+.case-split-layout {
+  display: grid;
+  grid-template-columns: minmax(22rem, 0.92fr) minmax(26rem, 1.08fr);
+
+  gap: 1rem;
+
+  min-width: 0;
+
+  // Altura calculada para que las columnas tengan scroll interno.
+  // Ajusta si tu layout tiene otra altura de navbar/sidebar.
+  height: calc(100vh - 18.5rem);
+  min-height: 38rem;
+}
+
+.split-panel {
+  display: flex;
+  flex-direction: column;
+
+  min-width: 0;
+  min-height: 0;
+
+  overflow: hidden;
+}
+
+.split-panel--case {
+  border-color: rgba($primary, 0.1);
+}
+
+.split-panel--submission {
+  border-color: rgba($teal, 0.12);
+}
+
+.split-panel__scroll {
+  flex: 1;
+
+  min-width: 0;
+  min-height: 0;
+
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+
+  scroll-behavior: smooth;
+}
+
+.split-panel__scroll--submission {
+  background: linear-gradient(180deg, rgba($slate-50, 0.4), rgba($white, 0.85));
+}
+
+// Scrollbar solo dentro de los paneles.
+.split-panel__scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba($slate-400, 0.75) transparent;
+
+  &::-webkit-scrollbar {
+    width: 0.65rem;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border: 0.18rem solid transparent;
+    border-radius: 999px;
+    background-clip: padding-box;
+    background-color: rgba($slate-400, 0.75);
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: rgba($slate-500, 0.85);
+  }
+}
+
+// ==========================================================================
+// CHILD COMPONENT SUPPORT
+// ==========================================================================
+
+app-case-content,
+app-submissions-detail {
+  display: block;
+  min-width: 0;
+}
+
+// Evita que los hijos creen scroll extra si algún estilo viejo quedó vivo.
+:host ::ng-deep {
+  app-case-content,
+  app-submissions-detail {
+    width: 100%;
+  }
+
+  .case-content-view,
+  .submission-detail {
+    min-width: 0;
+  }
+}
+
+// ==========================================================================
+// RESPONSIVE
+// ==========================================================================
+
+@include tablet {
+  .case-page {
+    padding: 1rem;
+  }
+
   .case-header {
-    align-items: stretch;
     flex-direction: column;
   }
 
@@ -513,29 +744,133 @@ $background: #f8fafc;
     width: 100%;
     min-width: 0;
   }
+
+  .case-single-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .start-panel {
+    position: static;
+  }
+
+  .submission-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .submission-toolbar__actions {
+    justify-content: stretch;
+
+    app-button {
+      flex: 1;
+    }
+  }
+
+  .case-split-layout {
+    grid-template-columns: 1fr;
+
+    height: auto;
+    min-height: 0;
+  }
+
+  .split-panel {
+    min-height: 0;
+  }
+
+  .split-panel__scroll {
+    overflow: visible;
+  }
 }
 
-@media (max-width: 650px) {
+@include mobile {
   .case-page {
-    padding: 1rem;
+    gap: 0.85rem;
+    padding: 0.75rem;
+  }
+
+  .state-container {
+    flex-direction: column;
+
+    min-height: 18rem;
+    padding: 1.25rem;
+
+    border-radius: $radius-xl;
   }
 
   .case-header {
-    padding: 1.3rem;
+    padding: 1.1rem;
+    border-radius: $radius-xl;
+  }
+
+  .case-header__content {
+    h1 {
+      font-size: clamp(1.85rem, 11vw, 2.55rem);
+    }
+
+    p {
+      font-size: 0.92rem;
+    }
+  }
+
+  .case-status-card {
+    padding: 0.9rem;
+    border-radius: $radius-lg;
   }
 
   .panel-header {
     align-items: flex-start;
+    padding: 0.9rem;
+  }
+
+  .panel-header__content {
+    h2 {
+      font-size: 1rem;
+    }
+  }
+
+  .panel-badge {
+    font-size: 0.68rem;
+  }
+
+  .start-panel {
+    padding: 1rem;
+    border-radius: $radius-lg;
+  }
+
+  .submission-toolbar {
+    padding: 0.9rem;
+    border-radius: $radius-lg;
+  }
+
+  .submission-toolbar__content {
+    align-items: flex-start;
+  }
+
+  .submission-toolbar__icon {
+    width: 2.65rem;
+    height: 2.65rem;
+  }
+
+  .submission-toolbar__info {
+    h2 {
+      font-size: 1.05rem;
+    }
+
+    p {
+      font-size: 0.86rem;
+    }
+  }
+
+  .submission-toolbar__actions {
     flex-direction: column;
+
+    app-button {
+      width: 100%;
+    }
   }
 
-  .split-scroll {
-    padding: 0.8rem;
-  }
-
-  .state-container {
-    width: calc(100% - 2rem);
-
-    margin: 1rem auto;
+  .case-panel,
+  .split-panel {
+    border-radius: $radius-lg;
   }
 }
