@@ -37,7 +37,7 @@ export class ClassroomList implements OnInit, AfterViewInit {
 
   readonly isJoinModalOpen = signal(false);
 
-
+  readonly error = signal(false);
 
   ngOnInit() {
     this.loadClassrooms();
@@ -54,6 +54,7 @@ export class ClassroomList implements OnInit, AfterViewInit {
   loadClassrooms() {
 
     this.loading.set(true);
+    this.error.set(false);
 
 
     this.api.findMy<ClassroomStudentModel[]>().subscribe({
@@ -73,9 +74,8 @@ export class ClassroomList implements OnInit, AfterViewInit {
 
 
       error: () => {
-
+        this.error.set(true);
         this.loading.set(false);
-
       }
 
     });

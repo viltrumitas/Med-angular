@@ -52,9 +52,20 @@ export class JoinClassroom {
 
     const { code } = this.form.getRawValue();
 
+    console.log('Código enviado:', code);
+
     this.classroomApi.join({ code }).subscribe({
-      next: (classroom) => this.handleSuccess(classroom),
-      error: (error: HttpErrorResponse) => this.handleError(error),
+      next: (classroom) => {
+        console.log('Respuesta join:', classroom);
+
+        this.handleSuccess(classroom);
+      },
+
+      error: (error: HttpErrorResponse) => {
+        console.log('Error join:', error);
+
+        this.handleError(error);
+      },
     });
   }
 

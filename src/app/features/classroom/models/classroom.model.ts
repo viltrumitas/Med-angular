@@ -6,6 +6,8 @@ export interface ClassroomModel {
 
   description: string | null;
 
+  code: string;
+
   assignmentsCount: number;
 
   createdAt: string;
