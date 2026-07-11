@@ -1,4 +1,4 @@
-import { TeacherModel } from "../../cases/dto/teacher-response.dto";
+import { TeacherModel } from '../../cases/dto/teacher-response.dto';
 
 export interface ClassroomStudentResponseDto {
   id: string;
@@ -12,7 +12,7 @@ export interface ClassroomStudentResponseDto {
     firstName: string;
     lastName: string;
   };
-  
+
   assignmentsCount: number;
 
   createdAt: string;

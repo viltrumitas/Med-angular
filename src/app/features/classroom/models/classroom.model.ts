@@ -1,5 +1,4 @@
 export interface ClassroomModel {
-
   id: string;
 
   name: string;
