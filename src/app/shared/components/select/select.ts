@@ -1,5 +1,5 @@
-import { Component, input } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
+import { Component, forwardRef, input } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 export interface SelectOption {
   label: string;
@@ -8,41 +8,52 @@ export interface SelectOption {
 
 @Component({
   selector: 'app-select',
-  imports: [FormsModule],
+  imports: [],
   templateUrl: './select.html',
   styleUrl: './select.scss',
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: SelectComponent,
+      useExisting: forwardRef(() => SelectComponent),
       multi: true,
     },
   ],
 })
 export class SelectComponent implements ControlValueAccessor {
-  labelText = input.required<string>();
-  options = input<SelectOption[]>([]);
+  readonly labelText = input('');
+  readonly placeHolderText = input('Seleccione una opción');
+  readonly options = input<SelectOption[]>([]);
 
   value = '';
+  disabled = false;
 
-  onChange = (value: string) => {};
-  onTouched = () => {};
+  private onChange: (value: string) => void = () => {};
+  private onTouched: () => void = () => {};
 
-  writeValue(value: string): void {
+  writeValue(value: string | null): void {
     this.value = value ?? '';
   }
 
-  registerOnChange(fn: any): void {
+  registerOnChange(fn: (value: string) => void): void {
     this.onChange = fn;
   }
 
-  registerOnTouched(fn: any): void {
+  registerOnTouched(fn: () => void): void {
     this.onTouched = fn;
   }
 
-  setValue(value: string) {
-    this.value = value;
-    this.onChange(value);
+  setDisabledState(isDisabled: boolean): void {
+    this.disabled = isDisabled;
+  }
+
+  onSelectChange(event: Event): void {
+    const select = event.target as HTMLSelectElement;
+
+    this.value = select.value;
+    this.onChange(this.value);
+  }
+
+  onBlur(): void {
     this.onTouched();
   }
 }

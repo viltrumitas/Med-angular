@@ -1,14 +1,13 @@
-<!-- HAMBURGUESA MOBILE -->
-<button type="button" class="hamburger" (click)="toggleMobile()" aria-label="Abrir menú">
-  <i [attr.data-lucide]="mobileOpen() ? 'x' : 'menu'" aria-hidden="true"></i>
-</button>
-
-<!-- OVERLAY MOBILE -->
-@if (mobileOpen()) {
-  <div class="mobile-overlay" (click)="closeMobile()"></div>
+@if (!mobileOpen()) {
+  <button type="button" class="hamburger" (click)="toggleMobile()" aria-label="Abrir menú">
+    <i data-lucide="menu" aria-hidden="true"></i>
+  </button>
 }
 
-<!-- SIDEBAR -->
+@if (mobileOpen()) {
+  <div class="mobile-overlay" (click)="closeMobile()" aria-hidden="true"></div>
+}
+
 <aside
   class="sidebar glass-sidebar"
   [class.closed]="collapsed()"
@@ -16,21 +15,46 @@
   (mouseenter)="toggle(true)"
   (mouseleave)="toggle(false)"
 >
-  <!-- HEADER / PERFIL -->
-  <div class="header">
-    <div class="org">
-      <div class="avatar">M</div>
-      @if (!collapsed() || mobileOpen()) {
-        <div class="profile-info">
-          <span class="brand">ed<span class="accent">Land</span></span>
-          <span class="profile-role">Maestro</span>
-        </div>
-      }
-    </div>
-  </div>
+  <header class="sidebar-header">
+    <div class="brand-mark">
+      <span class="brand-mark__letter">
+        {{ roleInitial() }}
+      </span>
 
-  <!-- NAV -->
-  <nav class="nav">
+      <span class="brand-mark__pulse" aria-hidden="true"></span>
+    </div>
+
+    @if (!collapsed() || mobileOpen()) {
+      <div class="brand-content">
+        <div class="brand-content__top">
+          <span class="brand-name"> Med<span>Cases</span> </span>
+
+          <span class="brand-badge">
+            {{ roleLabel() }}
+          </span>
+        </div>
+
+        <span class="brand-subtitle"> Simulación clínica </span>
+      </div>
+    }
+
+    @if (mobileOpen()) {
+      <button
+        type="button"
+        class="mobile-close-btn"
+        (click)="closeMobile()"
+        aria-label="Cerrar menú"
+      >
+        <i data-lucide="x" aria-hidden="true"></i>
+      </button>
+    }
+  </header>
+
+  <!-- =========================
+       NAVIGATION
+  ========================== -->
+
+  <nav class="nav" aria-label="Navegación principal">
     @for (item of navItem(); track item.name) {
       @if (item.separator) {
         <div class="divider" aria-hidden="true"></div>
@@ -39,24 +63,33 @@
           @if (item.icon) {
             <i class="icon" [attr.data-lucide]="item.icon" aria-hidden="true"></i>
           }
+
           @if (!collapsed() || mobileOpen()) {
-            <span class="label">{{ item.name }}</span>
+            <span class="label">
+              {{ item.name }}
+            </span>
           }
         </button>
       } @else if (item.children?.length) {
-        <!-- ITEM CON SUBMENÚ INLINE -->
+        <!-- ITEM CON SUBMENÚ -->
+
         <div class="submenu-group">
           <button
             type="button"
             class="item"
             [class.active]="isSubmenuOpen(item)"
+            [attr.aria-expanded]="isSubmenuOpen(item)"
             (click)="toggleSubmenu(item)"
           >
             @if (item.icon) {
               <i class="icon" [attr.data-lucide]="item.icon" aria-hidden="true"></i>
             }
+
             @if (!collapsed() || mobileOpen()) {
-              <span class="label">{{ item.name }}</span>
+              <span class="label">
+                {{ item.name }}
+              </span>
+
               <i
                 class="icon chevron-icon"
                 [class.rotated]="isSubmenuOpen(item)"
@@ -75,7 +108,11 @@
                   routerLinkActive="active-sub"
                   (click)="closeMobile()"
                 >
-                  {{ child.name }}
+                  <span class="submenu-item__dot" aria-hidden="true"></span>
+
+                  <span>
+                    {{ child.name }}
+                  </span>
                 </a>
               }
             </div>
@@ -83,6 +120,7 @@
         </div>
       } @else {
         <!-- ITEM NORMAL -->
+
         <a
           class="item"
           [routerLink]="item.path"
@@ -93,27 +131,50 @@
           @if (item.icon) {
             <i class="icon" [attr.data-lucide]="item.icon" aria-hidden="true"></i>
           }
+
           @if (!collapsed() || mobileOpen()) {
-            <span class="label">{{ item.name }}</span>
+            <span class="label">
+              {{ item.name }}
+            </span>
           }
         </a>
       }
     }
   </nav>
 
-  <!-- FOOTER -->
-  <div class="footer">
+  <!-- =========================
+       FOOTER
+  ========================== -->
+
+  <footer class="sidebar-footer">
+    @if (!collapsed() || mobileOpen()) {
+      <div class="sidebar-footer__separator"></div>
+
+      <div class="sidebar-footer__label">Cuenta</div>
+    }
+
     @for (item of footerItem(); track item.name) {
       @if (item.action) {
-        <button type="button" class="item" (click)="handleAction(item.action)">
-          @if (item.icon) {
-            <i class="icon" [attr.data-lucide]="item.icon" aria-hidden="true"></i>
-          }
+        <button type="button" class="item item--logout" (click)="handleAction(item.action)">
+          <span class="item__icon-wrapper">
+            @if (item.icon) {
+              <i class="icon" [attr.data-lucide]="item.icon" aria-hidden="true"></i>
+            }
+          </span>
+
           @if (!collapsed() || mobileOpen()) {
-            <span class="label">{{ item.name }}</span>
+            <span class="logout-content">
+              <span class="logout-content__title">
+                {{ item.name }}
+              </span>
+
+              <span class="logout-content__description"> Finalizar sesión </span>
+            </span>
+
+            <i class="logout-arrow" data-lucide="arrow-right" aria-hidden="true"></i>
           }
         </button>
       }
     }
-  </div>
+  </footer>
 </aside>

@@ -1,3 +1,12 @@
-<button class="btn" [ngClass]="variant" [type]="type" [disabled]="disabled" (click)="onClick()">
-  {{ text }}
+<button
+  class="btn"
+  [class]="'btn btn--' + variant"
+  [type]="type"
+  [disabled]="disabled"
+  [attr.aria-disabled]="disabled"
+  (click)="onClick()"
+>
+  <span class="btn__content">
+    {{ text }}
+  </span>
 </button>

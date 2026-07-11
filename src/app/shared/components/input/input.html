@@ -1,12 +1,21 @@
-<div class="control--input">
-  <label>{{ labelText }}</label>
+<div class="input-control" [class.input-control--disabled]="disabled">
+  @if (labelText) {
+    <label class="input-control__label">
+      {{ labelText }}
+    </label>
+  }
 
-  <input
-    [type]="type"
-    [value]="value"
-    [placeholder]="placeHolderText"
-    [disabled]="disabled"
-    (input)="onInput($event)"
-    (blur)="onBlur()"
-  />
+  <div class="input-control__field">
+    <input
+      class="input-control__input"
+      [type]="type === 'number' ? 'text' : type"
+      [inputMode]="type === 'number' ? 'numeric' : 'text'"
+      [value]="value"
+      [placeholder]="placeHolderText"
+      [disabled]="disabled"
+      (keydown)="onKeyDown($event)"
+      (input)="onInput($event)"
+      (blur)="onBlur()"
+    />
+  </div>
 </div>

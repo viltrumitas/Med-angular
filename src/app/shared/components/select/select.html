@@ -1,16 +1,39 @@
-<div class="select-container">
-  <label>{{ labelText() }}</label>
+<div class="select-control" [class.select-control--disabled]="disabled">
+  @if (labelText()) {
+    <label class="select-control__label">
+      {{ labelText() }}
+    </label>
+  }
 
-  <select
-    [value]="value"
-    (change)="setValue($any($event.target).value)"
-  >
-    <option value="">Seleccione una opción</option>
-
-    @for(option of options(); track option.value) {
-      <option [value]="option.value">
-        {{ option.label }}
+  <div class="select-control__field">
+    <select
+      class="select-control__select"
+      [value]="value"
+      [disabled]="disabled"
+      (change)="onSelectChange($event)"
+      (blur)="onBlur()"
+    >
+      <option value="">
+        {{ placeHolderText() }}
       </option>
-    }
-  </select>
+
+      @for (option of options(); track option.value) {
+        <option [value]="option.value">
+          {{ option.label }}
+        </option>
+      }
+    </select>
+
+    <span class="select-control__icon" aria-hidden="true">
+      <svg viewBox="0 0 20 20" fill="none">
+        <path
+          d="m6 8 4 4 4-4"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </span>
+  </div>
 </div>

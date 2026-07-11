@@ -1,9 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, forwardRef, Input } from '@angular/core';
-import {
-  ControlValueAccessor,
-  NG_VALUE_ACCESSOR,
-} from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
   selector: 'app-input',
@@ -20,20 +17,17 @@ import {
   ],
 })
 export class InputComponent implements ControlValueAccessor {
-
   @Input() labelText!: string;
-
   @Input() type: 'text' | 'number' | 'email' | 'password' = 'text';
-
   @Input() placeHolderText = '';
+  @Input() min?: number;
+  @Input() max?: number;
 
   value: string | number | null = '';
-
   disabled = false;
 
-  private onChange: (value: string | number | null) => void = () => { };
-
-  private onTouched: () => void = () => { };
+  private onChange: (value: string | number | null) => void = () => {};
+  private onTouched: () => void = () => {};
 
   writeValue(value: string | number | null): void {
     this.value = value ?? '';
@@ -51,20 +45,54 @@ export class InputComponent implements ControlValueAccessor {
     this.disabled = disabled;
   }
 
-  onInput(event: Event): void {
-    const input = event.target as HTMLInputElement;
-
-    const value =
-      this.type === 'number'
-        ? (input.value === '' ? null : input.valueAsNumber)
-        : input.value;
-
-    this.value = value;
-    this.onChange(value);
-  }
-
   onBlur(): void {
     this.onTouched();
   }
 
+  onKeyDown(event: KeyboardEvent): void {
+    if (this.type !== 'number') {
+      return;
+    }
+
+    const allowedKeys = [
+      'Backspace',
+      'Delete',
+      'Tab',
+      'Escape',
+      'Enter',
+      'ArrowLeft',
+      'ArrowRight',
+      'Home',
+      'End',
+    ];
+
+    if (allowedKeys.includes(event.key)) {
+      return;
+    }
+
+    if (
+      (event.ctrlKey || event.metaKey) &&
+      ['a', 'c', 'v', 'x'].includes(event.key.toLowerCase())
+    ) {
+      return;
+    }
+
+    if (!/^\d$/.test(event.key)) {
+      event.preventDefault();
+    }
+  }
+
+  onInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+
+    let newValue = input.value;
+
+    if (this.type === 'number') {
+      newValue = newValue.replace(/\D/g, '');
+      input.value = newValue;
+    }
+
+    this.value = newValue;
+    this.onChange(this.value);
+  }
 }

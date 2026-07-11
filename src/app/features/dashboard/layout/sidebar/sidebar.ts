@@ -10,8 +10,9 @@ import {
 } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { createIcons, icons } from 'lucide';
-import { SidebarItem } from '../../model/menu.types';
+
 import { AuthService } from '../../../../core/services/auth.service';
+import { SidebarItem } from '../../model/menu.types';
 
 @Component({
   selector: 'app-sidebar',
@@ -23,16 +24,49 @@ import { AuthService } from '../../../../core/services/auth.service';
 export class Sidebar implements AfterViewInit {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
+
   private readonly activeSubmenuName = signal<string | null>(null);
 
-  collapsed = signal(true);
-  mobileOpen = signal(false);
-  items = input.required<SidebarItem[]>();
+  readonly collapsed = signal(true);
+  readonly mobileOpen = signal(false);
+
+  readonly items = input.required<SidebarItem[]>();
 
   readonly navItem = computed(() =>
     this.items().filter((item) => (item.seciton ?? 'nav') === 'nav'),
   );
+
   readonly footerItem = computed(() => this.items().filter((item) => item.seciton === 'footer'));
+
+  readonly roleLabel = computed(() => {
+    const role = this.authService.role();
+
+    switch (role) {
+      case 'TEACHER':
+        return 'Maestro';
+
+      case 'STUDENT':
+        return 'Alumno';
+
+      default:
+        return 'Usuario';
+    }
+  });
+
+  readonly roleInitial = computed(() => {
+    const role = this.authService.role();
+
+    switch (role) {
+      case 'TEACHER':
+        return 'M';
+
+      case 'STUDENT':
+        return 'A';
+
+      default:
+        return 'U';
+    }
+  });
 
   constructor() {
     afterRenderEffect(() => {
@@ -41,28 +75,32 @@ export class Sidebar implements AfterViewInit {
     });
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     this.renderIcons();
   }
 
-  private renderIcons() {
+  private renderIcons(): void {
     createIcons({ icons });
   }
 
-  toggle(open: boolean) {
+  toggle(open: boolean): void {
     this.collapsed.set(!open);
-    if (!open) this.activeSubmenuName.set(null);
+
+    if (!open) {
+      this.activeSubmenuName.set(null);
+    }
   }
 
-  toggleMobile() {
+  toggleMobile(): void {
     this.mobileOpen.update((open) => !open);
   }
 
-  closeMobile() {
+  closeMobile(): void {
     this.mobileOpen.set(false);
+    this.activeSubmenuName.set(null);
   }
 
-  toggleSubmenu(item: SidebarItem) {
+  toggleSubmenu(item: SidebarItem): void {
     this.activeSubmenuName.update((current) =>
       current === item.name ? null : (item.name ?? null),
     );
@@ -75,14 +113,21 @@ export class Sidebar implements AfterViewInit {
   handleAction(action: string): void {
     switch (action) {
       case 'logout':
-        this.authService.removeToken();
-        this.router.navigate(['/']);
+        this.logout();
         break;
     }
   }
 
+  private logout(): void {
+    this.closeMobile();
+
+    this.authService.removeToken();
+
+    void this.router.navigate(['/']);
+  }
+
   @HostListener('document:keydown.escape')
-  onEscape() {
-    this.mobileOpen.set(false);
+  onEscape(): void {
+    this.closeMobile();
   }
 }
