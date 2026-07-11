@@ -1,24 +1,184 @@
-<div class="case-container">
+<section class="case-page">
   @if (isLoading()) {
-    <div class="loading-state">
+    <section class="state-container">
       <div class="spinner"></div>
-      <p>Cargando caso clínico...</p>
-    </div>
-  } @else if (error()) {
-    <div class="error-state">
-      <span class="error-icon">⚠️</span>
-      <p class="error">{{ error() }}</p>
-    </div>
-  } @else if (assignedCase(); as item) {
-    <app-case-content [case]="item.case" />
 
-    <div class="actions-container">
-      <app-button
-        type="submit"
-        text="Iniciar resouesta"
-        variant="secondary"
-        (clicked)="startSubmission()"
-      ></app-button>
-    </div>
+      <div class="state-content">
+        <h2>Cargando caso clínico</h2>
+
+        <p>Estamos obteniendo la información del caso asignado...</p>
+      </div>
+    </section>
+  } @else if (error()) {
+    <section class="state-container error-state">
+      <div class="state-icon">
+        <i data-lucide="triangle-alert"></i>
+      </div>
+
+      <div class="state-content">
+        <h2>No pudimos cargar el caso</h2>
+
+        <p>
+          {{ error() }}
+        </p>
+      </div>
+    </section>
+  } @else if (assignedCase(); as item) {
+    <!-- =========================
+         HEADER
+    ========================== -->
+
+    <header class="case-header">
+      <div class="case-header__content">
+        <span class="case-header__eyebrow"> Caso clínico asignado </span>
+
+        <h1>
+          {{ item.case.title }}
+        </h1>
+
+        <p>Revisa la información del caso y completa tu respuesta clínica.</p>
+      </div>
+
+      <div class="case-status-card">
+        <div class="case-status-card__icon">
+          <i data-lucide="file-text"></i>
+        </div>
+
+        <div>
+          <span>Estado de respuesta</span>
+
+          <strong>
+            @if (item.submission) {
+              @switch (item.submission.status) {
+                @case ('DRAFT') {
+                  En progreso
+                }
+
+                @case ('SUBMITTED') {
+                  Enviada
+                }
+
+                @case ('REVIEWED') {
+                  Revisada
+                }
+
+                @default {
+                  {{ item.submission.status }}
+                }
+              }
+            } @else {
+              Sin iniciar
+            }
+          </strong>
+        </div>
+      </div>
+    </header>
+
+    <!-- =========================
+         SIN INICIAR
+    ========================== -->
+
+    @if (!item.submission) {
+      <section class="case-single-layout">
+        <div class="case-panel">
+          <div class="panel-header">
+            <div>
+              <span class="panel-eyebrow"> Información del caso </span>
+
+              <h2>Detalles clínicos</h2>
+            </div>
+          </div>
+
+          <app-case-content [case]="item.case" />
+        </div>
+
+        <aside class="start-panel">
+          <div class="start-panel__icon">
+            <i data-lucide="play-circle"></i>
+          </div>
+
+          <h2>¿Listo para responder?</h2>
+
+          <p>
+            Inicia tu respuesta para comenzar a registrar tu manejo clínico, diagnóstico y plan de
+            tratamiento.
+          </p>
+
+          <app-button
+            type="button"
+            text="Iniciar respuesta"
+            variant="secondary"
+            (clicked)="startSubmission()"
+          />
+        </aside>
+      </section>
+    }
+
+    <!-- =========================
+         EN PROGRESO / YA EXISTE SUBMISSION
+    ========================== -->
+
+    @else {
+      <section class="case-split-layout">
+        <!-- LEFT: CASE -->
+
+        <section class="split-panel split-panel--case">
+          <div class="panel-header">
+            <div>
+              <span class="panel-eyebrow"> Información del caso </span>
+
+              <h2>Caso clínico</h2>
+            </div>
+
+            <span class="panel-badge"> Lectura </span>
+          </div>
+
+          <div class="split-scroll">
+            <app-case-content [case]="item.case" />
+          </div>
+        </section>
+
+        <!-- RIGHT: SUBMISSION -->
+
+        <section class="split-panel split-panel--submission">
+          <div class="panel-header">
+            <div>
+              <span class="panel-eyebrow"> Tu respuesta </span>
+
+              <h2>Submission</h2>
+            </div>
+
+            <span
+              class="panel-badge panel-badge--submission"
+              [class.panel-badge--submitted]="item.submission.status === 'SUBMITTED'"
+              [class.panel-badge--reviewed]="item.submission.status === 'REVIEWED'"
+            >
+              @switch (item.submission.status) {
+                @case ('DRAFT') {
+                  En progreso
+                }
+
+                @case ('SUBMITTED') {
+                  Enviada
+                }
+
+                @case ('REVIEWED') {
+                  Revisada
+                }
+
+                @default {
+                  {{ item.submission.status }}
+                }
+              }
+            </span>
+          </div>
+
+          <div class="split-scroll">
+            <!-- Aquí va tu componente real de submission -->
+            <!-- <app-submission-detail [submissionId]="item.submission.id" /> -->
+          </div>
+        </section>
+      </section>
+    }
   }
-</div>
+</section>

@@ -3,7 +3,6 @@
 // =========================
 
 $primary: #2563eb;
-$primary-hover: #1d4ed8;
 $primary-light: #eff6ff;
 
 $teal: #0d9488;
@@ -20,8 +19,6 @@ $text-secondary: #475569;
 $text-muted: #94a3b8;
 
 $border: #e2e8f0;
-$border-soft: #f1f5f9;
-
 $surface: #ffffff;
 $background: #f8fafc;
 
@@ -38,7 +35,7 @@ $background: #f8fafc;
 }
 
 // =========================
-// CLASSROOM HEADER
+// HEADER
 // =========================
 
 .classroom-header {
@@ -68,13 +65,31 @@ $background: #f8fafc;
 
   position: absolute;
 
-  width: 220px;
-  height: 220px;
+  width: 230px;
+  height: 230px;
 
-  top: -130px;
-  right: 100px;
+  top: -135px;
+  right: 110px;
 
   border: 1px solid rgba(13, 148, 136, 0.08);
+  border-radius: 50%;
+
+  pointer-events: none;
+}
+
+.classroom-header::after {
+  content: '';
+
+  position: absolute;
+
+  width: 120px;
+  height: 120px;
+
+  right: -45px;
+  bottom: -55px;
+
+  background: rgba(13, 148, 136, 0.06);
+
   border-radius: 50%;
 
   pointer-events: none;
@@ -147,19 +162,13 @@ $background: #f8fafc;
   border-radius: 50%;
 
   box-shadow: 0 0 0 4px $success-light;
-
-  &.inactive {
-    background: $text-muted;
-
-    box-shadow: 0 0 0 4px #f1f5f9;
-  }
 }
 
 // =========================
-// CODE BOX
+// TEACHER CARD
 // =========================
 
-.code-box {
+.teacher-card {
   position: relative;
   z-index: 1;
 
@@ -168,7 +177,7 @@ $background: #f8fafc;
 
   gap: 1rem;
 
-  min-width: 280px;
+  min-width: 285px;
 
   padding: 1.1rem 1.2rem;
 
@@ -183,27 +192,27 @@ $background: #f8fafc;
   -webkit-backdrop-filter: blur(8px);
 }
 
-.code-icon {
+.teacher-icon {
   display: grid;
   place-items: center;
 
-  width: 46px;
-  height: 46px;
+  width: 48px;
+  height: 48px;
 
   flex-shrink: 0;
 
   color: $teal;
   background: $teal-light;
 
-  border-radius: 12px;
+  border-radius: 13px;
 
   i {
-    width: 21px;
-    height: 21px;
+    width: 22px;
+    height: 22px;
   }
 }
 
-.code-content {
+.teacher-content {
   display: flex;
   flex-direction: column;
 
@@ -221,10 +230,10 @@ $background: #f8fafc;
 
     color: $text-primary;
 
-    font-size: 1.2rem;
-    font-weight: 750;
+    font-size: 0.95rem;
+    font-weight: 720;
 
-    letter-spacing: 0.08em;
+    line-height: 1.35;
   }
 
   small {
@@ -267,10 +276,13 @@ $background: #f8fafc;
 
   transition:
     transform 160ms ease,
-    box-shadow 160ms ease;
+    box-shadow 160ms ease,
+    border-color 160ms ease;
 
   &:hover {
     transform: translateY(-2px);
+
+    border-color: #cbd5e1;
 
     box-shadow: 0 10px 26px rgba(15, 23, 42, 0.05);
   }
@@ -292,24 +304,19 @@ $background: #f8fafc;
     height: 22px;
   }
 
-  &.students {
-    color: $primary;
-    background: $primary-light;
-  }
-
   &.assignments {
     color: $purple;
     background: $purple-light;
   }
 
-  &.status {
-    color: $success;
-    background: $success-light;
+  &.teacher {
+    color: $teal;
+    background: $teal-light;
+  }
 
-    &.inactive {
-      color: $text-secondary;
-      background: #f1f5f9;
-    }
+  &.progress {
+    color: $primary;
+    background: $primary-light;
   }
 }
 
@@ -331,7 +338,7 @@ $background: #f8fafc;
 
     color: $text-primary;
 
-    font-size: 1.45rem;
+    font-size: 1.35rem;
     font-weight: 750;
 
     line-height: 1.2;
@@ -393,35 +400,21 @@ $background: #f8fafc;
 
   padding: 0.55rem 0.75rem;
 
-  color: $text-secondary;
-  background: transparent;
+  color: $primary;
+  background: $primary-light;
 
   border: none;
   border-radius: 9px;
 
   font: inherit;
   font-size: 0.8rem;
-  font-weight: 550;
+  font-weight: 600;
 
-  cursor: pointer;
-
-  transition:
-    color 160ms ease,
-    background-color 160ms ease;
+  cursor: default;
 
   i {
     width: 16px;
     height: 16px;
-  }
-
-  &:hover:not(.active) {
-    color: $text-primary;
-    background: $background;
-  }
-
-  &.active {
-    color: $primary;
-    background: $primary-light;
   }
 }
 
@@ -435,66 +428,13 @@ $background: #f8fafc;
 
   padding: 0 0.35rem;
 
-  color: $text-secondary;
-  background: #e2e8f0;
+  color: $primary;
+  background: #dbeafe;
 
   border-radius: 999px;
 
   font-size: 0.65rem;
   font-weight: 700;
-}
-
-.tabs button.active {
-  .tab-count {
-    color: $primary;
-    background: #dbeafe;
-  }
-}
-
-// =========================
-// CREATE ACTIVITY BUTTON
-// =========================
-
-.create-assignment-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  gap: 0.5rem;
-
-  min-height: 40px;
-
-  padding: 0.55rem 0.85rem;
-
-  color: #ffffff;
-  background: $primary;
-
-  border: none;
-  border-radius: 9px;
-
-  font: inherit;
-  font-size: 0.78rem;
-  font-weight: 650;
-
-  cursor: pointer;
-
-  transition:
-    background-color 160ms ease,
-    transform 160ms ease,
-    box-shadow 160ms ease;
-
-  &:hover {
-    background: $primary-hover;
-
-    transform: translateY(-1px);
-
-    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.18);
-  }
-
-  i {
-    width: 16px;
-    height: 16px;
-  }
 }
 
 // =========================
@@ -547,11 +487,10 @@ $background: #f8fafc;
 }
 
 // =========================
-// GRIDS
+// GRID
 // =========================
 
-.assignment-grid,
-.student-grid {
+.assignment-grid {
   display: grid;
 
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -604,10 +543,6 @@ app-assignment-card {
 
     font-size: 0.82rem;
     line-height: 1.6;
-
-    strong {
-      color: $text-primary;
-    }
   }
 }
 
@@ -626,50 +561,6 @@ app-assignment-card {
   i {
     width: 24px;
     height: 24px;
-  }
-
-  &.students-empty {
-    color: $teal;
-    background: $teal-light;
-  }
-}
-
-.empty-action {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  gap: 0.5rem;
-
-  margin-top: 1.3rem;
-
-  padding: 0.65rem 0.9rem;
-
-  color: $primary;
-  background: $primary-light;
-
-  border: none;
-  border-radius: 9px;
-
-  font: inherit;
-  font-size: 0.78rem;
-  font-weight: 650;
-
-  cursor: pointer;
-
-  transition:
-    background-color 160ms ease,
-    transform 160ms ease;
-
-  &:hover {
-    background: #dbeafe;
-
-    transform: translateY(-1px);
-  }
-
-  i {
-    width: 16px;
-    height: 16px;
   }
 }
 
@@ -731,233 +622,11 @@ app-assignment-card {
 }
 
 // =========================
-// MODAL BACKDROP
-// =========================
-
-.modal-backdrop {
-  position: fixed;
-  inset: 0;
-
-  z-index: 1000;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  padding: 2rem;
-
-  background: rgba(15, 23, 42, 0.52);
-
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-
-  animation: backdrop-in 180ms ease;
-}
-
-// =========================
-// MODAL
-// =========================
-
-.assignment-modal {
-  display: flex;
-  flex-direction: column;
-
-  width: min(100%, 900px);
-  max-height: calc(100dvh - 4rem);
-
-  background: $surface;
-
-  border: 1px solid rgba(226, 232, 240, 0.9);
-  border-radius: 18px;
-
-  overflow: hidden;
-
-  box-shadow:
-    0 30px 80px rgba(15, 23, 42, 0.22),
-    0 8px 24px rgba(15, 23, 42, 0.1);
-
-  animation: modal-in 220ms ease;
-}
-
-// =========================
-// MODAL HEADER
-// =========================
-
-.modal-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-
-  gap: 1.5rem;
-
-  padding: 1.4rem 1.5rem;
-
-  background: radial-gradient(circle at 85% 0%, rgba(37, 99, 235, 0.08), transparent 35%), #ffffff;
-
-  border-bottom: 1px solid $border;
-}
-
-.modal-heading {
-  display: flex;
-  align-items: flex-start;
-
-  gap: 1rem;
-
-  min-width: 0;
-}
-
-.modal-title {
-  min-width: 0;
-
-  h2 {
-    margin: 0.2rem 0 0;
-
-    color: $text-primary;
-
-    font-size: 1.15rem;
-    font-weight: 720;
-    line-height: 1.3;
-
-    letter-spacing: -0.02em;
-  }
-
-  p {
-    max-width: 600px;
-
-    margin: 0.4rem 0 0;
-
-    color: $text-secondary;
-
-    font-size: 0.8rem;
-    line-height: 1.55;
-  }
-}
-
-.modal-eyebrow {
-  color: $primary;
-
-  font-size: 0.68rem;
-  font-weight: 700;
-
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-.modal-icon {
-  display: grid;
-  place-items: center;
-
-  width: 46px;
-  height: 46px;
-
-  flex-shrink: 0;
-
-  color: $primary;
-  background: $primary-light;
-
-  border-radius: 13px;
-
-  i {
-    width: 21px;
-    height: 21px;
-  }
-}
-
-// =========================
-// CLOSE MODAL
-// =========================
-
-.close-modal {
-  display: grid;
-  place-items: center;
-
-  width: 36px;
-  height: 36px;
-
-  flex-shrink: 0;
-
-  padding: 0;
-
-  color: $text-secondary;
-  background: $background;
-
-  border: none;
-  border-radius: 10px;
-
-  cursor: pointer;
-
-  transition:
-    color 160ms ease,
-    background-color 160ms ease,
-    transform 160ms ease;
-
-  &:hover {
-    color: $text-primary;
-    background: #f1f5f9;
-
-    transform: rotate(3deg);
-  }
-
-  i {
-    width: 18px;
-    height: 18px;
-  }
-}
-
-// =========================
-// MODAL CONTENT
-// =========================
-
-.modal-content {
-  flex: 1;
-
-  min-height: 0;
-
-  padding: 1.5rem;
-
-  overflow-y: auto;
-
-  overscroll-behavior: contain;
-
-  scrollbar-width: thin;
-  scrollbar-color: #cbd5e1 transparent;
-}
-
-// =========================
-// ANIMATIONS
-// =========================
-
-@keyframes backdrop-in {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes modal-in {
-  from {
-    opacity: 0;
-
-    transform: translateY(12px) scale(0.985);
-  }
-
-  to {
-    opacity: 1;
-
-    transform: translateY(0) scale(1);
-  }
-}
-
-// =========================
 // RESPONSIVE
 // =========================
 
 @media (max-width: 1100px) {
-  .assignment-grid,
-  .student-grid {
+  .assignment-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
@@ -970,7 +639,7 @@ app-assignment-card {
     gap: 1.5rem;
   }
 
-  .code-box {
+  .teacher-card {
     width: 100%;
     min-width: 0;
   }
@@ -999,10 +668,6 @@ app-assignment-card {
   }
 
   .tabs button {
-    flex: 1;
-  }
-
-  .create-assignment-btn {
     width: 100%;
   }
 
@@ -1014,61 +679,7 @@ app-assignment-card {
     flex-direction: column;
   }
 
-  .assignment-grid,
-  .student-grid {
+  .assignment-grid {
     grid-template-columns: 1fr;
-  }
-
-  // MODAL MOBILE
-
-  .modal-backdrop {
-    align-items: flex-end;
-
-    padding: 0;
-  }
-
-  .assignment-modal {
-    width: 100%;
-    max-height: 92dvh;
-
-    border-radius: 18px 18px 0 0;
-
-    animation: modal-mobile-in 220ms ease;
-  }
-
-  .modal-header {
-    padding: 1.1rem;
-  }
-
-  .modal-heading {
-    gap: 0.75rem;
-  }
-
-  .modal-content {
-    padding: 1rem;
-  }
-
-  .modal-icon {
-    width: 42px;
-    height: 42px;
-
-    i {
-      width: 19px;
-      height: 19px;
-    }
-  }
-}
-
-@keyframes modal-mobile-in {
-  from {
-    opacity: 0;
-
-    transform: translateY(30px);
-  }
-
-  to {
-    opacity: 1;
-
-    transform: translateY(0);
   }
 }

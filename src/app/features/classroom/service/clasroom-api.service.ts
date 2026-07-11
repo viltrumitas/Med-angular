@@ -37,19 +37,14 @@ export class ClassroomApi {
     return this.http.get<T>(`${this.api}/my`);
   }
 
-
   findTeacherDetail(id: string) {
-    return this.http.get<ClassroomTeacherDetailModel>(
-      `${this.api}/${id}`
-    )
+    return this.http.get<ClassroomTeacherDetailModel>(`${this.api}/${id}`);
   }
 
   findStudentDetail(id: string) {
-    return this.http.get<ClassroomStudentDetailModel>(
-      `${this.api}/${id}`
-    )
+    return this.http.get<ClassroomStudentDetailModel>(`${this.api}/${id}`);
   }
-  
+
   update(id: string, dto: UpdateClassroomDto): Observable<ClassroomModel> {
     return this.http.patch<ClassroomModel>(`${this.api}/${id}`, dto);
   }

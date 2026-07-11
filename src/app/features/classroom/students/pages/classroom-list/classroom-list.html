@@ -88,18 +88,14 @@
           <p>
             {{ classrooms().length }}
 
-            {{
-              classrooms().length === 1 ? 'clase disponible' : 'clases disponibles'
-            }}
+            {{ classrooms().length === 1 ? 'clase disponible' : 'clases disponibles' }}
           </p>
         </div>
       </div>
 
       <div class="classroom-grid">
         @for (classroom of classrooms(); track classroom.id) {
-          <article 
-            class="classroom-card"
-            (click)="openClassroom(classroom.id)">
+          <article class="classroom-card" (click)="openClassroom(classroom.id)">
             <!-- =========================
                  VISUAL
             ========================== -->

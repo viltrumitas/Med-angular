@@ -6,11 +6,11 @@ export const STUDENT_MENU: SidebarItem[] = [
     path: '/dashboard/student/classrooms',
     icon: 'home',
   },
-  {
-    name: 'Aun no se que va',
-    path: '/dashboard',
-    icon: 'folder',
-  },
+  // {
+  //   name: 'Aun no se que va',
+  //   path: '/dashboard/student',
+  //   icon: 'folder',
+  // },
 
   {
     name: 'Cerrar Sesion',

@@ -4,7 +4,7 @@ export const studentRoutes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'home',
+    redirectTo: 'classrooms',
   },
   {
     path: 'classrooms',

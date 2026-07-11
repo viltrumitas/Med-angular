@@ -1,512 +1,245 @@
 <section class="classroom-page">
-
   @if (loading()) {
+    <section class="state-container">
+      <div class="spinner"></div>
 
-  <section class="state-container">
-    <div class="spinner"></div>
-
-    <div class="state-content">
-      <h2>Cargando clase</h2>
-      <p>Estamos obteniendo la información de la clase...</p>
-    </div>
-  </section>
-
-
+      <div class="state-content">
+        <h2>Cargando clase</h2>
+        <p>Estamos obteniendo la información de la clase...</p>
+      </div>
+    </section>
   } @else {
+    @let c = classroom()!;
 
-  @let c = classroom()!;
+    <!-- HEADER -->
 
+    <header class="classroom-header">
+      <div class="header-main">
+        <span class="header-eyebrow"> Clase </span>
 
-  <!-- HEADER -->
-
-  <header class="classroom-header">
-
-    <div class="header-main">
-
-      <span class="header-eyebrow">
-        Clase
-      </span>
-
-      <h1>
-        {{ c.name }}
-      </h1>
-
-      <p>
-        {{ c.description || 'Sin descripción.' }}
-      </p>
-
-      <div class="classroom-status">
-
-        <span class="status-dot" [class.inactive]="!c.isActive">
-        </span>
-
-
-        <span>
-          {{ c.isActive ? 'Clase activa' : 'Clase inactiva' }}
-        </span>
-
-      </div>
-
-    </div>
-
-
-    <div class="code-box">
-
-      <div class="code-icon">
-        <i data-lucide="key-round"></i>
-      </div>
-
-
-      <div class="code-content">
-
-        <span>
-          Código de acceso
-        </span>
-
-
-        <strong>
-          {{ c.code }}
-        </strong>
-
-
-        <small>
-          Compártelo con tus estudiantes
-        </small>
-
-      </div>
-
-    </div>
-
-  </header>
-
-
-
-
-  <!-- STATS -->
-
-  <section class="stats-grid">
-
-    <article class="stat-card">
-
-      <div class="stat-icon students">
-        <i data-lucide="users"></i>
-      </div>
-
-
-      <div class="stat-content">
-
-        <span>
-          Estudiantes
-        </span>
-
-
-        <strong>
-          {{ c.studentsCount }}
-        </strong>
-
-
-        <small>
-          Inscritos en la clase
-        </small>
-
-      </div>
-
-    </article>
-
-
-
-    <article class="stat-card">
-
-      <div class="stat-icon assignments">
-        <i data-lucide="clipboard-list"></i>
-      </div>
-
-
-      <div class="stat-content">
-
-        <span>
-          Actividades
-        </span>
-
-
-        <strong>
-          {{ c.assignmentsCount }}
-        </strong>
-
-
-        <small>
-          Actividades disponibles
-        </small>
-
-      </div>
-
-    </article>
-
-
-
-    <article class="stat-card">
-
-      <div class="stat-icon status" [class.inactive]="!c.isActive">
-
-        <i [attr.data-lucide]="
-          c.isActive 
-          ? 'circle-check' 
-          : 'circle-pause'">
-        </i>
-
-      </div>
-
-
-      <div class="stat-content">
-
-        <span>
-          Estado
-        </span>
-
-
-        <strong>
-          {{ c.isActive ? 'Activa' : 'Inactiva' }}
-        </strong>
-
-
-        <small>
-          {{
-          c.isActive
-          ? 'Disponible para estudiantes'
-          : 'Acceso cerrado'
-          }}
-        </small>
-
-      </div>
-
-    </article>
-
-
-
-  </section>
-
-
-
-
-
-  <!-- WORKSPACE -->
-
-  <section class="workspace">
-
-
-    <div class="workspace-header">
-
-
-      <nav class="tabs">
-
-
-        <button type="button" [class.active]="activeTab() === 'assignments'" (click)="changeTab('assignments')">
-
-
-          <i data-lucide="clipboard-list"></i>
-
-
-          <span>
-            Actividades
-          </span>
-
-
-          <span class="tab-count">
-            {{ c.assignmentsCount }}
-          </span>
-
-
-        </button>
-
-
-        <button type="button" [class.active]="activeTab() === 'students'" (click)="changeTab('students')">
-
-
-          <i data-lucide="users"></i>
-
-
-          <span>
-            Estudiantes
-          </span>
-
-
-          <span class="tab-count">
-            {{ c.studentsCount }}
-          </span>
-
-
-        </button>
-
-      </nav>
-
-
-      <button type="button" class="create-assignment-btn" (click)="openCreateAssignment()">
-
-
-
-        <i data-lucide="plus"></i>
-
-
-        <span>
-          Nueva actividad
-        </span>
-
-
-      </button>
-
-
-    </div>
-
-
-
-
-
-    <!-- ACTIVIDADES -->
-
-
-    @if (activeTab() === 'assignments') {
-
-
-    <section class="tab-content">
-
-
-      <div class="section-header">
-
-        <div>
-
-          <h2>
-            Actividades
-          </h2>
-
-
-          <p>
-            Casos clínicos asignados a esta clase.
-          </p>
-
-
-        </div>
-
-
-        <span class="section-count">
-
-          {{ c.assignmentsCount }}
-
-          {{
-          c.assignmentsCount === 1
-          ? 'actividad'
-          : 'actividades'
-          }}
-
-        </span>
-
-
-      </div>
-
-
-
-
-      @if (c.assignments.length === 0) {
-
-
-      <section class="empty-state">
-
-        <h3>
-          No hay actividades
-        </h3>
+        <h1>
+          {{ c.name }}
+        </h1>
 
         <p>
-          Aún no hay actividades disponibles.
+          {{ c.description || 'Sin descripción.' }}
         </p>
 
-      </section>
+        <div class="classroom-status">
+          <span class="status-dot" [class.inactive]="!c.isActive"> </span>
 
-
-
-      } @else {
-
-
-
-      <div class="assignment-grid">
-
-
-        @for (assignment of c.assignments; track assignment.id) {
-
-
-        <app-assignment-card [assignment]="assignment" (viewAssignment)="openAssignment($event)" />
-
-
-        }
-
-
+          <span>
+            {{ c.isActive ? 'Clase activa' : 'Clase inactiva' }}
+          </span>
+        </div>
       </div>
 
-
-      }
-
-
-
-    </section>
-
-
-    }
-
-
-
-
-
-    <!-- ESTUDIANTES SOLO TEACHER -->
-
-
-    @if ('students' in c && activeTab() === 'students') {
-
-
-    <section class="tab-content">
-
-
-      <div class="section-header">
-
-
-        <div>
-
-          <h2>
-            Estudiantes
-          </h2>
-
-
-          <p>
-            Estudiantes inscritos en esta clase.
-          </p>
-
-
+      <div class="code-box">
+        <div class="code-icon">
+          <i data-lucide="key-round"></i>
         </div>
 
-
-        <span class="section-count">
-
-          {{ c.studentsCount }}
-
-          {{
-          c.studentsCount === 1
-          ? 'estudiante'
-          : 'estudiantes'
-          }}
-
-        </span>
-
-
-      </div>
-
-
-
-
-
-      @if (c.students.length === 0) {
-
-
-      <section class="empty-state">
-
-        <h3>
-          No hay estudiantes inscritos
-        </h3>
-
-
-        <p>
-
-          Comparte el código
+        <div class="code-content">
+          <span> Código de acceso </span>
 
           <strong>
             {{ c.code }}
           </strong>
 
-          para que puedan unirse.
+          <small> Compártelo con tus estudiantes </small>
+        </div>
+      </div>
+    </header>
 
-        </p>
+    <!-- STATS -->
 
+    <section class="stats-grid">
+      <article class="stat-card">
+        <div class="stat-icon students">
+          <i data-lucide="users"></i>
+        </div>
 
-      </section>
+        <div class="stat-content">
+          <span> Estudiantes </span>
 
+          <strong>
+            {{ c.studentsCount }}
+          </strong>
 
+          <small> Inscritos en la clase </small>
+        </div>
+      </article>
 
-      } @else {
+      <article class="stat-card">
+        <div class="stat-icon assignments">
+          <i data-lucide="clipboard-list"></i>
+        </div>
 
+        <div class="stat-content">
+          <span> Actividades </span>
 
+          <strong>
+            {{ c.assignmentsCount }}
+          </strong>
 
-      <app-student-card [students]="c.students" />
+          <small> Actividades disponibles </small>
+        </div>
+      </article>
 
+      <article class="stat-card">
+        <div class="stat-icon status" [class.inactive]="!c.isActive">
+          <i [attr.data-lucide]="c.isActive ? 'circle-check' : 'circle-pause'"> </i>
+        </div>
 
+        <div class="stat-content">
+          <span> Estado </span>
 
-      }
+          <strong>
+            {{ c.isActive ? 'Activa' : 'Inactiva' }}
+          </strong>
 
-
-
+          <small>
+            {{ c.isActive ? 'Disponible para estudiantes' : 'Acceso cerrado' }}
+          </small>
+        </div>
+      </article>
     </section>
 
+    <!-- WORKSPACE -->
 
-    }
+    <section class="workspace">
+      <div class="workspace-header">
+        <nav class="tabs">
+          <button
+            type="button"
+            [class.active]="activeTab() === 'assignments'"
+            (click)="changeTab('assignments')"
+          >
+            <i data-lucide="clipboard-list"></i>
 
+            <span> Actividades </span>
 
+            <span class="tab-count">
+              {{ c.assignmentsCount }}
+            </span>
+          </button>
 
-  </section>
+          <button
+            type="button"
+            [class.active]="activeTab() === 'students'"
+            (click)="changeTab('students')"
+          >
+            <i data-lucide="users"></i>
 
+            <span> Estudiantes </span>
 
+            <span class="tab-count">
+              {{ c.studentsCount }}
+            </span>
+          </button>
+        </nav>
 
+        <button type="button" class="create-assignment-btn" (click)="openCreateAssignment()">
+          <i data-lucide="plus"></i>
 
-  <!-- MODAL CREAR ACTIVIDAD -->
-
-
-  @if (showCreateAssignment()) {
-
-
-  <div class="modal-backdrop" (click)="closeCreateAssignment()">
-
-
-
-    <section class="assignment-modal" (click)="$event.stopPropagation()">
-
-
-
-      <header class="modal-header">
-
-
-        <h2>
-          Crear actividad
-        </h2>
-
-
-
-        <button type="button" class="close-modal" (click)="closeCreateAssignment()">
-
-
-          <i data-lucide="x"></i>
-
-
+          <span> Nueva actividad </span>
         </button>
-
-
-      </header>
-
-
-
-
-      <div class="modal-content">
-
-
-        <app-assignment-create [classroomId]="c.id" (created)="onAssignmentCreated()" />
-
-
       </div>
 
+      <!-- ACTIVIDADES -->
 
+      @if (activeTab() === 'assignments') {
+        <section class="tab-content">
+          <div class="section-header">
+            <div>
+              <h2>Actividades</h2>
 
+              <p>Casos clínicos asignados a esta clase.</p>
+            </div>
+
+            <span class="section-count">
+              {{ c.assignmentsCount }}
+
+              {{ c.assignmentsCount === 1 ? 'actividad' : 'actividades' }}
+            </span>
+          </div>
+
+          @if (c.assignments.length === 0) {
+            <section class="empty-state">
+              <h3>No hay actividades</h3>
+
+              <p>Aún no hay actividades disponibles.</p>
+            </section>
+          } @else {
+            <div class="assignment-grid">
+              @for (assignment of c.assignments; track assignment.id) {
+                <app-assignment-card
+                  [assignment]="assignment"
+                  (viewAssignment)="openAssignment($event)"
+                />
+              }
+            </div>
+          }
+        </section>
+      }
+
+      <!-- ESTUDIANTES SOLO TEACHER -->
+
+      @if ('students' in c && activeTab() === 'students') {
+        <section class="tab-content">
+          <div class="section-header">
+            <div>
+              <h2>Estudiantes</h2>
+
+              <p>Estudiantes inscritos en esta clase.</p>
+            </div>
+
+            <span class="section-count">
+              {{ c.studentsCount }}
+
+              {{ c.studentsCount === 1 ? 'estudiante' : 'estudiantes' }}
+            </span>
+          </div>
+
+          @if (c.students.length === 0) {
+            <section class="empty-state">
+              <h3>No hay estudiantes inscritos</h3>
+
+              <p>
+                Comparte el código
+
+                <strong>
+                  {{ c.code }}
+                </strong>
+
+                para que puedan unirse.
+              </p>
+            </section>
+          } @else {
+            <app-student-card [students]="c.students" />
+          }
+        </section>
+      }
     </section>
 
+    <!-- MODAL CREAR ACTIVIDAD -->
 
-  </div>
+    @if (showCreateAssignment()) {
+      <div class="modal-backdrop" (click)="closeCreateAssignment()">
+        <section class="assignment-modal" (click)="$event.stopPropagation()">
+          <header class="modal-header">
+            <h2>Crear actividad</h2>
 
+            <button type="button" class="close-modal" (click)="closeCreateAssignment()">
+              <i data-lucide="x"></i>
+            </button>
+          </header>
 
+          <div class="modal-content">
+            <app-assignment-create [classroomId]="c.id" (created)="onAssignmentCreated()" />
+          </div>
+        </section>
+      </div>
+    }
   }
-
-
-  }
-
 </section>

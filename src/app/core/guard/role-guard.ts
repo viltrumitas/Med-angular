@@ -7,7 +7,6 @@ export const roleGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  // Safety net: si llegó aquí sin autenticarse, redirige al login
   if (!authService.isLoggedIn()) {
     return router.createUrlTree(['/auth'], {
       queryParams: { returnUrl: state.url },

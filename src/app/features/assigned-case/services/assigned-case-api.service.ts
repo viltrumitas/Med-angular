@@ -18,9 +18,7 @@ export class AssignedCaseApiService {
   }
 
   findMyAssignedCasesByAssignment(assignmentId: string) {
-    return this.http.get<AssignedStudentCase[]>(
-      `${this.api}/my-assigned-case/${assignmentId}`
-    )
+    return this.http.get<AssignedStudentCase[]>(`${this.api}/my-assigned-case/${assignmentId}`);
   }
 
   findById(id: string): Observable<AssignedStudentCase> {
