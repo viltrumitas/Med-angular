@@ -1,7 +1,7 @@
 <section class="classroom-page">
   @if (loading()) {
-    <section class="state-container">
-      <div class="spinner"></div>
+    <section class="state-container" aria-live="polite">
+      <div class="spinner" aria-hidden="true"></div>
 
       <div class="state-content">
         <h2>Cargando clase</h2>
@@ -11,11 +11,13 @@
   } @else {
     @let c = classroom()!;
 
-    <!-- HEADER -->
+    <!-- =========================
+         HEADER
+    ========================== -->
 
     <header class="classroom-header">
       <div class="header-main">
-        <span class="header-eyebrow"> Clase </span>
+        <span class="header-eyebrow">Clase</span>
 
         <h1>
           {{ c.name }}
@@ -26,7 +28,7 @@
         </p>
 
         <div class="classroom-status">
-          <span class="status-dot" [class.inactive]="!c.isActive"> </span>
+          <span class="status-dot" [class.inactive]="!c.isActive"></span>
 
           <span>
             {{ c.isActive ? 'Clase activa' : 'Clase inactiva' }}
@@ -34,39 +36,41 @@
         </div>
       </div>
 
-      <div class="code-box">
+      <aside class="code-box" aria-label="Código de acceso de la clase">
         <div class="code-icon">
           <i data-lucide="key-round"></i>
         </div>
 
         <div class="code-content">
-          <span> Código de acceso </span>
+          <span>Código de acceso</span>
 
           <strong>
             {{ c.code }}
           </strong>
 
-          <small> Compártelo con tus estudiantes </small>
+          <small>Compártelo con tus estudiantes</small>
         </div>
-      </div>
+      </aside>
     </header>
 
-    <!-- STATS -->
+    <!-- =========================
+         STATS
+    ========================== -->
 
-    <section class="stats-grid">
+    <section class="stats-grid" aria-label="Resumen de la clase">
       <article class="stat-card">
         <div class="stat-icon students">
           <i data-lucide="users"></i>
         </div>
 
         <div class="stat-content">
-          <span> Estudiantes </span>
+          <span>Estudiantes</span>
 
           <strong>
             {{ c.studentsCount }}
           </strong>
 
-          <small> Inscritos en la clase </small>
+          <small>Inscritos en la clase</small>
         </div>
       </article>
 
@@ -76,40 +80,40 @@
         </div>
 
         <div class="stat-content">
-          <span> Actividades </span>
+          <span>Actividades</span>
 
           <strong>
             {{ c.assignmentsCount }}
           </strong>
 
-          <small> Actividades disponibles </small>
+          <small>Actividades disponibles</small>
         </div>
       </article>
 
       <article class="stat-card">
-        <div class="stat-icon status" [class.inactive]="!c.isActive">
-          <i [attr.data-lucide]="c.isActive ? 'circle-check' : 'circle-pause'"> </i>
+        <div class="stat-icon pending">
+          <i data-lucide="file-check"></i>
         </div>
 
         <div class="stat-content">
-          <span> Estado </span>
+          <span>Pendientes</span>
 
           <strong>
-            {{ c.isActive ? 'Activa' : 'Inactiva' }}
+            {{ pendingReviews().length }}
           </strong>
 
-          <small>
-            {{ c.isActive ? 'Disponible para estudiantes' : 'Acceso cerrado' }}
-          </small>
+          <small>Entregas por revisar</small>
         </div>
       </article>
     </section>
 
-    <!-- WORKSPACE -->
+    <!-- =========================
+         WORKSPACE
+    ========================== -->
 
     <section class="workspace">
       <div class="workspace-header">
-        <nav class="tabs">
+        <nav class="tabs" aria-label="Secciones de la clase">
           <button
             type="button"
             [class.active]="activeTab() === 'assignments'"
@@ -117,7 +121,7 @@
           >
             <i data-lucide="clipboard-list"></i>
 
-            <span> Actividades </span>
+            <span>Actividades</span>
 
             <span class="tab-count">
               {{ c.assignmentsCount }}
@@ -128,13 +132,14 @@
             type="button"
             [class.active]="activeTab() === 'pending'"
             (click)="changeTab('pending')"
-            >
-              <i data-lucide="file-check"></i>
-              <span> Pendientes </span>
+          >
+            <i data-lucide="file-check"></i>
 
-              <span class="tab-count">
-                {{ pendingReviews().length }}
-              </span>
+            <span>Pendientes</span>
+
+            <span class="tab-count">
+              {{ pendingReviews().length }}
+            </span>
           </button>
 
           <button
@@ -144,7 +149,7 @@
           >
             <i data-lucide="users"></i>
 
-            <span> Estudiantes </span>
+            <span>Estudiantes</span>
 
             <span class="tab-count">
               {{ c.studentsCount }}
@@ -152,36 +157,54 @@
           </button>
         </nav>
 
-        <button type="button" class="create-assignment-btn" (click)="openCreateAssignment()">
-          <i data-lucide="plus"></i>
+        @if (activeTab() === 'assignments') {
+          <button type="button" class="create-assignment-btn" (click)="openCreateAssignment()">
+            <i data-lucide="plus"></i>
 
-          <span> Nueva actividad </span>
-        </button>
+            <span>Nueva actividad</span>
+          </button>
+        }
       </div>
 
-      <!-- ACTIVIDADES -->
+      <!-- =========================
+           ACTIVIDADES
+      ========================== -->
 
       @if (activeTab() === 'assignments') {
         <section class="tab-content">
           <div class="section-header">
             <div>
-              <h2>Actividades</h2>
+              <span class="section-eyebrow">Actividades</span>
 
-              <p>Casos clínicos asignados a esta clase.</p>
+              <h2>Casos asignados</h2>
+
+              <p>Gestiona los casos clínicos asignados a esta clase.</p>
             </div>
 
             <span class="section-count">
               {{ c.assignmentsCount }}
-
               {{ c.assignmentsCount === 1 ? 'actividad' : 'actividades' }}
             </span>
           </div>
 
           @if (c.assignments.length === 0) {
             <section class="empty-state">
+              <div class="empty-icon">
+                <i data-lucide="clipboard-plus"></i>
+              </div>
+
               <h3>No hay actividades</h3>
 
-              <p>Aún no hay actividades disponibles.</p>
+              <p>
+                Aún no has creado actividades para esta clase. Crea una para comenzar a asignar
+                casos clínicos.
+              </p>
+
+              <button type="button" class="empty-action" (click)="openCreateAssignment()">
+                <i data-lucide="plus"></i>
+
+                <span>Crear actividad</span>
+              </button>
             </section>
           } @else {
             <div class="assignment-grid">
@@ -196,95 +219,121 @@
         </section>
       }
 
+      <!-- =========================
+           PENDIENTES
+      ========================== -->
+
       @if (activeTab() === 'pending') {
         <section class="tab-content">
           <div class="section-header">
             <div>
-              <h2>
-                Revisiones pendientes
-              </h2>
+              <span class="section-eyebrow">Revisión</span>
 
-              <p>
-                Entregas de estudiantes esperando evaluacion.
-              </p>
+              <h2>Revisiones pendientes</h2>
+
+              <p>Entregas de estudiantes esperando evaluación.</p>
             </div>
+
             <span class="section-count">
               {{ pendingReviews().length }}
-
-              {{
-                pendingReviews().length === 1
-                ? 'entrega'
-                : 'entregas'
-              }}
-
+              {{ pendingReviews().length === 1 ? 'entrega' : 'entregas' }}
             </span>
           </div>
 
           @if (pendingReviews().length === 0) {
             <section class="empty-state">
-              <h3>
-                No hay revisiones pendientes
-              </h3>
+              <div class="empty-icon success">
+                <i data-lucide="circle-check"></i>
+              </div>
 
-              <p>
-                Todas la entregas han sido revisadas.
-              </p>
+              <h3>No hay revisiones pendientes</h3>
+
+              <p>Todas las entregas han sido revisadas o aún no hay nuevas entregas disponibles.</p>
             </section>
           } @else {
-            <div class="assignment-grid">
+            <div class="review-grid">
               @for (review of pendingReviews(); track review.id) {
                 <article
-                  class="assignment-card"
+                  class="review-card"
+                  role="button"
+                  tabindex="0"
                   (click)="openSubmissionReview(review.id)"
+                  (keydown.enter)="openSubmissionReview(review.id)"
                 >
-                  <h3>
-                    {{ review.assignment.title }}
-                  </h3>
+                  <div class="review-card__header">
+                    <div class="review-card__icon">
+                      <i data-lucide="file-text"></i>
+                    </div>
 
-                  <p>
-                    {{ review.student.firstName }}
-                  </p>
+                    <span class="review-status"> Pendiente </span>
+                  </div>
 
-                  <strong>
-                    {{ review.case.title }}
-                  </strong>
+                  <div class="review-card__content">
+                    <h3>
+                      {{ review.assignment.title }}
+                    </h3>
+
+                    <p>
+                      Entrega realizada por
+                      <strong>
+                        {{ review.student.firstName }}
+                      </strong>
+                    </p>
+
+                    <div class="review-case">
+                      <span>Caso clínico</span>
+
+                      <strong>
+                        {{ review.case.title }}
+                      </strong>
+                    </div>
+                  </div>
+
+                  <footer class="review-card__footer">
+                    <span>Revisar entrega</span>
+
+                    <i data-lucide="arrow-up-right"></i>
+                  </footer>
                 </article>
               }
             </div>
           }
         </section>
-      } 
+      }
 
-      <!-- ESTUDIANTES SOLO TEACHER -->
+      <!-- =========================
+           ESTUDIANTES
+      ========================== -->
 
       @if ('students' in c && activeTab() === 'students') {
         <section class="tab-content">
           <div class="section-header">
             <div>
-              <h2>Estudiantes</h2>
+              <span class="section-eyebrow">Estudiantes</span>
 
-              <p>Estudiantes inscritos en esta clase.</p>
+              <h2>Inscritos</h2>
+
+              <p>Consulta los estudiantes inscritos en esta clase.</p>
             </div>
 
             <span class="section-count">
               {{ c.studentsCount }}
-
               {{ c.studentsCount === 1 ? 'estudiante' : 'estudiantes' }}
             </span>
           </div>
 
           @if (c.students.length === 0) {
             <section class="empty-state">
+              <div class="empty-icon students-empty">
+                <i data-lucide="user-plus"></i>
+              </div>
+
               <h3>No hay estudiantes inscritos</h3>
 
               <p>
                 Comparte el código
-
-                <strong>
-                  {{ c.code }}
-                </strong>
-
-                para que puedan unirse.
+                <strong>{{ c.code }}</strong>
+                para que tus estudiantes puedan unirse a la clase.
               </p>
             </section>
           } @else {
@@ -294,15 +343,34 @@
       }
     </section>
 
-    <!-- MODAL CREAR ACTIVIDAD -->
+    <!-- =========================
+         MODAL CREAR ACTIVIDAD
+    ========================== -->
 
     @if (showCreateAssignment()) {
-      <div class="modal-backdrop" (click)="closeCreateAssignment()">
-        <section class="assignment-modal" (click)="$event.stopPropagation()">
+      <div class="modal-backdrop" role="presentation" (click)="closeCreateAssignment()">
+        <section
+          class="assignment-modal"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="create-assignment-title"
+          (click)="$event.stopPropagation()"
+        >
           <header class="modal-header">
-            <h2>Crear actividad</h2>
+            <div>
+              <span class="modal-eyebrow">Nueva actividad</span>
 
-            <button type="button" class="close-modal" (click)="closeCreateAssignment()">
+              <h2 id="create-assignment-title">Crear actividad</h2>
+
+              <p>Selecciona los casos clínicos que formarán parte de esta actividad.</p>
+            </div>
+
+            <button
+              type="button"
+              class="close-modal"
+              aria-label="Cerrar modal"
+              (click)="closeCreateAssignment()"
+            >
               <i data-lucide="x"></i>
             </button>
           </header>

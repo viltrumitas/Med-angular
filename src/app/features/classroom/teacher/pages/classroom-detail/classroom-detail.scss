@@ -12,8 +12,14 @@ $teal-light: #f0fdfa;
 $success: #059669;
 $success-light: #ecfdf5;
 
+$warning: #d97706;
+$warning-light: #fff7ed;
+
 $purple: #7c3aed;
 $purple-light: #f5f3ff;
+
+$danger: #dc2626;
+$danger-light: #fef2f2;
 
 $text-primary: #0f172a;
 $text-secondary: #475569;
@@ -32,13 +38,68 @@ $background: #f8fafc;
 .classroom-page {
   width: 100%;
   max-width: 1450px;
-
   margin: 0 auto;
   padding: 2rem;
 }
 
 // =========================
-// CLASSROOM HEADER
+// LOADING STATE
+// =========================
+
+.state-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 360px;
+  padding: 3rem 2rem;
+
+  text-align: center;
+
+  background: $surface;
+  border: 1px solid $border;
+  border-radius: 16px;
+}
+
+.state-content {
+  h2 {
+    margin: 1rem 0 0;
+
+    color: $text-primary;
+
+    font-size: 1.08rem;
+    font-weight: 700;
+  }
+
+  p {
+    margin: 0.45rem 0 0;
+
+    color: $text-secondary;
+
+    font-size: 0.86rem;
+  }
+}
+
+.spinner {
+  width: 38px;
+  height: 38px;
+
+  border: 3px solid $border;
+  border-top-color: $primary;
+  border-radius: 50%;
+
+  animation: spin 700ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// =========================
+// HEADER
 // =========================
 
 .classroom-header {
@@ -48,36 +109,58 @@ $background: #f8fafc;
   align-items: center;
   justify-content: space-between;
 
-  gap: 3rem;
+  gap: 2.5rem;
 
   padding: 2rem;
   margin-bottom: 1.25rem;
 
   background:
-    radial-gradient(circle at 90% 15%, rgba(45, 212, 191, 0.14), transparent 30%),
+    radial-gradient(circle at 90% 10%, rgba(45, 212, 191, 0.16), transparent 32%),
+    radial-gradient(circle at 5% 100%, rgba(37, 99, 235, 0.08), transparent 30%),
     linear-gradient(135deg, #ffffff, #f8fffe);
 
   border: 1px solid $border;
   border-radius: 18px;
 
   overflow: hidden;
-}
 
-.classroom-header::before {
-  content: '';
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.03),
+    0 8px 26px rgba(15, 23, 42, 0.04);
 
-  position: absolute;
+  &::before {
+    content: '';
 
-  width: 220px;
-  height: 220px;
+    position: absolute;
 
-  top: -130px;
-  right: 100px;
+    width: 230px;
+    height: 230px;
 
-  border: 1px solid rgba(13, 148, 136, 0.08);
-  border-radius: 50%;
+    top: -140px;
+    right: 105px;
 
-  pointer-events: none;
+    border: 1px solid rgba(13, 148, 136, 0.1);
+    border-radius: 50%;
+
+    pointer-events: none;
+  }
+
+  &::after {
+    content: '';
+
+    position: absolute;
+
+    width: 130px;
+    height: 130px;
+
+    bottom: -80px;
+    left: -40px;
+
+    border: 1px solid rgba(37, 99, 235, 0.08);
+    border-radius: 50%;
+
+    pointer-events: none;
+  }
 }
 
 .header-main {
@@ -92,20 +175,20 @@ $background: #f8fafc;
     color: $text-primary;
 
     font-size: clamp(1.8rem, 3vw, 2.35rem);
-    font-weight: 750;
+    font-weight: 760;
     line-height: 1.15;
 
-    letter-spacing: -0.04em;
+    letter-spacing: -0.045em;
   }
 
   > p {
-    max-width: 650px;
+    max-width: 680px;
 
     margin: 0.7rem 0 0;
 
     color: $text-secondary;
 
-    font-size: 0.92rem;
+    font-size: 0.93rem;
     line-height: 1.65;
   }
 }
@@ -114,14 +197,14 @@ $background: #f8fafc;
   color: $teal;
 
   font-size: 0.72rem;
-  font-weight: 750;
+  font-weight: 760;
 
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 
 // =========================
-// STATUS
+// CLASSROOM STATUS
 // =========================
 
 .classroom-status {
@@ -135,7 +218,7 @@ $background: #f8fafc;
   color: $text-secondary;
 
   font-size: 0.78rem;
-  font-weight: 550;
+  font-weight: 600;
 }
 
 .status-dot {
@@ -168,38 +251,40 @@ $background: #f8fafc;
 
   gap: 1rem;
 
-  min-width: 280px;
+  min-width: 290px;
 
-  padding: 1.1rem 1.2rem;
+  padding: 1.15rem 1.2rem;
 
-  background: rgba(255, 255, 255, 0.82);
+  background: rgba(255, 255, 255, 0.84);
 
-  border: 1px solid rgba(13, 148, 136, 0.15);
-  border-radius: 14px;
+  border: 1px solid rgba(13, 148, 136, 0.16);
+  border-radius: 15px;
 
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
+  box-shadow:
+    0 8px 24px rgba(15, 23, 42, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
 
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .code-icon {
   display: grid;
   place-items: center;
 
-  width: 46px;
-  height: 46px;
+  width: 48px;
+  height: 48px;
 
   flex-shrink: 0;
 
   color: $teal;
   background: $teal-light;
 
-  border-radius: 12px;
+  border-radius: 13px;
 
   i {
-    width: 21px;
-    height: 21px;
+    width: 22px;
+    height: 22px;
   }
 }
 
@@ -213,7 +298,7 @@ $background: #f8fafc;
     color: $text-secondary;
 
     font-size: 0.72rem;
-    font-weight: 550;
+    font-weight: 600;
   }
 
   strong {
@@ -221,10 +306,10 @@ $background: #f8fafc;
 
     color: $text-primary;
 
-    font-size: 1.2rem;
-    font-weight: 750;
+    font-size: 1.25rem;
+    font-weight: 760;
 
-    letter-spacing: 0.08em;
+    letter-spacing: 0.09em;
   }
 
   small {
@@ -237,12 +322,11 @@ $background: #f8fafc;
 }
 
 // =========================
-// STATS
+// STATS GRID
 // =========================
 
 .stats-grid {
   display: grid;
-
   grid-template-columns: repeat(3, minmax(0, 1fr));
 
   gap: 1rem;
@@ -256,23 +340,28 @@ $background: #f8fafc;
 
   gap: 1rem;
 
-  min-height: 112px;
+  min-height: 114px;
 
   padding: 1.15rem;
 
   background: $surface;
 
   border: 1px solid $border;
-  border-radius: 14px;
+  border-radius: 15px;
 
   transition:
     transform 160ms ease,
+    border-color 160ms ease,
     box-shadow 160ms ease;
 
   &:hover {
     transform: translateY(-2px);
 
-    box-shadow: 0 10px 26px rgba(15, 23, 42, 0.05);
+    border-color: #cbd5e1;
+
+    box-shadow:
+      0 12px 28px rgba(15, 23, 42, 0.06),
+      0 2px 6px rgba(15, 23, 42, 0.03);
   }
 }
 
@@ -302,6 +391,11 @@ $background: #f8fafc;
     background: $purple-light;
   }
 
+  &.pending {
+    color: $warning;
+    background: $warning-light;
+  }
+
   &.status {
     color: $success;
     background: $success-light;
@@ -323,17 +417,16 @@ $background: #f8fafc;
     color: $text-secondary;
 
     font-size: 0.8rem;
-    font-weight: 550;
+    font-weight: 600;
   }
 
   strong {
-    margin-top: 0.15rem;
+    margin-top: 0.12rem;
 
     color: $text-primary;
 
     font-size: 1.45rem;
-    font-weight: 750;
-
+    font-weight: 760;
     line-height: 1.2;
   }
 
@@ -343,6 +436,7 @@ $background: #f8fafc;
     color: $text-muted;
 
     font-size: 0.7rem;
+    line-height: 1.35;
   }
 }
 
@@ -354,9 +448,13 @@ $background: #f8fafc;
   background: $surface;
 
   border: 1px solid $border;
-  border-radius: 16px;
+  border-radius: 17px;
 
   overflow: hidden;
+
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.03),
+    0 6px 18px rgba(15, 23, 42, 0.04);
 }
 
 .workspace-header {
@@ -366,7 +464,9 @@ $background: #f8fafc;
 
   gap: 1rem;
 
-  padding: 0.8rem 1rem;
+  padding: 0.85rem 1rem;
+
+  background: rgba(248, 250, 252, 0.75);
 
   border-bottom: 1px solid $border;
 }
@@ -379,7 +479,13 @@ $background: #f8fafc;
   display: flex;
   align-items: center;
 
-  gap: 0.3rem;
+  gap: 0.35rem;
+
+  padding: 0.25rem;
+
+  background: $background;
+
+  border-radius: 12px;
 }
 
 .tabs button {
@@ -389,9 +495,9 @@ $background: #f8fafc;
 
   gap: 0.5rem;
 
-  min-height: 40px;
+  min-height: 38px;
 
-  padding: 0.55rem 0.75rem;
+  padding: 0.5rem 0.75rem;
 
   color: $text-secondary;
   background: transparent;
@@ -401,27 +507,35 @@ $background: #f8fafc;
 
   font: inherit;
   font-size: 0.8rem;
-  font-weight: 550;
+  font-weight: 600;
+
+  white-space: nowrap;
 
   cursor: pointer;
 
   transition:
     color 160ms ease,
-    background-color 160ms ease;
+    background-color 160ms ease,
+    box-shadow 160ms ease;
 
   i {
     width: 16px;
     height: 16px;
+    flex-shrink: 0;
   }
 
   &:hover:not(.active) {
     color: $text-primary;
-    background: $background;
+    background: rgba(255, 255, 255, 0.75);
   }
 
   &.active {
     color: $primary;
-    background: $primary-light;
+    background: $surface;
+
+    box-shadow:
+      0 1px 3px rgba(15, 23, 42, 0.08),
+      0 1px 2px rgba(15, 23, 42, 0.04);
   }
 }
 
@@ -441,7 +555,7 @@ $background: #f8fafc;
   border-radius: 999px;
 
   font-size: 0.65rem;
-  font-weight: 700;
+  font-weight: 760;
 }
 
 .tabs button.active {
@@ -452,7 +566,7 @@ $background: #f8fafc;
 }
 
 // =========================
-// CREATE ACTIVITY BUTTON
+// CREATE ASSIGNMENT BUTTON
 // =========================
 
 .create-assignment-btn {
@@ -464,31 +578,35 @@ $background: #f8fafc;
 
   min-height: 40px;
 
-  padding: 0.55rem 0.85rem;
+  padding: 0.55rem 0.9rem;
 
   color: #ffffff;
   background: $primary;
 
   border: none;
-  border-radius: 9px;
+  border-radius: 10px;
 
   font: inherit;
-  font-size: 0.78rem;
-  font-weight: 650;
+  font-size: 0.8rem;
+  font-weight: 700;
+
+  white-space: nowrap;
 
   cursor: pointer;
 
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.16);
+
   transition:
     background-color 160ms ease,
-    transform 160ms ease,
-    box-shadow 160ms ease;
+    box-shadow 160ms ease,
+    transform 160ms ease;
 
   &:hover {
     background: $primary-hover;
 
     transform: translateY(-1px);
 
-    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.18);
+    box-shadow: 0 10px 24px rgba(37, 99, 235, 0.23);
   }
 
   i {
@@ -519,21 +637,41 @@ $background: #f8fafc;
 
     color: $text-primary;
 
-    font-size: 1.05rem;
-    font-weight: 700;
+    font-size: 1.08rem;
+    font-weight: 760;
+    line-height: 1.25;
   }
 
   p {
-    margin: 0.3rem 0 0;
+    margin: 0.35rem 0 0;
 
     color: $text-secondary;
 
-    font-size: 0.8rem;
+    font-size: 0.82rem;
+    line-height: 1.5;
   }
 }
 
+.section-eyebrow {
+  display: inline-block;
+
+  margin-bottom: 0.25rem;
+
+  color: $primary;
+
+  font-size: 0.68rem;
+  font-weight: 760;
+
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
 .section-count {
-  padding: 0.4rem 0.65rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0.42rem 0.7rem;
 
   color: $text-secondary;
   background: $background;
@@ -541,7 +679,7 @@ $background: #f8fafc;
   border-radius: 999px;
 
   font-size: 0.72rem;
-  font-weight: 600;
+  font-weight: 700;
 
   white-space: nowrap;
 }
@@ -551,9 +689,8 @@ $background: #f8fafc;
 // =========================
 
 .assignment-grid,
-.student-grid {
+.review-grid {
   display: grid;
-
   grid-template-columns: repeat(3, minmax(0, 1fr));
 
   gap: 1rem;
@@ -565,8 +702,13 @@ app-assignment-card {
   height: 100%;
 }
 
+app-student-card {
+  display: block;
+  min-width: 0;
+}
+
 // =========================
-// EMPTY
+// EMPTY STATE
 // =========================
 
 .empty-state {
@@ -575,38 +717,41 @@ app-assignment-card {
   align-items: center;
   justify-content: center;
 
-  min-height: 280px;
+  min-height: 285px;
 
   padding: 2.5rem 2rem;
 
   text-align: center;
 
-  background: $background;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.05), transparent 35%), $background;
 
   border: 1px dashed #cbd5e1;
-  border-radius: 14px;
+  border-radius: 15px;
 
   h3 {
     margin: 1rem 0 0;
 
     color: $text-primary;
 
-    font-size: 1rem;
-    font-weight: 680;
+    font-size: 1.02rem;
+    font-weight: 720;
   }
 
   p {
-    max-width: 430px;
+    max-width: 450px;
 
     margin: 0.5rem 0 0;
 
     color: $text-secondary;
 
-    font-size: 0.82rem;
+    font-size: 0.84rem;
     line-height: 1.6;
 
     strong {
       color: $text-primary;
+      font-weight: 760;
+      letter-spacing: 0.04em;
     }
   }
 }
@@ -615,17 +760,22 @@ app-assignment-card {
   display: grid;
   place-items: center;
 
-  width: 56px;
-  height: 56px;
+  width: 58px;
+  height: 58px;
 
   color: $primary;
   background: $primary-light;
 
-  border-radius: 15px;
+  border-radius: 16px;
 
   i {
-    width: 24px;
-    height: 24px;
+    width: 25px;
+    height: 25px;
+  }
+
+  &.success {
+    color: $success;
+    background: $success-light;
   }
 
   &.students-empty {
@@ -641,19 +791,19 @@ app-assignment-card {
 
   gap: 0.5rem;
 
-  margin-top: 1.3rem;
+  margin-top: 1.35rem;
 
-  padding: 0.65rem 0.9rem;
+  padding: 0.68rem 0.95rem;
 
   color: $primary;
   background: $primary-light;
 
   border: none;
-  border-radius: 9px;
+  border-radius: 10px;
 
   font: inherit;
-  font-size: 0.78rem;
-  font-weight: 650;
+  font-size: 0.8rem;
+  font-weight: 700;
 
   cursor: pointer;
 
@@ -674,114 +824,236 @@ app-assignment-card {
 }
 
 // =========================
-// LOADING
+// REVIEW CARDS
 // =========================
 
-.state-container {
+.review-card {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
 
-  min-height: 360px;
+  min-height: 255px;
 
-  padding: 3rem 2rem;
-
-  text-align: center;
+  padding: 1.15rem;
 
   background: $surface;
 
   border: 1px solid $border;
-  border-radius: 16px;
+  border-radius: 15px;
+
+  cursor: pointer;
+
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+
+  &:hover {
+    transform: translateY(-3px);
+
+    border-color: #cbd5e1;
+
+    box-shadow:
+      0 14px 32px rgba(15, 23, 42, 0.07),
+      0 2px 6px rgba(15, 23, 42, 0.03);
+  }
+
+  &:focus-visible {
+    outline: 2px solid rgba(37, 99, 235, 0.65);
+    outline-offset: 3px;
+  }
 }
 
-.state-content {
-  h2 {
-    margin: 1rem 0 0;
+.review-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 1rem;
+}
+
+.review-card__icon {
+  display: grid;
+  place-items: center;
+
+  width: 44px;
+  height: 44px;
+
+  color: $warning;
+  background: $warning-light;
+
+  border-radius: 12px;
+
+  i {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.review-status {
+  display: inline-flex;
+  align-items: center;
+
+  padding: 0.35rem 0.65rem;
+
+  color: #92400e;
+  background: $warning-light;
+
+  border-radius: 999px;
+
+  font-size: 0.7rem;
+  font-weight: 760;
+}
+
+.review-card__content {
+  flex: 1;
+
+  padding: 1.15rem 0;
+
+  h3 {
+    display: -webkit-box;
+
+    margin: 0;
 
     color: $text-primary;
 
-    font-size: 1.05rem;
+    font-size: 1rem;
+    font-weight: 720;
+    line-height: 1.4;
+
+    overflow: hidden;
+
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
   }
 
   p {
-    margin: 0.45rem 0 0;
+    margin: 0.7rem 0 0;
 
     color: $text-secondary;
 
-    font-size: 0.84rem;
+    font-size: 0.82rem;
+    line-height: 1.6;
+
+    strong {
+      color: $text-primary;
+      font-weight: 700;
+    }
   }
 }
 
-.spinner {
-  width: 38px;
-  height: 38px;
+.review-case {
+  margin-top: 1rem;
+  padding: 0.78rem;
 
-  border: 3px solid $border;
-  border-top-color: $primary;
-  border-radius: 50%;
+  background: $background;
 
-  animation: spin 700ms linear infinite;
-}
+  border: 1px solid $border-soft;
+  border-radius: 11px;
 
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
+  span {
+    display: block;
+
+    color: $text-muted;
+
+    font-size: 0.68rem;
+    font-weight: 760;
+
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  strong {
+    display: -webkit-box;
+
+    margin-top: 0.25rem;
+
+    color: $text-primary;
+
+    font-size: 0.8rem;
+    font-weight: 680;
+    line-height: 1.45;
+
+    overflow: hidden;
+
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
   }
 }
 
-// =========================
-// MODAL BACKDROP
-// =========================
-
-.modal-backdrop {
-  position: fixed;
-  inset: 0;
-
-  z-index: 1000;
-
+.review-card__footer {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
 
-  padding: 2rem;
+  padding-top: 0.9rem;
 
-  background: rgba(15, 23, 42, 0.52);
+  border-top: 1px solid $border-soft;
 
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
+  span {
+    color: $text-secondary;
 
-  animation: backdrop-in 180ms ease;
+    font-size: 0.78rem;
+    font-weight: 700;
+  }
+
+  i {
+    width: 16px;
+    height: 16px;
+
+    color: $primary;
+
+    transition: transform 160ms ease;
+  }
+}
+
+.review-card:hover {
+  .review-card__footer i {
+    transform: translate(2px, -2px);
+  }
 }
 
 // =========================
 // MODAL
 // =========================
 
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 1.5rem;
+
+  background: rgba(15, 23, 42, 0.46);
+
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+
+  animation: backdropIn 160ms ease;
+}
+
 .assignment-modal {
+  width: min(100%, 940px);
+  max-height: min(90vh, 850px);
+
   display: flex;
   flex-direction: column;
 
-  width: min(100%, 900px);
-  max-height: calc(100dvh - 4rem);
-
   background: $surface;
 
-  border: 1px solid rgba(226, 232, 240, 0.9);
   border-radius: 18px;
+
+  box-shadow:
+    0 30px 80px rgba(15, 23, 42, 0.26),
+    0 8px 20px rgba(15, 23, 42, 0.13);
 
   overflow: hidden;
 
-  box-shadow:
-    0 30px 80px rgba(15, 23, 42, 0.22),
-    0 8px 24px rgba(15, 23, 42, 0.1);
-
-  animation: modal-in 220ms ease;
+  animation: modalIn 180ms ease;
 }
-
-// =========================
-// MODAL HEADER
-// =========================
 
 .modal-header {
   display: flex;
@@ -790,46 +1062,33 @@ app-assignment-card {
 
   gap: 1.5rem;
 
-  padding: 1.4rem 1.5rem;
+  padding: 1.35rem 1.5rem;
 
-  background: radial-gradient(circle at 85% 0%, rgba(37, 99, 235, 0.08), transparent 35%), #ffffff;
+  background:
+    radial-gradient(circle at 95% 0%, rgba(37, 99, 235, 0.12), transparent 36%),
+    linear-gradient(135deg, #ffffff, #f8fbff);
 
   border-bottom: 1px solid $border;
-}
-
-.modal-heading {
-  display: flex;
-  align-items: flex-start;
-
-  gap: 1rem;
-
-  min-width: 0;
-}
-
-.modal-title {
-  min-width: 0;
 
   h2 {
-    margin: 0.2rem 0 0;
+    margin: 0.25rem 0 0;
 
     color: $text-primary;
 
-    font-size: 1.15rem;
-    font-weight: 720;
-    line-height: 1.3;
-
-    letter-spacing: -0.02em;
+    font-size: 1.16rem;
+    font-weight: 760;
+    line-height: 1.25;
   }
 
   p {
-    max-width: 600px;
+    max-width: 620px;
 
-    margin: 0.4rem 0 0;
+    margin: 0.35rem 0 0;
 
     color: $text-secondary;
 
-    font-size: 0.8rem;
-    line-height: 1.55;
+    font-size: 0.82rem;
+    line-height: 1.5;
   }
 }
 
@@ -837,52 +1096,26 @@ app-assignment-card {
   color: $primary;
 
   font-size: 0.68rem;
-  font-weight: 700;
+  font-weight: 760;
 
-  text-transform: uppercase;
   letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
-
-.modal-icon {
-  display: grid;
-  place-items: center;
-
-  width: 46px;
-  height: 46px;
-
-  flex-shrink: 0;
-
-  color: $primary;
-  background: $primary-light;
-
-  border-radius: 13px;
-
-  i {
-    width: 21px;
-    height: 21px;
-  }
-}
-
-// =========================
-// CLOSE MODAL
-// =========================
 
 .close-modal {
   display: grid;
   place-items: center;
 
-  width: 36px;
-  height: 36px;
+  width: 38px;
+  height: 38px;
 
   flex-shrink: 0;
-
-  padding: 0;
 
   color: $text-secondary;
   background: $background;
 
   border: none;
-  border-radius: 10px;
+  border-radius: 11px;
 
   cursor: pointer;
 
@@ -893,9 +1126,9 @@ app-assignment-card {
 
   &:hover {
     color: $text-primary;
-    background: #f1f5f9;
+    background: #e2e8f0;
 
-    transform: rotate(3deg);
+    transform: rotate(4deg);
   }
 
   i {
@@ -904,30 +1137,15 @@ app-assignment-card {
   }
 }
 
-// =========================
-// MODAL CONTENT
-// =========================
-
 .modal-content {
-  flex: 1;
-
-  min-height: 0;
+  overflow: auto;
 
   padding: 1.5rem;
 
-  overflow-y: auto;
-
-  overscroll-behavior: contain;
-
-  scrollbar-width: thin;
-  scrollbar-color: #cbd5e1 transparent;
+  background: $surface;
 }
 
-// =========================
-// ANIMATIONS
-// =========================
-
-@keyframes backdrop-in {
+@keyframes backdropIn {
   from {
     opacity: 0;
   }
@@ -937,16 +1155,14 @@ app-assignment-card {
   }
 }
 
-@keyframes modal-in {
+@keyframes modalIn {
   from {
     opacity: 0;
-
-    transform: translateY(12px) scale(0.985);
+    transform: translateY(12px) scale(0.98);
   }
 
   to {
     opacity: 1;
-
     transform: translateY(0) scale(1);
   }
 }
@@ -955,14 +1171,14 @@ app-assignment-card {
 // RESPONSIVE
 // =========================
 
-@media (max-width: 1100px) {
+@media (max-width: 1150px) {
   .assignment-grid,
-  .student-grid {
+  .review-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-@media (max-width: 850px) {
+@media (max-width: 900px) {
   .classroom-header {
     align-items: stretch;
     flex-direction: column;
@@ -978,6 +1194,19 @@ app-assignment-card {
   .stats-grid {
     grid-template-columns: 1fr;
   }
+
+  .workspace-header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .tabs {
+    width: fit-content;
+  }
+
+  .create-assignment-btn {
+    align-self: flex-start;
+  }
 }
 
 @media (max-width: 650px) {
@@ -987,19 +1216,43 @@ app-assignment-card {
 
   .classroom-header {
     padding: 1.3rem;
+    border-radius: 16px;
+  }
+
+  .header-main {
+    h1 {
+      font-size: 1.55rem;
+    }
+
+    > p {
+      font-size: 0.84rem;
+    }
+  }
+
+  .code-box {
+    padding: 1rem;
+  }
+
+  .stats-grid {
+    gap: 0.75rem;
+  }
+
+  .stat-card {
+    min-height: auto;
   }
 
   .workspace-header {
-    align-items: stretch;
-    flex-direction: column;
+    padding: 0.75rem;
   }
 
   .tabs {
     width: 100%;
+    overflow-x: auto;
   }
 
   .tabs button {
     flex: 1;
+    min-width: max-content;
   }
 
   .create-assignment-btn {
@@ -1015,60 +1268,25 @@ app-assignment-card {
   }
 
   .assignment-grid,
-  .student-grid {
+  .review-grid {
     grid-template-columns: 1fr;
   }
 
-  // MODAL MOBILE
-
   .modal-backdrop {
-    align-items: flex-end;
-
-    padding: 0;
+    padding: 0.75rem;
   }
 
   .assignment-modal {
-    width: 100%;
-    max-height: 92dvh;
+    max-height: 92vh;
 
-    border-radius: 18px 18px 0 0;
-
-    animation: modal-mobile-in 220ms ease;
+    border-radius: 16px;
   }
 
   .modal-header {
-    padding: 1.1rem;
-  }
-
-  .modal-heading {
-    gap: 0.75rem;
+    padding: 1rem;
   }
 
   .modal-content {
     padding: 1rem;
-  }
-
-  .modal-icon {
-    width: 42px;
-    height: 42px;
-
-    i {
-      width: 19px;
-      height: 19px;
-    }
-  }
-}
-
-@keyframes modal-mobile-in {
-  from {
-    opacity: 0;
-
-    transform: translateY(30px);
-  }
-
-  to {
-    opacity: 1;
-
-    transform: translateY(0);
   }
 }
