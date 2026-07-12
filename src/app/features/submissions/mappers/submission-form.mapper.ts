@@ -4,7 +4,7 @@ import { SubmissionFormValue } from '../form/submission-form.factory';
 export function mapSubmissionFormValue(submission: SubmissionResponseDto): SubmissionFormValue {
   return {
     clinical: {
-      sceneManagnment: submission.sceneManagment ?? '',
+      sceneManagement: submission.sceneManagement ?? '',
       sss: submission.sss ?? '',
       primaryTest: submission.primaryTest ?? '',
       sample: submission.sample ?? '',

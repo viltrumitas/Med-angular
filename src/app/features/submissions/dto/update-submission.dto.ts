@@ -1,7 +1,3 @@
-import { SubmissionFormValue } from '../form/submission-form.factory';
+import { SubmissionDto } from './submission.dto';
 
-type FlattendFormFields = SubmissionFormValue['clinical'] &
-  SubmissionFormValue['diagnostic'] &
-  SubmissionFormValue['treatment'];
-
-export type UpdateSubmissionDto = Partial<FlattendFormFields>;
+export type UpdateSubmissionDto = Partial<SubmissionDto>;

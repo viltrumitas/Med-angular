@@ -3,7 +3,7 @@ import { UpdateSubmissionDto } from '../dto/update-submission.dto';
 
 export function toUpdateSubmissionDto(form: SubmissionFormValue): UpdateSubmissionDto {
   return {
-    sceneManagnment: form.clinical.sceneManagnment,
+    sceneManagement: form.clinical.sceneManagement,
     sss: form.clinical.sss,
     primaryTest: form.clinical.primaryTest,
     sample: form.clinical.sample,

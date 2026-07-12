@@ -26,6 +26,7 @@ import { Clinical } from '../../components/clinical/clinical';
 import { Diagnostic } from '../../components/diagnostic/diagnostic';
 import { Treatment } from '../../components/treatment/treatment';
 import { createIcons, icons } from 'lucide';
+import { switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-submissions-detail',
@@ -96,12 +97,23 @@ export class SubmissionsDetail implements OnInit, AfterViewInit {
       return;
     }
 
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      this.saveError.set('Completa todos los campos obligatorios');
+      return;
+    }
+
+    const dto = toUpdateSubmissionDto(this.form.getRawValue());
+
     this.isSubmitting.set(true);
     this.saveError.set(null);
 
     this.api
-      .submit(submissionId)
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .update(submissionId, dto)
+      .pipe(
+        switchMap(() => this.api.submit(submissionId)),
+        takeUntilDestroyed(this.destroyRef),
+      )
       .subscribe({
         next: (response) => {
           this.submissions.set(response);
@@ -110,8 +122,10 @@ export class SubmissionsDetail implements OnInit, AfterViewInit {
           this.renderIcon();
         },
         error: (err: HttpErrorResponse) => {
-          console.error('[SubmissionDetail] Error al enviar:', err);
+          console.error('[SubmissionDetail] Error al guardar o enviar:', err);
+
           this.saveError.set(err.error?.message ?? 'No se pudo enviar la submission');
+
           this.isSubmitting.set(false);
           this.renderIcon();
         },

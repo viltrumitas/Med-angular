@@ -13,7 +13,7 @@ export interface SubmissionResponseDto {
 
   assignment: AssignmentResponseDto;
   case: CaseResponseDto;
-  sceneManagment?: string | null;
+  sceneManagement?: string | null;
   sss?: string | null;
   primaryTest?: string | null;
   sample?: string | null;
@@ -23,6 +23,7 @@ export interface SubmissionResponseDto {
   transferDecision?: boolean | null;
   treatmentPlan?: string | null;
   reportPatient?: string | null;
+
   status: SubmissionStatus | null;
 
   createdAt: Date;
