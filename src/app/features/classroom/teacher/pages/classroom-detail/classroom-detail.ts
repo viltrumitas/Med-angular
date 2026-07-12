@@ -7,6 +7,8 @@ import { AssignmentCard } from '../../../components/assignment-card/assignment-c
 import { createIcons, icons } from 'lucide';
 import { StudentCard } from '../../../components/student-card/student-card';
 import { ClassroomTeacherDetailModel } from '../../../models/classroom-teacher-detail.model';
+import { SubmissionApi } from '../../../../submissions/service/submission-api.service';
+import { SubmissionsListItem } from '../../../../reviews/models/submissions-list.model';
 
 @Component({
   selector: 'app-classroom-detail',
@@ -17,13 +19,17 @@ import { ClassroomTeacherDetailModel } from '../../../models/classroom-teacher-d
 })
 export class ClassroomDetail implements AfterViewInit, OnInit {
   private readonly api = inject(ClassroomApi);
+  private readonly submissionApi = inject(SubmissionApi);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
 
   readonly classroom = signal<ClassroomTeacherDetailModel | null>(null);
   readonly loading = signal(true);
 
-  readonly activeTab = signal<'assignments' | 'students'>('assignments');
+  readonly pendingReviews = signal<SubmissionsListItem[]>([]);
+  readonly loadingPendingReviews = signal(false);
+
+  readonly activeTab = signal<'assignments' | 'students' | 'pending'>('assignments');
   readonly showCreateAssignment = signal(false);
 
   ngOnInit() {
@@ -41,6 +47,7 @@ export class ClassroomDetail implements AfterViewInit, OnInit {
       next: (data) => {
         this.classroom.set(data);
         this.loading.set(false);
+        this.loadPendingReviews();
         this.renderIcon();
       },
       error: () => {
@@ -48,6 +55,36 @@ export class ClassroomDetail implements AfterViewInit, OnInit {
         this.renderIcon();
       },
     });
+  }
+
+  loadPendingReviews() {
+    const classroomId = this.classroom()?.id;
+
+    if (!classroomId) return;
+
+    this.loadingPendingReviews.set(true);
+
+    this.submissionApi.findPendingByClassroom(classroomId).subscribe({
+      next: (submissions) => {
+        console.log('[Pending reviews]', submissions);
+
+        this.pendingReviews.set(submissions);
+        this.loadingPendingReviews.set(false);
+      },
+
+      error: (err) => {
+        console.error('Error cargando revisiones pendientes', err)
+
+        this.loadingPendingReviews.set(false);
+      }
+    });
+  }
+
+  openSubmissionReview(submissionId: string) {
+    this.router.navigate([
+      '/dashboard/teacher/reviews/crear',
+      submissionId,
+    ]);
   }
 
   openAssignment(assignmentId: string) {
@@ -66,7 +103,7 @@ export class ClassroomDetail implements AfterViewInit, OnInit {
     this.renderIcon();
   }
 
-  changeTab(tab: 'assignments' | 'students') {
+  changeTab(tab: 'assignments' | 'students' | 'pending') {
     this.activeTab.set(tab);
     this.renderIcon();
   }

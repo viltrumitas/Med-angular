@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { SubmissionCard } from '../../components/review-card/review-card';
 import { ReviewApi } from '../../services/review-api';
 import { SubmissionsListItem } from '../../models/submissions-list.model';
+import { SubmissionApi } from '../../../submissions/service/submission-api.service';
 
 @Component({
   selector: 'app-review-list',
@@ -15,6 +16,7 @@ import { SubmissionsListItem } from '../../models/submissions-list.model';
 export class ReviewList implements OnInit {
   private readonly router = inject(Router);
   private readonly reviewsService = inject(ReviewApi);
+  private readonly submissionsService = inject(SubmissionApi)
 
   submissions = signal<SubmissionsListItem[]>([]);
   loading = signal(false);
@@ -26,7 +28,7 @@ export class ReviewList implements OnInit {
   loadSubmissions() {
     this.loading.set(true);
 
-    this.reviewsService.getMyPending().subscribe({
+    this.submissionsService.findPending().subscribe({
       next: (data) => {
         this.submissions.set(data);
         this.loading.set(false);

@@ -126,6 +126,19 @@
 
           <button
             type="button"
+            [class.active]="activeTab() === 'pending'"
+            (click)="changeTab('pending')"
+            >
+              <i data-lucide="file-check"></i>
+              <span> Pendientes </span>
+
+              <span class="tab-count">
+                {{ pendingReviews().length }}
+              </span>
+          </button>
+
+          <button
+            type="button"
             [class.active]="activeTab() === 'students'"
             (click)="changeTab('students')"
           >
@@ -182,6 +195,65 @@
           }
         </section>
       }
+
+      @if (activeTab() === 'pending') {
+        <section class="tab-content">
+          <div class="section-header">
+            <div>
+              <h2>
+                Revisiones pendientes
+              </h2>
+
+              <p>
+                Entregas de estudiantes esperando evaluacion.
+              </p>
+            </div>
+            <span class="section-count">
+              {{ pendingReviews().length }}
+
+              {{
+                pendingReviews().length === 1
+                ? 'entrega'
+                : 'entregas'
+              }}
+
+            </span>
+          </div>
+
+          @if (pendingReviews().length === 0) {
+            <section class="empty-state">
+              <h3>
+                No hay revisiones pendientes
+              </h3>
+
+              <p>
+                Todas la entregas han sido revisadas.
+              </p>
+            </section>
+          } @else {
+            <div class="assignment-grid">
+              @for (review of pendingReviews(); track review.id) {
+                <article
+                  class="assignment-card"
+                  (click)="openSubmissionReview(review.id)"
+                >
+                  <h3>
+                    {{ review.assignment.title }}
+                  </h3>
+
+                  <p>
+                    {{ review.student.firstName }}
+                  </p>
+
+                  <strong>
+                    {{ review.case.title }}
+                  </strong>
+                </article>
+              }
+            </div>
+          }
+        </section>
+      } 
 
       <!-- ESTUDIANTES SOLO TEACHER -->
 
