@@ -171,7 +171,11 @@
               <span class="logout-content__description"> Finalizar sesión </span>
             </span>
 
-            <i class="logout-arrow" data-lucide="arrow-right" aria-hidden="true"></i>
+            @if (!collapsed() || mobileOpen()) {
+              <span class="logout-arrow-wrapper" aria-hidden="true">
+                <i data-lucide="arrow-right"></i>
+              </span>
+            }
           }
         </button>
       }

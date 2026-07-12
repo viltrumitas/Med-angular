@@ -1,9 +1,11 @@
 // ==========================================================================
-// ASSIGNED CASE DETAIL / CASE PAGE
+// ASSIGNED CASE DETAIL
 // ==========================================================================
 
 :host {
   display: block;
+
+  width: 100%;
   min-width: 0;
 }
 
@@ -27,12 +29,6 @@ $amber-light: #fffbeb;
 $emerald: #059669;
 $emerald-light: #ecfdf5;
 
-$violet: #7c3aed;
-$violet-light: #f5f3ff;
-
-$cyan: #0891b2;
-$cyan-light: #ecfeff;
-
 $slate-950: #020617;
 $slate-900: #0f172a;
 $slate-800: #1e293b;
@@ -55,9 +51,9 @@ $radius-2xl: 2rem;
 
 $shadow-sm: 0 10px 30px rgba(15, 23, 42, 0.06);
 $shadow-md: 0 18px 45px rgba(15, 23, 42, 0.08);
-$shadow-lg: 0 28px 70px rgba(15, 23, 42, 0.12);
 
 $transition: 0.22s ease;
+$accordion-transition: cubic-bezier(0.22, 1, 0.36, 1);
 
 // ==========================================================================
 // MIXINS
@@ -70,30 +66,43 @@ $transition: 0.22s ease;
 }
 
 @mixin card-base {
-  border: 1px solid rgba($slate-200, 0.9);
   background: rgba($white, 0.94);
+
+  border: 1px solid rgba($slate-200, 0.9);
+
   box-shadow: $shadow-sm;
+
   backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
 }
 
-@mixin icon-box($bg, $color) {
+@mixin icon-box($background, $color) {
   @include flex-center;
 
   flex: 0 0 auto;
 
   color: $color;
-  background: radial-gradient(circle at 30% 20%, rgba($white, 0.78), transparent 38%), $bg;
+
+  background: radial-gradient(circle at 30% 20%, rgba($white, 0.78), transparent 38%), $background;
 
   i,
   svg {
     width: 1.15rem;
     height: 1.15rem;
+
     stroke-width: 2.2;
   }
 }
 
+@mixin focus-ring {
+  &:focus-visible {
+    outline: 3px solid rgba($primary, 0.2);
+    outline-offset: -3px;
+  }
+}
+
 @mixin tablet {
-  @media (max-width: 72rem) {
+  @media (max-width: 56.25rem) {
     @content;
   }
 }
@@ -105,19 +114,23 @@ $transition: 0.22s ease;
 }
 
 // ==========================================================================
-// PAGE BASE
+// PAGE
 // ==========================================================================
 
 .case-page {
   display: grid;
+
   gap: clamp(1rem, 2vw, 1.4rem);
 
   width: min(100%, 96rem);
   min-width: 0;
+
   margin-inline: auto;
   padding: clamp(1rem, 2.4vw, 2rem);
 
   color: $slate-900;
+
+  box-sizing: border-box;
 }
 
 // ==========================================================================
@@ -134,6 +147,7 @@ $transition: 0.22s ease;
   gap: 1rem;
 
   min-height: 24rem;
+
   padding: 2rem;
 
   text-align: center;
@@ -148,10 +162,12 @@ $transition: 0.22s ease;
   width: 3.35rem;
   height: 3.35rem;
 
+  flex: 0 0 3.35rem;
+
   color: $primary;
+  background: $primary-light;
 
   border-radius: 1.2rem;
-  background: $primary-light;
 
   i,
   svg {
@@ -163,12 +179,14 @@ $transition: 0.22s ease;
 .state-content,
 .state-container__content {
   display: grid;
+
   gap: 0.35rem;
 
   h2 {
     margin: 0;
 
     color: $slate-950;
+
     font-size: clamp(1.25rem, 2vw, 1.6rem);
     font-weight: 900;
     letter-spacing: -0.035em;
@@ -178,14 +196,16 @@ $transition: 0.22s ease;
     margin: 0;
 
     color: $slate-500;
+
     font-size: 0.95rem;
     line-height: 1.5;
   }
 }
 
 .state-container--error {
-  border-color: rgba($rose, 0.18);
   background: radial-gradient(circle at 100% 0%, rgba($rose, 0.08), transparent 35%), $white;
+
+  border-color: rgba($rose, 0.18);
 
   .state-container__icon,
   .state-icon {
@@ -198,17 +218,13 @@ $transition: 0.22s ease;
   width: 2.65rem;
   height: 2.65rem;
 
+  flex: 0 0 2.65rem;
+
   border: 3px solid rgba($primary, 0.16);
   border-top-color: $primary;
   border-radius: 999px;
 
   animation: spin 0.85s linear infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
 }
 
 // ==========================================================================
@@ -218,23 +234,25 @@ $transition: 0.22s ease;
 .case-header {
   position: relative;
 
-  display: flex;
-  align-items: stretch;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
 
   gap: 1.25rem;
 
+  min-width: 0;
+
+  padding: clamp(1.2rem, 2.2vw, 1.65rem);
+
   overflow: hidden;
-
-  padding: clamp(1.25rem, 2.4vw, 1.85rem);
-
-  border: 1px solid rgba($primary, 0.12);
-  border-radius: $radius-2xl;
 
   background:
     radial-gradient(circle at 95% 0%, rgba($primary, 0.16), transparent 32%),
     radial-gradient(circle at 0% 0%, rgba($teal, 0.1), transparent 28%),
     linear-gradient(135deg, $white 0%, $slate-50 100%);
+
+  border: 1px solid rgba($primary, 0.12);
+  border-radius: $radius-xl;
 
   box-shadow: $shadow-md;
 }
@@ -245,43 +263,51 @@ $transition: 0.22s ease;
 
   display: grid;
   align-content: center;
-  gap: 0.6rem;
+
+  gap: 0.55rem;
 
   min-width: 0;
 
   h1 {
     margin: 0;
 
+    overflow-wrap: anywhere;
+
     color: $slate-950;
-    font-size: clamp(2rem, 4vw, 3.35rem);
+
+    font-size: clamp(1.65rem, 3vw, 2.55rem);
     font-weight: 950;
-    line-height: 0.96;
-    letter-spacing: -0.06em;
+    line-height: 1.02;
+    letter-spacing: -0.055em;
   }
 
   p {
     max-width: 44rem;
+
     margin: 0;
 
     color: $slate-600;
-    font-size: 1rem;
-    line-height: 1.55;
+
+    font-size: 0.92rem;
+    line-height: 1.5;
   }
 }
 
 .case-header__eyebrow {
   width: fit-content;
-  padding: 0.48rem 0.75rem;
+
+  padding: 0.42rem 0.68rem;
 
   color: $primary-dark;
-  font-size: 0.76rem;
-  font-weight: 900;
-  letter-spacing: 0.055em;
-  text-transform: uppercase;
+  background: $primary-light;
 
   border: 1px solid rgba($primary, 0.14);
   border-radius: 999px;
-  background: $primary-light;
+
+  font-size: 0.69rem;
+  font-weight: 900;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
 }
 
 // ==========================================================================
@@ -294,26 +320,28 @@ $transition: 0.22s ease;
 
   display: flex;
   align-items: center;
-  align-self: center;
 
-  gap: 0.85rem;
+  gap: 0.75rem;
 
-  min-width: min(100%, 16rem);
-  padding: 1rem;
+  min-width: 14rem;
+
+  padding: 0.85rem;
+
+  background: rgba($white, 0.82);
 
   border: 1px solid $slate-200;
-  border-radius: $radius-xl;
-  background: rgba($white, 0.82);
+  border-radius: $radius-lg;
+
   box-shadow: $shadow-sm;
 }
 
 .case-status-card__icon {
   @include icon-box($slate-100, $slate-600);
 
-  width: 3rem;
-  height: 3rem;
+  width: 2.7rem;
+  height: 2.7rem;
 
-  border-radius: 1rem;
+  border-radius: 0.85rem;
 }
 
 .case-status-card__content {
@@ -323,7 +351,8 @@ $transition: 0.22s ease;
     display: block;
 
     color: $slate-500;
-    font-size: 0.72rem;
+
+    font-size: 0.66rem;
     font-weight: 850;
     letter-spacing: 0.045em;
     text-transform: uppercase;
@@ -331,17 +360,21 @@ $transition: 0.22s ease;
 
   strong {
     display: block;
-    margin-top: 0.2rem;
+
+    margin-top: 0.15rem;
 
     color: $slate-950;
-    font-size: 1rem;
+
+    font-size: 0.92rem;
     font-weight: 950;
   }
 }
 
 .case-status-card--draft {
-  border-color: rgba($amber, 0.18);
+  color: $amber;
   background: rgba($amber-light, 0.9);
+
+  border-color: rgba($amber, 0.18);
 
   .case-status-card__icon {
     color: $amber;
@@ -350,8 +383,9 @@ $transition: 0.22s ease;
 }
 
 .case-status-card--submitted {
-  border-color: rgba($primary, 0.18);
   background: rgba($primary-light, 0.9);
+
+  border-color: rgba($primary, 0.18);
 
   .case-status-card__icon {
     color: $primary;
@@ -360,8 +394,9 @@ $transition: 0.22s ease;
 }
 
 .case-status-card--reviewed {
-  border-color: rgba($emerald, 0.18);
   background: rgba($emerald-light, 0.9);
+
+  border-color: rgba($emerald, 0.18);
 
   .case-status-card__icon {
     color: $emerald;
@@ -370,7 +405,24 @@ $transition: 0.22s ease;
 }
 
 // ==========================================================================
-// SHARED PANEL HEADER
+// SHARED PANELS
+// ==========================================================================
+
+.case-panel,
+.start-panel,
+.split-panel,
+.submission-toolbar {
+  @include card-base;
+
+  min-width: 0;
+
+  overflow: hidden;
+
+  border-radius: $radius-xl;
+}
+
+// ==========================================================================
+// PANEL HEADER
 // ==========================================================================
 
 .panel-header {
@@ -380,11 +432,36 @@ $transition: 0.22s ease;
 
   gap: 1rem;
 
+  width: 100%;
   min-width: 0;
+
   padding: 1rem 1.1rem;
 
-  border-bottom: 1px solid $slate-200;
+  color: inherit;
+
   background: linear-gradient(180deg, rgba($white, 0.96), rgba($slate-50, 0.82));
+
+  border: 0;
+  border-bottom: 1px solid $slate-200;
+
+  font: inherit;
+  text-align: left;
+}
+
+.panel-header--toggle {
+  cursor: pointer;
+
+  -webkit-tap-highlight-color: transparent;
+
+  transition:
+    background-color $transition,
+    border-color $transition;
+
+  @include focus-ring;
+
+  &:hover {
+    background: linear-gradient(180deg, rgba($primary-light, 0.62), rgba($white, 0.95));
+  }
 }
 
 .panel-header__content {
@@ -394,6 +471,7 @@ $transition: 0.22s ease;
     margin: 0.2rem 0 0;
 
     color: $slate-950;
+
     font-size: 1.08rem;
     font-weight: 950;
     letter-spacing: -0.03em;
@@ -404,72 +482,166 @@ $transition: 0.22s ease;
   display: block;
 
   color: $slate-500;
-  font-size: 0.72rem;
+
+  font-size: 0.7rem;
   font-weight: 850;
   letter-spacing: 0.055em;
   text-transform: uppercase;
 }
 
+.panel-header__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  gap: 0.55rem;
+
+  flex: 0 0 auto;
+}
+
 .panel-badge {
   flex: 0 0 auto;
 
-  padding: 0.42rem 0.65rem;
+  padding: 0.4rem 0.62rem;
 
   color: $slate-600;
-  font-size: 0.72rem;
-  font-weight: 900;
+  background: $white;
 
   border: 1px solid $slate-200;
   border-radius: 999px;
-  background: $white;
+
+  font-size: 0.68rem;
+  font-weight: 900;
 }
 
 .panel-badge--submission {
   color: $amber;
-  border-color: rgba($amber, 0.18);
   background: $amber-light;
+
+  border-color: rgba($amber, 0.18);
 }
 
 .panel-badge--submitted {
   color: $primary;
-  border-color: rgba($primary, 0.18);
   background: $primary-light;
+
+  border-color: rgba($primary, 0.18);
 }
 
 .panel-badge--reviewed {
   color: $emerald;
-  border-color: rgba($emerald, 0.18);
   background: $emerald-light;
+
+  border-color: rgba($emerald, 0.18);
 }
 
 // ==========================================================================
-// SINGLE LAYOUT - BEFORE STARTING SUBMISSION
+// ACCORDION
+// ==========================================================================
+
+.panel-toggle-icon {
+  @include flex-center;
+
+  width: 2rem;
+  height: 2rem;
+
+  flex: 0 0 2rem;
+
+  color: $slate-500;
+  background: $slate-100;
+
+  border: 1px solid $slate-200;
+  border-radius: 0.65rem;
+
+  transition:
+    color $transition,
+    background-color $transition,
+    border-color $transition,
+    transform 0.28s $accordion-transition;
+
+  i,
+  svg {
+    width: 1rem;
+    height: 1rem;
+
+    pointer-events: none;
+  }
+}
+
+.panel-toggle-icon--open {
+  color: $primary;
+  background: $primary-light;
+
+  border-color: rgba($primary, 0.14);
+
+  transform: rotate(180deg);
+}
+
+.panel-collapse {
+  display: grid;
+  grid-template-rows: 0fr;
+
+  min-width: 0;
+
+  opacity: 0;
+  visibility: hidden;
+
+  transition:
+    grid-template-rows 0.32s $accordion-transition,
+    opacity 0.18s ease,
+    visibility 0s linear 0.32s;
+
+  > * {
+    min-height: 0;
+
+    overflow: hidden;
+  }
+}
+
+.panel-collapse--open {
+  grid-template-rows: 1fr;
+
+  opacity: 1;
+  visibility: visible;
+
+  transition:
+    grid-template-rows 0.32s $accordion-transition,
+    opacity 0.22s ease 0.05s,
+    visibility 0s linear;
+}
+
+.panel-collapse--split {
+  flex: 1;
+
+  min-height: 0;
+}
+
+.panel--collapsed {
+  align-self: start;
+
+  .panel-header {
+    border-bottom-color: transparent;
+  }
+}
+
+// ==========================================================================
+// SINGLE LAYOUT
 // ==========================================================================
 
 .case-single-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(19rem, 0.32fr);
+  grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.32fr);
 
   gap: 1rem;
 
   min-width: 0;
+
   align-items: start;
-}
-
-.case-panel,
-.start-panel,
-.split-panel,
-.submission-toolbar {
-  @include card-base;
-
-  min-width: 0;
-
-  border-radius: $radius-xl;
-  overflow: hidden;
 }
 
 .case-panel {
   display: grid;
+
   min-width: 0;
 }
 
@@ -477,48 +649,29 @@ $transition: 0.22s ease;
   min-width: 0;
 }
 
+// ==========================================================================
+// START PANEL
+// ==========================================================================
+
 .start-panel {
   position: sticky;
   top: 1rem;
 
   display: grid;
   align-content: start;
-  gap: 0.85rem;
 
-  padding: clamp(1.1rem, 2vw, 1.35rem);
+  gap: 0.8rem;
+
+  padding: clamp(1rem, 2vw, 1.25rem);
 
   background: radial-gradient(circle at 100% 0%, rgba($teal, 0.1), transparent 36%), $white;
-}
 
-.start-panel__icon {
-  @include icon-box($teal-light, $teal);
-
-  width: 3.4rem;
-  height: 3.4rem;
-
-  border-radius: 1.15rem;
-
-  i,
-  svg {
-    width: 1.55rem;
-    height: 1.55rem;
-  }
-}
-
-.start-panel__eyebrow {
-  color: $teal;
-  font-size: 0.76rem;
-  font-weight: 900;
-  letter-spacing: 0.055em;
-  text-transform: uppercase;
-}
-
-.start-panel {
   h2 {
     margin: 0;
 
     color: $slate-950;
-    font-size: clamp(1.35rem, 2vw, 1.7rem);
+
+    font-size: clamp(1.25rem, 2vw, 1.6rem);
     font-weight: 950;
     letter-spacing: -0.045em;
   }
@@ -527,14 +680,40 @@ $transition: 0.22s ease;
     margin: 0;
 
     color: $slate-600;
-    font-size: 0.95rem;
-    line-height: 1.6;
+
+    font-size: 0.9rem;
+    line-height: 1.55;
   }
+}
+
+.start-panel__icon {
+  @include icon-box($teal-light, $teal);
+
+  width: 3.1rem;
+  height: 3.1rem;
+
+  border-radius: 1rem;
+
+  i,
+  svg {
+    width: 1.4rem;
+    height: 1.4rem;
+  }
+}
+
+.start-panel__eyebrow {
+  color: $teal;
+
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
 }
 
 .start-panel__actions {
   display: grid;
-  margin-top: 0.25rem;
+
+  margin-top: 0.2rem;
 }
 
 // ==========================================================================
@@ -543,6 +722,7 @@ $transition: 0.22s ease;
 
 .submission-workspace {
   display: grid;
+
   gap: 1rem;
 
   min-width: 0;
@@ -560,7 +740,7 @@ $transition: 0.22s ease;
 
   gap: 1rem;
 
-  padding: 1rem;
+  padding: 0.9rem 1rem;
 
   background: radial-gradient(circle at 100% 0%, rgba($primary, 0.08), transparent 32%), $white;
 }
@@ -569,7 +749,7 @@ $transition: 0.22s ease;
   display: flex;
   align-items: center;
 
-  gap: 0.85rem;
+  gap: 0.8rem;
 
   min-width: 0;
 }
@@ -577,30 +757,32 @@ $transition: 0.22s ease;
 .submission-toolbar__icon {
   @include icon-box($primary-light, $primary);
 
-  width: 3rem;
-  height: 3rem;
+  width: 2.8rem;
+  height: 2.8rem;
 
-  border-radius: 1rem;
+  border-radius: 0.9rem;
 }
 
 .submission-toolbar__info {
   min-width: 0;
 
   h2 {
-    margin: 0.18rem 0 0;
+    margin: 0.15rem 0 0;
 
     color: $slate-950;
-    font-size: 1.15rem;
+
+    font-size: 1.08rem;
     font-weight: 950;
     letter-spacing: -0.035em;
   }
 
   p {
-    margin: 0.25rem 0 0;
+    margin: 0.2rem 0 0;
 
     color: $slate-500;
-    font-size: 0.9rem;
-    line-height: 1.45;
+
+    font-size: 0.84rem;
+    line-height: 1.4;
   }
 }
 
@@ -608,7 +790,8 @@ $transition: 0.22s ease;
   display: block;
 
   color: $slate-500;
-  font-size: 0.72rem;
+
+  font-size: 0.68rem;
   font-weight: 850;
   letter-spacing: 0.055em;
   text-transform: uppercase;
@@ -619,7 +802,7 @@ $transition: 0.22s ease;
   align-items: center;
   justify-content: flex-end;
 
-  gap: 0.75rem;
+  gap: 0.7rem;
 
   flex: 0 0 auto;
 }
@@ -630,16 +813,18 @@ $transition: 0.22s ease;
 
 .case-split-layout {
   display: grid;
-  grid-template-columns: minmax(22rem, 0.92fr) minmax(26rem, 1.08fr);
+  grid-template-columns: minmax(21rem, 0.92fr) minmax(25rem, 1.08fr);
 
   gap: 1rem;
 
+  width: 100%;
   min-width: 0;
 
-  // Altura calculada para que las columnas tengan scroll interno.
-  // Ajusta si tu layout tiene otra altura de navbar/sidebar.
-  height: calc(100vh - 18.5rem);
-  min-height: 38rem;
+  height: calc(100dvh - 17rem);
+  min-height: 32rem;
+  max-height: calc(100dvh - 17rem);
+
+  overflow: hidden;
 }
 
 .split-panel {
@@ -648,8 +833,31 @@ $transition: 0.22s ease;
 
   min-width: 0;
   min-height: 0;
+  height: 100%;
 
   overflow: hidden;
+}
+
+.panel-collapse--split {
+  flex: 1;
+
+  min-width: 0;
+  min-height: 0;
+
+  overflow: hidden;
+
+  &.panel-collapse--open {
+    min-height: 0;
+  }
+}
+
+.panel-collapse--split > .split-panel__scroll {
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .split-panel--case {
@@ -660,9 +868,14 @@ $transition: 0.22s ease;
   border-color: rgba($teal, 0.12);
 }
 
-.split-panel__scroll {
-  flex: 1;
+// ==========================================================================
+// PANEL SCROLL
+// ==========================================================================
 
+.split-panel__scroll {
+  flex: 1 1 auto;
+
+  width: 100%;
   min-width: 0;
   min-height: 0;
 
@@ -673,14 +886,7 @@ $transition: 0.22s ease;
   scrollbar-gutter: stable;
 
   scroll-behavior: smooth;
-}
 
-.split-panel__scroll--submission {
-  background: linear-gradient(180deg, rgba($slate-50, 0.4), rgba($white, 0.85));
-}
-
-// Scrollbar solo dentro de los paneles.
-.split-panel__scroll {
   scrollbar-width: thin;
   scrollbar-color: rgba($slate-400, 0.75) transparent;
 
@@ -693,15 +899,19 @@ $transition: 0.22s ease;
   }
 
   &::-webkit-scrollbar-thumb {
+    background-color: rgba($slate-400, 0.75);
+    background-clip: padding-box;
+
     border: 0.18rem solid transparent;
     border-radius: 999px;
-    background-clip: padding-box;
-    background-color: rgba($slate-400, 0.75);
   }
 
   &::-webkit-scrollbar-thumb:hover {
     background-color: rgba($slate-500, 0.85);
   }
+}
+.split-panel__scroll--submission {
+  background: linear-gradient(180deg, rgba($slate-50, 0.4), rgba($white, 0.85));
 }
 
 // ==========================================================================
@@ -711,10 +921,11 @@ $transition: 0.22s ease;
 app-case-content,
 app-submissions-detail {
   display: block;
+
+  width: 100%;
   min-width: 0;
 }
 
-// Evita que los hijos creen scroll extra si algún estilo viejo quedó vivo.
 :host ::ng-deep {
   app-case-content,
   app-submissions-detail {
@@ -728,7 +939,7 @@ app-submissions-detail {
 }
 
 // ==========================================================================
-// RESPONSIVE
+// TABLET
 // ==========================================================================
 
 @include tablet {
@@ -737,7 +948,7 @@ app-submissions-detail {
   }
 
   .case-header {
-    flex-direction: column;
+    grid-template-columns: 1fr;
   }
 
   .case-status-card {
@@ -771,20 +982,40 @@ app-submissions-detail {
 
     height: auto;
     min-height: 0;
+    max-height: none;
+
+    overflow: visible;
   }
 
   .split-panel {
+    height: auto;
     min-height: 0;
   }
 
-  .split-panel__scroll {
-    overflow: visible;
+  .panel-collapse--split {
+    flex: initial;
+
+    overflow: hidden;
+  }
+
+  .panel-collapse--split.panel-collapse--open {
+    .split-panel__scroll {
+      height: auto;
+      max-height: none;
+
+      overflow: visible;
+    }
   }
 }
 
+// ==========================================================================
+// MOBILE
+// ==========================================================================
+
 @include mobile {
   .case-page {
-    gap: 0.85rem;
+    gap: 0.8rem;
+
     padding: 0.75rem;
   }
 
@@ -792,53 +1023,105 @@ app-submissions-detail {
     flex-direction: column;
 
     min-height: 18rem;
+
     padding: 1.25rem;
 
     border-radius: $radius-xl;
   }
 
   .case-header {
-    padding: 1.1rem;
-    border-radius: $radius-xl;
-  }
+    gap: 0.85rem;
 
-  .case-header__content {
-    h1 {
-      font-size: clamp(1.85rem, 11vw, 2.55rem);
-    }
+    padding: 1rem;
 
-    p {
-      font-size: 0.92rem;
-    }
-  }
-
-  .case-status-card {
-    padding: 0.9rem;
     border-radius: $radius-lg;
   }
 
+  .case-header__content {
+    padding-right: 3.1rem;
+
+    h1 {
+      font-size: clamp(1.45rem, 8vw, 2rem);
+      line-height: 1.05;
+    }
+
+    p {
+      font-size: 0.84rem;
+    }
+  }
+
+  .case-header__eyebrow {
+    padding: 0.36rem 0.58rem;
+
+    font-size: 0.61rem;
+  }
+
+  .case-status-card {
+    padding: 0.75rem;
+
+    border-radius: $radius-md;
+  }
+
+  .case-status-card__icon {
+    width: 2.4rem;
+    height: 2.4rem;
+
+    flex-basis: 2.4rem;
+  }
+
   .panel-header {
-    align-items: flex-start;
-    padding: 0.9rem;
+    align-items: center;
+
+    gap: 0.7rem;
+
+    min-height: 4rem;
+
+    padding: 0.8rem;
   }
 
   .panel-header__content {
     h2 {
-      font-size: 1rem;
+      font-size: 0.96rem;
     }
   }
 
+  .panel-header__eyebrow {
+    font-size: 0.62rem;
+  }
+
+  .panel-header__actions {
+    gap: 0.4rem;
+  }
+
   .panel-badge {
-    font-size: 0.68rem;
+    max-width: 7rem;
+
+    overflow: hidden;
+
+    padding: 0.35rem 0.5rem;
+
+    font-size: 0.61rem;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .panel-toggle-icon {
+    width: 1.85rem;
+    height: 1.85rem;
+
+    flex-basis: 1.85rem;
   }
 
   .start-panel {
     padding: 1rem;
+
     border-radius: $radius-lg;
   }
 
   .submission-toolbar {
-    padding: 0.9rem;
+    padding: 0.8rem;
+
     border-radius: $radius-lg;
   }
 
@@ -847,17 +1130,19 @@ app-submissions-detail {
   }
 
   .submission-toolbar__icon {
-    width: 2.65rem;
-    height: 2.65rem;
+    width: 2.5rem;
+    height: 2.5rem;
+
+    flex-basis: 2.5rem;
   }
 
   .submission-toolbar__info {
     h2 {
-      font-size: 1.05rem;
+      font-size: 1rem;
     }
 
     p {
-      font-size: 0.86rem;
+      font-size: 0.8rem;
     }
   }
 
@@ -872,5 +1157,100 @@ app-submissions-detail {
   .case-panel,
   .split-panel {
     border-radius: $radius-lg;
+  }
+
+  .panel-collapse--open {
+    .split-panel__scroll {
+      overflow: visible;
+    }
+  }
+}
+
+// ==========================================================================
+// VERY SMALL MOBILE
+// ==========================================================================
+
+@media (max-width: 30rem) {
+  .case-page {
+    padding: 0.65rem;
+  }
+
+  .case-header__content {
+    padding-right: 2.8rem;
+
+    h1 {
+      font-size: 1.35rem;
+    }
+
+    p {
+      font-size: 0.78rem;
+    }
+  }
+
+  .panel-header {
+    gap: 0.55rem;
+
+    padding: 0.75rem;
+  }
+
+  .panel-header__content {
+    h2 {
+      font-size: 0.9rem;
+    }
+  }
+
+  .panel-header__eyebrow {
+    font-size: 0.58rem;
+  }
+
+  .panel-badge {
+    display: none;
+  }
+
+  .panel-toggle-icon {
+    width: 1.9rem;
+    height: 1.9rem;
+
+    flex-basis: 1.9rem;
+  }
+
+  .submission-toolbar__info {
+    p {
+      display: none;
+    }
+  }
+}
+
+// ==========================================================================
+// TOUCH DEVICES
+// ==========================================================================
+
+@media (hover: none) {
+  .panel-header--toggle:hover {
+    background: linear-gradient(180deg, rgba($white, 0.96), rgba($slate-50, 0.82));
+  }
+}
+
+// ==========================================================================
+// REDUCED MOTION
+// ==========================================================================
+
+@media (prefers-reduced-motion: reduce) {
+  .panel-collapse,
+  .panel-toggle-icon,
+  .panel-header--toggle,
+  .spinner {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+// ==========================================================================
+// ANIMATIONS
+// ==========================================================================
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
 }

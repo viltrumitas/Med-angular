@@ -1,6 +1,6 @@
-// =========================
-// COLORS
-// =========================
+// ==========================================================================
+// VARIABLES
+// ==========================================================================
 
 $primary: #2563eb;
 $primary-light: #eff6ff;
@@ -22,77 +22,97 @@ $border: #e2e8f0;
 $surface: #ffffff;
 $background: #f8fafc;
 
-// =========================
+$desktop-bp: 1200px;
+$tablet-bp: 900px;
+$mobile-bp: 700px;
+$small-mobile-bp: 480px;
+
+$ease-fast: 160ms ease;
+$ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+
+// ==========================================================================
+// HOST
+// ==========================================================================
+
+:host {
+  display: block;
+
+  width: 100%;
+  min-width: 0;
+}
+
+// ==========================================================================
 // PAGE
-// =========================
+// ==========================================================================
 
 .classroom-page {
   width: 100%;
   max-width: 1450px;
+  min-width: 0;
 
   margin: 0 auto;
-  padding: 2rem;
+  padding: clamp(1.25rem, 2vw, 2rem);
+
+  box-sizing: border-box;
 }
 
-// =========================
-// HEADER
-// =========================
+// ==========================================================================
+// HEADER COMPACTO
+// ==========================================================================
 
 .classroom-header {
   position: relative;
 
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
-  justify-content: space-between;
 
-  gap: 3rem;
+  gap: 1.5rem;
 
-  padding: 2rem;
-  margin-bottom: 1.25rem;
+  margin-bottom: 1rem;
+  padding: 1.35rem 1.5rem;
+
+  overflow: hidden;
 
   background:
-    radial-gradient(circle at 90% 15%, rgba(45, 212, 191, 0.14), transparent 30%),
+    radial-gradient(circle at 92% 0%, rgba(45, 212, 191, 0.12), transparent 35%),
     linear-gradient(135deg, #ffffff, #f8fffe);
 
   border: 1px solid $border;
-  border-radius: 18px;
+  border-radius: 16px;
 
-  overflow: hidden;
-}
+  &::before {
+    content: '';
 
-.classroom-header::before {
-  content: '';
+    position: absolute;
+    top: -105px;
+    right: 90px;
 
-  position: absolute;
+    width: 175px;
+    height: 175px;
 
-  width: 230px;
-  height: 230px;
+    border: 1px solid rgba(13, 148, 136, 0.08);
+    border-radius: 50%;
 
-  top: -135px;
-  right: 110px;
+    pointer-events: none;
+  }
 
-  border: 1px solid rgba(13, 148, 136, 0.08);
-  border-radius: 50%;
+  &::after {
+    content: '';
 
-  pointer-events: none;
-}
+    position: absolute;
+    right: -45px;
+    bottom: -65px;
 
-.classroom-header::after {
-  content: '';
+    width: 105px;
+    height: 105px;
 
-  position: absolute;
+    background: rgba(13, 148, 136, 0.06);
 
-  width: 120px;
-  height: 120px;
+    border-radius: 50%;
 
-  right: -45px;
-  bottom: -55px;
-
-  background: rgba(13, 148, 136, 0.06);
-
-  border-radius: 50%;
-
-  pointer-events: none;
+    pointer-events: none;
+  }
 }
 
 .header-main {
@@ -102,71 +122,82 @@ $background: #f8fafc;
   min-width: 0;
 
   h1 {
-    margin: 0.3rem 0 0;
+    margin: 0.2rem 0 0;
+
+    overflow-wrap: anywhere;
 
     color: $text-primary;
 
-    font-size: clamp(1.8rem, 3vw, 2.35rem);
+    font-size: clamp(1.45rem, 2.3vw, 1.9rem);
     font-weight: 750;
     line-height: 1.15;
-
-    letter-spacing: -0.04em;
+    letter-spacing: -0.035em;
   }
 
   > p {
+    display: -webkit-box;
+
     max-width: 650px;
 
-    margin: 0.7rem 0 0;
+    margin: 0.45rem 0 0;
+
+    overflow: hidden;
 
     color: $text-secondary;
 
-    font-size: 0.92rem;
-    line-height: 1.65;
+    font-size: 0.84rem;
+    line-height: 1.5;
+
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
   }
 }
 
 .header-eyebrow {
+  display: inline-block;
+
   color: $teal;
 
-  font-size: 0.72rem;
+  font-size: 0.66rem;
   font-weight: 750;
-
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 
-// =========================
-// STATUS
-// =========================
+// ==========================================================================
+// STATUS COMPACTO
+// ==========================================================================
 
 .classroom-status {
   display: inline-flex;
   align-items: center;
 
-  gap: 0.5rem;
+  gap: 0.45rem;
 
-  margin-top: 1rem;
+  margin-top: 0.7rem;
 
   color: $text-secondary;
 
-  font-size: 0.78rem;
+  font-size: 0.72rem;
   font-weight: 550;
 }
 
 .status-dot {
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
+
+  flex: 0 0 6px;
 
   background: $success;
 
   border-radius: 50%;
 
-  box-shadow: 0 0 0 4px $success-light;
+  box-shadow: 0 0 0 3px $success-light;
 }
 
-// =========================
-// TEACHER CARD
-// =========================
+// ==========================================================================
+// TEACHER CARD COMPACTA
+// ==========================================================================
 
 .teacher-card {
   position: relative;
@@ -175,18 +206,19 @@ $background: #f8fafc;
   display: flex;
   align-items: center;
 
-  gap: 1rem;
+  gap: 0.75rem;
 
-  min-width: 285px;
+  min-width: 230px;
+  max-width: 285px;
 
-  padding: 1.1rem 1.2rem;
+  padding: 0.8rem 0.9rem;
 
-  background: rgba(255, 255, 255, 0.82);
+  background: rgba(255, 255, 255, 0.88);
 
   border: 1px solid rgba(13, 148, 136, 0.15);
-  border-radius: 14px;
+  border-radius: 12px;
 
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.04);
 
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
@@ -196,19 +228,19 @@ $background: #f8fafc;
   display: grid;
   place-items: center;
 
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
 
-  flex-shrink: 0;
+  flex: 0 0 40px;
 
   color: $teal;
   background: $teal-light;
 
-  border-radius: 13px;
+  border-radius: 10px;
 
   i {
-    width: 22px;
-    height: 22px;
+    width: 19px;
+    height: 19px;
   }
 }
 
@@ -221,37 +253,177 @@ $background: #f8fafc;
   span {
     color: $text-secondary;
 
-    font-size: 0.72rem;
+    font-size: 0.65rem;
     font-weight: 550;
   }
 
   strong {
-    margin-top: 0.15rem;
+    margin-top: 0.1rem;
+
+    overflow: hidden;
 
     color: $text-primary;
 
-    font-size: 0.95rem;
+    font-size: 0.84rem;
     font-weight: 720;
+    line-height: 1.3;
 
-    line-height: 1.35;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   small {
-    margin-top: 0.2rem;
+    margin-top: 0.1rem;
+
+    overflow: hidden;
 
     color: $text-muted;
 
-    font-size: 0.68rem;
+    font-size: 0.62rem;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 
-// =========================
-// STATS
-// =========================
+// ==========================================================================
+// STATS EN UNA SOLA FILA
+// ==========================================================================
 
 .stats-grid {
   display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 
+  gap: 0.75rem;
+
+  margin-bottom: 1rem;
+}
+
+.stat-card {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr);
+  align-items: center;
+
+  gap: 0.7rem;
+
+  min-width: 0;
+  min-height: 76px;
+
+  padding: 0.75rem 0.85rem;
+
+  background: $surface;
+
+  border: 1px solid $border;
+  border-radius: 12px;
+
+  transition:
+    transform $ease-fast,
+    box-shadow $ease-fast,
+    border-color $ease-fast;
+
+  &:hover {
+    transform: translateY(-1px);
+
+    border-color: #cbd5e1;
+
+    box-shadow: 0 7px 18px rgba(15, 23, 42, 0.045);
+  }
+}
+
+.stat-icon {
+  display: grid;
+  place-items: center;
+
+  width: 38px;
+  height: 38px;
+
+  border-radius: 10px;
+
+  i {
+    width: 18px;
+    height: 18px;
+  }
+
+  &.assignments {
+    color: $purple;
+    background: $purple-light;
+  }
+
+  &.teacher {
+    color: $teal;
+    background: $teal-light;
+  }
+
+  &.progress {
+    color: $primary;
+    background: $primary-light;
+  }
+}
+
+.stat-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+
+  gap: 0.15rem 0.5rem;
+
+  min-width: 0;
+
+  > span {
+    grid-column: 1;
+
+    overflow: hidden;
+
+    color: $text-secondary;
+
+    font-size: 0.68rem;
+    font-weight: 550;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  strong {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+
+    margin: 0;
+
+    overflow: hidden;
+
+    color: $text-primary;
+
+    font-size: 1.05rem;
+    font-weight: 750;
+    line-height: 1;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  small {
+    grid-column: 1;
+
+    margin: 0;
+
+    overflow: hidden;
+
+    color: $text-muted;
+
+    font-size: 0.62rem;
+    line-height: 1.25;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+// ==========================================================================
+// STATS
+// ==========================================================================
+
+.stats-grid {
+  display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
 
   gap: 1rem;
@@ -265,6 +437,7 @@ $background: #f8fafc;
 
   gap: 1rem;
 
+  min-width: 0;
   min-height: 112px;
 
   padding: 1.15rem;
@@ -275,9 +448,9 @@ $background: #f8fafc;
   border-radius: 14px;
 
   transition:
-    transform 160ms ease,
-    box-shadow 160ms ease,
-    border-color 160ms ease;
+    transform $ease-fast,
+    box-shadow $ease-fast,
+    border-color $ease-fast;
 
   &:hover {
     transform: translateY(-2px);
@@ -295,7 +468,7 @@ $background: #f8fafc;
   width: 50px;
   height: 50px;
 
-  flex-shrink: 0;
+  flex: 0 0 50px;
 
   border-radius: 13px;
 
@@ -336,34 +509,46 @@ $background: #f8fafc;
   strong {
     margin-top: 0.15rem;
 
+    overflow: hidden;
+
     color: $text-primary;
 
     font-size: 1.35rem;
     font-weight: 750;
-
     line-height: 1.2;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   small {
     margin-top: 0.25rem;
 
+    overflow: hidden;
+
     color: $text-muted;
 
     font-size: 0.7rem;
+    line-height: 1.4;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 
-// =========================
+// ==========================================================================
 // WORKSPACE
-// =========================
+// ==========================================================================
 
 .workspace {
+  min-width: 0;
+
+  overflow: hidden;
+
   background: $surface;
 
   border: 1px solid $border;
   border-radius: 16px;
-
-  overflow: hidden;
 }
 
 .workspace-header {
@@ -375,18 +560,28 @@ $background: #f8fafc;
 
   padding: 0.8rem 1rem;
 
+  overflow-x: auto;
+
   border-bottom: 1px solid $border;
+
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
-// =========================
+// ==========================================================================
 // TABS
-// =========================
+// ==========================================================================
 
 .tabs {
   display: flex;
   align-items: center;
 
   gap: 0.3rem;
+
+  min-width: max-content;
 }
 
 .tabs button {
@@ -415,6 +610,8 @@ $background: #f8fafc;
   i {
     width: 16px;
     height: 16px;
+
+    flex-shrink: 0;
   }
 }
 
@@ -437,11 +634,13 @@ $background: #f8fafc;
   font-weight: 700;
 }
 
-// =========================
+// ==========================================================================
 // TAB CONTENT
-// =========================
+// ==========================================================================
 
 .tab-content {
+  min-width: 0;
+
   padding: 1.25rem;
 }
 
@@ -453,6 +652,10 @@ $background: #f8fafc;
   gap: 1rem;
 
   margin-bottom: 1rem;
+
+  > div {
+    min-width: 0;
+  }
 
   h2 {
     margin: 0;
@@ -469,10 +672,13 @@ $background: #f8fafc;
     color: $text-secondary;
 
     font-size: 0.8rem;
+    line-height: 1.5;
   }
 }
 
 .section-count {
+  flex-shrink: 0;
+
   padding: 0.4rem 0.65rem;
 
   color: $text-secondary;
@@ -486,27 +692,29 @@ $background: #f8fafc;
   white-space: nowrap;
 }
 
-// =========================
-// GRID
-// =========================
+// ==========================================================================
+// ASSIGNMENT GRID
+// ==========================================================================
 
 .assignment-grid {
   display: grid;
-
   grid-template-columns: repeat(3, minmax(0, 1fr));
 
   gap: 1rem;
+
+  align-items: stretch;
 }
 
 app-assignment-card {
   display: block;
+
   min-width: 0;
   height: 100%;
 }
 
-// =========================
-// EMPTY
-// =========================
+// ==========================================================================
+// EMPTY STATE
+// ==========================================================================
 
 .empty-state {
   display: flex;
@@ -532,6 +740,7 @@ app-assignment-card {
 
     font-size: 1rem;
     font-weight: 680;
+    line-height: 1.35;
   }
 
   p {
@@ -564,9 +773,9 @@ app-assignment-card {
   }
 }
 
-// =========================
+// ==========================================================================
 // LOADING
-// =========================
+// ==========================================================================
 
 .state-container {
   display: flex;
@@ -593,6 +802,7 @@ app-assignment-card {
     color: $text-primary;
 
     font-size: 1.05rem;
+    font-weight: 680;
   }
 
   p {
@@ -601,6 +811,7 @@ app-assignment-card {
     color: $text-secondary;
 
     font-size: 0.84rem;
+    line-height: 1.55;
   }
 }
 
@@ -615,28 +826,21 @@ app-assignment-card {
   animation: spin 700ms linear infinite;
 }
 
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-// =========================
+// ==========================================================================
 // RESPONSIVE
-// =========================
+// ==========================================================================
 
-@media (max-width: 1100px) {
-  .assignment-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+@media (max-width: 900px) {
+  .classroom-page {
+    padding: 1.25rem;
   }
-}
 
-@media (max-width: 850px) {
   .classroom-header {
-    align-items: stretch;
-    flex-direction: column;
+    grid-template-columns: minmax(0, 1fr) 220px;
 
-    gap: 1.5rem;
+    gap: 1rem;
+
+    padding: 1.1rem 1.25rem;
   }
 
   .teacher-card {
@@ -644,29 +848,119 @@ app-assignment-card {
     min-width: 0;
   }
 
+  // Se conservan obligatoriamente las tres columnas.
   .stats-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
-@media (max-width: 650px) {
+@media (max-width: 700px) {
   .classroom-page {
     padding: 1rem;
   }
 
   .classroom-header {
-    padding: 1.3rem;
+    display: block;
+
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+
+    border-radius: 14px;
+  }
+
+  .header-main {
+    padding-right: 3.25rem;
+
+    h1 {
+      font-size: 1.3rem;
+    }
+
+    > p {
+      display: -webkit-box;
+
+      margin-top: 0.4rem;
+
+      overflow: hidden;
+
+      font-size: 0.78rem;
+      line-height: 1.45;
+
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+    }
+  }
+
+  .classroom-status {
+    margin-top: 0.55rem;
+  }
+
+  .teacher-card {
+    width: 100%;
+    min-width: 0;
+
+    margin-top: 0.75rem;
+    padding: 0.65rem 0.75rem;
+  }
+
+  .teacher-icon {
+    width: 36px;
+    height: 36px;
+
+    flex-basis: 36px;
+  }
+
+  // MUY IMPORTANTE:
+  // no cambiar esto a 1fr.
+  .stats-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+
+    gap: 0.45rem;
+
+    margin-bottom: 0.85rem;
+  }
+
+  .stat-card {
+    flex-direction: column;
+    align-items: flex-start;
+
+    gap: 0.45rem;
+
+    min-height: 94px;
+
+    padding: 0.6rem;
+  }
+
+  .stat-icon {
+    width: 30px;
+    height: 30px;
+
+    flex-basis: 30px;
+
+    border-radius: 8px;
+
+    i {
+      width: 15px;
+      height: 15px;
+    }
+  }
+
+  .stat-content {
+    width: 100%;
+
+    strong {
+      font-size: 0.88rem;
+    }
+
+    > span {
+      font-size: 0.58rem;
+    }
   }
 
   .workspace-header {
-    align-items: stretch;
-    flex-direction: column;
+    padding: 0.7rem;
   }
 
-  .tabs {
-    width: 100%;
-  }
-
+  .tabs,
   .tabs button {
     width: 100%;
   }
@@ -677,9 +971,44 @@ app-assignment-card {
 
   .section-header {
     flex-direction: column;
+
+    gap: 0.65rem;
   }
 
   .assignment-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .classroom-page {
+    padding: 0.8rem;
+  }
+
+  .stats-grid {
+    gap: 0.35rem;
+  }
+
+  .stat-card {
+    min-height: 88px;
+
+    padding: 0.5rem;
+  }
+
+  .stat-icon {
+    width: 28px;
+    height: 28px;
+
+    flex-basis: 28px;
+  }
+
+  .stat-content {
+    strong {
+      font-size: 0.78rem;
+    }
+
+    > span {
+      font-size: 0.54rem;
+    }
   }
 }

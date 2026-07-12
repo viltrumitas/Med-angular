@@ -30,13 +30,22 @@ export class AssignedDetail implements OnInit, AfterViewInit {
   private readonly destroyRef = inject(DestroyRef);
 
   readonly submissionDetail = viewChild(SubmissionsDetail);
-
   readonly assignedCase = signal<AssignedStudentCase | null>(null);
-
   readonly isLoading = signal(false);
   readonly isStartingSubmission = signal(false);
-
   readonly error = signal<string | null>(null);
+  readonly casePanelOpen = signal(true);
+  readonly submissionPanelOpen = signal(true);
+
+  toggleCasePanel(): void {
+    this.casePanelOpen.update((isOpen) => !isOpen);
+    this.renderIcon();
+  }
+
+  toggleSubmissionPanel(): void {
+    this.submissionPanelOpen.update((isOpen) => !isOpen);
+    this.renderIcon();
+  }
 
   ngOnInit(): void {
     const assignedCaseId = this.route.snapshot.paramMap.get('id');
@@ -109,9 +118,9 @@ export class AssignedDetail implements OnInit, AfterViewInit {
       .subscribe({
         next: (response) => {
           this.assignedCase.set(response);
-
           this.isLoading.set(false);
           this.isStartingSubmission.set(false);
+          this.configureResponsivePanels();
         },
         error: (err) => {
           console.error('[AssignedDetail] Error al cargar el caso asignado:', err);
@@ -122,6 +131,15 @@ export class AssignedDetail implements OnInit, AfterViewInit {
           this.isStartingSubmission.set(false);
         },
       });
+  }
+
+  private configureResponsivePanels(): void {
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
+
+    if (isMobile) {
+      this.casePanelOpen.set(false);
+      this.submissionPanelOpen.set(true);
+    }
   }
 
   private renderIcon() {

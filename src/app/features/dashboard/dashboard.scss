@@ -1,71 +1,210 @@
+// ==========================================================================
+// VARIABLES
+// ==========================================================================
+
+$sidebar-width: 16rem;
+$sidebar-collapsed-width: 4.5rem;
+
+$tablet-bp: 1100px;
+$mobile-bp: 768px;
+$small-mobile-bp: 480px;
+
 $bg-main: #f8fafc;
-$transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+$scroll-thumb: #cbd5e1;
+$scroll-thumb-hover: #94a3b8;
+
+$ease-layout: cubic-bezier(0.4, 0, 0.2, 1);
+
+// ==========================================================================
+// HOST
+// ==========================================================================
+
+:host {
+  display: block;
+
+  width: 100%;
+  min-width: 0;
+  min-height: 100dvh;
+
+  background: $bg-main;
+}
+
+// ==========================================================================
+// DASHBOARD LAYOUT
+// ==========================================================================
 
 .layout {
   display: grid;
-  grid-template-columns: auto 1fr;
-  width: 100vw;
+  grid-template-columns: $sidebar-width minmax(0, 1fr);
+
+  width: 100%;
+  min-width: 0;
   height: 100vh;
+  height: 100dvh;
+
   overflow: hidden;
-  background-color: #f8fafc;
 
-  .side-bar {
-    width: 15rem;
+  background: $bg-main;
+
+  transition: grid-template-columns 0.36s $ease-layout;
+
+  // El sidebar real es fixed, este contenedor solo reserva su espacio.
+  &:has(.side-bar .sidebar.closed) {
+    grid-template-columns: $sidebar-collapsed-width minmax(0, 1fr);
+  }
+}
+
+// ==========================================================================
+// SIDEBAR SPACE
+// ==========================================================================
+
+.side-bar {
+  position: relative;
+  z-index: 50;
+
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+
+  pointer-events: none;
+
+  // Reactivamos los eventos dentro del componente real.
+  app-sidebar {
+    display: block;
+
+    width: 100%;
     height: 100%;
-    z-index: 50;
-    display: flex;
-    flex-shrink: 0;
-    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    background: transparent;
-    position: relative;
 
-    &:has(.sidebar.closed),
-    &.collapsed {
-      width: 3.8rem;
-    }
+    pointer-events: auto;
+  }
+}
+
+// ==========================================================================
+// MAIN CONTENT
+// ==========================================================================
+
+.main {
+  position: relative;
+
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  min-height: 0;
+
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  background: $bg-main;
+
+  overscroll-behavior-y: contain;
+  scrollbar-gutter: stable;
+
+  scrollbar-width: thin;
+  scrollbar-color: $scroll-thumb transparent;
+
+  &::-webkit-scrollbar {
+    width: 6px;
   }
 
-  .main {
-    flex-grow: 1;
-    height: 100%;
-    overflow-y: auto;
-    overflow-x: hidden;
-    transition: $transition-smooth;
-    position: relative;
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
 
-    // Estilizar la barra de scroll del main para que se vea pro y sutil
-    &::-webkit-scrollbar {
-      width: 6px;
-    }
-    &::-webkit-scrollbar-track {
-      background: transparent;
-    }
-    &::-webkit-scrollbar-thumb {
-      background: #cbd5e1;
-      border-radius: 4px;
-      &:hover {
-        background: #94a3b8;
-      }
+  &::-webkit-scrollbar-thumb {
+    background: $scroll-thumb;
+    border-radius: 999px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: $scroll-thumb-hover;
+  }
+
+  @media (max-width: #{$mobile-bp}) {
+    height: auto;
+    min-height: 100vh;
+    min-height: 100dvh;
+
+    padding: 0;
+
+    overflow-x: hidden;
+    overflow-y: visible;
+
+    scrollbar-gutter: auto;
+  }
+}
+
+// ==========================================================================
+// TABLET
+// ==========================================================================
+
+@media (min-width: 769px) and (max-width: #{$tablet-bp}) {
+  .layout {
+    grid-template-columns: 15rem minmax(0, 1fr);
+
+    &:has(.side-bar .sidebar.closed) {
+      grid-template-columns: 4.25rem minmax(0, 1fr);
     }
   }
 }
 
-@media (max-width: 768px) {
+// ==========================================================================
+// MOBILE
+// ==========================================================================
+
+@media (max-width: #{$mobile-bp}) {
   .layout {
-    grid-template-columns: 1fr;
+    display: block;
 
-    .side-bar {
-      width: 100% !important;
-      height: auto;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-    }
+    width: 100%;
+    min-height: 100vh;
+    min-height: 100dvh;
 
-    .main {
-      padding: 1.25rem;
-      height: calc(100vh - 60px); // Resta el tamaño aproximado de tu barra inferior móvil
-      padding-bottom: 5rem; // Espacio extra abajo para que el menú flotante no tape info
+    overflow: visible;
+
+    background: $bg-main;
+  }
+
+  .side-bar {
+    position: static;
+
+    width: 0;
+    height: 0;
+
+    overflow: visible;
+
+    app-sidebar {
+      display: block;
+
+      width: 0;
+      height: 0;
     }
+  }
+
+  .main {
+    width: 100%;
+    min-width: 0;
+
+    height: auto;
+    min-height: 100vh;
+    min-height: 100dvh;
+
+    // Ya no bajamos todo el contenido.
+    padding: 0;
+
+    overflow-x: hidden;
+    overflow-y: visible;
+
+    scrollbar-gutter: auto;
+  }
+}
+
+// ==========================================================================
+// REDUCED MOTION
+// ==========================================================================
+
+@media (prefers-reduced-motion: reduce) {
+  .layout,
+  .main {
+    transition: none;
   }
 }

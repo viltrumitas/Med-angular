@@ -14,7 +14,7 @@
       <div class="case-header__main">
         <div class="case-header__meta">
           <span class="case-header__area">
-            <i data-lucide="stethoscope"></i>
+            <i data-lucide="stethoscope" aria-hidden="true"></i>
 
             {{ c.area }}
           </span>
@@ -35,7 +35,7 @@
         </h1>
 
         <div class="case-header__date">
-          <i data-lucide="calendar-days"></i>
+          <i data-lucide="calendar-days" aria-hidden="true"></i>
 
           <span>Creado el {{ c.createdAt }}</span>
         </div>
@@ -43,7 +43,7 @@
 
       <div class="case-header__visual">
         <div class="case-header__icon">
-          <i data-lucide="clipboard-plus"></i>
+          <i data-lucide="clipboard-plus" aria-hidden="true"></i>
         </div>
       </div>
     </header>
@@ -56,7 +56,7 @@
   <section class="clinical-overview">
     <article class="overview-card overview-card--primary">
       <div class="overview-card__icon">
-        <i data-lucide="message-square-heart"></i>
+        <i data-lucide="message-square-heart" aria-hidden="true"></i>
       </div>
 
       <div class="overview-card__content">
@@ -70,7 +70,7 @@
 
     <article class="overview-card">
       <div class="overview-card__icon">
-        <i data-lucide="map-pin"></i>
+        <i data-lucide="map-pin" aria-hidden="true"></i>
       </div>
 
       <div class="overview-card__content">
@@ -84,6 +84,28 @@
   </section>
 
   <!-- =========================
+       ACCORDION CONTROLS
+  ========================== -->
+
+  <div class="section-controls">
+    <span class="section-controls__label"> Información clínica </span>
+
+    <div class="section-controls__actions">
+      <button type="button" (click)="expandAll()">
+        <i data-lucide="list-plus" aria-hidden="true"></i>
+
+        <span>Mostrar todo</span>
+      </button>
+
+      <button type="button" (click)="collapseAll()">
+        <i data-lucide="list-minus" aria-hidden="true"></i>
+
+        <span>Ocultar todo</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- =========================
        MAIN CONTENT
   ========================== -->
 
@@ -92,11 +114,17 @@
          PATIENT DATA
     ========================== -->
 
-    <section class="case-section">
-      <header class="case-section__header">
+    <section class="case-section" [class.case-section--collapsed]="!patientOpen()">
+      <button
+        type="button"
+        class="case-section__header case-section__header--toggle"
+        [attr.aria-expanded]="patientOpen()"
+        aria-controls="patient-section-content"
+        (click)="toggleSection('patient')"
+      >
         <div class="case-section__heading">
           <div class="case-section__icon case-section__icon--patient">
-            <i data-lucide="user-round"></i>
+            <i data-lucide="user-round" aria-hidden="true"></i>
           </div>
 
           <div>
@@ -105,72 +133,84 @@
             <p>Información general y antecedentes clínicos.</p>
           </div>
         </div>
-      </header>
 
-      <div class="patient-summary">
-        <article class="patient-summary__main">
-          <div class="patient-summary__avatar">
-            <i data-lucide="user-round"></i>
+        <span class="case-section__chevron" [class.case-section__chevron--open]="patientOpen()">
+          <i data-lucide="chevron-down" aria-hidden="true"></i>
+        </span>
+      </button>
+
+      <div
+        id="patient-section-content"
+        class="case-section__collapse"
+        [class.case-section__collapse--open]="patientOpen()"
+      >
+        <div class="case-section__body">
+          <div class="patient-summary">
+            <article class="patient-summary__main">
+              <div class="patient-summary__avatar">
+                <i data-lucide="user-round" aria-hidden="true"></i>
+              </div>
+
+              <div class="patient-summary__identity">
+                <span>Paciente</span>
+
+                <strong>
+                  {{ c.patientName || 'Paciente no especificado' }}
+                </strong>
+              </div>
+            </article>
+
+            <div class="patient-summary__data">
+              <div class="patient-summary__item">
+                <span>Género</span>
+
+                <strong>
+                  {{ c.gender || 'No registrado' }}
+                </strong>
+              </div>
+
+              <div class="patient-summary__item">
+                <span>Edad</span>
+
+                <strong>
+                  {{ c.age ?? 'No registrada' }}
+                </strong>
+              </div>
+            </div>
           </div>
 
-          <div class="patient-summary__identity">
-            <span>Paciente</span>
+          <div class="medical-info">
+            <article class="medical-info__card">
+              <header class="medical-info__header">
+                <i data-lucide="history" aria-hidden="true"></i>
 
-            <strong>
-              {{ c.patientName || 'Paciente no especificado' }}
-            </strong>
-          </div>
-        </article>
+                <span>Antecedentes médicos</span>
+              </header>
 
-        <div class="patient-summary__data">
-          <div class="patient-summary__item">
-            <span>Género</span>
+              @if (c.medicalHistory?.length) {
+                <ul class="medical-info__list">
+                  @for (history of c.medicalHistory; track $index) {
+                    <li>{{ history }}</li>
+                  }
+                </ul>
+              } @else {
+                <p>Sin antecedentes registrados.</p>
+              }
+            </article>
 
-            <strong>
-              {{ c.gender || 'No registrado' }}
-            </strong>
-          </div>
+            <article class="medical-info__card">
+              <header class="medical-info__header">
+                <i data-lucide="pill" aria-hidden="true"></i>
 
-          <div class="patient-summary__item">
-            <span>Edad</span>
+                <span>Medicamentos actuales</span>
+              </header>
 
-            <strong>
-              {{ c.age ?? 'No registrada' }}
-            </strong>
+              <p>
+                {{ c.medications || 'Sin medicamentos registrados.' }}
+              </p>
+            </article>
           </div>
         </div>
-      </div>
-
-      <div class="medical-info">
-        <article class="medical-info__card">
-          <header class="medical-info__header">
-            <i data-lucide="history"></i>
-
-            <span>Antecedentes médicos</span>
-          </header>
-
-          @if (c.medicalHistory?.length) {
-            <ul class="medical-info__list">
-              @for (history of c.medicalHistory; track $index) {
-                <li>{{ history }}</li>
-              }
-            </ul>
-          } @else {
-            <p>Sin antecedentes registrados.</p>
-          }
-        </article>
-
-        <article class="medical-info__card">
-          <header class="medical-info__header">
-            <i data-lucide="pill"></i>
-
-            <span>Medicamentos actuales</span>
-          </header>
-
-          <p>
-            {{ c.medications || 'Sin medicamentos registrados.' }}
-          </p>
-        </article>
       </div>
     </section>
 
@@ -178,11 +218,17 @@
          VITAL SIGNS
     ========================== -->
 
-    <section class="case-section">
-      <header class="case-section__header">
+    <section class="case-section" [class.case-section--collapsed]="!vitalsOpen()">
+      <button
+        type="button"
+        class="case-section__header case-section__header--toggle"
+        [attr.aria-expanded]="vitalsOpen()"
+        aria-controls="vitals-section-content"
+        (click)="toggleSection('vitals')"
+      >
         <div class="case-section__heading">
           <div class="case-section__icon case-section__icon--vitals">
-            <i data-lucide="activity"></i>
+            <i data-lucide="activity" aria-hidden="true"></i>
           </div>
 
           <div>
@@ -191,92 +237,90 @@
             <p>Valores registrados durante la valoración inicial.</p>
           </div>
         </div>
-      </header>
 
-      <div class="vital-signs">
-        <article class="vital-card">
-          <div class="vital-card__icon">
-            <i data-lucide="gauge"></i>
+        <span class="case-section__chevron" [class.case-section__chevron--open]="vitalsOpen()">
+          <i data-lucide="chevron-down" aria-hidden="true"></i>
+        </span>
+      </button>
+
+      <div
+        id="vitals-section-content"
+        class="case-section__collapse"
+        [class.case-section__collapse--open]="vitalsOpen()"
+      >
+        <div class="case-section__body">
+          <div class="vital-signs">
+            <article class="vital-card">
+              <div class="vital-card__icon">
+                <i data-lucide="gauge" aria-hidden="true"></i>
+              </div>
+
+              <span>TA</span>
+
+              <strong>{{ c.ta || 'Sin registro' }}</strong>
+            </article>
+
+            <article class="vital-card">
+              <div class="vital-card__icon vital-card__icon--heart">
+                <i data-lucide="heart-pulse" aria-hidden="true"></i>
+              </div>
+
+              <span>FC</span>
+
+              <strong>{{ c.fc ?? 'Sin registro' }}</strong>
+            </article>
+
+            <article class="vital-card">
+              <div class="vital-card__icon vital-card__icon--respiratory">
+                <i data-lucide="wind" aria-hidden="true"></i>
+              </div>
+
+              <span>FR</span>
+
+              <strong>{{ c.fr ?? 'Sin registro' }}</strong>
+            </article>
+
+            <article class="vital-card">
+              <div class="vital-card__icon vital-card__icon--oxygen">
+                <i data-lucide="droplets" aria-hidden="true"></i>
+              </div>
+
+              <span>SpO₂</span>
+
+              <strong>{{ c.spo2 ?? 'Sin registro' }}</strong>
+            </article>
+
+            <article class="vital-card">
+              <div class="vital-card__icon vital-card__icon--glucose">
+                <i data-lucide="test-tube" aria-hidden="true"></i>
+              </div>
+
+              <span>Glucosa</span>
+
+              <strong>{{ c.glucose ?? 'Sin registro' }}</strong>
+            </article>
+
+            <article class="vital-card">
+              <div class="vital-card__icon vital-card__icon--temperature">
+                <i data-lucide="thermometer" aria-hidden="true"></i>
+              </div>
+
+              <span>Temperatura</span>
+
+              <strong>{{ c.temperature ?? 'Sin registro' }}</strong>
+            </article>
+
+            <article class="vital-card">
+              <div class="vital-card__icon vital-card__icon--capillary">
+                <i data-lucide="timer" aria-hidden="true"></i>
+              </div>
+
+              <span>Llenado capilar</span>
+
+              <strong>{{ c.capillaryFiller ?? 'Sin registro' }}</strong>
+            </article>
           </div>
-
-          <span>TA</span>
-
-          <strong>
-            {{ c.ta || 'Sin registro' }}
-          </strong>
-        </article>
-
-        <article class="vital-card">
-          <div class="vital-card__icon vital-card__icon--heart">
-            <i data-lucide="heart-pulse"></i>
-          </div>
-
-          <span>FC</span>
-
-          <strong>
-            {{ c.fc ?? 'Sin registro' }}
-          </strong>
-        </article>
-
-        <article class="vital-card">
-          <div class="vital-card__icon vital-card__icon--respiratory">
-            <i data-lucide="wind"></i>
-          </div>
-
-          <span>FR</span>
-
-          <strong>
-            {{ c.fr ?? 'Sin registro' }}
-          </strong>
-        </article>
-
-        <article class="vital-card">
-          <div class="vital-card__icon vital-card__icon--oxygen">
-            <i data-lucide="droplets"></i>
-          </div>
-
-          <span>SpO₂</span>
-
-          <strong>
-            {{ c.spo2 ?? 'Sin registro' }}
-          </strong>
-        </article>
-
-        <article class="vital-card">
-          <div class="vital-card__icon vital-card__icon--glucose">
-            <i data-lucide="test-tube"></i>
-          </div>
-
-          <span>Glucosa</span>
-
-          <strong>
-            {{ c.glucose ?? 'Sin registro' }}
-          </strong>
-        </article>
-
-        <article class="vital-card">
-          <div class="vital-card__icon vital-card__icon--temperature">
-            <i data-lucide="thermometer"></i>
-          </div>
-
-          <span>Temperatura</span>
-
-          <strong>
-            {{ c.temperature ?? 'Sin registro' }}
-          </strong>
-        </article>
-
-        <article class="vital-card">
-          <div class="vital-card__icon vital-card__icon--capillary">
-            <i data-lucide="timer"></i>
-          </div>
-
-          <span>Llenado capilar</span>
-
-          <strong>
-            {{ c.capillaryFiller ?? 'Sin registro' }}
-          </strong>
-        </article>
+        </div>
       </div>
     </section>
 
@@ -284,11 +328,17 @@
          NEUROLOGICAL
     ========================== -->
 
-    <section class="case-section">
-      <header class="case-section__header">
+    <section class="case-section" [class.case-section--collapsed]="!neurologicalOpen()">
+      <button
+        type="button"
+        class="case-section__header case-section__header--toggle"
+        [attr.aria-expanded]="neurologicalOpen()"
+        aria-controls="neurological-section-content"
+        (click)="toggleSection('neurological')"
+      >
         <div class="case-section__heading">
           <div class="case-section__icon case-section__icon--neurological">
-            <i data-lucide="brain"></i>
+            <i data-lucide="brain" aria-hidden="true"></i>
           </div>
 
           <div>
@@ -297,78 +347,93 @@
             <p>Escala de Glasgow y valoración de Cincinnati.</p>
           </div>
         </div>
-      </header>
 
-      <div class="neurological">
-        <article class="glasgow-card">
-          <div class="glasgow-card__heading">
-            <div class="glasgow-card__icon">
-              <i data-lucide="brain"></i>
-            </div>
+        <span
+          class="case-section__chevron"
+          [class.case-section__chevron--open]="neurologicalOpen()"
+        >
+          <i data-lucide="chevron-down" aria-hidden="true"></i>
+        </span>
+      </button>
 
-            <div>
-              <span>Escala de Glasgow</span>
+      <div
+        id="neurological-section-content"
+        class="case-section__collapse"
+        [class.case-section__collapse--open]="neurologicalOpen()"
+      >
+        <div class="case-section__body">
+          <div class="neurological">
+            <article class="glasgow-card">
+              <div class="glasgow-card__heading">
+                <div class="glasgow-card__icon">
+                  <i data-lucide="brain" aria-hidden="true"></i>
+                </div>
 
-              <small>Nivel de conciencia</small>
-            </div>
+                <div>
+                  <span>Escala de Glasgow</span>
+
+                  <small>Nivel de conciencia</small>
+                </div>
+              </div>
+
+              <strong class="glasgow-card__value">
+                {{ c.glasgow ?? 'N/A' }}
+              </strong>
+            </article>
+
+            <article class="cincinnati-card">
+              <header class="cincinnati-card__header">
+                <h3>Escala de Cincinnati</h3>
+
+                <p>Evaluación rápida de signos neurológicos.</p>
+              </header>
+
+              <div class="cincinnati-card__grid">
+                <div class="neurological-item">
+                  <div class="neurological-item__icon">
+                    <i data-lucide="hand" aria-hidden="true"></i>
+                  </div>
+
+                  <div class="neurological-item__content">
+                    <span>Deriva del brazo</span>
+
+                    <strong>
+                      {{ c.cincinnati?.armDrift || 'Sin registro' }}
+                    </strong>
+                  </div>
+                </div>
+
+                <div class="neurological-item">
+                  <div class="neurological-item__icon">
+                    <i data-lucide="scan-face" aria-hidden="true"></i>
+                  </div>
+
+                  <div class="neurological-item__content">
+                    <span>Caída facial</span>
+
+                    <strong>
+                      {{ c.cincinnati?.facialDroop || 'Sin registro' }}
+                    </strong>
+                  </div>
+                </div>
+
+                <div class="neurological-item">
+                  <div class="neurological-item__icon">
+                    <i data-lucide="message-circle" aria-hidden="true"></i>
+                  </div>
+
+                  <div class="neurological-item__content">
+                    <span>Habla</span>
+
+                    <strong>
+                      {{ c.cincinnati?.speech || 'Sin registro' }}
+                    </strong>
+                  </div>
+                </div>
+              </div>
+            </article>
           </div>
-
-          <strong class="glasgow-card__value">
-            {{ c.glasgow ?? 'N/A' }}
-          </strong>
-        </article>
-
-        <article class="cincinnati-card">
-          <header class="cincinnati-card__header">
-            <h3>Escala de Cincinnati</h3>
-
-            <p>Evaluación rápida de signos neurológicos.</p>
-          </header>
-
-          <div class="cincinnati-card__grid">
-            <div class="neurological-item">
-              <div class="neurological-item__icon">
-                <i data-lucide="hand"></i>
-              </div>
-
-              <div class="neurological-item__content">
-                <span>Deriva del brazo</span>
-
-                <strong>
-                  {{ c.cincinnati?.armDrift }}
-                </strong>
-              </div>
-            </div>
-
-            <div class="neurological-item">
-              <div class="neurological-item__icon">
-                <i data-lucide="scan-face"></i>
-              </div>
-
-              <div class="neurological-item__content">
-                <span>Caída facial</span>
-
-                <strong>
-                  {{ c.cincinnati?.facialDroop }}
-                </strong>
-              </div>
-            </div>
-
-            <div class="neurological-item">
-              <div class="neurological-item__icon">
-                <i data-lucide="message-circle"></i>
-              </div>
-
-              <div class="neurological-item__content">
-                <span>Habla</span>
-
-                <strong>
-                  {{ c.cincinnati?.speech }}
-                </strong>
-              </div>
-            </div>
-          </div>
-        </article>
+        </div>
       </div>
     </section>
 
@@ -376,11 +441,17 @@
          GENERAL FINDINGS
     ========================== -->
 
-    <section class="case-section">
-      <header class="case-section__header">
+    <section class="case-section" [class.case-section--collapsed]="!findingsOpen()">
+      <button
+        type="button"
+        class="case-section__header case-section__header--toggle"
+        [attr.aria-expanded]="findingsOpen()"
+        aria-controls="findings-section-content"
+        (click)="toggleSection('findings')"
+      >
         <div class="case-section__heading">
           <div class="case-section__icon case-section__icon--findings">
-            <i data-lucide="search-check"></i>
+            <i data-lucide="search-check" aria-hidden="true"></i>
           </div>
 
           <div>
@@ -389,14 +460,26 @@
             <p>Observaciones obtenidas durante la valoración.</p>
           </div>
         </div>
-      </header>
 
-      <div class="findings-box">
-        <i data-lucide="quote"></i>
+        <span class="case-section__chevron" [class.case-section__chevron--open]="findingsOpen()">
+          <i data-lucide="chevron-down" aria-hidden="true"></i>
+        </span>
+      </button>
 
-        <p>
-          {{ c.generalFindings || 'Sin hallazgos generales registrados.' }}
-        </p>
+      <div
+        id="findings-section-content"
+        class="case-section__collapse"
+        [class.case-section__collapse--open]="findingsOpen()"
+      >
+        <div class="case-section__body">
+          <div class="findings-box">
+            <i data-lucide="quote" aria-hidden="true"></i>
+
+            <p>
+              {{ c.generalFindings || 'Sin hallazgos generales registrados.' }}
+            </p>
+          </div>
+        </div>
       </div>
     </section>
   </div>

@@ -1,8 +1,8 @@
 import {
   afterRenderEffect,
-  AfterViewInit,
   Component,
   computed,
+  ElementRef,
   HostListener,
   inject,
   input,
@@ -21,9 +21,10 @@ import { SidebarItem } from '../../model/menu.types';
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.scss',
 })
-export class Sidebar implements AfterViewInit {
+export class Sidebar {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
   private readonly activeSubmenuName = signal<string | null>(null);
 
@@ -70,20 +71,81 @@ export class Sidebar implements AfterViewInit {
 
   constructor() {
     afterRenderEffect(() => {
+      /*
+       * Registramos las señales que pueden crear nuevos elementos <i>.
+       */
       this.items();
-      this.renderIcons();
+      this.mobileOpen();
+      this.activeSubmenuName();
+
+      this.renderPendingIcons();
     });
   }
 
-  ngAfterViewInit(): void {
-    this.renderIcons();
-  }
+  private renderPendingIcons(): void {
+    const host = this.elementRef.nativeElement;
 
-  private renderIcons(): void {
-    createIcons({ icons });
+    /*
+     * Buscamos exclusivamente etiquetas <i> pendientes.
+     * Los SVG que Lucide ya generó no entran aquí.
+     */
+    const pendingIcons = host.querySelectorAll<HTMLElement>('i[data-lucide]');
+
+    if (pendingIcons.length === 0) {
+      return;
+    }
+
+    /*
+     * Cambiamos temporalmente el atributo para que createIcons()
+     * no encuentre ni vuelva a procesar SVG anteriores.
+     */
+    pendingIcons.forEach((icon) => {
+      const iconName = icon.getAttribute('data-lucide');
+
+      if (!iconName) {
+        return;
+      }
+
+      icon.setAttribute('data-sidebar-lucide', iconName);
+      icon.removeAttribute('data-lucide');
+    });
+
+    createIcons({
+      icons,
+      root: host,
+      nameAttr: 'data-sidebar-lucide',
+    });
+
+    /*
+     * Lucide copia el atributo temporal al SVG generado.
+     * Lo quitamos para que quede marcado como procesado.
+     */
+    host.querySelectorAll<SVGElement>('svg[data-sidebar-lucide]').forEach((icon) => {
+      icon.removeAttribute('data-sidebar-lucide');
+    });
+
+    /*
+     * Protección adicional: dentro del wrapper de logout
+     * nunca permitimos más de un SVG.
+     */
+    host.querySelectorAll<HTMLElement>('.item__icon-wrapper').forEach((wrapper) => {
+      const renderedIcons = wrapper.querySelectorAll(':scope > svg');
+
+      renderedIcons.forEach((icon, index) => {
+        if (index > 0) {
+          icon.remove();
+        }
+      });
+    });
   }
 
   toggle(open: boolean): void {
+    const supportsDesktopHover = window.matchMedia('(hover: hover) and (min-width: 769px)').matches;
+
+    if (!supportsDesktopHover) {
+      return;
+    }
+
     this.collapsed.set(!open);
 
     if (!open) {
@@ -93,9 +155,17 @@ export class Sidebar implements AfterViewInit {
 
   toggleMobile(): void {
     this.mobileOpen.update((open) => !open);
+
+    if (!this.mobileOpen()) {
+      this.activeSubmenuName.set(null);
+    }
   }
 
   closeMobile(): void {
+    if (!this.mobileOpen()) {
+      return;
+    }
+
     this.mobileOpen.set(false);
     this.activeSubmenuName.set(null);
   }
@@ -120,7 +190,6 @@ export class Sidebar implements AfterViewInit {
 
   private logout(): void {
     this.closeMobile();
-
     this.authService.removeToken();
 
     void this.router.navigate(['/']);

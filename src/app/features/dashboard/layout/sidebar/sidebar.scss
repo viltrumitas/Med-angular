@@ -85,7 +85,7 @@ $ease-sidebar: cubic-bezier(0.4, 0, 0.2, 1);
 
   color: var(--sidebar-text);
 
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.94);
 
   border: 1px solid var(--sidebar-border);
   border-radius: 0.8rem;
@@ -98,6 +98,8 @@ $ease-sidebar: cubic-bezier(0.4, 0, 0.2, 1);
   -webkit-backdrop-filter: blur(12px);
 
   cursor: pointer;
+
+  -webkit-tap-highlight-color: transparent;
 
   transition:
     color $ease-fast,
@@ -123,7 +125,7 @@ $ease-sidebar: cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   &:active {
-    transform: translateY(0);
+    transform: scale(0.96);
   }
 
   i {
@@ -148,14 +150,16 @@ $ease-sidebar: cubic-bezier(0.4, 0, 0.2, 1);
   @include mobile {
     position: fixed;
     inset: 0;
-    z-index: 1050;
+    z-index: 1000;
 
     display: block;
 
-    background: rgba(15, 23, 42, 0.48);
+    background: rgba(15, 23, 42, 0.52);
 
     backdrop-filter: blur(3px);
     -webkit-backdrop-filter: blur(3px);
+
+    cursor: pointer;
 
     animation: overlayIn 0.25s ease both;
   }
@@ -167,22 +171,30 @@ $ease-sidebar: cubic-bezier(0.4, 0, 0.2, 1);
 
 .sidebar {
   position: fixed;
-  z-index: 10;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1100;
+
   display: flex;
   flex-direction: column;
+
   width: var(--sidebar-width);
   height: 100vh;
   height: 100dvh;
 
-  // SOLUCIÓN ANIMACIÓN: Ocultamos el eje X para que no desborde al cerrar
-  overflow-x: hidden;
-  overflow-y: visible;
+  overflow: hidden;
 
   color: var(--sidebar-text);
+
   background: var(--sidebar-bg);
+
   border-right: 1px solid var(--sidebar-border);
+
   box-shadow: 8px 0 28px rgba(15, 23, 42, 0.035);
+
   isolation: isolate;
+
   will-change: width, transform;
 
   transition:
@@ -193,7 +205,6 @@ $ease-sidebar: cubic-bezier(0.4, 0, 0.2, 1);
   &.closed {
     width: var(--sidebar-collapsed-width);
 
-    // SOLUCIÓN ANIMACIÓN: Solo desaparecemos el texto, no cambiamos el grid ni el padding
     .brand-content,
     .label,
     .chevron-icon,
@@ -201,7 +212,7 @@ $ease-sidebar: cubic-bezier(0.4, 0, 0.2, 1);
     .sidebar-footer__label,
     .sidebar-footer__separator,
     .logout-content,
-    .logout-arrow {
+    .logout-arrow-wrapper {
       opacity: 0;
       visibility: hidden;
 
@@ -215,33 +226,53 @@ $ease-sidebar: cubic-bezier(0.4, 0, 0.2, 1);
 
   @include mobile {
     width: min(18rem, calc(100vw - 3.5rem)) !important;
+    max-width: 100%;
 
-    transform: translateX(-105%);
+    transform: translate3d(-105%, 0, 0);
 
-    box-shadow: 18px 0 50px rgba(15, 23, 42, 0.18);
+    visibility: hidden;
+    pointer-events: none;
 
-    transition: transform 0.4s $ease-smooth;
+    border-right: 0;
+
+    box-shadow: none;
+
+    transition:
+      transform 0.4s $ease-smooth,
+      visibility 0s linear 0.4s,
+      box-shadow 0.3s ease;
+
+    &.closed {
+      width: min(18rem, calc(100vw - 3.5rem)) !important;
+    }
 
     &.mobile-open {
-      transform: translateX(0);
+      transform: translate3d(0, 0, 0);
 
-      // SOLUCIÓN MOBILE INVISIBLE: Forzamos que se muestre el contenido al abrir en móvil
+      visibility: visible;
+      pointer-events: auto;
+
+      box-shadow: 18px 0 50px rgba(15, 23, 42, 0.22);
+
+      transition:
+        transform 0.4s $ease-smooth,
+        visibility 0s linear 0s,
+        box-shadow 0.3s ease;
+
       .brand-content,
       .label,
       .chevron-icon,
       .sidebar-footer__label,
       .sidebar-footer__separator,
       .logout-content,
-      .logout-arrow {
+      .logout-arrow-wrapper {
         opacity: 1 !important;
         visibility: visible !important;
+
         pointer-events: auto !important;
+
         transform: none !important;
       }
-    }
-
-    &.closed {
-      width: min(18rem, calc(100vw - 3.5rem)) !important;
     }
   }
 }
@@ -261,6 +292,8 @@ $ease-sidebar: cubic-bezier(0.4, 0, 0.2, 1);
   min-height: 78px;
 
   padding: 0.9rem 1rem;
+
+  flex-shrink: 0;
 
   border-bottom: 1px solid var(--sidebar-border);
 
@@ -290,33 +323,60 @@ $ease-sidebar: cubic-bezier(0.4, 0, 0.2, 1);
   display: none;
 
   @include mobile {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    position: absolute;
+    top: 50%;
+    right: 0.85rem;
+    z-index: 2;
 
-    margin-left: auto;
-    padding: 0.4rem;
+    display: grid;
+    place-items: center;
+
+    width: 40px;
+    height: 40px;
+
+    padding: 0;
 
     color: var(--sidebar-text-secondary);
-    background: transparent;
 
-    border: none;
-    border-radius: 0.5rem;
+    background: var(--sidebar-surface);
+
+    border: 1px solid var(--sidebar-border);
+    border-radius: 0.7rem;
 
     cursor: pointer;
+
+    transform: translateY(-50%);
+
+    -webkit-tap-highlight-color: transparent;
+
     transition:
       color $ease-fast,
-      background-color $ease-fast;
+      background-color $ease-fast,
+      border-color $ease-fast,
+      transform 0.18s ease;
+
+    @include focus-ring;
 
     &:hover,
     &:focus-visible {
       color: var(--sidebar-danger);
+
       background: var(--sidebar-danger-light);
+
+      border-color: rgba(220, 38, 38, 0.15);
+
+      transform: translateY(-50%) scale(1.03);
+    }
+
+    &:active {
+      transform: translateY(-50%) scale(0.96);
     }
 
     i {
       width: 20px;
       height: 20px;
+
+      pointer-events: none;
     }
   }
 }
@@ -478,6 +538,7 @@ $ease-sidebar: cubic-bezier(0.4, 0, 0.2, 1);
   overflow-x: hidden;
   overflow-y: auto;
 
+  overscroll-behavior: contain;
   scrollbar-width: thin;
   scrollbar-color: transparent transparent;
 
@@ -729,6 +790,8 @@ $ease-sidebar: cubic-bezier(0.4, 0, 0.2, 1);
 
   text-decoration: none;
 
+  -webkit-tap-highlight-color: transparent;
+
   transition:
     color $ease-fast,
     background-color $ease-fast,
@@ -784,6 +847,8 @@ $ease-sidebar: cubic-bezier(0.4, 0, 0.2, 1);
 
   margin: 0.7rem 0.5rem;
 
+  flex-shrink: 0;
+
   background: linear-gradient(
     90deg,
     transparent,
@@ -805,7 +870,9 @@ $ease-sidebar: cubic-bezier(0.4, 0, 0.2, 1);
 
   padding: 0 0.75rem 0.85rem;
 
-  background: linear-gradient(to top, rgba(248, 250, 252, 0.65), rgba(255, 255, 255, 0));
+  flex-shrink: 0;
+
+  background: linear-gradient(to top, rgba(248, 250, 252, 0.75), rgba(255, 255, 255, 0));
 
   transition: padding 0.3s $ease-sidebar;
 }
@@ -889,11 +956,14 @@ $ease-sidebar: cubic-bezier(0.4, 0, 0.2, 1);
       background: rgba(220, 38, 38, 0.1);
     }
 
-    .logout-arrow {
+    .logout-arrow-wrapper {
       opacity: 1;
-
       transform: translateX(2px);
     }
+  }
+
+  &:active {
+    transform: scale(0.99);
   }
 }
 
@@ -962,7 +1032,10 @@ $ease-sidebar: cubic-bezier(0.4, 0, 0.2, 1);
   white-space: nowrap;
 }
 
-.logout-arrow {
+.logout-arrow-wrapper {
+  display: grid;
+  place-items: center;
+
   width: 16px;
   height: 16px;
 
@@ -975,6 +1048,14 @@ $ease-sidebar: cubic-bezier(0.4, 0, 0.2, 1);
   transition:
     opacity $ease-fast,
     transform 0.22s $ease-smooth;
+
+  i,
+  svg {
+    display: block;
+
+    width: 16px;
+    height: 16px;
+  }
 }
 
 // ==========================================================================
@@ -1015,21 +1096,20 @@ $ease-sidebar: cubic-bezier(0.4, 0, 0.2, 1);
 @include mobile {
   .hamburger {
     top: max(1rem, env(safe-area-inset-top));
-    left: max(1rem, env(safe-area-inset-left));
+    right: max(1rem, env(safe-area-inset-right));
+    left: auto;
   }
 
   .sidebar {
     padding-top: env(safe-area-inset-top);
     padding-bottom: env(safe-area-inset-bottom);
-
-    border-right: 0;
   }
 
   .sidebar-header {
     min-height: 76px;
 
     padding-left: 1rem;
-    padding-right: 3.75rem;
+    padding-right: 4rem;
   }
 
   .brand-content__top {
@@ -1043,7 +1123,7 @@ $ease-sidebar: cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .item {
-    min-height: 46px;
+    min-height: 48px;
 
     font-size: 0.92rem;
 
@@ -1060,7 +1140,7 @@ $ease-sidebar: cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .submenu-item {
-    min-height: 40px;
+    min-height: 42px;
   }
 
   .sidebar-footer {
@@ -1099,7 +1179,7 @@ $ease-sidebar: cubic-bezier(0.4, 0, 0.2, 1);
   .sidebar-header {
     min-height: 72px;
 
-    padding-right: 3.5rem;
+    padding-right: 3.75rem;
   }
 
   .brand-mark {
@@ -1124,11 +1204,44 @@ $ease-sidebar: cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .item {
-    min-height: 44px;
+    min-height: 46px;
 
     padding-inline: 0.7rem;
 
     font-size: 0.875rem;
+  }
+}
+
+// ==========================================================================
+// VERY SMALL MOBILE
+// ==========================================================================
+
+@media (max-width: 360px) {
+  .sidebar {
+    width: calc(100vw - 1.5rem) !important;
+
+    &.closed {
+      width: calc(100vw - 1.5rem) !important;
+    }
+  }
+
+  .sidebar-header {
+    gap: 0.65rem;
+
+    padding-left: 0.8rem;
+    padding-right: 3.65rem;
+  }
+
+  .brand-badge {
+    display: none;
+  }
+
+  .nav {
+    padding-inline: 0.6rem;
+  }
+
+  .sidebar-footer {
+    padding-inline: 0.6rem;
   }
 }
 
@@ -1157,7 +1270,7 @@ $ease-sidebar: cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .item {
-    min-height: 39px;
+    min-height: 41px;
   }
 
   .divider {
@@ -1170,6 +1283,10 @@ $ease-sidebar: cubic-bezier(0.4, 0, 0.2, 1);
 
   .item--logout {
     min-height: 50px;
+  }
+
+  .logout-content__description {
+    display: none;
   }
 }
 
@@ -1208,9 +1325,10 @@ $ease-sidebar: cubic-bezier(0.4, 0, 0.2, 1);
   .inline-submenu,
   .submenu-item,
   .logout-content,
-  .logout-arrow,
+  .logout-arrow-wrapper,
   .item__icon-wrapper,
   .hamburger,
+  .mobile-close-btn,
   .mobile-overlay {
     animation: none !important;
     transition: none !important;

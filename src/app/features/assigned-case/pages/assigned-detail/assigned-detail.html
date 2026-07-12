@@ -12,7 +12,7 @@
   } @else if (error()) {
     <section class="state-container state-container--error" role="alert">
       <div class="state-container__icon">
-        <i data-lucide="triangle-alert"></i>
+        <i data-lucide="triangle-alert" aria-hidden="true"></i>
       </div>
 
       <div class="state-container__content">
@@ -43,23 +43,23 @@
       >
         <div class="case-status-card__icon">
           @if (!item.submission) {
-            <i data-lucide="file-text"></i>
+            <i data-lucide="file-text" aria-hidden="true"></i>
           } @else {
             @switch (item.submission.status) {
               @case ('DRAFT') {
-                <i data-lucide="clipboard-pen-line"></i>
+                <i data-lucide="clipboard-pen-line" aria-hidden="true"></i>
               }
 
               @case ('SUBMITTED') {
-                <i data-lucide="send"></i>
+                <i data-lucide="send" aria-hidden="true"></i>
               }
 
               @case ('REVIEWED') {
-                <i data-lucide="badge-check"></i>
+                <i data-lucide="badge-check" aria-hidden="true"></i>
               }
 
               @default {
-                <i data-lucide="file-text"></i>
+                <i data-lucide="file-text" aria-hidden="true"></i>
               }
             }
           }
@@ -101,25 +101,47 @@
 
     @if (!item.submission) {
       <section class="case-single-layout">
-        <article class="case-panel">
-          <header class="panel-header">
+        <!-- CASO CLÍNICO DESPLEGABLE -->
+
+        <article class="case-panel" [class.panel--collapsed]="!casePanelOpen()">
+          <button
+            type="button"
+            class="panel-header panel-header--toggle"
+            [attr.aria-expanded]="casePanelOpen()"
+            aria-controls="initial-case-content"
+            (click)="toggleCasePanel()"
+          >
             <div class="panel-header__content">
               <span class="panel-header__eyebrow"> Información del caso </span>
 
               <h2>Detalles clínicos</h2>
             </div>
 
-            <span class="panel-badge"> Lectura </span>
-          </header>
+            <div class="panel-header__actions">
+              <span class="panel-badge"> Lectura </span>
 
-          <div class="case-panel__content">
-            <app-case-content [case]="item.case" />
+              <span class="panel-toggle-icon" [class.panel-toggle-icon--open]="casePanelOpen()">
+                <i data-lucide="chevron-down" aria-hidden="true"></i>
+              </span>
+            </div>
+          </button>
+
+          <div
+            id="initial-case-content"
+            class="panel-collapse"
+            [class.panel-collapse--open]="casePanelOpen()"
+          >
+            <div class="case-panel__content">
+              <app-case-content [case]="item.case" />
+            </div>
           </div>
         </article>
 
+        <!-- PANEL PARA INICIAR RESPUESTA -->
+
         <aside class="start-panel">
           <div class="start-panel__icon">
-            <i data-lucide="play-circle"></i>
+            <i data-lucide="play-circle" aria-hidden="true"></i>
           </div>
 
           <span class="start-panel__eyebrow"> Respuesta clínica </span>
@@ -157,19 +179,19 @@
             <div class="submission-toolbar__icon">
               @switch (item.submission.status) {
                 @case ('DRAFT') {
-                  <i data-lucide="clipboard-pen-line"></i>
+                  <i data-lucide="clipboard-pen-line" aria-hidden="true"></i>
                 }
 
                 @case ('SUBMITTED') {
-                  <i data-lucide="send"></i>
+                  <i data-lucide="send" aria-hidden="true"></i>
                 }
 
                 @case ('REVIEWED') {
-                  <i data-lucide="badge-check"></i>
+                  <i data-lucide="badge-check" aria-hidden="true"></i>
                 }
 
                 @default {
-                  <i data-lucide="file-text"></i>
+                  <i data-lucide="file-text" aria-hidden="true"></i>
                 }
               }
             </div>
@@ -237,19 +259,40 @@
                CASO CLÍNICO
           ========================== -->
 
-          <article class="split-panel split-panel--case">
-            <header class="panel-header">
+          <article
+            class="split-panel split-panel--case"
+            [class.panel--collapsed]="!casePanelOpen()"
+          >
+            <button
+              type="button"
+              class="panel-header panel-header--toggle"
+              [attr.aria-expanded]="casePanelOpen()"
+              aria-controls="clinical-case-panel"
+              (click)="toggleCasePanel()"
+            >
               <div class="panel-header__content">
                 <span class="panel-header__eyebrow"> Información del caso </span>
 
                 <h2>Caso clínico</h2>
               </div>
 
-              <span class="panel-badge"> Lectura </span>
-            </header>
+              <div class="panel-header__actions">
+                <span class="panel-badge"> Lectura </span>
 
-            <div class="split-panel__scroll">
-              <app-case-content [case]="item.case" mode="embedded" />
+                <span class="panel-toggle-icon" [class.panel-toggle-icon--open]="casePanelOpen()">
+                  <i data-lucide="chevron-down" aria-hidden="true"></i>
+                </span>
+              </div>
+            </button>
+
+            <div
+              id="clinical-case-panel"
+              class="panel-collapse panel-collapse--split"
+              [class.panel-collapse--open]="casePanelOpen()"
+            >
+              <div class="split-panel__scroll">
+                <app-case-content [case]="item.case" mode="embedded" />
+              </div>
             </div>
           </article>
 
@@ -257,41 +300,65 @@
                RESPUESTA DEL ALUMNO
           ========================== -->
 
-          <article class="split-panel split-panel--submission">
-            <header class="panel-header">
+          <article
+            class="split-panel split-panel--submission"
+            [class.panel--collapsed]="!submissionPanelOpen()"
+          >
+            <button
+              type="button"
+              class="panel-header panel-header--toggle"
+              [attr.aria-expanded]="submissionPanelOpen()"
+              aria-controls="student-submission-panel"
+              (click)="toggleSubmissionPanel()"
+            >
               <div class="panel-header__content">
                 <span class="panel-header__eyebrow"> Tu respuesta </span>
 
                 <h2>Submission</h2>
               </div>
 
-              <span
-                class="panel-badge panel-badge--submission"
-                [class.panel-badge--submitted]="item.submission.status === 'SUBMITTED'"
-                [class.panel-badge--reviewed]="item.submission.status === 'REVIEWED'"
-              >
-                @switch (item.submission.status) {
-                  @case ('DRAFT') {
-                    En progreso
-                  }
+              <div class="panel-header__actions">
+                <span
+                  class="panel-badge panel-badge--submission"
+                  [class.panel-badge--submitted]="item.submission.status === 'SUBMITTED'"
+                  [class.panel-badge--reviewed]="item.submission.status === 'REVIEWED'"
+                >
+                  @switch (item.submission.status) {
+                    @case ('DRAFT') {
+                      En progreso
+                    }
 
-                  @case ('SUBMITTED') {
-                    Enviada
-                  }
+                    @case ('SUBMITTED') {
+                      Enviada
+                    }
 
-                  @case ('REVIEWED') {
-                    Revisada
-                  }
+                    @case ('REVIEWED') {
+                      Revisada
+                    }
 
-                  @default {
-                    {{ item.submission.status ?? 'Sin estado' }}
+                    @default {
+                      {{ item.submission.status ?? 'Sin estado' }}
+                    }
                   }
-                }
-              </span>
-            </header>
+                </span>
 
-            <div class="split-panel__scroll split-panel__scroll--submission">
-              <app-submissions-detail [submissionId]="item.submission.id" />
+                <span
+                  class="panel-toggle-icon"
+                  [class.panel-toggle-icon--open]="submissionPanelOpen()"
+                >
+                  <i data-lucide="chevron-down" aria-hidden="true"></i>
+                </span>
+              </div>
+            </button>
+
+            <div
+              id="student-submission-panel"
+              class="panel-collapse panel-collapse--split"
+              [class.panel-collapse--open]="submissionPanelOpen()"
+            >
+              <div class="split-panel__scroll split-panel__scroll--submission">
+                <app-submissions-detail [submissionId]="item.submission.id" />
+              </div>
             </div>
           </article>
         </div>
