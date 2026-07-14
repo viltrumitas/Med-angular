@@ -6,7 +6,10 @@
 
     @for (r of reviews(); track r.id) {
 
-      <div class="review-card">
+      <div 
+        class="review-card"
+        (click)="openReview(r.id)"
+      >
 
         <header>
           <h3>{{ r.case.title }}</h3>

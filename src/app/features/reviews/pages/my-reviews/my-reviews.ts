@@ -1,4 +1,5 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { ReviewApi } from '../../services/review-api';
 import { ReviewResponseDto } from '../../dto/review-response.dto';
 import { CommonModule } from '@angular/common';
@@ -11,6 +12,7 @@ import { CommonModule } from '@angular/common';
 })
 export class MyReviews {
   private readonly api = inject(ReviewApi);
+  private readonly router = inject(Router)
 
   reviews = signal<ReviewResponseDto[]>([]);
   loading = signal(true);
@@ -25,5 +27,12 @@ export class MyReviews {
         this.loading.set(false);
       },
     });
+  }
+
+  openReview(id: string) {
+    this.router.navigate([
+      '/dashboard/teacher/reviews',
+      id
+    ]);
   }
 }

@@ -1,0 +1,417 @@
+// ===============================
+// VARIABLES
+// ===============================
+
+$primary: #0d9488;
+$primary-light: #f0fdfa;
+
+$text-main: #1e293b;
+$text-muted: #64748b;
+
+$background: #f8fafc;
+$card: #ffffff;
+
+$border: #e2e8f0;
+
+$success: #16a34a;
+
+
+// ===============================
+// CONTAINER
+// ===============================
+
+.review-detail {
+
+  padding: 2rem;
+  background: $background;
+  min-height: 100%;
+
+}
+
+
+// ===============================
+// HEADER
+// ===============================
+
+.review-header {
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  background: $card;
+
+  padding: 2rem;
+
+  border-radius: 20px;
+
+  border: 1px solid $border;
+
+  margin-bottom: 1.5rem;
+
+
+  h1 {
+
+    margin: 0;
+
+    font-size: 1.8rem;
+
+    color: $text-main;
+
+    font-weight: 700;
+
+  }
+
+
+  p {
+
+    margin-top: .5rem;
+
+    color: $text-muted;
+
+    font-size: 1rem;
+
+  }
+
+}
+
+.review-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+
+.edit-btn {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+
+  padding: .75rem 1rem;
+
+  border-radius: 12px;
+
+  border: 1px solid rgba(13,148,136,.25);
+
+  background: #f0fdfa;
+
+  color: #0d9488;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: .2s ease;
+
+
+  &:hover {
+    background: #ccfbf1;
+    transform: translateY(-1px);
+  }
+}
+
+
+// ===============================
+// SCORE
+// ===============================
+
+.score-card {
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+
+  background: $primary-light;
+
+  border-radius: 18px;
+
+  padding: 1.2rem 2rem;
+
+
+  span {
+
+    color: $text-muted;
+
+    font-size: .9rem;
+
+  }
+
+
+  strong {
+
+    color: $primary;
+
+    font-size: 2.5rem;
+
+    font-weight: 800;
+
+  }
+
+}
+
+
+// ===============================
+// INFORMATION CARDS
+// ===============================
+
+.info-card,
+.feedback-card {
+
+
+  background: $card;
+
+  border: 1px solid $border;
+
+  border-radius: 18px;
+
+  padding: 1.5rem;
+
+  margin-bottom: 1.5rem;
+
+
+  h2 {
+
+    margin-top: 0;
+
+    margin-bottom: 1rem;
+
+    color: $text-main;
+
+    font-size: 1.2rem;
+
+  }
+
+
+  p {
+
+    color: $text-muted;
+
+    margin: .6rem 0;
+
+
+    strong {
+
+      color: $text-main;
+
+    }
+
+  }
+
+}
+
+
+// ===============================
+// FEEDBACK
+// ===============================
+
+
+.feedback-card {
+
+  background: linear-gradient(135deg,
+      #ffffff,
+      #f8fafc);
+
+
+  p {
+
+    background: #f8fafc;
+
+    padding: 1rem;
+
+    border-radius: 12px;
+
+    border-left: 4px solid $primary;
+
+  }
+
+}
+
+
+// ===============================
+// RUBRICA
+// ===============================
+
+.rubric-section {
+
+
+  h2 {
+
+    font-size: 1.5rem;
+
+    color: $text-main;
+
+    margin-bottom: 1rem;
+
+  }
+
+}
+
+
+
+.rubric-grid {
+
+
+  display: grid;
+
+  grid-template-columns: repeat(auto-fit,
+      minmax(320px, 1fr));
+
+  gap: 1.5rem;
+
+}
+
+
+
+// ===============================
+// RUBRIC CARD
+// ===============================
+
+
+.rubric-card {
+
+
+  background: $card;
+
+  border-radius: 18px;
+
+  border: 1px solid $border;
+
+  padding: 1.5rem;
+
+
+  transition: .2s ease;
+
+
+  &:hover {
+
+    transform: translateY(-3px);
+
+    box-shadow:
+      0 10px 25px rgba(0, 0, 0, .05);
+
+  }
+
+
+
+  h3 {
+
+    color: $primary;
+
+    font-size: 1.1rem;
+
+    margin-top: 0;
+
+    margin-bottom: 1.2rem;
+
+    border-bottom: 1px solid $border;
+
+    padding-bottom: .8rem;
+
+  }
+
+}
+
+
+
+// ===============================
+// ITEMS
+// ===============================
+
+
+.rubric-item {
+
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+
+  padding: .8rem 0;
+
+
+  border-bottom: 1px dashed $border;
+
+
+  &:last-child {
+
+    border-bottom: none;
+
+  }
+
+
+
+  span {
+
+    color: $text-muted;
+
+    font-size: .9rem;
+
+    max-width: 75%;
+
+  }
+
+
+
+  strong {
+
+    background: $primary-light;
+
+    color: $primary;
+
+    padding: .35rem .7rem;
+
+    border-radius: 10px;
+
+    font-size: .85rem;
+
+    min-width: 35px;
+
+    text-align: center;
+
+  }
+
+}
+
+
+
+// ===============================
+// RESPONSIVE
+// ===============================
+
+
+@media(max-width:768px) {
+
+
+  .review-detail {
+
+    padding: 1rem;
+
+  }
+
+
+  .review-header {
+
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 1rem;
+
+  }
+
+
+  .score-card {
+
+    width: 100%;
+
+  }
+
+
+}

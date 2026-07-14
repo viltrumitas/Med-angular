@@ -56,11 +56,19 @@ export class ReviewCreate implements OnInit {
 
   submission = signal<SubmissionResponseDto | null>(null);
 
+  classroomId = signal<string | null>(null);
+
   loading = signal(true);
 
   saving = signal(false);
 
   ngOnInit() {
+
+    const classroomId =
+      this.route.snapshot.queryParamMap.get('classroomId');
+
+    this.classroomId.set(classroomId);
+
     const submissionId =
       this.route.snapshot.paramMap.get('submissionId');
 
@@ -122,9 +130,18 @@ export class ReviewCreate implements OnInit {
 
           this.saving.set(false);
 
-          this.router.navigate([
-            '/dashboard/teacher/reviews/my-reviews',
-          ]);
+          const classroomId = this.classroomId();
+
+          if (classroomId) {
+            this.router.navigate([
+              '/dashboard/teacher/reviews/my-reviews',
+              classroomId,
+            ]);
+          } else {
+            this.router.navigate([
+              '/dashboard/teacher/reviews/my-reviews',
+            ]);
+          }
 
         },
 

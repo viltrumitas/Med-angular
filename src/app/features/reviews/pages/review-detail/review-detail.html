@@ -1,1 +1,186 @@
-<p>review-detail works!</p>
+@if (loading()) {
+
+<p>
+  Cargando evaluación...
+</p>
+
+
+} @else if (review(); as r) {
+
+
+<div class="review-detail">
+
+
+  <header class="review-header">
+
+    <div>
+
+      <h1>
+        Evaluación clínica
+      </h1>
+
+
+      <p>
+        {{ r.case.title }}
+      </p>
+
+    </div>
+
+
+    <div class="review-actions">
+      <button type="button" class="edit-btn" (click)="editReview(r.id)">
+        <i data-lucide="pen">
+          Editar evaluacion
+        </i>
+      </button>
+      <div class="score-card">
+
+        <span>
+          Puntaje
+        </span>
+
+        <strong>
+          {{ r.totalScore }}
+        </strong>
+
+      </div>
+    </div>
+
+  </header>
+
+
+
+  <section class="info-card">
+
+
+    <h2>
+      Información
+    </h2>
+
+
+    <p>
+      <strong>
+        Estudiante:
+      </strong>
+
+      {{ r.student.firstName }}
+      {{ r.student.lastName }}
+
+    </p>
+
+
+    <p>
+      <strong>
+        Actividad:
+      </strong>
+
+      {{ r.assignment.title }}
+
+    </p>
+
+
+    <p>
+      <strong>
+        Fecha:
+      </strong>
+
+      {{ r.createdAt | date }}
+
+    </p>
+
+
+  </section>
+
+
+
+  <section class="feedback-card">
+
+
+    <h2>
+      Retroalimentación
+    </h2>
+
+
+    <p>
+      {{ r.feedback ?? 'Sin comentarios' }}
+    </p>
+
+
+  </section>
+
+
+
+
+  <!-- =========================
+       RUBRICA DINAMICA
+  ========================== -->
+
+  <section class="rubric-section">
+
+
+    <h2>
+      Evaluación
+    </h2>
+
+
+
+    <div class="rubric-grid">
+
+
+      @for (
+      section of sections();
+      track section.key
+      ) {
+
+
+      <article class="rubric-card">
+
+
+        <h3>
+          {{ sectionLabel(section.key) }}
+        </h3>
+
+
+
+        @for (
+        item of getEntries(section.value, section.key);
+        track item[0]
+        ) {
+
+
+        <div class="rubric-item">
+
+
+          <span>
+            {{ label(item[0]) }}
+          </span>
+
+
+          <strong>
+            {{ item[1] }}
+          </strong>
+
+
+        </div>
+
+
+        }
+
+
+      </article>
+
+
+      }
+
+
+    </div>
+
+
+  </section>
+
+
+
+</div>
+
+
+}

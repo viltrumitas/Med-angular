@@ -20,6 +20,12 @@ export const reviewsRoutes: Routes = [
         .then(c => c.ReviewCreate),
   },
   {
+    path: ':id/edit',
+    loadComponent: () => 
+      import('./pages/review-edit/review-edit')
+      .then(c => c.ReviewEdit),
+  },
+  {
     path: ':id',
     loadComponent: () =>
       import('./pages/review-detail/review-detail')

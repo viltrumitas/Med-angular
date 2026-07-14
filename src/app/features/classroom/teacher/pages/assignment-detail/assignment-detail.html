@@ -277,9 +277,23 @@
 
               <!-- ACTION -->
 
-              <button type="button" class="row-action" aria-label="Ver asignación">
-                <i data-lucide="chevron-right"></i>
-              </button>
+              @if (assigned.submission?.status === 'SUBMITTED') {
+                <button
+                  type="button"
+                  class="row-action"
+                  (click)="openReview(assigned)"
+                >
+                  <i data-lucide="clipboard-check"></i>
+                </button>
+              } @else {
+                <button
+                  type="button"
+                  class="row-action disabled"
+                  disabled
+                >
+                  <i data-lucide="clock"></i>
+                </button>
+              }
             </article>
           }
         </div>

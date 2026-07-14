@@ -84,7 +84,11 @@ export class ClassroomDetail implements AfterViewInit, OnInit {
     this.router.navigate([
       '/dashboard/teacher/reviews/crear',
       submissionId,
-    ]);
+    ], {
+      queryParams: {
+        classroomId: this.classroom()!.id
+      }
+    });
   }
 
   openAssignment(assignmentId: string) {

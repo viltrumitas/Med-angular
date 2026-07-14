@@ -11,7 +11,16 @@ export const TEACHER_MENU: SidebarItem[] = [
     path: '/dashboard/teacher/cases',
     icon: 'folder',
   },
-
+  {
+    name: 'Todos mis pendientes',
+    path: '/dashboard/teacher/reviews',
+    icon: 'clipboard-clock',
+  },
+  {
+    name: 'Mis revisiones',
+    path: '/dashboard/teacher/reviews/my-reviews',
+    icon: 'list-checks',
+  },
   {
     name: 'Cerrar Sesion',
     action: 'logout',

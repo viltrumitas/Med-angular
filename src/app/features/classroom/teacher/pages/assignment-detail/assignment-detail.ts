@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AssignmentApi } from '../../../../assignments/services/assignment-api';
 import { AssignmentDetail as AssignmentDetailModel } from '../../../models/assignment-detail.model';
 import { createIcons, icons } from 'lucide';
+import { AssignedCase } from '../../../models/assigned-case.model';
 
 @Component({
   selector: 'app-assignment-detail',
@@ -82,6 +83,25 @@ export class AssignmentDetailPage implements AfterViewInit, OnInit {
 
       complete: () => {
         console.log('COMPLETE');
+      },
+    });
+  }
+
+  openReview(assigned: AssignedCase) {
+    if (!assigned.submission) return;
+
+    if (assigned.submission.status !== 'SUBMITTED') {
+      return;
+    }
+
+    const classroomId = this.route.snapshot.paramMap.get('classroomId');
+
+    this.router.navigate([
+      '/dashboard/teacher/reviews/crear',
+      assigned.submission.id,
+    ], {
+      queryParams: {
+        classroomId,
       },
     });
   }

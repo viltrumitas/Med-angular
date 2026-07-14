@@ -29,7 +29,7 @@ export interface StudentAssignmentDetailModel {
 
     submission: {
       id: string;
-      status: 'DRAFT' | 'SUBMITTED' | 'REVIEW';
+      status: 'DRAFT' | 'SUBMITTED' | 'REVIEWED';
     } | null;
 
     assignedAt: string;
