@@ -10,6 +10,7 @@ import { PhysicalExaminationModel } from "../models/physicalExamination.model";
 import { PrimaryAssessmentModel } from "../models/primaryAssessment.model";
 import { SceneManagementModel } from "../models/sceneManagment.model";
 import { VitalSignsModel } from "../models/vitalSigns.model";
+import { SubmissionResponseDto } from "./submission-response.dto";
 
 export interface ReviewResponseDto {
   id: string;
@@ -20,6 +21,8 @@ export interface ReviewResponseDto {
 
   case: CaseResponseDto;
   assignment: AssignmentResponseDto;
+
+  submission: SubmissionResponseDto;
 
   sceneManagement: SceneManagementModel;
   primaryAssessment: PrimaryAssessmentModel;

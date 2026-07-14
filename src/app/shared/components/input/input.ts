@@ -23,14 +23,14 @@ export class InputComponent implements ControlValueAccessor {
   @Input() min?: number;
   @Input() max?: number;
 
-  value: string | number | null = '';
+  value: string | number | null = null;
   disabled = false;
 
-  private onChange: (value: string | number | null) => void = () => {};
-  private onTouched: () => void = () => {};
+  private onChange: (value: string | number | null) => void = () => { };
+  private onTouched: () => void = () => { };
 
   writeValue(value: string | number | null): void {
-    this.value = value ?? '';
+    this.value = value;
   }
 
   registerOnChange(fn: (value: string | number | null) => void): void {
@@ -85,14 +85,21 @@ export class InputComponent implements ControlValueAccessor {
   onInput(event: Event): void {
     const input = event.target as HTMLInputElement;
 
-    let newValue = input.value;
+    let newValue: string | number | null = input.value;
 
     if (this.type === 'number') {
-      newValue = newValue.replace(/\D/g, '');
+
+      newValue = input.value.replace(/\D/g, '');
+
       input.value = newValue;
+
+      newValue = newValue === ''
+        ? null
+        : Number(newValue);
     }
 
     this.value = newValue;
+
     this.onChange(this.value);
   }
 }
