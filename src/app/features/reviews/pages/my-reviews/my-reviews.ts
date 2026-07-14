@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
 })
 export class MyReviews {
   private readonly api = inject(ReviewApi);
-  private readonly router = inject(Router)
+  private readonly router = inject(Router);
 
   reviews = signal<ReviewResponseDto[]>([]);
   loading = signal(true);
@@ -21,7 +21,7 @@ export class MyReviews {
     this.api.getMyReviews().subscribe({
       next: (data) => {
         this.reviews.set(data);
-        this.loading.set(false)
+        this.loading.set(false);
       },
       error: () => {
         this.loading.set(false);
@@ -30,9 +30,6 @@ export class MyReviews {
   }
 
   openReview(id: string) {
-    this.router.navigate([
-      '/dashboard/teacher/reviews',
-      id
-    ]);
+    this.router.navigate(['/dashboard/teacher/reviews', id]);
   }
 }

@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit, AfterViewInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { createReviewForm } from '../../forms/review.form';
 import { SceneManagement } from '../../components/scene-management/scene-management';
@@ -10,7 +10,6 @@ import { FocusedAssessment } from '../../components/focused-assessment/focused-a
 import { Opqrst } from '../../components/opqrst/opqrst';
 import { Sampler } from '../../components/sampler/sampler';
 import { OtherInterventions } from '../../components/other-interventions/other-interventions';
-
 import { ReviewApi } from '../../services/review-api';
 import { Router, ActivatedRoute } from '@angular/router';
 import { mapCreateReview } from '../../mappers/review-mapper';
@@ -18,7 +17,8 @@ import { SubmissionResponseDto } from '../../dto/submission-response.dto';
 import { ButtonComponent } from '../../../../shared/components/button/button';
 import { CaseContent } from '../../../cases/pages/case-content/case-content';
 import { SubmissionContent } from '../../components/submission-content/submission-content';
-import { TextareaComponent } from "../../../../shared/components/text-area/text-area";
+import { TextareaComponent } from '../../../../shared/components/text-area/text-area';
+import { createIcons, icons } from 'lucide';
 
 @Component({
   selector: 'app-review-create',
@@ -37,45 +37,37 @@ import { TextareaComponent } from "../../../../shared/components/text-area/text-
     ButtonComponent,
     CaseContent,
     SubmissionContent,
-    TextareaComponent
+    TextareaComponent,
   ],
   templateUrl: './review-create.html',
   styleUrl: './review-create.scss',
 })
-export class ReviewCreate implements OnInit {
-
+export class ReviewCreate implements OnInit, AfterViewInit {
   private readonly api = inject(ReviewApi);
-
   private readonly route = inject(ActivatedRoute);
-
   private readonly router = inject(Router);
 
   totalScore = signal(0);
-
   reviewForm = createReviewForm();
-
   submission = signal<SubmissionResponseDto | null>(null);
-
   classroomId = signal<string | null>(null);
-
   loading = signal(true);
-
   saving = signal(false);
+  caseExpanded = signal(false);
+  submissionExpanded = signal(true);
+
+  ngAfterViewInit(): void {
+    this.renderIcon();
+  }
 
   ngOnInit() {
-
-    const classroomId =
-      this.route.snapshot.queryParamMap.get('classroomId');
+    const classroomId = this.route.snapshot.queryParamMap.get('classroomId');
+    const submissionId = this.route.snapshot.paramMap.get('submissionId');
 
     this.classroomId.set(classroomId);
 
-    const submissionId =
-      this.route.snapshot.paramMap.get('submissionId');
-
     if (!submissionId) {
-      this.router.navigate([
-        '/dashboard/teacher/reviews',
-      ]);
+      this.router.navigate(['/dashboard/teacher/reviews']);
       return;
     }
 
@@ -85,28 +77,30 @@ export class ReviewCreate implements OnInit {
 
     this.calculateTotalScore();
 
-    this.api
-      .getSubmissionById(submissionId)
-      .subscribe({
+    this.api.getSubmissionById(submissionId).subscribe({
+      next: (submission) => {
+        this.submission.set(submission);
+        this.loading.set(false);
+        this.renderIcon();
+      },
 
-        next: (submission) => {
-          this.submission.set(submission);
-          this.loading.set(false);
-        },
+      error: () => {
+        this.loading.set(false);
 
-        error: () => {
-          this.loading.set(false);
+        this.router.navigate(['/dashboard/teacher/reviews']);
+      },
+    });
+  }
 
-          this.router.navigate([
-            '/dashboard/teacher/reviews',
-          ]);
-        },
+  toggleCase(): void {
+    this.caseExpanded.update((value) => !value);
+  }
 
-      });
+  toggleSubmission(): void {
+    this.submissionExpanded.update((value) => !value);
   }
 
   save() {
-
     if (this.reviewForm.invalid) {
       this.reviewForm.markAllAsTouched();
       return;
@@ -118,47 +112,30 @@ export class ReviewCreate implements OnInit {
 
     this.saving.set(true);
 
-    const dto = mapCreateReview(
-      this.reviewForm.getRawValue(),
-    );
+    const dto = mapCreateReview(this.reviewForm.getRawValue());
 
-    this.api
-      .create(submission.id, dto)
-      .subscribe({
+    this.api.create(submission.id, dto).subscribe({
+      next: () => {
+        this.saving.set(false);
 
-        next: () => {
+        const classroomId = this.classroomId();
 
-          this.saving.set(false);
+        if (classroomId) {
+          this.router.navigate(['/dashboard/teacher/reviews/my-reviews', classroomId]);
+        } else {
+          this.router.navigate(['/dashboard/teacher/reviews/my-reviews']);
+        }
+      },
 
-          const classroomId = this.classroomId();
+      error: (err) => {
+        console.error(err);
 
-          if (classroomId) {
-            this.router.navigate([
-              '/dashboard/teacher/reviews/my-reviews',
-              classroomId,
-            ]);
-          } else {
-            this.router.navigate([
-              '/dashboard/teacher/reviews/my-reviews',
-            ]);
-          }
-
-        },
-
-        error: (err) => {
-
-          console.error(err);
-
-          this.saving.set(false);
-
-        },
-
-      });
-
+        this.saving.set(false);
+      },
+    });
   }
 
   private calculateTotalScore(): void {
-
     const value = this.reviewForm.getRawValue();
 
     const sections = [
@@ -174,19 +151,15 @@ export class ReviewCreate implements OnInit {
     ];
 
     const total = sections.reduce((total, section) => {
-
-      return (
-        total +
-        Object.values(section).reduce(
-          (sum, score) => sum + Number(score),
-          0,
-        )
-      );
-
+      return total + Object.values(section).reduce((sum, score) => sum + Number(score), 0);
     }, 0);
 
     this.totalScore.set(total);
-
   }
 
+  private renderIcon() {
+    setTimeout(() => {
+      createIcons({ icons });
+    });
+  }
 }

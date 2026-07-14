@@ -1,16 +1,241 @@
-<div class="section" [formGroup]="group">
-  <app-input formControlName="hemorrhageIdentification" type="number" labelText="Identifica hemorragias exanguitantes" />
-  <app-input formControlName="hemorrhageControl" type="number" labelText="Control de hemorragias" />
-  <app-input formControlName="airwayAssessment" type="number" labelText="Evaluacion de la VA" />
-  <app-input formControlName="airwayManagement" type="number" labelText="Tratamiento a considerar para abrir VA" />
-  <app-input formControlName="ventilationAssessment" type="number" labelText="Evaluacion de la ventilacion (RFC)" />
-  <app-input formControlName="lungAuscultation" type="number" labelText="Auscutacion de campos pulmonares" />
-  <app-input formControlName="oxygenTherapy" type="number" labelText="Administra y selecciona dispositivo Para oxigeno terapia" />
-  <app-input formControlName="pulseAssessment" type="number" labelText="Evalua RFC del pulso periferico y central" />
-  <app-input formControlName="capillaryRefill" type="number" labelText="Evalua llenado capilar" />
-  <app-input formControlName="skinAssessment" type="number" labelText="Evulua temperatura, coloracion y condicion de la piel" />
-  <app-input formControlName="pirrl" type="number" labelText="Evalua PIRRL" />
-  <app-input formControlName="glasgow" type="number" labelText="Evulua y determina ECG" />
-  <app-input formControlName="exposure" type="number" labelText="Exposion del paciente" />
-  <app-input formControlName="temperatureManagement" type="number" labelText="Manejo de temperatura y pudor del paciente" />
-</div>
+<section class="primary-assessment" [formGroup]="group">
+  <div class="primary-assessment__intro">
+    <p>Califica cada criterio de la evaluación primaria según el desempeño del estudiante.</p>
+  </div>
+
+  <div class="primary-assessment__groups">
+    <!-- =========================
+         X — HEMORRAGIAS
+    ========================== -->
+
+    <section class="assessment-group">
+      <header class="assessment-group__header">
+        <span class="assessment-group__badge">X</span>
+
+        <div>
+          <span class="assessment-group__eyebrow">Control inmediato</span>
+          <h3>Hemorragias exanguinantes</h3>
+        </div>
+      </header>
+
+      <div class="assessment-group__grid">
+        <div class="assessment-field">
+          <span class="assessment-field__number">01</span>
+
+          <app-input
+            formControlName="hemorrhageIdentification"
+            type="number"
+            labelText="Identificación de hemorragias exanguinantes"
+          />
+        </div>
+
+        <div class="assessment-field">
+          <span class="assessment-field__number">02</span>
+
+          <app-input
+            formControlName="hemorrhageControl"
+            type="number"
+            labelText="Control de hemorragias"
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================
+         A — VÍA AÉREA
+    ========================== -->
+
+    <section class="assessment-group">
+      <header class="assessment-group__header">
+        <span class="assessment-group__badge">A</span>
+
+        <div>
+          <span class="assessment-group__eyebrow">Airway</span>
+          <h3>Vía aérea</h3>
+        </div>
+      </header>
+
+      <div class="assessment-group__grid">
+        <div class="assessment-field">
+          <span class="assessment-field__number">03</span>
+
+          <app-input
+            formControlName="airwayAssessment"
+            type="number"
+            labelText="Evaluación de la vía aérea"
+          />
+        </div>
+
+        <div class="assessment-field">
+          <span class="assessment-field__number">04</span>
+
+          <app-input
+            formControlName="airwayManagement"
+            type="number"
+            labelText="Tratamiento considerado para abrir la vía aérea"
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================
+         B — VENTILACIÓN
+    ========================== -->
+
+    <section class="assessment-group">
+      <header class="assessment-group__header">
+        <span class="assessment-group__badge">B</span>
+
+        <div>
+          <span class="assessment-group__eyebrow">Breathing</span>
+          <h3>Ventilación y oxigenación</h3>
+        </div>
+      </header>
+
+      <div class="assessment-group__grid">
+        <div class="assessment-field">
+          <span class="assessment-field__number">05</span>
+
+          <app-input
+            formControlName="ventilationAssessment"
+            type="number"
+            labelText="Evaluación de la ventilación y frecuencia respiratoria"
+          />
+        </div>
+
+        <div class="assessment-field">
+          <span class="assessment-field__number">06</span>
+
+          <app-input
+            formControlName="lungAuscultation"
+            type="number"
+            labelText="Auscultación de campos pulmonares"
+          />
+        </div>
+
+        <div class="assessment-field assessment-field--wide">
+          <span class="assessment-field__number">07</span>
+
+          <app-input
+            formControlName="oxygenTherapy"
+            type="number"
+            labelText="Selección y administración del dispositivo de oxigenoterapia"
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================
+         C — CIRCULACIÓN
+    ========================== -->
+
+    <section class="assessment-group">
+      <header class="assessment-group__header">
+        <span class="assessment-group__badge">C</span>
+
+        <div>
+          <span class="assessment-group__eyebrow">Circulation</span>
+          <h3>Circulación y perfusión</h3>
+        </div>
+      </header>
+
+      <div class="assessment-group__grid">
+        <div class="assessment-field">
+          <span class="assessment-field__number">08</span>
+
+          <app-input
+            formControlName="pulseAssessment"
+            type="number"
+            labelText="Evaluación de frecuencia, ritmo y calidad del pulso"
+          />
+        </div>
+
+        <div class="assessment-field">
+          <span class="assessment-field__number">09</span>
+
+          <app-input
+            formControlName="capillaryRefill"
+            type="number"
+            labelText="Evaluación del llenado capilar"
+          />
+        </div>
+
+        <div class="assessment-field assessment-field--wide">
+          <span class="assessment-field__number">10</span>
+
+          <app-input
+            formControlName="skinAssessment"
+            type="number"
+            labelText="Evaluación de temperatura, coloración y condición de la piel"
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================
+         D — NEUROLÓGICO
+    ========================== -->
+
+    <section class="assessment-group">
+      <header class="assessment-group__header">
+        <span class="assessment-group__badge">D</span>
+
+        <div>
+          <span class="assessment-group__eyebrow">Disability</span>
+          <h3>Estado neurológico</h3>
+        </div>
+      </header>
+
+      <div class="assessment-group__grid">
+        <div class="assessment-field">
+          <span class="assessment-field__number">11</span>
+
+          <app-input formControlName="pirrl" type="number" labelText="Evaluación de PIRRL" />
+        </div>
+
+        <div class="assessment-field">
+          <span class="assessment-field__number">12</span>
+
+          <app-input
+            formControlName="glasgow"
+            type="number"
+            labelText="Evaluación y determinación de la Escala de Coma de Glasgow"
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================
+         E — EXPOSICIÓN
+    ========================== -->
+
+    <section class="assessment-group">
+      <header class="assessment-group__header">
+        <span class="assessment-group__badge">E</span>
+
+        <div>
+          <span class="assessment-group__eyebrow">Exposure</span>
+          <h3>Exposición y control ambiental</h3>
+        </div>
+      </header>
+
+      <div class="assessment-group__grid">
+        <div class="assessment-field">
+          <span class="assessment-field__number">13</span>
+
+          <app-input formControlName="exposure" type="number" labelText="Exposición del paciente" />
+        </div>
+
+        <div class="assessment-field">
+          <span class="assessment-field__number">14</span>
+
+          <app-input
+            formControlName="temperatureManagement"
+            type="number"
+            labelText="Manejo de temperatura y preservación del pudor"
+          />
+        </div>
+      </div>
+    </section>
+  </div>
+</section>

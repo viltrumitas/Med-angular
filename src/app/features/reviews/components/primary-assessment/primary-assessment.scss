@@ -1,0 +1,308 @@
+// ==========================================================================
+// VARIABLES
+// ==========================================================================
+
+$mobile: 640px;
+$tablet: 900px;
+
+$primary: #2563eb;
+$primary-dark: #1d4ed8;
+$primary-soft: #eff6ff;
+
+$teal: #0d9488;
+$teal-dark: #0f766e;
+$teal-soft: #f0fdfa;
+
+$text-primary: #0f172a;
+$text-secondary: #475569;
+$text-muted: #94a3b8;
+
+$border: #e2e8f0;
+$border-soft: #f1f5f9;
+
+$surface: #ffffff;
+$surface-soft: #f8fafc;
+
+$transition-fast: 180ms ease;
+$transition-base: 260ms cubic-bezier(0.4, 0, 0.2, 1);
+
+// ==========================================================================
+// COMPONENT
+// ==========================================================================
+
+.primary-assessment {
+  display: grid;
+
+  gap: 0.85rem;
+
+  width: 100%;
+  min-width: 0;
+}
+
+// ==========================================================================
+// INTRODUCTION
+// ==========================================================================
+
+.primary-assessment__intro {
+  padding: 0.65rem 0.75rem;
+
+  border-left: 3px solid $primary;
+  border-radius: 0 0.65rem 0.65rem 0;
+
+  background: linear-gradient(90deg, rgba($primary-soft, 0.96), rgba($surface, 0.68));
+
+  p {
+    margin: 0;
+
+    color: $text-secondary;
+
+    font-size: 0.78rem;
+    font-weight: 600;
+    line-height: 1.5;
+  }
+}
+
+// ==========================================================================
+// GROUPS
+// ==========================================================================
+
+.primary-assessment__groups {
+  display: grid;
+
+  gap: 0.75rem;
+}
+
+.assessment-group {
+  min-width: 0;
+  padding: 0.75rem;
+
+  border: 1px solid $border;
+  border-radius: 0.85rem;
+
+  background: linear-gradient(145deg, rgba($surface, 0.99), rgba($surface-soft, 0.78));
+
+  box-shadow:
+    0 4px 12px rgba($text-primary, 0.025),
+    inset 0 1px 0 rgba($surface, 0.9);
+}
+
+// ==========================================================================
+// GROUP HEADER
+// ==========================================================================
+
+.assessment-group__header {
+  display: flex;
+  align-items: center;
+
+  gap: 0.65rem;
+
+  margin-bottom: 0.7rem;
+  padding-bottom: 0.65rem;
+
+  border-bottom: 1px solid $border-soft;
+
+  h3 {
+    margin: 0.12rem 0 0;
+
+    color: $text-primary;
+
+    font-size: 0.88rem;
+    font-weight: 800;
+    letter-spacing: -0.015em;
+    line-height: 1.3;
+  }
+}
+
+.assessment-group__badge {
+  flex: 0 0 auto;
+
+  display: grid;
+  place-items: center;
+
+  width: 2.15rem;
+  height: 2.15rem;
+
+  border: 1px solid rgba($primary, 0.15);
+  border-radius: 0.65rem;
+
+  background: $primary-soft;
+  color: $primary-dark;
+
+  font-size: 0.78rem;
+  font-weight: 900;
+
+  box-shadow: 0 5px 12px rgba($primary, 0.08);
+}
+
+.assessment-group__eyebrow {
+  color: $teal-dark;
+
+  font-size: 0.56rem;
+  font-weight: 800;
+  letter-spacing: 0.065em;
+  text-transform: uppercase;
+}
+
+// ==========================================================================
+// FIELD GRID
+// ==========================================================================
+
+.assessment-group__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 0.65rem;
+}
+
+// ==========================================================================
+// FIELD
+// ==========================================================================
+
+.assessment-field {
+  position: relative;
+
+  min-width: 0;
+  padding: 0.7rem;
+
+  border: 1px solid $border;
+  border-radius: 0.75rem;
+
+  background: $surface;
+
+  transition:
+    border-color $transition-fast,
+    box-shadow $transition-base,
+    transform $transition-fast;
+
+  &:hover {
+    border-color: rgba($primary, 0.2);
+  }
+
+  &:focus-within {
+    border-color: rgba($primary, 0.38);
+
+    transform: translateY(-1px);
+
+    box-shadow:
+      0 7px 18px rgba($primary, 0.055),
+      0 0 0 3px rgba($primary, 0.055);
+  }
+
+  app-input {
+    display: block;
+
+    min-width: 0;
+    width: 100%;
+  }
+}
+
+.assessment-field--wide {
+  grid-column: 1 / -1;
+}
+
+.assessment-field__number {
+  position: absolute;
+  top: 0.42rem;
+  right: 0.48rem;
+  z-index: 1;
+
+  display: grid;
+  place-items: center;
+
+  min-width: 1.5rem;
+  height: 1.3rem;
+  padding-inline: 0.3rem;
+
+  border: 1px solid rgba($teal, 0.12);
+  border-radius: 0.42rem;
+
+  background: $teal-soft;
+  color: $teal-dark;
+
+  font-size: 0.54rem;
+  font-weight: 850;
+  letter-spacing: 0.035em;
+
+  pointer-events: none;
+}
+
+// ==========================================================================
+// SHARED INPUT ADJUSTMENTS
+// ==========================================================================
+
+:host ::ng-deep app-input {
+  label {
+    max-width: calc(100% - 2rem);
+    padding-right: 0.25rem;
+
+    color: $text-primary;
+
+    font-size: 0.74rem;
+    font-weight: 750;
+    line-height: 1.35;
+  }
+
+  input {
+    min-height: 2.5rem;
+
+    font-size: 0.82rem;
+  }
+}
+
+// ==========================================================================
+// RESPONSIVE
+// ==========================================================================
+
+@media (max-width: $tablet) {
+  .assessment-group__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .assessment-field--wide {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: $mobile) {
+  .primary-assessment {
+    gap: 0.75rem;
+  }
+
+  .primary-assessment__intro {
+    padding: 0.6rem 0.68rem;
+
+    p {
+      font-size: 0.73rem;
+    }
+  }
+
+  .assessment-group {
+    padding: 0.65rem;
+
+    border-radius: 0.78rem;
+  }
+
+  .assessment-group__header {
+    margin-bottom: 0.6rem;
+    padding-bottom: 0.55rem;
+  }
+
+  .assessment-group__badge {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .assessment-field {
+    padding: 0.65rem;
+  }
+}
+
+// ==========================================================================
+// REDUCED MOTION
+// ==========================================================================
+
+@media (prefers-reduced-motion: reduce) {
+  .assessment-field {
+    transition: none;
+  }
+}

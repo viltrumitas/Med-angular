@@ -1,417 +1,902 @@
-// ===============================
+// ==========================================================================
 // VARIABLES
-// ===============================
+// ==========================================================================
 
-$primary: #0d9488;
-$primary-light: #f0fdfa;
+$mobile: 640px;
+$tablet: 900px;
+$desktop: 1200px;
 
-$text-main: #1e293b;
-$text-muted: #64748b;
+$primary: #2563eb;
+$primary-dark: #1d4ed8;
+$primary-soft: #eff6ff;
 
-$background: #f8fafc;
-$card: #ffffff;
+$teal: #0d9488;
+$teal-dark: #0f766e;
+$teal-soft: #f0fdfa;
+
+$text-primary: #0f172a;
+$text-secondary: #475569;
+$text-muted: #94a3b8;
 
 $border: #e2e8f0;
+$border-soft: #f1f5f9;
 
-$success: #16a34a;
+$surface: #ffffff;
+$surface-soft: #f8fafc;
 
+$transition-fast: 180ms ease;
+$transition-base: 280ms cubic-bezier(0.4, 0, 0.2, 1);
 
-// ===============================
-// CONTAINER
-// ===============================
+// ==========================================================================
+// PAGE
+// ==========================================================================
 
-.review-detail {
-
-  padding: 2rem;
-  background: $background;
+.review-detail-page {
+  width: 100%;
   min-height: 100%;
 
+  padding: clamp(0.75rem, 2vw, 2rem);
+
+  color: $text-primary;
 }
 
-
-// ===============================
-// HEADER
-// ===============================
-
-.review-header {
-
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  background: $card;
-
-  padding: 2rem;
-
-  border-radius: 20px;
-
-  border: 1px solid $border;
-
-  margin-bottom: 1.5rem;
-
-
-  h1 {
-
-    margin: 0;
-
-    font-size: 1.8rem;
-
-    color: $text-main;
-
-    font-weight: 700;
-
-  }
-
-
-  p {
-
-    margin-top: .5rem;
-
-    color: $text-muted;
-
-    font-size: 1rem;
-
-  }
-
-}
-
-.review-actions {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-
-.edit-btn {
-  display: flex;
-  align-items: center;
-  gap: .5rem;
-
-  padding: .75rem 1rem;
-
-  border-radius: 12px;
-
-  border: 1px solid rgba(13,148,136,.25);
-
-  background: #f0fdfa;
-
-  color: #0d9488;
-
-  font-weight: 600;
-
-  cursor: pointer;
-
-  transition: .2s ease;
-
-
-  &:hover {
-    background: #ccfbf1;
-    transform: translateY(-1px);
-  }
-}
-
-
-// ===============================
-// SCORE
-// ===============================
-
-.score-card {
-
-  display: flex;
-
-  flex-direction: column;
-
-  align-items: center;
-
-  justify-content: center;
-
-
-  background: $primary-light;
-
-  border-radius: 18px;
-
-  padding: 1.2rem 2rem;
-
-
-  span {
-
-    color: $text-muted;
-
-    font-size: .9rem;
-
-  }
-
-
-  strong {
-
-    color: $primary;
-
-    font-size: 2.5rem;
-
-    font-weight: 800;
-
-  }
-
-}
-
-
-// ===============================
-// INFORMATION CARDS
-// ===============================
-
-.info-card,
-.feedback-card {
-
-
-  background: $card;
-
-  border: 1px solid $border;
-
-  border-radius: 18px;
-
-  padding: 1.5rem;
-
-  margin-bottom: 1.5rem;
-
-
-  h2 {
-
-    margin-top: 0;
-
-    margin-bottom: 1rem;
-
-    color: $text-main;
-
-    font-size: 1.2rem;
-
-  }
-
-
-  p {
-
-    color: $text-muted;
-
-    margin: .6rem 0;
-
-
-    strong {
-
-      color: $text-main;
-
-    }
-
-  }
-
-}
-
-
-// ===============================
-// FEEDBACK
-// ===============================
-
-
-.feedback-card {
-
-  background: linear-gradient(135deg,
-      #ffffff,
-      #f8fafc);
-
-
-  p {
-
-    background: #f8fafc;
-
-    padding: 1rem;
-
-    border-radius: 12px;
-
-    border-left: 4px solid $primary;
-
-  }
-
-}
-
-
-// ===============================
-// RUBRICA
-// ===============================
-
-.rubric-section {
-
-
-  h2 {
-
-    font-size: 1.5rem;
-
-    color: $text-main;
-
-    margin-bottom: 1rem;
-
-  }
-
-}
-
-
-
-.rubric-grid {
-
-
+.review-detail {
   display: grid;
 
-  grid-template-columns: repeat(auto-fit,
-      minmax(320px, 1fr));
+  gap: 1rem;
+
+  animation: review-detail-enter 380ms ease both;
+}
+
+// ==========================================================================
+// HEADER
+// ==========================================================================
+
+.review-detail__header {
+  position: relative;
+  isolation: isolate;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
   gap: 1.5rem;
 
-}
+  min-height: 150px;
+  padding: clamp(1.2rem, 2.5vw, 1.7rem);
 
+  overflow: hidden;
 
+  border: 1px solid rgba($primary, 0.14);
+  border-radius: 1.35rem;
 
-// ===============================
-// RUBRIC CARD
-// ===============================
+  background:
+    radial-gradient(circle at 88% 5%, rgba($teal, 0.16), transparent 34%),
+    radial-gradient(circle at 8% 110%, rgba($primary, 0.1), transparent 38%),
+    linear-gradient(135deg, rgba($surface, 0.98), rgba($primary-soft, 0.92));
 
+  box-shadow:
+    0 14px 32px rgba($text-primary, 0.05),
+    inset 0 1px 0 rgba($surface, 0.9);
 
-.rubric-card {
+  &::before {
+    content: '';
 
+    position: absolute;
+    top: -75px;
+    right: -55px;
+    z-index: -1;
 
-  background: $card;
+    width: 185px;
+    aspect-ratio: 1;
 
-  border-radius: 18px;
-
-  border: 1px solid $border;
-
-  padding: 1.5rem;
-
-
-  transition: .2s ease;
-
-
-  &:hover {
-
-    transform: translateY(-3px);
-
-    box-shadow:
-      0 10px 25px rgba(0, 0, 0, .05);
-
+    border: 29px solid rgba($primary, 0.05);
+    border-radius: 50%;
   }
 
+  &::after {
+    content: '';
 
+    position: absolute;
+    right: 3%;
+    bottom: -35px;
+    z-index: -1;
 
-  h3 {
+    width: 165px;
+    height: 100px;
 
-    color: $primary;
+    opacity: 0.25;
 
-    font-size: 1.1rem;
+    background-image:
+      linear-gradient(rgba($primary, 0.18) 1px, transparent 1px),
+      linear-gradient(90deg, rgba($primary, 0.18) 1px, transparent 1px);
+    background-size: 17px 17px;
 
-    margin-top: 0;
+    mask-image: linear-gradient(to top, #000, transparent);
 
-    margin-bottom: 1.2rem;
-
-    border-bottom: 1px solid $border;
-
-    padding-bottom: .8rem;
-
+    pointer-events: none;
   }
-
 }
 
+.review-detail__heading {
+  position: relative;
+  z-index: 1;
 
+  min-width: 0;
+  width: min(100%, 680px);
 
-// ===============================
-// ITEMS
-// ===============================
+  h1 {
+    margin: 0;
 
+    color: $text-primary;
 
-.rubric-item {
+    font-size: clamp(1.65rem, 3.5vw, 2.2rem);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 1.05;
+  }
 
+  p {
+    display: -webkit-box;
+
+    max-width: 620px;
+    margin: 0.65rem 0 0;
+    overflow: hidden;
+
+    color: $text-secondary;
+
+    font-size: 0.92rem;
+    font-weight: 600;
+    line-height: 1.55;
+
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+}
+
+.review-detail__eyebrow {
+  display: inline-flex;
+
+  margin-bottom: 0.5rem;
+  padding: 0.36rem 0.62rem;
+
+  border: 1px solid rgba($teal, 0.18);
+  border-radius: 999px;
+
+  background: rgba($teal-soft, 0.85);
+  color: $teal-dark;
+
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+// ==========================================================================
+// HEADER ACTIONS
+// ==========================================================================
+
+.review-detail__actions {
+  position: relative;
+  z-index: 1;
+
+  flex: 0 0 auto;
 
   display: flex;
-
-  justify-content: space-between;
-
   align-items: center;
 
-
-  padding: .8rem 0;
-
-
-  border-bottom: 1px dashed $border;
-
-
-  &:last-child {
-
-    border-bottom: none;
-
-  }
-
-
-
-  span {
-
-    color: $text-muted;
-
-    font-size: .9rem;
-
-    max-width: 75%;
-
-  }
-
-
-
-  strong {
-
-    background: $primary-light;
-
-    color: $primary;
-
-    padding: .35rem .7rem;
-
-    border-radius: 10px;
-
-    font-size: .85rem;
-
-    min-width: 35px;
-
-    text-align: center;
-
-  }
-
+  gap: 0.65rem;
 }
 
+.review-detail__edit-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 
+  gap: 0.45rem;
 
-// ===============================
-// RESPONSIVE
-// ===============================
+  min-height: 2.65rem;
+  padding: 0.68rem 0.9rem;
 
+  border: 1px solid rgba($primary, 0.16);
+  border-radius: 0.8rem;
 
-@media(max-width:768px) {
+  background: rgba($surface, 0.84);
+  color: $primary-dark;
 
+  font: inherit;
+  font-size: 0.76rem;
+  font-weight: 800;
 
-  .review-detail {
+  cursor: pointer;
 
-    padding: 1rem;
+  box-shadow:
+    0 8px 18px rgba($primary, 0.08),
+    inset 0 1px 0 rgba($surface, 0.9);
 
+  transition:
+    transform $transition-fast,
+    border-color $transition-fast,
+    background $transition-fast,
+    box-shadow $transition-base;
+
+  i,
+  svg {
+    width: 0.95rem;
+    height: 0.95rem;
+
+    stroke-width: 2.2;
   }
 
+  &:hover {
+    border-color: rgba($primary, 0.3);
 
-  .review-header {
+    background: $surface;
 
+    transform: translateY(-2px);
+
+    box-shadow: 0 12px 24px rgba($primary, 0.12);
+  }
+
+  &:focus-visible {
+    outline: 3px solid rgba($primary, 0.18);
+    outline-offset: 2px;
+  }
+}
+
+.review-detail__score {
+  min-width: 105px;
+  padding: 0.65rem 0.8rem;
+
+  border: 1px solid rgba($teal, 0.16);
+  border-radius: 0.85rem;
+
+  background: rgba($teal-soft, 0.92);
+  color: $teal-dark;
+
+  box-shadow: 0 8px 18px rgba($teal, 0.1);
+
+  > span {
+    display: block;
+
+    margin-bottom: 0.2rem;
+
+    font-size: 0.6rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  div {
+    display: flex;
+    align-items: baseline;
+
+    gap: 0.2rem;
+  }
+
+  strong {
+    font-size: 1.45rem;
+    font-weight: 850;
+    letter-spacing: -0.04em;
+    line-height: 1;
+  }
+
+  small {
+    font-size: 0.65rem;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+}
+
+// ==========================================================================
+// SUMMARY
+// ==========================================================================
+
+.review-summary,
+.review-feedback,
+.review-rubric {
+  border: 1px solid $border;
+  border-radius: 1.25rem;
+
+  background: rgba($surface, 0.95);
+
+  box-shadow:
+    0 10px 26px rgba($text-primary, 0.04),
+    inset 0 1px 0 rgba($surface, 0.9);
+}
+
+.review-summary {
+  padding: clamp(1rem, 2vw, 1.3rem);
+}
+
+.review-summary__header {
+  margin-bottom: 0.9rem;
+  padding-bottom: 0.8rem;
+
+  border-bottom: 1px solid $border;
+
+  h2 {
+    margin: 0.2rem 0 0;
+
+    color: $text-primary;
+
+    font-size: 1.2rem;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+  }
+}
+
+.review-summary__eyebrow,
+.review-feedback__eyebrow,
+.review-rubric__eyebrow {
+  color: $primary;
+
+  font-size: 0.63rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.review-summary__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+
+  gap: 0.75rem;
+}
+
+.review-summary__item {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  min-width: 0;
+  min-height: 84px;
+  padding: 0.85rem;
+
+  border: 1px solid $border-soft;
+  border-radius: 0.85rem;
+
+  background: $surface-soft;
+
+  strong,
+  time {
+    display: block;
+
+    margin-top: 0.25rem;
+    overflow: hidden;
+
+    color: $text-primary;
+
+    font-size: 0.82rem;
+    font-weight: 750;
+    line-height: 1.4;
+
+    text-overflow: ellipsis;
+  }
+}
+
+.review-summary__item--student {
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+
+  gap: 0.65rem;
+}
+
+.review-summary__avatar {
+  flex: 0 0 auto;
+
+  display: grid;
+  place-items: center;
+
+  width: 2.4rem;
+  height: 2.4rem;
+
+  border: 1px solid rgba($primary, 0.14);
+  border-radius: 0.7rem;
+
+  background: $primary-soft;
+  color: $primary-dark;
+
+  font-size: 0.7rem;
+  font-weight: 850;
+}
+
+.review-summary__label {
+  display: block;
+
+  color: $text-muted;
+
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+// ==========================================================================
+// FEEDBACK
+// ==========================================================================
+
+.review-feedback {
+  padding: clamp(1rem, 2vw, 1.3rem);
+}
+
+.review-feedback__header {
+  display: flex;
+  align-items: center;
+
+  gap: 0.7rem;
+
+  margin-bottom: 0.85rem;
+
+  h2 {
+    margin: 0.15rem 0 0;
+
+    color: $text-primary;
+
+    font-size: 1.15rem;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+  }
+}
+
+.review-feedback__icon {
+  flex: 0 0 auto;
+
+  display: grid;
+  place-items: center;
+
+  width: 2.55rem;
+  height: 2.55rem;
+
+  border: 1px solid rgba($teal, 0.15);
+  border-radius: 0.75rem;
+
+  background: $teal-soft;
+  color: $teal-dark;
+
+  i,
+  svg {
+    width: 1.15rem;
+    height: 1.15rem;
+
+    stroke-width: 2;
+  }
+}
+
+.review-feedback__content {
+  margin: 0;
+  padding: 0.9rem;
+
+  border: 1px solid rgba($primary, 0.1);
+  border-radius: 0.85rem;
+
+  background: $surface-soft;
+  color: $text-secondary;
+
+  font-size: 0.84rem;
+  line-height: 1.65;
+  white-space: pre-line;
+}
+
+.review-feedback__content--empty {
+  border-style: dashed;
+
+  color: $text-muted;
+  font-style: italic;
+}
+
+// ==========================================================================
+// RUBRIC
+// ==========================================================================
+
+.review-rubric {
+  padding: clamp(1rem, 2vw, 1.3rem);
+}
+
+.review-rubric__header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+
+  gap: 1rem;
+
+  margin-bottom: 1rem;
+  padding-bottom: 0.85rem;
+
+  border-bottom: 1px solid $border;
+
+  h2 {
+    margin: 0.2rem 0 0;
+
+    color: $text-primary;
+
+    font-size: 1.25rem;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+  }
+
+  p {
+    margin: 0.35rem 0 0;
+
+    color: #64748b;
+
+    font-size: 0.8rem;
+    line-height: 1.5;
+  }
+}
+
+.review-rubric__count {
+  flex: 0 0 auto;
+
+  display: flex;
+  align-items: center;
+
+  gap: 0.4rem;
+
+  padding: 0.45rem 0.6rem;
+
+  border: 1px solid rgba($teal, 0.15);
+  border-radius: 0.7rem;
+
+  background: $teal-soft;
+  color: $teal-dark;
+
+  strong {
+    display: grid;
+    place-items: center;
+
+    min-width: 1.7rem;
+    height: 1.7rem;
+
+    border-radius: 0.5rem;
+
+    background: $teal;
+    color: $surface;
+
+    font-size: 0.75rem;
+    font-weight: 850;
+  }
+
+  span {
+    font-size: 0.68rem;
+    font-weight: 750;
+  }
+}
+
+.review-rubric__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 0.8rem;
+}
+
+// ==========================================================================
+// RUBRIC CARD
+// ==========================================================================
+
+.rubric-card {
+  min-width: 0;
+  overflow: hidden;
+
+  border: 1px solid $border;
+  border-radius: 0.9rem;
+
+  background: $surface;
+
+  box-shadow: 0 5px 14px rgba($text-primary, 0.035);
+}
+
+.rubric-card__header {
+  display: flex;
+  align-items: center;
+
+  gap: 0.55rem;
+
+  padding: 0.75rem 0.8rem;
+
+  border-bottom: 1px solid $border-soft;
+
+  background: linear-gradient(135deg, rgba($primary-soft, 0.8), rgba($teal-soft, 0.55));
+
+  h3 {
+    margin: 0;
+
+    color: $text-primary;
+
+    font-size: 0.86rem;
+    font-weight: 800;
+    letter-spacing: -0.015em;
+  }
+}
+
+.rubric-card__number {
+  flex: 0 0 auto;
+
+  display: grid;
+  place-items: center;
+
+  width: 1.75rem;
+  height: 1.75rem;
+
+  border-radius: 0.5rem;
+
+  background: $primary;
+  color: $surface;
+
+  font-size: 0.68rem;
+  font-weight: 850;
+
+  box-shadow: 0 5px 12px rgba($primary, 0.18);
+}
+
+.rubric-card__items {
+  display: grid;
+}
+
+.rubric-card__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 0.8rem;
+
+  padding: 0.7rem 0.8rem;
+
+  border-bottom: 1px solid $border-soft;
+
+  &:last-child {
+    border-bottom: 0;
+  }
+
+  span {
+    color: $text-secondary;
+
+    font-size: 0.76rem;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  strong {
+    flex: 0 0 auto;
+
+    display: grid;
+    place-items: center;
+
+    min-width: 2rem;
+    min-height: 1.75rem;
+    padding-inline: 0.45rem;
+
+    border: 1px solid rgba($teal, 0.14);
+    border-radius: 0.5rem;
+
+    background: $teal-soft;
+    color: $teal-dark;
+
+    font-size: 0.76rem;
+    font-weight: 850;
+  }
+}
+
+// ==========================================================================
+// LOADING
+// ==========================================================================
+
+.review-detail-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 1.2rem;
+
+  min-height: 300px;
+  padding: clamp(1.5rem, 4vw, 3rem);
+
+  border: 1px solid $border;
+  border-radius: 1.35rem;
+
+  background: radial-gradient(circle at 50% 0%, rgba($primary, 0.08), transparent 42%), $surface;
+
+  box-shadow: 0 12px 30px rgba($text-primary, 0.045);
+}
+
+.review-detail-state__spinner {
+  flex: 0 0 auto;
+
+  width: 2.75rem;
+  height: 2.75rem;
+
+  border: 3px solid rgba($primary, 0.15);
+  border-top-color: $primary;
+  border-radius: 50%;
+
+  animation: review-detail-spin 700ms linear infinite;
+}
+
+.review-detail-state__content {
+  max-width: 480px;
+
+  h2 {
+    margin: 0;
+
+    color: $text-primary;
+
+    font-size: 1.3rem;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+  }
+
+  p {
+    margin: 0.5rem 0 0;
+
+    color: #64748b;
+
+    font-size: 0.88rem;
+    line-height: 1.6;
+  }
+}
+
+// ==========================================================================
+// RESPONSIVE
+// ==========================================================================
+
+@media (max-width: $desktop) {
+  .review-summary__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    .review-summary__item:last-child {
+      grid-column: 1 / -1;
+    }
+  }
+}
+
+@media (max-width: $tablet) {
+  .review-detail-page {
+    padding: 1rem;
+  }
+
+  .review-detail__header {
+    align-items: flex-start;
     flex-direction: column;
 
-    align-items: flex-start;
+    min-height: auto;
+  }
 
+  .review-detail__actions {
+    width: 100%;
+  }
+
+  .review-detail__edit-button {
+    flex: 1;
+  }
+
+  .review-rubric__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: $mobile) {
+  .review-detail-page {
+    padding: 0.75rem;
+  }
+
+  .review-detail__header {
     gap: 1rem;
 
+    padding: 1.15rem;
+
+    border-radius: 1.1rem;
+
+    &::before {
+      top: -85px;
+      right: -80px;
+
+      width: 170px;
+    }
+
+    &::after {
+      display: none;
+    }
   }
 
+  .review-detail__heading {
+    h1 {
+      font-size: 1.65rem;
+    }
 
-  .score-card {
+    p {
+      font-size: 0.85rem;
+    }
+  }
 
+  .review-detail__actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .review-detail__edit-button {
     width: 100%;
-
   }
 
+  .review-detail__score {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 
+    min-width: 0;
+  }
+
+  .review-summary,
+  .review-feedback,
+  .review-rubric {
+    padding: 0.85rem;
+
+    border-radius: 1.05rem;
+  }
+
+  .review-summary__grid {
+    grid-template-columns: minmax(0, 1fr);
+
+    .review-summary__item:last-child {
+      grid-column: auto;
+    }
+  }
+
+  .review-rubric__header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .rubric-card__item {
+    align-items: flex-start;
+  }
+
+  .review-detail-state {
+    flex-direction: column;
+
+    min-height: 290px;
+    padding: 1.5rem 1.15rem;
+
+    border-radius: 1.1rem;
+
+    text-align: center;
+  }
+}
+
+// ==========================================================================
+// REDUCED MOTION
+// ==========================================================================
+
+@media (prefers-reduced-motion: reduce) {
+  .review-detail,
+  .review-detail-state__spinner {
+    animation: none;
+  }
+
+  .review-detail__edit-button {
+    transition: none;
+  }
+}
+
+// ==========================================================================
+// ANIMATIONS
+// ==========================================================================
+
+@keyframes review-detail-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes review-detail-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

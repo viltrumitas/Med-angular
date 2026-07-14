@@ -1,34 +1,99 @@
-<div class="page">
+<section class="pending-page">
+  <!-- =========================
+       HEADER
+  ========================== -->
 
-  <header class="header">
-    <h1>Mis pendientes</h1>
-    <p class="subtitle">
-      Revisa y evalúa las entregas asignadas.
-    </p>
+  <header class="pending-header">
+    <div class="pending-header__content">
+      <span class="pending-header__eyebrow"> Evaluación académica </span>
+
+      <h1>Mis pendientes</h1>
+
+      <p>
+        Revisa las entregas asignadas, analiza las respuestas y registra la evaluación de cada
+        estudiante.
+      </p>
+    </div>
   </header>
 
+  <!-- =========================
+       LOADING
+  ========================== -->
+
   @if (loading()) {
-    <div class="state">
-      Cargando entregas...
-    </div>
+    <section class="pending-state" aria-live="polite">
+      <div class="pending-state__spinner" aria-hidden="true"></div>
+
+      <div class="pending-state__content">
+        <h2>Cargando entregas</h2>
+
+        <p>Estamos obteniendo las respuestas que tienes pendientes por evaluar.</p>
+      </div>
+    </section>
   }
 
-  @if (!loading() && submissions().length === 0) {
-    <div class="state empty">
-      <h3>No tienes entregas pendientes</h3>
-      <p>Todas las entregas han sido evaluadas.</p>
-    </div>
+  <!-- =========================
+       EMPTY
+  ========================== -->
+
+  @else if (submissions().length === 0) {
+    <section class="pending-state pending-state--empty">
+      <div class="pending-state__illustration" aria-hidden="true">
+        <div class="pending-state__document">
+          <span></span>
+          <span></span>
+          <span></span>
+
+          <div class="pending-state__check"></div>
+        </div>
+      </div>
+
+      <div class="pending-state__content">
+        <span class="pending-state__eyebrow"> Todo al día </span>
+
+        <h2>No tienes entregas pendientes</h2>
+
+        <p>
+          Todas las respuestas asignadas ya fueron evaluadas. Las nuevas entregas aparecerán
+          automáticamente en esta sección.
+        </p>
+      </div>
+    </section>
   }
 
-  @if (!loading() && submissions().length > 0) {
-    <div class="cards">
-      @for (submission of submissions(); track submission.id) {
-        <app-review-card
-          [submission]="submission"
-          (viewSubmissions)="openSubmission($event)"
-        />
-      }
-    </div>
-  }
+  <!-- =========================
+       CONTENT
+  ========================== -->
 
-</div>
+  @else {
+    <section class="pending-workspace">
+      <header class="pending-workspace__header">
+        <div>
+          <span class="pending-workspace__eyebrow"> Bandeja de revisión </span>
+
+          <h2>Entregas por evaluar</h2>
+
+          <p>Selecciona una entrega para consultar las respuestas del estudiante.</p>
+        </div>
+
+        <div class="pending-workspace__counter">
+          <strong>
+            {{ submissions().length }}
+          </strong>
+
+          <span>
+            {{ submissions().length === 1 ? 'pendiente' : 'pendientes' }}
+          </span>
+        </div>
+      </header>
+
+      <div class="pending-grid">
+        @for (submission of submissions(); track submission.id) {
+          <article class="pending-grid__item">
+            <app-review-card [submission]="submission" (viewSubmissions)="openSubmission($event)" />
+          </article>
+        }
+      </div>
+    </section>
+  }
+</section>

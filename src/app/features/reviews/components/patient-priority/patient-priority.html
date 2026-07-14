@@ -1,4 +1,30 @@
-<div class="section" [formGroup]="group">
-  <app-input formControlName="patientPriority" type="number" labelText="Prioridad del paciente" />
-  <app-input formControlName="transferPatientDecision" type="number" labelText="Determina traslado del paciente: Si / Mo" />
-</div>
+<section class="priority-assessment" [formGroup]="group">
+  <div class="priority-assessment__intro">
+    <p>
+      Evalúa si el estudiante identifica correctamente la prioridad del paciente y toma una decisión
+      adecuada sobre su traslado.
+    </p>
+  </div>
+
+  <div class="priority-assessment__grid">
+    <div class="priority-field">
+      <span class="priority-field__number">01</span>
+
+      <app-input
+        formControlName="patientPriority"
+        type="number"
+        labelText="Prioridad del paciente"
+      />
+    </div>
+
+    <div class="priority-field">
+      <span class="priority-field__number">02</span>
+
+      <app-input
+        formControlName="transferPatientDecision"
+        type="number"
+        labelText="Decisión de traslado del paciente"
+      />
+    </div>
+  </div>
+</section>

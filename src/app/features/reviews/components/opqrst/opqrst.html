@@ -1,8 +1,46 @@
-<div class="section" [formGroup]="group">
-  <app-input formControlName="onset" type="number" labelText="Onset" />
-  <app-input formControlName="provocation" type="number" labelText="Provocacion" />
-  <app-input formControlName="quality" type="number" labelText="Quality (calidad)" />
-  <app-input formControlName="region" type="number" labelText="Region" />
-  <app-input formControlName="severity" type="number" labelText="Severity" />
-  <app-input formControlName="time" type="number" labelText="Time" />
-</div>
+<section class="assessment-grid" [formGroup]="group">
+  <div class="assessment-grid__intro">
+    <p>
+      Evalúa la aplicación del método OPQRST para caracterizar correctamente el síntoma principal
+      del paciente.
+    </p>
+  </div>
+
+  <div class="assessment-grid__fields">
+    <div class="assessment-field">
+      <span class="assessment-field__number">O</span>
+
+      <app-input formControlName="onset" type="number" labelText="Inicio" />
+    </div>
+
+    <div class="assessment-field">
+      <span class="assessment-field__number">P</span>
+
+      <app-input formControlName="provocation" type="number" labelText="Provocación o alivio" />
+    </div>
+
+    <div class="assessment-field">
+      <span class="assessment-field__number">Q</span>
+
+      <app-input formControlName="quality" type="number" labelText="Calidad" />
+    </div>
+
+    <div class="assessment-field">
+      <span class="assessment-field__number">R</span>
+
+      <app-input formControlName="region" type="number" labelText="Región o irradiación" />
+    </div>
+
+    <div class="assessment-field">
+      <span class="assessment-field__number">S</span>
+
+      <app-input formControlName="severity" type="number" labelText="Severidad" />
+    </div>
+
+    <div class="assessment-field">
+      <span class="assessment-field__number">T</span>
+
+      <app-input formControlName="time" type="number" labelText="Tiempo y evolución" />
+    </div>
+  </div>
+</section>

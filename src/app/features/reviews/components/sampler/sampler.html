@@ -1,10 +1,127 @@
-<div class="section" [formGroup]="group">
-  <app-input formControlName="signs" type="number" labelText="Signos" />
-  <app-input formControlName="symptoms" type="number" labelText="Sintomas" />
-  <app-input formControlName="allergies" type="number" labelText="Alergias" />
-  <app-input formControlName="medications" type="number" labelText="Medicamentos" />
-  <app-input formControlName="conditions" type="number" labelText="Patologias" />
-  <app-input formControlName="riskFactors" type="number" labelText="Factores de riesgo" />
-  <app-input formControlName="livings" type="number" labelText="Liberaciones" />
-  <app-input formControlName="previousEvents" type="number" labelText="Eventos previos" />
-</div>
+<section class="sampler-assessment" [formGroup]="group">
+  <div class="sampler-assessment__intro">
+    <div class="sampler-assessment__acronym" aria-hidden="true">
+      <span>S</span>
+      <span>A</span>
+      <span>M</span>
+      <span>P</span>
+      <span>L</span>
+      <span>E</span>
+      <span>R</span>
+    </div>
+
+    <p>Califica la recopilación del historial clínico dirigido mediante la metodología SAMPLER.</p>
+  </div>
+
+  <div class="sampler-assessment__grid">
+    <!-- SIGNOS Y SÍNTOMAS -->
+
+    <article class="sampler-field">
+      <span class="sampler-field__letter">S</span>
+
+      <div class="sampler-field__content">
+        <span class="sampler-field__category"> Estado actual </span>
+
+        <app-input formControlName="signs" type="number" labelText="Identificación de signos" />
+      </div>
+    </article>
+
+    <article class="sampler-field">
+      <span class="sampler-field__letter">S</span>
+
+      <div class="sampler-field__content">
+        <span class="sampler-field__category"> Estado actual </span>
+
+        <app-input
+          formControlName="symptoms"
+          type="number"
+          labelText="Identificación de síntomas"
+        />
+      </div>
+    </article>
+
+    <!-- ALERGIAS -->
+
+    <article class="sampler-field">
+      <span class="sampler-field__letter">A</span>
+
+      <div class="sampler-field__content">
+        <span class="sampler-field__category"> Antecedentes </span>
+
+        <app-input formControlName="allergies" type="number" labelText="Alergias" />
+      </div>
+    </article>
+
+    <!-- MEDICAMENTOS -->
+
+    <article class="sampler-field">
+      <span class="sampler-field__letter">M</span>
+
+      <div class="sampler-field__content">
+        <span class="sampler-field__category"> Tratamiento actual </span>
+
+        <app-input
+          formControlName="medications"
+          type="number"
+          labelText="Medicamentos utilizados"
+        />
+      </div>
+    </article>
+
+    <!-- PATOLOGÍAS -->
+
+    <article class="sampler-field">
+      <span class="sampler-field__letter">P</span>
+
+      <div class="sampler-field__content">
+        <span class="sampler-field__category"> Historial médico </span>
+
+        <app-input formControlName="conditions" type="number" labelText="Patologías previas" />
+      </div>
+    </article>
+
+    <!-- ÚLTIMA INGESTA -->
+
+    <article class="sampler-field">
+      <span class="sampler-field__letter">L</span>
+
+      <div class="sampler-field__content">
+        <span class="sampler-field__category"> Último consumo </span>
+
+        <app-input
+          formControlName="livings"
+          type="number"
+          labelText="Última ingesta de alimentos o líquidos"
+        />
+      </div>
+    </article>
+
+    <!-- EVENTOS PREVIOS -->
+
+    <article class="sampler-field">
+      <span class="sampler-field__letter">E</span>
+
+      <div class="sampler-field__content">
+        <span class="sampler-field__category"> Situación previa </span>
+
+        <app-input
+          formControlName="previousEvents"
+          type="number"
+          labelText="Eventos previos al padecimiento"
+        />
+      </div>
+    </article>
+
+    <!-- FACTORES DE RIESGO -->
+
+    <article class="sampler-field">
+      <span class="sampler-field__letter">R</span>
+
+      <div class="sampler-field__content">
+        <span class="sampler-field__category"> Riesgos asociados </span>
+
+        <app-input formControlName="riskFactors" type="number" labelText="Factores de riesgo" />
+      </div>
+    </article>
+  </div>
+</section>

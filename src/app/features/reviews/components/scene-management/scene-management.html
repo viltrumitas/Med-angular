@@ -1,7 +1,53 @@
-<div class="section" [formGroup]="group">
-  <app-input formControlName="sceneManagement" type="number" labelText="Manejo de la escena" />
-  <app-input formControlName="situationManagement" type="number" labelText="Manejo de la situacion" />
-  <app-input formControlName="safetyManagement" type="number" labelText="Manejo de la seguridad" />
-  <app-input formControlName="resourceRequest" type="number" labelText="Solicitud de servicios y recursos adicionales" />
-  <app-input formControlName="overallImpression" type="number" labelText="Impresion general del paciente (AVDI)" />
-</div>
+<section class="scene-assessment" [formGroup]="group">
+  <div class="scene-assessment__intro">
+    <p>Evalúa el control de la escena, la seguridad y la impresión inicial del paciente.</p>
+  </div>
+
+  <div class="scene-assessment__grid">
+    <div class="scene-assessment__field">
+      <span class="scene-assessment__number">01</span>
+
+      <app-input formControlName="sceneManagement" type="number" labelText="Manejo de la escena" />
+    </div>
+
+    <div class="scene-assessment__field">
+      <span class="scene-assessment__number">02</span>
+
+      <app-input
+        formControlName="situationManagement"
+        type="number"
+        labelText="Manejo de la situación"
+      />
+    </div>
+
+    <div class="scene-assessment__field">
+      <span class="scene-assessment__number">03</span>
+
+      <app-input
+        formControlName="safetyManagement"
+        type="number"
+        labelText="Manejo de la seguridad"
+      />
+    </div>
+
+    <div class="scene-assessment__field scene-assessment__field--wide">
+      <span class="scene-assessment__number">04</span>
+
+      <app-input
+        formControlName="resourceRequest"
+        type="number"
+        labelText="Solicitud de servicios y recursos adicionales"
+      />
+    </div>
+
+    <div class="scene-assessment__field">
+      <span class="scene-assessment__number">05</span>
+
+      <app-input
+        formControlName="overallImpression"
+        type="number"
+        labelText="Impresión general del paciente (AVDI)"
+      />
+    </div>
+  </div>
+</section>

@@ -1,47 +1,155 @@
-@if (loading()) {
-  <p>Cargando evaluaciones...</p>
-} @else {
+<section class="review-history">
+  <!-- =========================
+       HEADER
+  ========================== -->
 
-  <div class="reviews-grid">
+  <header class="review-history__header">
+    <div class="review-history__header-content">
+      <span class="review-history__eyebrow"> Historial académico </span>
 
-    @for (r of reviews(); track r.id) {
+      <h1 class="review-history__title">Evaluaciones realizadas</h1>
 
-      <div 
-        class="review-card"
-        (click)="openReview(r.id)"
-      >
+      <p class="review-history__description">
+        Consulta las entregas evaluadas y revisa el resultado obtenido por cada estudiante.
+      </p>
+    </div>
+  </header>
 
-        <header>
-          <h3>{{ r.case.title }}</h3>
-          <span class="score">
-            {{ r.totalScore }} pts
-          </span>
-        </header>
+  <!-- =========================
+       LOADING
+  ========================== -->
 
-        <p>
-          <strong>Estudiante:</strong>
-          {{ r.student.firstName }} {{ r.student.lastName }}
-        </p>
+  @if (loading()) {
+    <section class="review-history__state" aria-live="polite">
+      <div class="review-history__loader" aria-hidden="true"></div>
 
-        <p>
-          <strong>Actividad:</strong>
-          {{ r.assignment.title }}
-        </p>
+      <div class="review-history__state-content">
+        <h2>Cargando evaluaciones</h2>
 
-        @if (r.feedback) {
-          <div class="feedback">
-            {{ r.feedback }}
-          </div>
-        }
+        <p>Estamos obteniendo el historial de revisiones realizadas.</p>
+      </div>
+    </section>
+  }
 
-        <small>
-          {{ r.createdAt | date:'short' }}
-        </small>
+  <!-- =========================
+       EMPTY
+  ========================== -->
 
+  @else if (reviews().length === 0) {
+    <section class="review-history__state review-history__state--empty">
+      <div class="review-history__empty-icon" aria-hidden="true">
+        <div class="review-history__empty-sheet">
+          <span></span>
+          <span></span>
+          <span></span>
+
+          <div class="review-history__empty-score">0</div>
+        </div>
       </div>
 
-    }
+      <div class="review-history__state-content">
+        <span class="review-history__state-label"> Sin evaluaciones </span>
 
-  </div>
+        <h2>Aún no has realizado evaluaciones</h2>
 
-}
+        <p>Las entregas que califiques aparecerán automáticamente en este historial.</p>
+      </div>
+    </section>
+  }
+
+  <!-- =========================
+       CONTENT
+  ========================== -->
+
+  @else {
+    <section class="review-history__workspace">
+      <header class="review-history__workspace-header">
+        <div>
+          <span class="review-history__workspace-eyebrow"> Revisiones completadas </span>
+
+          <h2>Historial de evaluaciones</h2>
+
+          <p>Selecciona una evaluación para consultar todos sus detalles.</p>
+        </div>
+
+        <div class="review-history__counter">
+          <strong>{{ reviews().length }}</strong>
+
+          <span>
+            {{ reviews().length === 1 ? 'evaluación' : 'evaluaciones' }}
+          </span>
+        </div>
+      </header>
+
+      <div class="review-history__grid">
+        @for (r of reviews(); track r.id) {
+          <article
+            class="review-card"
+            tabindex="0"
+            role="button"
+            (click)="openReview(r.id)"
+            (keydown.enter)="openReview(r.id)"
+            (keydown.space)="openReview(r.id)"
+          >
+            <header class="review-card__header">
+              <div class="review-card__student">
+                <span class="review-card__avatar" aria-hidden="true">
+                  {{ r.student.firstName.charAt(0) }}
+                  {{ r.student.lastName.charAt(0) }}
+                </span>
+
+                <div class="review-card__student-info">
+                  <span class="review-card__eyebrow"> Estudiante </span>
+
+                  <h3>
+                    {{ r.student.firstName }}
+                    {{ r.student.lastName }}
+                  </h3>
+                </div>
+              </div>
+
+              <div class="review-card__score">
+                <strong>{{ r.totalScore }}</strong>
+                <span>pts</span>
+              </div>
+            </header>
+
+            <div class="review-card__content">
+              <div class="review-card__field">
+                <span>Actividad</span>
+
+                <p>
+                  {{ r.assignment.title }}
+                </p>
+              </div>
+
+              <div class="review-card__field">
+                <span>Caso clínico</span>
+
+                <p>
+                  {{ r.case.title }}
+                </p>
+              </div>
+            </div>
+
+            <footer class="review-card__footer">
+              <div class="review-card__date">
+                <span>Evaluada</span>
+
+                <time [attr.datetime]="r.createdAt">
+                  {{ r.createdAt | date: 'dd MMM yyyy, HH:mm' }}
+                </time>
+              </div>
+
+              <span class="review-card__action">
+                Ver evaluación
+
+                <span aria-hidden="true">→</span>
+              </span>
+            </footer>
+          </article>
+        }
+      </div>
+    </section>
+  }
+</section>

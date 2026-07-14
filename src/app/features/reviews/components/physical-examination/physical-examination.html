@@ -1,10 +1,66 @@
-<div class="section" [formGroup]="group">
-  <app-input formControlName="head" type="number" labelText="Cabeza" />
-  <app-input formControlName="neck" type="number" labelText="Cuello" />
-  <app-input formControlName="thorax" type="number" labelText="Torax" />
-  <app-input formControlName="abdomen" type="number" labelText="Abdomen" />
-  <app-input formControlName="pelvis" type="number" labelText="Pelvis" />
-  <app-input formControlName="spine" type="number" labelText="Columna" />
-  <app-input formControlName="lowerExtremities" type="number" labelText="MT" />
-  <app-input formControlName="upperExtremities" type="number" labelText="MP" />
-</div>
+<section class="physical-assessment" [formGroup]="group">
+  <div class="physical-assessment__intro">
+    <p>
+      Evalúa la exploración física por regiones anatómicas y la identificación de hallazgos
+      relevantes.
+    </p>
+  </div>
+
+  <div class="physical-assessment__grid">
+    <div class="physical-field">
+      <span class="physical-field__number">01</span>
+
+      <app-input formControlName="head" type="number" labelText="Cabeza" />
+    </div>
+
+    <div class="physical-field">
+      <span class="physical-field__number">02</span>
+
+      <app-input formControlName="neck" type="number" labelText="Cuello" />
+    </div>
+
+    <div class="physical-field">
+      <span class="physical-field__number">03</span>
+
+      <app-input formControlName="thorax" type="number" labelText="Tórax" />
+    </div>
+
+    <div class="physical-field">
+      <span class="physical-field__number">04</span>
+
+      <app-input formControlName="abdomen" type="number" labelText="Abdomen" />
+    </div>
+
+    <div class="physical-field">
+      <span class="physical-field__number">05</span>
+
+      <app-input formControlName="pelvis" type="number" labelText="Pelvis" />
+    </div>
+
+    <div class="physical-field">
+      <span class="physical-field__number">06</span>
+
+      <app-input formControlName="spine" type="number" labelText="Columna vertebral" />
+    </div>
+
+    <div class="physical-field">
+      <span class="physical-field__number">07</span>
+
+      <app-input
+        formControlName="upperExtremities"
+        type="number"
+        labelText="Extremidades superiores"
+      />
+    </div>
+
+    <div class="physical-field">
+      <span class="physical-field__number">08</span>
+
+      <app-input
+        formControlName="lowerExtremities"
+        type="number"
+        labelText="Extremidades inferiores"
+      />
+    </div>
+  </div>
+</section>

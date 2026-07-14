@@ -1,6 +1,31 @@
-<div class="section" [formGroup]="group">
-  <app-input formControlName="inspection" type="number" labelText="Inspeccion" />
-  <app-input formControlName="palpation" type="number" labelText="Palpacion" />
-  <app-input formControlName="auscultation" type="number" labelText="Auscultacion" />
-  <app-input formControlName="percussion" type="number" labelText="Percusion" />
-</div>
+<section class="assessment-grid" [formGroup]="group">
+  <div class="assessment-grid__intro">
+    <p>Asigna el puntaje correspondiente a cada técnica de exploración física.</p>
+  </div>
+
+  <div class="assessment-grid__fields">
+    <div class="assessment-field">
+      <span class="assessment-field__number">01</span>
+
+      <app-input formControlName="inspection" type="number" labelText="Inspección" />
+    </div>
+
+    <div class="assessment-field">
+      <span class="assessment-field__number">02</span>
+
+      <app-input formControlName="palpation" type="number" labelText="Palpación" />
+    </div>
+
+    <div class="assessment-field">
+      <span class="assessment-field__number">03</span>
+
+      <app-input formControlName="auscultation" type="number" labelText="Auscultación" />
+    </div>
+
+    <div class="assessment-field">
+      <span class="assessment-field__number">04</span>
+
+      <app-input formControlName="percussion" type="number" labelText="Percusión" />
+    </div>
+  </div>
+</section>

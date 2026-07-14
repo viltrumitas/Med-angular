@@ -1,13 +1,112 @@
-<div class="section" [formGroup]="group">
-  <app-input formControlName="vascularAccess" type="number" labelText="Accesos vasculares: Soluciones, cantidades, cateter a utilizar" />
-  <app-input formControlName="temperatureControl" type="number" labelText="Manejo adecuado de la temperatura con mantas, agentes fisicos" />
-  <app-input formControlName="drugAdministration" type="number" labelText="Seleccion, dosis y administracion de farmacos" />
-  <app-input formControlName="patientPositioning" type="number" labelText="Posicion del paciente" />
-  <app-input formControlName="packaging" type="number" labelText="Empaquetamiento del paciente" />
-  <app-input formControlName="crumRegulation" type="number" labelText="Regulacion del paciente en caso de ser necesario a CRUM" />
-  <app-input formControlName="uniform" type="number" labelText="Presencia del alumno (uniforme)" />
-  <app-input formControlName="workTeam" type="number" labelText="Equipo de trabajo: Botiquin, EPP, Diagnostico" />
-  <app-input formControlName="interventionsPerformed" type="number" labelText="Realiza intervenciones en el paciente: SI / NO" />
-  <app-input formControlName="teamWork" type="number" labelText="Trabajo en equipo: SI / NO" />
-  <app-input formControlName="correctDiagnosis" type="number" labelText="Identifica diagnosticos" />
-</div>
+<section class="assessment-grid" [formGroup]="group">
+  <div class="assessment-grid__intro">
+    <p>
+      Evalúa el manejo clínico, las intervenciones realizadas y el desempeño operativo del
+      estudiante.
+    </p>
+  </div>
+
+  <div class="assessment-grid__fields">
+    <div class="assessment-field assessment-field--wide">
+      <span class="assessment-field__number">01</span>
+
+      <app-input
+        formControlName="vascularAccess"
+        type="number"
+        labelText="Accesos vasculares, soluciones, cantidades y catéter"
+      />
+    </div>
+
+    <div class="assessment-field assessment-field--wide">
+      <span class="assessment-field__number">02</span>
+
+      <app-input
+        formControlName="temperatureControl"
+        type="number"
+        labelText="Manejo adecuado de la temperatura"
+      />
+    </div>
+
+    <div class="assessment-field assessment-field--wide">
+      <span class="assessment-field__number">03</span>
+
+      <app-input
+        formControlName="drugAdministration"
+        type="number"
+        labelText="Selección, dosis y administración de fármacos"
+      />
+    </div>
+
+    <div class="assessment-field">
+      <span class="assessment-field__number">04</span>
+
+      <app-input
+        formControlName="patientPositioning"
+        type="number"
+        labelText="Posición del paciente"
+      />
+    </div>
+
+    <div class="assessment-field">
+      <span class="assessment-field__number">05</span>
+
+      <app-input
+        formControlName="packaging"
+        type="number"
+        labelText="Empaquetamiento del paciente"
+      />
+    </div>
+
+    <div class="assessment-field assessment-field--wide">
+      <span class="assessment-field__number">06</span>
+
+      <app-input
+        formControlName="crumRegulation"
+        type="number"
+        labelText="Regulación del paciente a CRUM"
+      />
+    </div>
+
+    <div class="assessment-field">
+      <span class="assessment-field__number">07</span>
+
+      <app-input formControlName="uniform" type="number" labelText="Presentación y uniforme" />
+    </div>
+
+    <div class="assessment-field assessment-field--wide">
+      <span class="assessment-field__number">08</span>
+
+      <app-input
+        formControlName="workTeam"
+        type="number"
+        labelText="Equipo de trabajo: botiquín, EPP y diagnóstico"
+      />
+    </div>
+
+    <div class="assessment-field">
+      <span class="assessment-field__number">09</span>
+
+      <app-input
+        formControlName="interventionsPerformed"
+        type="number"
+        labelText="Realiza intervenciones en el paciente"
+      />
+    </div>
+
+    <div class="assessment-field">
+      <span class="assessment-field__number">10</span>
+
+      <app-input formControlName="teamWork" type="number" labelText="Trabajo en equipo" />
+    </div>
+
+    <div class="assessment-field assessment-field--wide">
+      <span class="assessment-field__number">11</span>
+
+      <app-input
+        formControlName="correctDiagnosis"
+        type="number"
+        labelText="Identificación correcta de diagnósticos"
+      />
+    </div>
+  </div>
+</section>

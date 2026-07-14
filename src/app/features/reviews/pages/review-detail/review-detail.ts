@@ -1,36 +1,23 @@
-import {
-  Component,
-  inject,
-  signal,
-  OnInit,
-  computed
-} from '@angular/core';
-
+import { Component, inject, signal, OnInit, computed, AfterViewInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-
 import { ReviewApi } from '../../services/review-api';
 import { ReviewResponseDto } from '../../dto/review-response.dto';
+import { createIcons, icons } from 'lucide';
 
 interface ReviewSection {
   key: string;
   value: unknown;
 }
 
-
 @Component({
   selector: 'app-review-detail',
   standalone: true,
-  imports: [
-    CommonModule
-  ],
+  imports: [CommonModule],
   templateUrl: './review-detail.html',
   styleUrl: './review-detail.scss',
 })
-
-
-export class ReviewDetail implements OnInit {
-
+export class ReviewDetail implements OnInit, AfterViewInit {
   private readonly router = inject(Router);
 
   private readonly route = inject(ActivatedRoute);
@@ -38,7 +25,6 @@ export class ReviewDetail implements OnInit {
   private readonly api = inject(ReviewApi);
 
   private readonly labels: Record<string, string> = {
-
     // Manejo de escena
     sceneManagement: 'Manejo de la escena',
     situationManagement: 'Manejo de la situacion',
@@ -61,8 +47,6 @@ export class ReviewDetail implements OnInit {
     glasgow: 'Evalua y determina ECG',
     exposure: 'Exposion del paciente',
     temperatureManagement: 'Manejo de temperatura y pudor del paciente',
-
-
 
     // Prioridad paciente
     patientPriority: 'Prioridad del paciente',
@@ -125,7 +109,6 @@ export class ReviewDetail implements OnInit {
   };
 
   private readonly sectionOrder: Record<string, string[]> = {
-
     sceneManagement: [
       'sceneManagement',
       'situationManagement',
@@ -133,7 +116,6 @@ export class ReviewDetail implements OnInit {
       'resourceRequest',
       'overallImpression',
     ],
-
 
     primaryAssessment: [
       'hemorrhageIdentification',
@@ -152,30 +134,11 @@ export class ReviewDetail implements OnInit {
       'temperatureManagement',
     ],
 
+    patientPriority: ['patientPriority', 'transferPatientDecision'],
 
-    patientPriority: [
-      'patientPriority',
-      'transferPatientDecision',
-    ],
+    vitalSigns: ['fc', 'fr', 'temperature', 'glucose', 'ta', 'spo2'],
 
-
-    vitalSigns: [
-      'fc',
-      'fr',
-      'temperature',
-      'glucose',
-      'ta',
-      'spo2',
-    ],
-
-
-    focusedAssessment: [
-      'inspection',
-      'palpation',
-      'auscultation',
-      'percussion',
-    ],
-
+    focusedAssessment: ['inspection', 'palpation', 'auscultation', 'percussion'],
 
     physicalExamination: [
       'head',
@@ -188,7 +151,6 @@ export class ReviewDetail implements OnInit {
       'upperExtremities',
     ],
 
-
     sampler: [
       'signs',
       'symptoms',
@@ -200,16 +162,7 @@ export class ReviewDetail implements OnInit {
       'previousEvents',
     ],
 
-
-    opqrst: [
-      'onset',
-      'provocation',
-      'quality',
-      'region',
-      'severity',
-      'time',
-    ],
-
+    opqrst: ['onset', 'provocation', 'quality', 'region', 'severity', 'time'],
 
     otherInterventions: [
       'vascularAccess',
@@ -224,17 +177,14 @@ export class ReviewDetail implements OnInit {
       'teamWork',
       'correctDiagnosis',
     ],
-
   };
 
   readonly sections = computed<ReviewSection[]>(() => {
-
     const review = this.review();
 
     if (!review) {
       return [];
     }
-
 
     return [
       {
@@ -282,11 +232,9 @@ export class ReviewDetail implements OnInit {
         value: review.otherInterventions,
       },
     ];
-
   });
 
   private readonly sectionLabels: Record<string, string> = {
-
     sceneManagement: 'Parametros',
 
     primaryAssessment: 'Evaluación primaria',
@@ -304,56 +252,37 @@ export class ReviewDetail implements OnInit {
     opqrst: 'OPQRST',
 
     otherInterventions: 'Otras intervenciones',
-
   };
 
-
   review = signal<ReviewResponseDto | null>(null);
-
   loading = signal(true);
 
-
+  ngAfterViewInit(): void {
+    this.renderIcon();
+  }
 
   ngOnInit() {
-
-    const id =
-      this.route.snapshot.paramMap.get('id');
-
+    const id = this.route.snapshot.paramMap.get('id');
 
     if (!id) {
       this.loading.set(false);
       return;
     }
 
+    this.api.getReviewById(id).subscribe({
+      next: (review) => {
+        console.log('[Review detail]', review);
+        this.review.set(review);
+        this.loading.set(false);
+        this.renderIcon();
+      },
 
-    this.api.getReviewById(id)
-      .subscribe({
+      error: (err) => {
+        console.error(err);
 
-        next: (review) => {
-
-          console.log(
-            '[Review detail]',
-            review
-          );
-
-
-          this.review.set(review);
-
-          this.loading.set(false);
-
-        },
-
-
-        error: (err) => {
-
-          console.error(err);
-
-          this.loading.set(false);
-
-        }
-
-      });
-
+        this.loading.set(false);
+      },
+    });
   }
 
   editReview(id: string) {
@@ -361,59 +290,42 @@ export class ReviewDetail implements OnInit {
 
     if (!review) return;
 
-    this.router.navigate([
-      '/dashboard/teacher/reviews',
-      id,
-      'edit'
-    ]);
+    this.router.navigate(['/dashboard/teacher/reviews', id, 'edit']);
   }
 
-  getEntries(
-    section: unknown,
-    sectionKey?: string
-  ) {
-
+  getEntries(section: unknown, sectionKey?: string) {
     if (!section || typeof section !== 'object') {
       return [];
     }
 
-
     const entries = Object.entries(section);
-
 
     if (!sectionKey) {
       return entries;
     }
 
-
     const order = this.sectionOrder[sectionKey];
-
 
     if (!order) {
       return entries;
     }
 
-
     return order
-      .filter(key =>
-        entries.some(([entryKey]) => entryKey === key)
-      )
-      .map(key =>
-        entries.find(([entryKey]) => entryKey === key)!
-      );
-
+      .filter((key) => entries.some(([entryKey]) => entryKey === key))
+      .map((key) => entries.find(([entryKey]) => entryKey === key)!);
   }
 
   label(key: string): string {
-
     return this.labels[key] ?? key;
-
   }
 
   sectionLabel(key: string) {
-
     return this.sectionLabels[key] ?? key;
-
   }
 
+  private renderIcon() {
+    setTimeout(() => {
+      createIcons({ icons });
+    });
+  }
 }

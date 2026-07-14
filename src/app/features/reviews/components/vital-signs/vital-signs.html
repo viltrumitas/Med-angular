@@ -1,8 +1,43 @@
-<div class="section" [formGroup]="group">
-  <app-input formControlName="fc" type="number" labelText="FC" />
-  <app-input formControlName="fr" type="number" labelText="FR" />
-  <app-input formControlName="ta" type="number" labelText="TA" />
-  <app-input formControlName="temperature" type="number" labelText="TEMPERATURA" />
-  <app-input formControlName="glucose" type="number" labelText="GLUCOSA" />
-  <app-input formControlName="spo2" type="number" labelText="SPO2" />
-</div>
+<section class="vital-grid" [formGroup]="group">
+  <div class="vital-grid__intro">
+    <p>Asigna el puntaje correspondiente al registro e interpretación de cada signo vital.</p>
+  </div>
+
+  <div class="vital-grid__fields">
+    <div class="vital-field">
+      <span class="vital-field__code">FC</span>
+
+      <app-input formControlName="fc" type="number" labelText="Frecuencia cardíaca" />
+    </div>
+
+    <div class="vital-field">
+      <span class="vital-field__code">FR</span>
+
+      <app-input formControlName="fr" type="number" labelText="Frecuencia respiratoria" />
+    </div>
+
+    <div class="vital-field">
+      <span class="vital-field__code">TA</span>
+
+      <app-input formControlName="ta" type="number" labelText="Tensión arterial" />
+    </div>
+
+    <div class="vital-field">
+      <span class="vital-field__code">TEMP</span>
+
+      <app-input formControlName="temperature" type="number" labelText="Temperatura" />
+    </div>
+
+    <div class="vital-field">
+      <span class="vital-field__code">GLU</span>
+
+      <app-input formControlName="glucose" type="number" labelText="Glucosa" />
+    </div>
+
+    <div class="vital-field">
+      <span class="vital-field__code">SpO₂</span>
+
+      <app-input formControlName="spo2" type="number" labelText="Saturación de oxígeno" />
+    </div>
+  </div>
+</section>

@@ -1,45 +1,58 @@
 <article class="submission-card">
-
-  <div class="case-submission-info">
-    <h2>
-      {{ submission.student.firstName }}
-      {{ submission.student.lastName }}
-    </h2>
-
-    <h3>{{ submission.assignment.title }}</h3>
-
-    <h4>{{ submission.case.title }}</h4>
-  </div>
-
-  @if (submission.assignment.description) {
-  <p class="description">
-    {{ submission.assignment.description }}
-  </p>
-  }
-
-  <div class="info">
-
-    <div class="row">
-      <span class="label">Estado</span>
-
-      @if (submission.status === 'SUBMITTED') {
-      <span class="status">
-        ✓ Entregado
+  <header class="submission-card__header">
+    <div class="submission-card__student">
+      <span class="submission-card__avatar" aria-hidden="true">
+        {{ submission.student.firstName.charAt(0) }}
+        {{ submission.student.lastName.charAt(0) }}
       </span>
-      }
+
+      <div class="submission-card__student-info">
+        <span class="submission-card__eyebrow">Estudiante</span>
+
+        <h2>
+          {{ submission.student.firstName }}
+          {{ submission.student.lastName }}
+        </h2>
+      </div>
     </div>
 
-    <div class="row">
-      <span class="label">Enviado</span>
-      <span class="value">
-        {{ submission.createdAt | date:'medium' }}
+    @if (submission.status === 'SUBMITTED') {
+      <span class="submission-card__status">
+        <span class="submission-card__status-dot"></span>
+        Entregado
       </span>
+    }
+  </header>
+
+  <div class="submission-card__content">
+    <div class="submission-card__field">
+      <span>Actividad</span>
+
+      <h3>
+        {{ submission.assignment.title }}
+      </h3>
     </div>
 
+    <div class="submission-card__field">
+      <span>Caso clínico</span>
+
+      <p>
+        {{ submission.case.title }}
+      </p>
+    </div>
   </div>
 
-  <div class="actions">
-    <app-button text="Evaluar entrega" (clicked)="open()" />
-  </div>
+  <footer class="submission-card__footer">
+    <div class="submission-card__date">
+      <span>Enviado</span>
 
+      <time [attr.datetime]="submission.createdAt">
+        {{ submission.createdAt | date: 'dd MMM yyyy, HH:mm' }}
+      </time>
+    </div>
+
+    <div class="submission-card__actions">
+      <app-button text="Evaluar entrega" (clicked)="open()" />
+    </div>
+  </footer>
 </article>

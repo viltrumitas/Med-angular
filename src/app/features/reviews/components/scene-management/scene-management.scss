@@ -1,0 +1,204 @@
+// ==========================================================================
+// VARIABLES
+// ==========================================================================
+
+$mobile: 640px;
+
+$primary: #2563eb;
+$primary-soft: #eff6ff;
+
+$teal: #0d9488;
+$teal-dark: #0f766e;
+$teal-soft: #f0fdfa;
+
+$text-primary: #0f172a;
+$text-secondary: #475569;
+
+$border: #e2e8f0;
+$surface: #ffffff;
+$surface-soft: #f8fafc;
+
+$transition-fast: 180ms ease;
+$transition-base: 260ms cubic-bezier(0.4, 0, 0.2, 1);
+
+// ==========================================================================
+// WRAPPER
+// ==========================================================================
+
+.scene-assessment {
+  display: grid;
+
+  gap: 0.85rem;
+
+  width: 100%;
+  min-width: 0;
+}
+
+// ==========================================================================
+// INTRO
+// ==========================================================================
+
+.scene-assessment__intro {
+  padding: 0.65rem 0.75rem;
+
+  border-left: 3px solid $primary;
+  border-radius: 0 0.65rem 0.65rem 0;
+
+  background: linear-gradient(90deg, rgba($primary-soft, 0.95), rgba($surface, 0.65));
+
+  p {
+    margin: 0;
+
+    color: $text-secondary;
+
+    font-size: 0.76rem;
+    font-weight: 600;
+    line-height: 1.5;
+  }
+}
+
+// ==========================================================================
+// GRID
+// ==========================================================================
+
+.scene-assessment__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 0.7rem;
+}
+
+// ==========================================================================
+// FIELD
+// ==========================================================================
+
+.scene-assessment__field {
+  position: relative;
+
+  min-width: 0;
+  padding: 0.75rem;
+
+  border: 1px solid $border;
+  border-radius: 0.8rem;
+
+  background: linear-gradient(145deg, rgba($surface, 0.99), rgba($surface-soft, 0.85));
+
+  box-shadow:
+    0 4px 12px rgba($text-primary, 0.025),
+    inset 0 1px 0 rgba($surface, 0.9);
+
+  transition:
+    border-color $transition-fast,
+    box-shadow $transition-base,
+    transform $transition-fast;
+
+  &:hover {
+    border-color: rgba($primary, 0.2);
+  }
+
+  &:focus-within {
+    border-color: rgba($primary, 0.38);
+
+    transform: translateY(-1px);
+
+    box-shadow:
+      0 7px 18px rgba($primary, 0.06),
+      0 0 0 3px rgba($primary, 0.06);
+  }
+
+  app-input {
+    display: block;
+
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+.scene-assessment__field--wide {
+  grid-column: 1 / -1;
+}
+
+.scene-assessment__number {
+  position: absolute;
+  top: 0.45rem;
+  right: 0.5rem;
+  z-index: 1;
+
+  display: grid;
+  place-items: center;
+
+  min-width: 1.55rem;
+  height: 1.35rem;
+  padding-inline: 0.3rem;
+
+  border: 1px solid rgba($teal, 0.12);
+  border-radius: 0.45rem;
+
+  background: $teal-soft;
+  color: $teal-dark;
+
+  font-size: 0.55rem;
+  font-weight: 850;
+  letter-spacing: 0.04em;
+
+  pointer-events: none;
+}
+
+// ==========================================================================
+// SHARED INPUT
+// ==========================================================================
+
+:host ::ng-deep app-input {
+  label {
+    padding-right: 2rem;
+
+    color: $text-primary;
+
+    font-size: 0.75rem;
+    font-weight: 750;
+    line-height: 1.35;
+  }
+
+  input {
+    min-height: 2.55rem;
+
+    font-size: 0.82rem;
+  }
+}
+
+// ==========================================================================
+// RESPONSIVE
+// ==========================================================================
+
+@media (max-width: $mobile) {
+  .scene-assessment {
+    gap: 0.75rem;
+  }
+
+  .scene-assessment__grid {
+    grid-template-columns: minmax(0, 1fr);
+
+    gap: 0.6rem;
+  }
+
+  .scene-assessment__field,
+  .scene-assessment__field--wide {
+    grid-column: auto;
+
+    padding: 0.7rem;
+  }
+
+  .scene-assessment__intro {
+    padding: 0.6rem 0.7rem;
+
+    p {
+      font-size: 0.73rem;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene-assessment__field {
+    transition: none;
+  }
+}
