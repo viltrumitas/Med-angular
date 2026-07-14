@@ -1,34 +1,45 @@
-<section class="classrooms-page">
+<section class="teacher-classrooms">
   <!-- =========================
        HEADER
   ========================== -->
-  <header class="page-header">
-    <div class="header-content">
-      <span class="header-eyebrow"> Gestión de clases </span>
 
-      <h1>Mis clases</h1>
+  <header class="teacher-classrooms__header">
+    <div class="teacher-classrooms__header-content">
+      <span class="teacher-classrooms__eyebrow"> Gestión de clases </span>
 
-      <p>Administra tus clases, revisa su información y gestiona a tus estudiantes.</p>
+      <h1 class="teacher-classrooms__title">Mis clases</h1>
+
+      <p class="teacher-classrooms__description">
+        Administra tus clases, revisa su información y organiza las actividades de tus estudiantes.
+      </p>
     </div>
 
-    <button type="button" class="create-btn" (click)="openCreateClassroom()">
-      <i data-lucide="plus"></i>
+    <button type="button" class="teacher-classrooms__create-button" (click)="openCreateClassroom()">
+      <i data-lucide="plus" aria-hidden="true"></i>
 
       <span>Nueva clase</span>
     </button>
+
+    <div class="teacher-classrooms__header-decoration" aria-hidden="true">
+      <span class="teacher-classrooms__decoration-circle"></span>
+      <span class="teacher-classrooms__decoration-grid"></span>
+    </div>
   </header>
 
   <!-- =========================
        LOADING
   ========================== -->
-  @if (loading()) {
-    <section class="state-container">
-      <div class="spinner"></div>
 
-      <div class="state-content">
+  @if (loading()) {
+    <section class="teacher-classrooms__state" aria-live="polite">
+      <div class="teacher-classrooms__loader" aria-hidden="true">
+        <span></span>
+      </div>
+
+      <div class="teacher-classrooms__state-content">
         <h2>Cargando clases</h2>
 
-        <p>Estamos obteniendo las clases que has creado...</p>
+        <p>Estamos obteniendo las clases que has creado.</p>
       </div>
     </section>
   }
@@ -38,19 +49,27 @@
   ========================== -->
 
   @else if (classrooms().length === 0) {
-    <section class="empty-state">
-      <div class="empty-icon">
+    <section class="teacher-classrooms__state teacher-classrooms__state--empty">
+      <div class="teacher-classrooms__empty-icon" aria-hidden="true">
         <i data-lucide="school"></i>
       </div>
 
-      <h2>Aún no tienes clases</h2>
+      <div class="teacher-classrooms__state-content">
+        <span class="teacher-classrooms__state-label"> Sin clases </span>
 
-      <p>
-        Crea tu primera clase para comenzar a organizar estudiantes, casos clínicos y actividades.
-      </p>
+        <h2>Aún no tienes clases</h2>
 
-      <button type="button" class="empty-action" (click)="openCreateClassroom()">
-        <i data-lucide="plus"></i>
+        <p>
+          Crea tu primera clase para organizar estudiantes, casos clínicos y actividades académicas.
+        </p>
+      </div>
+
+      <button
+        type="button"
+        class="teacher-classrooms__empty-action"
+        (click)="openCreateClassroom()"
+      >
+        <i data-lucide="plus" aria-hidden="true"></i>
 
         <span>Crear primera clase</span>
       </button>
@@ -62,25 +81,35 @@
   ========================== -->
 
   @else {
-    <div class="classrooms-content">
-      <div class="list-header">
+    <section class="teacher-classrooms__workspace">
+      <header class="teacher-classrooms__workspace-header">
         <div>
+          <span class="teacher-classrooms__workspace-eyebrow"> Clases administradas </span>
+
           <h2>Todas las clases</h2>
 
-          <p>
-            {{ classrooms().length }}
-
-            {{ classrooms().length === 1 ? 'clase creada' : 'clases creadas' }}
-          </p>
+          <p>Consulta cada clase para gestionar estudiantes, actividades y casos clínicos.</p>
         </div>
-      </div>
 
-      <div class="classroom-grid">
+        <div class="teacher-classrooms__counter" aria-label="Cantidad de clases creadas">
+          <span class="teacher-classrooms__counter-value">
+            {{ classrooms().length }}
+          </span>
+
+          <span class="teacher-classrooms__counter-label">
+            {{ classrooms().length === 1 ? 'clase' : 'clases' }}
+          </span>
+        </div>
+      </header>
+
+      <div class="teacher-classrooms__grid">
         @for (classroom of classrooms(); track classroom.id) {
-          <app-classroom-card [classroom]="classroom" />
+          <div class="teacher-classrooms__card">
+            <app-classroom-card [classroom]="classroom" />
+          </div>
         }
       </div>
-    </div>
+    </section>
   }
 
   <!-- =========================
@@ -88,44 +117,44 @@
   ========================== -->
 
   @if (showCreateClassroom()) {
-    <div class="modal-backdrop" role="presentation" (click)="closeCreateClassroom()">
+    <div
+      class="teacher-classrooms__modal-backdrop"
+      role="presentation"
+      (click)="closeCreateClassroom()"
+    >
       <section
-        class="classroom-modal"
+        class="teacher-classrooms__modal"
         role="dialog"
         aria-modal="true"
         aria-labelledby="create-classroom-title"
         (click)="$event.stopPropagation()"
       >
-        <!-- MODAL HEADER -->
-
-        <header class="modal-header">
-          <div class="modal-heading">
-            <div class="modal-icon">
+        <header class="teacher-classrooms__modal-header">
+          <div class="teacher-classrooms__modal-heading">
+            <div class="teacher-classrooms__modal-icon" aria-hidden="true">
               <i data-lucide="school"></i>
             </div>
 
-            <div class="modal-title">
-              <span class="modal-eyebrow"> Nueva clase </span>
+            <div class="teacher-classrooms__modal-title">
+              <span class="teacher-classrooms__modal-eyebrow"> Nueva clase </span>
 
               <h2 id="create-classroom-title">Crear clase</h2>
 
-              <p>Crea un nuevo espacio para organizar estudiantes y actividades clínicas.</p>
+              <p>Crea un espacio para organizar estudiantes y actividades clínicas.</p>
             </div>
           </div>
 
           <button
             type="button"
-            class="close-modal"
+            class="teacher-classrooms__modal-close"
             aria-label="Cerrar modal"
             (click)="closeCreateClassroom()"
           >
-            <i data-lucide="x"></i>
+            <i data-lucide="x" aria-hidden="true"></i>
           </button>
         </header>
 
-        <!-- MODAL CONTENT -->
-
-        <div class="modal-content">
+        <div class="teacher-classrooms__modal-content">
           <app-create-classroom
             (created)="onClassroomCreated()"
             (cancelled)="closeCreateClassroom()"

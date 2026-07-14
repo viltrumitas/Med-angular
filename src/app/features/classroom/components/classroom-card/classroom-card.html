@@ -1,58 +1,105 @@
-<a class="classroom-card" [routerLink]="[classroom().id]">
-  <div class="card-visual">
-    <div class="visual-circle circle-one"></div>
-    <div class="visual-circle circle-two"></div>
+<a
+  class="classroom-card"
+  [routerLink]="[classroom().id]"
+  [attr.aria-label]="'Abrir clase ' + classroom().name"
+>
+  <!-- =========================
+       VISUAL
+  ========================== -->
 
-    <div class="class-icon">
+  <div class="classroom-card__visual" aria-hidden="true">
+    <span class="classroom-card__circle classroom-card__circle--one"></span>
+
+    <span class="classroom-card__circle classroom-card__circle--two"></span>
+
+    <div class="classroom-card__icon">
       <i data-lucide="school"></i>
     </div>
+
+    <span class="classroom-card__status">
+      <span></span>
+      Activa
+    </span>
   </div>
 
-  <div class="card-content">
-    <div class="card-header">
-      <div class="title-group">
-        <h2>{{ classroom().name }}</h2>
+  <!-- =========================
+       CONTENT
+  ========================== -->
 
-        @if (teacherClassroom; as teacher) {
-        <span class="code">
-          {{ teacher.code }}
-        </span>
-        }
+  <div class="classroom-card__content">
+    <header class="classroom-card__header">
+      <div class="classroom-card__heading">
+        <span class="classroom-card__eyebrow"> Clase administrada </span>
+
+        <h2 class="classroom-card__title">
+          {{ classroom().name }}
+        </h2>
       </div>
 
-      <span class="open-icon">
+      <span class="classroom-card__open-icon" aria-hidden="true">
         <i data-lucide="arrow-up-right"></i>
       </span>
-    </div>
+    </header>
 
-    <p class="description">
-      {{ classroom().description || 'Sin descripción' }}
+    @if (teacherClassroom; as teacher) {
+      <div class="classroom-card__code">
+        <span class="classroom-card__code-label"> Código de acceso </span>
+
+        <strong>
+          {{ teacher.code }}
+        </strong>
+      </div>
+    }
+
+    <p class="classroom-card__description">
+      {{ classroom().description || 'Esta clase aún no tiene una descripción.' }}
     </p>
 
-    <div class="stats">
-      @if (teacherClassroom; as teacher) {
-        <div class="stat">
-          <div class="stat-icon">
-            <i data-lucide="users"></i>
+    <!-- =========================
+         FOOTER
+    ========================== -->
+
+    <footer class="classroom-card__footer">
+      <div class="classroom-card__stats">
+        @if (teacherClassroom; as teacher) {
+          <div class="classroom-card__stat">
+            <span class="classroom-card__stat-icon" aria-hidden="true">
+              <i data-lucide="users"></i>
+            </span>
+
+            <div class="classroom-card__stat-content">
+              <strong>{{ teacher.studentsCount }}</strong>
+
+              <span>
+                {{ teacher.studentsCount === 1 ? 'Estudiante' : 'Estudiantes' }}
+              </span>
+            </div>
           </div>
+        }
 
-          <div class="stat-content">
-            <strong>{{ teacher.studentsCount }}</strong>
-            <span>Estudiantes</span>
+        <div class="classroom-card__stat">
+          <span
+            class="classroom-card__stat-icon classroom-card__stat-icon--assignments"
+            aria-hidden="true"
+          >
+            <i data-lucide="clipboard-list"></i>
+          </span>
+
+          <div class="classroom-card__stat-content">
+            <strong>{{ classroom().assignmentsCount }}</strong>
+
+            <span>
+              {{ classroom().assignmentsCount === 1 ? 'Actividad' : 'Actividades' }}
+            </span>
           </div>
-        </div>
-      }
-
-      <div class="stat">
-        <div class="stat-icon">
-          <i data-lucide="clipboard-list"></i>
-        </div>
-
-        <div class="stat-content">
-          <strong>{{ classroom().assignmentsCount }}</strong>
-          <span>Actividades</span>
         </div>
       </div>
-    </div>
+
+      <span class="classroom-card__action">
+        Administrar
+
+        <span aria-hidden="true">→</span>
+      </span>
+    </footer>
   </div>
 </a>

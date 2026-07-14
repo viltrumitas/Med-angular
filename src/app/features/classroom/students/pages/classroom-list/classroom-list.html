@@ -3,20 +3,27 @@
        HEADER
   ========================== -->
 
-  <header class="page-header">
-    <div class="header-content">
-      <span class="header-eyebrow"> Mis salones </span>
+  <header class="classrooms-page__header">
+    <div class="classrooms-page__header-content">
+      <span class="classrooms-page__eyebrow"> Mis salones </span>
 
-      <h1>Mis clases</h1>
+      <h1 class="classrooms-page__title">Mis clases</h1>
 
-      <p>Consulta las clases en las que estás inscrito y accede a tus actividades clínicas.</p>
+      <p class="classrooms-page__description">
+        Consulta las clases en las que estás inscrito y accede a tus actividades clínicas.
+      </p>
     </div>
 
-    <button type="button" class="join-btn" (click)="isJoinModalOpen.set(true)">
-      <i data-lucide="log-in"></i>
+    <button type="button" class="classrooms-page__join-button" (click)="isJoinModalOpen.set(true)">
+      <i data-lucide="log-in" aria-hidden="true"></i>
 
       <span>Unirse a una clase</span>
     </button>
+
+    <div class="classrooms-page__header-decoration" aria-hidden="true">
+      <span class="classrooms-page__decoration-circle"></span>
+      <span class="classrooms-page__decoration-grid"></span>
+    </div>
   </header>
 
   <!-- =========================
@@ -24,13 +31,15 @@
   ========================== -->
 
   @if (loading()) {
-    <section class="state-container">
-      <div class="spinner"></div>
+    <section class="classrooms-page__state" aria-live="polite">
+      <div class="classrooms-page__loader" aria-hidden="true">
+        <span></span>
+      </div>
 
-      <div class="state-content">
+      <div class="classrooms-page__state-content">
         <h2>Cargando clases</h2>
 
-        <p>Estamos obteniendo las clases en las que estás inscrito...</p>
+        <p>Estamos obteniendo las clases en las que estás inscrito.</p>
       </div>
     </section>
   }
@@ -40,12 +49,14 @@
   ========================== -->
 
   @else if (error()) {
-    <section class="state-container error-state">
-      <div class="state-icon">
-        <i data-lucide="triangle-alert"></i>
+    <section class="classrooms-page__state classrooms-page__state--error" role="alert">
+      <div class="classrooms-page__state-icon">
+        <i data-lucide="triangle-alert" aria-hidden="true"></i>
       </div>
 
-      <div class="state-content">
+      <div class="classrooms-page__state-content">
+        <span class="classrooms-page__state-label"> Error de carga </span>
+
         <h2>No pudimos cargar tus clases</h2>
 
         <p>Ocurrió un problema al obtener la información. Intenta nuevamente.</p>
@@ -58,17 +69,25 @@
   ========================== -->
 
   @else if (classrooms().length === 0) {
-    <section class="empty-state">
-      <div class="empty-icon">
-        <i data-lucide="school"></i>
+    <section class="classrooms-page__state classrooms-page__state--empty">
+      <div class="classrooms-page__empty-icon">
+        <i data-lucide="school" aria-hidden="true"></i>
       </div>
 
-      <h2>Aún no estás inscrito en ninguna clase</h2>
+      <div class="classrooms-page__state-content">
+        <span class="classrooms-page__state-label"> Sin clases </span>
 
-      <p>Usa el código que te proporcionó tu profesor para unirte a tu primera clase.</p>
+        <h2>Aún no estás inscrito en ninguna clase</h2>
 
-      <button type="button" class="empty-action" (click)="isJoinModalOpen.set(true)">
-        <i data-lucide="log-in"></i>
+        <p>Usa el código que te proporcionó tu profesor para unirte a tu primera clase.</p>
+      </div>
+
+      <button
+        type="button"
+        class="classrooms-page__empty-action"
+        (click)="isJoinModalOpen.set(true)"
+      >
+        <i data-lucide="log-in" aria-hidden="true"></i>
 
         <span>Unirme a una clase</span>
       </button>
@@ -80,55 +99,76 @@
   ========================== -->
 
   @else {
-    <section class="classrooms-content">
-      <div class="list-header">
+    <section class="classrooms-page__workspace">
+      <header class="classrooms-page__workspace-header">
         <div>
+          <span class="classrooms-page__workspace-eyebrow"> Clases inscritas </span>
+
           <h2>Todas mis clases</h2>
 
-          <p>
-            {{ classrooms().length }}
-
-            {{ classrooms().length === 1 ? 'clase disponible' : 'clases disponibles' }}
-          </p>
+          <p>Selecciona una clase para consultar sus actividades y casos asignados.</p>
         </div>
-      </div>
 
-      <div class="classroom-grid">
+        <div class="classrooms-page__counter" aria-label="Cantidad de clases disponibles">
+          <span class="classrooms-page__counter-value">
+            {{ classrooms().length }}
+          </span>
+
+          <span class="classrooms-page__counter-label">
+            {{ classrooms().length === 1 ? 'clase' : 'clases' }}
+          </span>
+        </div>
+      </header>
+
+      <div class="classrooms-page__grid">
         @for (classroom of classrooms(); track classroom.id) {
-          <article class="classroom-card" (click)="openClassroom(classroom.id)">
+          <article
+            class="classroom-card"
+            role="button"
+            tabindex="0"
+            (click)="openClassroom(classroom.id)"
+            (keydown.enter)="openClassroom(classroom.id)"
+            (keydown.space)="openClassroom(classroom.id)"
+          >
             <!-- =========================
                  VISUAL
             ========================== -->
 
-            <div class="card-visual">
-              <div class="visual-circle circle-one"></div>
-              <div class="visual-circle circle-two"></div>
+            <div class="classroom-card__visual" aria-hidden="true">
+              <span class="classroom-card__visual-circle classroom-card__visual-circle--one"></span>
 
-              <div class="class-icon">
+              <span class="classroom-card__visual-circle classroom-card__visual-circle--two"></span>
+
+              <div class="classroom-card__icon">
                 <i data-lucide="stethoscope"></i>
               </div>
+
+              <span class="classroom-card__status">
+                <span></span>
+                Activa
+              </span>
             </div>
 
             <!-- =========================
                  CONTENT
             ========================== -->
 
-            <div class="card-content">
-              <div class="card-header">
-                <div class="title-group">
-                  <span class="card-eyebrow"> Clase </span>
+            <div class="classroom-card__content">
+              <header class="classroom-card__header">
+                <div class="classroom-card__heading">
+                  <span class="classroom-card__eyebrow"> Clase inscrita </span>
 
-                  <h3>
+                  <h3 class="classroom-card__title">
                     {{ classroom.name }}
                   </h3>
                 </div>
 
-                <span class="open-icon">
+                <span class="classroom-card__open-icon" aria-hidden="true">
                   <i data-lucide="arrow-up-right"></i>
                 </span>
-              </div>
+              </header>
 
-              <p class="description">
+              <p class="classroom-card__description">
                 {{ classroom.description || 'Esta clase aún no tiene una descripción.' }}
               </p>
 
@@ -136,11 +176,11 @@
                    FOOTER
               ========================== -->
 
-              <footer class="card-footer">
-                <div class="classroom-meta">
-                  <div class="meta-icon">
-                    <i data-lucide="users"></i>
-                  </div>
+              <footer class="classroom-card__footer">
+                <div class="classroom-card__meta">
+                  <span class="classroom-card__meta-icon" aria-hidden="true">
+                    <i data-lucide="clipboard-list"></i>
+                  </span>
 
                   <div>
                     <strong>
@@ -153,7 +193,11 @@
                   </div>
                 </div>
 
-                <span class="enter-class"> Entrar a clase </span>
+                <span class="classroom-card__action">
+                  Entrar
+
+                  <span aria-hidden="true">→</span>
+                </span>
               </footer>
             </div>
           </article>
