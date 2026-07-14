@@ -1,35 +1,52 @@
 @if (loading()) {
-  <section class="state-container">
-    <div class="spinner"></div>
+  <section class="student-assignment__state" aria-live="polite">
+    <div class="student-assignment__spinner" aria-hidden="true"></div>
 
-    <div class="state-content">
+    <div class="student-assignment__state-content">
       <h2>Cargando actividad</h2>
 
       <p>Estamos obteniendo tus casos clínicos asignados...</p>
     </div>
   </section>
 } @else {
-  <main class="assignment-page">
+  <main class="student-assignment">
     <!-- =========================
-         HERO
+         HEADER
     ========================== -->
 
-    <header class="assignment-hero">
-      <div class="hero-content">
-        <span class="hero-eyebrow"> Actividad </span>
+    <header class="student-assignment__header">
+      <div class="student-assignment__header-content">
+        <div class="student-assignment__header-meta">
+          <span class="student-assignment__eyebrow"> Actividad académica </span>
 
-        <h1>Mis casos clínicos</h1>
+          <span class="student-assignment__availability">
+            <span></span>
+            Disponible
+          </span>
+        </div>
 
-        <p>
-          Revisa los casos asignados por tu profesor, inicia tus respuestas y da seguimiento a tu
-          avance.
+        <h1 class="student-assignment__title">Mis casos clínicos</h1>
+
+        <p class="student-assignment__description">
+          Revisa los casos asignados por tu profesor, completa tus respuestas y consulta el avance
+          de cada entrega.
         </p>
       </div>
 
-      <div class="hero-visual">
-        <div class="hero-icon">
+      <div class="student-assignment__visual" aria-hidden="true">
+        <div class="student-assignment__visual-icon">
           <i data-lucide="clipboard-list"></i>
         </div>
+
+        <div class="student-assignment__visual-content">
+          <span>Casos disponibles</span>
+
+          <strong>{{ totalCases() }}</strong>
+        </div>
+      </div>
+
+      <div class="student-assignment__decoration" aria-hidden="true">
+        <span></span>
       </div>
     </header>
 
@@ -37,106 +54,110 @@
          STATS
     ========================== -->
 
-    <section class="stats-grid">
-      <article class="stat-card">
-        <div class="stat-icon assigned">
+    <section class="student-assignment__stats" aria-label="Resumen de la actividad">
+      <article class="student-case-stat student-case-stat--assigned">
+        <div class="student-case-stat__icon" aria-hidden="true">
           <i data-lucide="briefcase-medical"></i>
         </div>
 
-        <div class="stat-content">
+        <div class="student-case-stat__content">
           <span>Casos asignados</span>
 
-          <strong>
-            {{ totalCases() }}
-          </strong>
+          <strong>{{ totalCases() }}</strong>
 
-          <small> Total de casos disponibles </small>
+          <small>Total disponible</small>
         </div>
       </article>
 
-      <article class="stat-card">
-        <div class="stat-icon completed">
+      <article class="student-case-stat student-case-stat--completed">
+        <div class="student-case-stat__icon" aria-hidden="true">
           <i data-lucide="circle-check"></i>
         </div>
 
-        <div class="stat-content">
+        <div class="student-case-stat__content">
           <span>Completados</span>
 
-          <strong>
-            {{ completedCases() }}
-          </strong>
+          <strong>{{ completedCases() }}</strong>
 
-          <small> Casos enviados o revisados </small>
+          <small>Enviados o revisados</small>
         </div>
       </article>
 
-      <article class="stat-card">
-        <div class="stat-icon pending">
+      <article class="student-case-stat student-case-stat--pending">
+        <div class="student-case-stat__icon" aria-hidden="true">
           <i data-lucide="clock-3"></i>
         </div>
 
-        <div class="stat-content">
+        <div class="student-case-stat__content">
           <span>Pendientes</span>
 
-          <strong>
-            {{ pendingCases() }}
-          </strong>
+          <strong>{{ pendingCases() }}</strong>
 
-          <small> Casos por iniciar o terminar </small>
+          <small>Por iniciar o terminar</small>
         </div>
       </article>
     </section>
 
     <!-- =========================
-         CASES SECTION
+         CASES WORKSPACE
     ========================== -->
 
-    <section class="cases-workspace">
-      <div class="workspace-header">
-        <div>
+    <section class="student-cases">
+      <header class="student-cases__header">
+        <div class="student-cases__heading">
+          <span class="student-cases__eyebrow"> Trabajo asignado </span>
+
           <h2>Mis casos</h2>
 
-          <p>Casos clínicos asignados para resolver dentro de esta actividad.</p>
+          <p>Casos clínicos disponibles para resolver dentro de esta actividad.</p>
         </div>
 
-        <span class="section-count">
+        <span class="student-cases__count">
           {{ totalCases() }}
-
           {{ totalCases() === 1 ? 'caso' : 'casos' }}
         </span>
-      </div>
+      </header>
 
       @if (assignedCases().length === 0) {
-        <section class="empty-state">
-          <div class="empty-icon">
+        <section class="student-cases__empty">
+          <div class="student-cases__empty-icon" aria-hidden="true">
             <i data-lucide="folder-open"></i>
           </div>
 
-          <h3>No hay casos asignados</h3>
+          <div class="student-cases__empty-content">
+            <span>Sin asignaciones</span>
 
-          <p>Tu profesor todavía no ha asignado casos clínicos para esta actividad.</p>
+            <h3>No hay casos asignados</h3>
+
+            <p>Tu profesor todavía no ha asignado casos clínicos para esta actividad.</p>
+          </div>
         </section>
       } @else {
-        <div class="cases-grid">
+        <div class="student-cases__grid">
           @for (item of assignedCases(); track item.id) {
             <article
-              class="case-card"
-              [class.case-card--submitted]="item.submission?.status === 'SUBMITTED'"
-              [class.case-card--reviewed]="item.submission?.status === 'REVIEWED'"
+              class="student-case-card"
+              [class.student-case-card--submitted]="item.submission?.status === 'SUBMITTED'"
+              [class.student-case-card--reviewed]="item.submission?.status === 'REVIEWED'"
+              tabindex="0"
+              role="button"
               (click)="openCase(item.id)"
+              (keydown.enter)="openCase(item.id)"
+              (keydown.space)="openCase(item.id)"
             >
-              <div class="case-card__header">
-                <div class="case-icon">
+              <header class="student-case-card__header">
+                <div class="student-case-card__icon" aria-hidden="true">
                   <i data-lucide="stethoscope"></i>
                 </div>
 
                 @if (item.submission) {
                   <span
-                    class="status-badge"
-                    [class.status-badge--submitted]="item.submission.status === 'SUBMITTED'"
-                    [class.status-badge--reviewed]="item.submission.status === 'REVIEWED'"
+                    class="student-case-status"
+                    [class.student-case-status--draft]="item.submission.status === 'DRAFT'"
+                    [class.student-case-status--submitted]="item.submission.status === 'SUBMITTED'"
+                    [class.student-case-status--reviewed]="item.submission.status === 'REVIEWED'"
                   >
-                    <span class="status-dot"></span>
+                    <span></span>
 
                     @switch (item.submission.status) {
                       @case ('DRAFT') {
@@ -157,47 +178,54 @@
                     }
                   </span>
                 } @else {
-                  <span class="status-badge">
-                    <span class="status-dot"></span>
-
+                  <span class="student-case-status">
+                    <span></span>
                     Sin iniciar
                   </span>
                 }
-              </div>
+              </header>
 
-              <div class="case-card__content">
-                <span class="case-eyebrow"> Caso clínico </span>
+              <div class="student-case-card__content">
+                <span class="student-case-card__eyebrow"> Caso clínico </span>
 
                 <h3>
                   {{ item.case.title }}
                 </h3>
 
-                @if (item.case.consult) {
-                  <p>
-                    {{ item.case.consult }}
-                  </p>
-                } @else {
-                  <p>Revisa el caso clínico asignado y completa tu respuesta.</p>
-                }
+                <p>
+                  {{
+                    item.case.consult || 'Revisa el caso clínico asignado y completa tu respuesta.'
+                  }}
+                </p>
               </div>
 
-              <footer class="case-card__footer">
-                <div class="case-meta">
+              <footer class="student-case-card__footer">
+                <div class="student-case-card__meta">
                   <i data-lucide="file-text"></i>
 
-                  @if (item.submission) {
-                    <span> Respuesta creada </span>
-                  } @else {
-                    <span> Pendiente de iniciar </span>
+                  @if (!item.submission) {
+                    <span>Pendiente de iniciar</span>
+                  } @else if (item.submission.status === 'DRAFT') {
+                    <span>Respuesta en progreso</span>
+                  } @else if (item.submission.status === 'SUBMITTED') {
+                    <span>Respuesta enviada</span>
+                  } @else if (item.submission.status === 'REVIEWED') {
+                    <span>Respuesta evaluada</span>
                   }
                 </div>
 
-                <button type="button" class="open-case-btn" (click)="openCase(item.id)">
+                <button
+                  type="button"
+                  class="student-case-card__action"
+                  (click)="$event.stopPropagation(); openCase(item.id)"
+                >
                   <span>
-                    @if (item.submission) {
-                      Continuar
+                    @if (!item.submission) {
+                      Iniciar
+                    } @else if (item.submission.status === 'REVIEWED') {
+                      Consultar
                     } @else {
-                      Entrar
+                      Continuar
                     }
                   </span>
 

@@ -1,34 +1,51 @@
-<article class="assignment-card" [class.published]="assignment.isPublished" (click)="open()">
-  <div class="card-header">
-    <div class="assignment-icon">
+<article
+  class="assignment-card"
+  [class.assignment-card--published]="assignment.isPublished"
+  role="button"
+  tabindex="0"
+  (click)="open()"
+  (keydown.enter)="open()"
+  (keydown.space)="open()"
+>
+  <header class="assignment-card__header">
+    <div class="assignment-card__icon" aria-hidden="true">
       <i data-lucide="clipboard-list"></i>
     </div>
 
-    <span class="status-badge">
-      <span class="status-dot"></span>
+    <span
+      class="assignment-card__status"
+      [class.assignment-card__status--published]="assignment.isPublished"
+    >
+      <span class="assignment-card__status-dot"></span>
 
       {{ assignment.isPublished ? 'Publicada' : 'Borrador' }}
     </span>
-  </div>
+  </header>
 
-  <div class="card-content">
-    <h3>
+  <div class="assignment-card__content">
+    <span class="assignment-card__eyebrow"> Actividad </span>
+
+    <h3 class="assignment-card__title">
       {{ assignment.title }}
     </h3>
 
-    <p>
-      {{ assignment.description || 'Sin descripción.' }}
+    <p class="assignment-card__description">
+      {{ assignment.description || 'Esta actividad no tiene una descripción.' }}
     </p>
   </div>
 
-  <footer class="card-footer">
-    <div class="footer-info">
+  <footer class="assignment-card__footer">
+    <div class="assignment-card__meta">
       <i data-lucide="calendar-days"></i>
 
       <span>Actividad de clase</span>
     </div>
 
-    <button type="button" class="open-button">
+    <button
+      type="button"
+      class="assignment-card__action"
+      (click)="$event.stopPropagation(); open()"
+    >
       <span>Ver actividad</span>
 
       <i data-lucide="arrow-up-right"></i>

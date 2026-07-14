@@ -1,282 +1,243 @@
 // ==========================================================================
-// CASE CONTENT
-// ==========================================================================
-
-:host {
-  display: block;
-  width: 100%;
-  min-width: 0;
-}
-
-// ==========================================================================
 // VARIABLES
 // ==========================================================================
 
 $primary: #2563eb;
 $primary-dark: #1d4ed8;
-$primary-light: #eff6ff;
+$primary-soft: #eff6ff;
 
 $teal: #0d9488;
-$teal-light: #f0fdfa;
+$teal-dark: #0f766e;
+$teal-soft: #f0fdfa;
 
 $violet: #7c3aed;
-$violet-light: #f5f3ff;
+$violet-soft: #f5f3ff;
 
-$amber: #d97706;
-$amber-light: #fffbeb;
+$orange: #ea580c;
+$orange-soft: #fff7ed;
 
-$rose: #e11d48;
-$rose-light: #fff1f2;
+$red: #dc2626;
+$red-soft: #fef2f2;
 
-$emerald: #059669;
-$emerald-light: #ecfdf5;
+$text-primary: #0f172a;
+$text-secondary: #475569;
+$text-muted: #94a3b8;
 
-$cyan: #0891b2;
-$cyan-light: #ecfeff;
+$border: #e2e8f0;
+$border-soft: #eef2f7;
+$surface: #ffffff;
+$surface-soft: #f8fafc;
 
-$slate-950: #020617;
-$slate-900: #0f172a;
-$slate-800: #1e293b;
-$slate-700: #334155;
-$slate-600: #475569;
-$slate-500: #64748b;
-$slate-400: #94a3b8;
-$slate-300: #cbd5e1;
-$slate-200: #e2e8f0;
-$slate-100: #f1f5f9;
-$slate-50: #f8fafc;
-
-$white: #ffffff;
-
-$radius-sm: 0.75rem;
-$radius-md: 1rem;
-$radius-lg: 1.25rem;
-$radius-xl: 1.5rem;
-$radius-2xl: 2rem;
-
-$shadow-sm: 0 10px 30px rgba(15, 23, 42, 0.06);
-$shadow-md: 0 18px 45px rgba(15, 23, 42, 0.08);
-$shadow-lg: 0 28px 70px rgba(15, 23, 42, 0.12);
-
-$transition: 0.22s ease;
+$transition-fast: 180ms ease;
+$transition-base: 280ms cubic-bezier(0.4, 0, 0.2, 1);
 
 // ==========================================================================
-// MIXINS
+// HOST / CONTAINER
 // ==========================================================================
 
-@mixin flex-center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+:host {
+  display: block;
+
+  width: 100%;
+  min-width: 0;
 }
-
-@mixin card-base {
-  border: 1px solid rgba($slate-200, 0.9);
-  background: rgba($white, 0.92);
-  box-shadow: $shadow-sm;
-  backdrop-filter: blur(14px);
-}
-
-@mixin icon-box($bg, $color) {
-  @include flex-center;
-
-  flex: 0 0 auto;
-
-  color: $color;
-  background: radial-gradient(circle at 30% 20%, rgba($white, 0.75), transparent 35%), $bg;
-
-  i,
-  svg {
-    width: 1.15rem;
-    height: 1.15rem;
-    stroke-width: 2.2;
-  }
-}
-
-@mixin mobile {
-  @media (max-width: 48rem) {
-    @content;
-  }
-}
-
-@mixin tablet {
-  @media (max-width: 64rem) {
-    @content;
-  }
-}
-
-// ==========================================================================
-// WRAPPER MODES
-// ==========================================================================
 
 .case-content-view {
+  container-name: case-content;
+  container-type: inline-size;
+
+  display: block;
+
   width: 100%;
   min-width: 0;
 
-  color: $slate-900;
+  color: $text-primary;
+
+  overflow-wrap: anywhere;
 }
 
 .case-content-view--full {
-  display: grid;
-  gap: clamp(1.25rem, 2vw, 1.75rem);
-
-  width: min(100%, 92rem);
-  margin-inline: auto;
-  padding: clamp(1rem, 2.5vw, 2rem);
+  padding: clamp(0.75rem, 2cqi, 1.75rem);
 }
 
 .case-content-view--embedded {
-  display: grid;
-  gap: 1rem;
+  padding: 0;
 
-  padding: clamp(0.875rem, 1.5vw, 1.25rem);
+  .case-header {
+    display: none;
+  }
+
+  .clinical-overview,
+  .case-clinical-content {
+    gap: 0.7rem;
+  }
+
+  .case-section {
+    border-radius: 0.9rem;
+  }
 }
 
 // ==========================================================================
-// HEADER - FULL MODE ONLY
+// CASE HEADER
 // ==========================================================================
 
 .case-header {
   position: relative;
+  isolation: isolate;
 
-  display: flex;
-  align-items: stretch;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
 
-  gap: 1.5rem;
+  gap: clamp(1rem, 3cqi, 2rem);
+
+  min-height: 150px;
+  margin-bottom: 1rem;
+  padding: clamp(1.15rem, 3cqi, 1.75rem);
 
   overflow: hidden;
 
-  padding: clamp(1.35rem, 2.5vw, 2rem);
-
-  border: 1px solid rgba($primary, 0.12);
-  border-radius: $radius-2xl;
+  border: 1px solid rgba($primary, 0.14);
+  border-radius: clamp(1rem, 2.5cqi, 1.4rem);
 
   background:
-    radial-gradient(circle at 90% 10%, rgba($primary, 0.18), transparent 34%),
-    radial-gradient(circle at 8% 0%, rgba($teal, 0.12), transparent 30%),
-    linear-gradient(135deg, $white 0%, $slate-50 100%);
+    radial-gradient(circle at 88% 0%, rgba($teal, 0.16), transparent 34%),
+    radial-gradient(circle at 8% 120%, rgba($primary, 0.12), transparent 40%),
+    linear-gradient(135deg, rgba($surface, 0.98), rgba($primary-soft, 0.93));
 
-  box-shadow: $shadow-md;
+  box-shadow:
+    0 14px 34px rgba($text-primary, 0.055),
+    inset 0 1px 0 rgba($surface, 0.95);
 
-  &::before {
+  &::after {
     content: '';
 
     position: absolute;
-    inset: auto -6rem -8rem auto;
+    top: -75px;
+    right: -55px;
+    z-index: -1;
 
-    width: 18rem;
-    height: 18rem;
+    width: clamp(160px, 22cqi, 210px);
+    aspect-ratio: 1;
 
-    border-radius: 999px;
-
-    background: rgba($primary, 0.08);
-    filter: blur(2px);
+    border: clamp(24px, 4cqi, 34px) solid rgba($primary, 0.045);
+    border-radius: 50%;
   }
 }
 
 .case-header__main {
-  position: relative;
-  z-index: 1;
-
-  display: grid;
-  align-content: center;
-  gap: 1rem;
-
   min-width: 0;
+  max-width: 800px;
 }
 
 .case-header__meta {
   display: flex;
+  align-items: center;
   flex-wrap: wrap;
-  gap: 0.65rem;
+
+  gap: 0.55rem;
+
+  margin-bottom: 0.55rem;
 }
 
 .case-header__area,
-.case-header__status,
+.case-header__status {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 0.38rem;
+
+  padding: 0.36rem 0.6rem;
+
+  border-radius: 999px;
+
+  font-size: clamp(0.58rem, 1.4cqi, 0.67rem);
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
+
+  i,
+  svg {
+    width: 0.82rem;
+    height: 0.82rem;
+  }
+}
+
+.case-header__area {
+  border: 1px solid rgba($primary, 0.15);
+
+  background: $primary-soft;
+  color: $primary-dark;
+
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+}
+
+.case-header__status {
+  border: 1px solid rgba($orange, 0.16);
+
+  background: $orange-soft;
+  color: #b45309;
+}
+
+.case-header__status--published {
+  border-color: rgba($teal, 0.16);
+
+  background: $teal-soft;
+  color: $teal-dark;
+
+  .case-header__status-dot {
+    background: #10b981;
+
+    box-shadow: 0 0 0 3px rgba(#10b981, 0.12);
+  }
+}
+
+.case-header__status--draft {
+  .case-header__status-dot {
+    background: #f59e0b;
+
+    box-shadow: 0 0 0 3px rgba(#f59e0b, 0.12);
+  }
+}
+
+.case-header__status-dot {
+  width: 0.42rem;
+  height: 0.42rem;
+
+  border-radius: 50%;
+}
+
+.case-header h1 {
+  margin: 0;
+
+  color: $text-primary;
+
+  font-size: clamp(1.45rem, 5cqi, 2.35rem);
+  font-weight: 850;
+  letter-spacing: -0.045em;
+  line-height: 1.08;
+}
+
 .case-header__date {
   display: inline-flex;
   align-items: center;
 
-  gap: 0.45rem;
+  gap: 0.35rem;
 
-  width: fit-content;
-}
+  margin-top: 0.7rem;
 
-.case-header__area {
-  padding: 0.48rem 0.75rem;
+  color: #64748b;
 
-  color: $primary-dark;
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-
-  border: 1px solid rgba($primary, 0.14);
-  border-radius: 999px;
-  background: $primary-light;
-
-  i,
-  svg {
-    width: 0.95rem;
-    height: 0.95rem;
-  }
-}
-
-.case-header__status {
-  padding: 0.48rem 0.75rem;
-
-  color: $slate-700;
-  font-size: 0.78rem;
-  font-weight: 800;
-
-  border: 1px solid $slate-200;
-  border-radius: 999px;
-  background: $white;
-}
-
-.case-header__status--published {
-  color: $emerald;
-  border-color: rgba($emerald, 0.18);
-  background: $emerald-light;
-}
-
-.case-header__status--draft {
-  color: $amber;
-  border-color: rgba($amber, 0.2);
-  background: $amber-light;
-}
-
-.case-header__status-dot {
-  width: 0.5rem;
-  height: 0.5rem;
-
-  border-radius: 999px;
-  background: currentColor;
-  box-shadow: 0 0 0 4px currentColor;
-  opacity: 0.22;
-}
-
-.case-header h1 {
-  max-width: 52rem;
-  margin: 0;
-
-  color: $slate-950;
-  font-size: clamp(2rem, 4vw, 3.4rem);
-  font-weight: 900;
-  line-height: 0.95;
-  letter-spacing: -0.055em;
-}
-
-.case-header__date {
-  color: $slate-500;
-  font-size: 0.92rem;
+  font-size: clamp(0.65rem, 1.8cqi, 0.75rem);
   font-weight: 650;
 
   i,
   svg {
-    width: 1rem;
-    height: 1rem;
+    width: 0.9rem;
+    height: 0.9rem;
+
+    color: $primary;
   }
 }
 
@@ -284,33 +245,42 @@ $transition: 0.22s ease;
   position: relative;
   z-index: 1;
 
-  @include flex-center;
+  display: grid;
+  place-items: center;
 
-  min-width: clamp(8rem, 16vw, 13rem);
+  width: clamp(72px, 12cqi, 104px);
+  aspect-ratio: 1;
+
+  border: 1px solid rgba($teal, 0.14);
+  border-radius: clamp(1rem, 3cqi, 1.5rem);
+
+  background: rgba($surface, 0.76);
+
+  box-shadow:
+    0 12px 30px rgba($text-primary, 0.07),
+    inset 0 1px 0 $surface;
+
+  backdrop-filter: blur(12px);
 }
 
 .case-header__icon {
-  @include flex-center;
+  display: grid;
+  place-items: center;
 
-  width: clamp(6.5rem, 14vw, 10rem);
-  height: clamp(6.5rem, 14vw, 10rem);
+  width: 55%;
+  aspect-ratio: 1;
 
-  color: $primary;
+  border-radius: 32%;
 
-  border: 1px solid rgba($primary, 0.14);
-  border-radius: 2rem;
+  background: $teal-soft;
+  color: $teal;
 
-  background:
-    radial-gradient(circle at 30% 20%, rgba($white, 0.85), transparent 36%),
-    linear-gradient(135deg, rgba($primary, 0.14), rgba($teal, 0.12));
-
-  box-shadow: 0 24px 55px rgba($primary, 0.18);
+  transform: rotate(-4deg);
 
   i,
   svg {
     width: 48%;
     height: 48%;
-    stroke-width: 1.8;
   }
 }
 
@@ -320,49 +290,62 @@ $transition: 0.22s ease;
 
 .clinical-overview {
   display: grid;
-  grid-template-columns: 1.25fr 1fr;
-  gap: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 0.8rem;
+
+  margin-bottom: 1rem;
 }
 
 .overview-card {
-  @include card-base;
-
-  position: relative;
-
   display: flex;
-  gap: 1rem;
+  align-items: flex-start;
+
+  gap: 0.75rem;
 
   min-width: 0;
-  padding: 1.1rem;
+  padding: clamp(0.8rem, 2.4cqi, 1.1rem);
 
-  overflow: hidden;
+  border: 1px solid $border;
+  border-radius: 1rem;
 
-  border-radius: $radius-xl;
+  background: rgba($surface, 0.94);
 
-  transition:
-    transform $transition,
-    box-shadow $transition,
-    border-color $transition;
-
-  &:hover {
-    transform: translateY(-2px);
-    border-color: rgba($primary, 0.18);
-    box-shadow: $shadow-md;
-  }
+  box-shadow:
+    0 7px 18px rgba($text-primary, 0.04),
+    inset 0 1px 0 $surface;
 }
 
 .overview-card--primary {
-  border-color: rgba($primary, 0.14);
-  background: radial-gradient(circle at 100% 0%, rgba($primary, 0.08), transparent 32%), $white;
+  border-color: rgba($primary, 0.15);
+
+  background: radial-gradient(circle at 100% 0%, rgba($primary, 0.07), transparent 42%), $surface;
+
+  .overview-card__icon {
+    background: $primary-soft;
+    color: $primary;
+  }
 }
 
 .overview-card__icon {
-  @include icon-box($primary-light, $primary);
+  flex: 0 0 auto;
 
-  width: 2.75rem;
-  height: 2.75rem;
+  display: grid;
+  place-items: center;
 
-  border-radius: 1rem;
+  width: clamp(2.15rem, 6cqi, 2.7rem);
+  height: clamp(2.15rem, 6cqi, 2.7rem);
+
+  border-radius: 0.75rem;
+
+  background: $teal-soft;
+  color: $teal;
+
+  i,
+  svg {
+    width: 45%;
+    height: 45%;
+  }
 }
 
 .overview-card__content {
@@ -370,241 +353,23 @@ $transition: 0.22s ease;
 
   span {
     display: block;
-    margin-bottom: 0.35rem;
 
-    color: $slate-500;
-    font-size: 0.76rem;
+    color: $text-muted;
+
+    font-size: clamp(0.56rem, 1.5cqi, 0.66rem);
     font-weight: 850;
-    letter-spacing: 0.045em;
+    letter-spacing: 0.065em;
     text-transform: uppercase;
   }
 
   p {
-    margin: 0;
+    margin: 0.35rem 0 0;
 
-    color: $slate-800;
-    font-size: 0.98rem;
-    font-weight: 650;
+    color: $text-secondary;
+
+    font-size: clamp(0.73rem, 2cqi, 0.86rem);
     line-height: 1.55;
   }
-}
-
-// ==========================================================================
-// CLINICAL CONTENT
-// ==========================================================================
-
-.case-clinical-content {
-  display: grid;
-
-  gap: 0.85rem;
-
-  min-width: 0;
-}
-
-.case-section {
-  @include card-base;
-
-  display: grid;
-  grid-template-rows: auto;
-
-  min-width: 0;
-
-  overflow: hidden;
-
-  border-radius: $radius-xl;
-
-  transition:
-    border-color $transition,
-    box-shadow $transition;
-}
-
-.case-section:not(.case-section--collapsed) {
-  border-color: rgba($primary, 0.12);
-}
-
-.case-section--collapsed {
-  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.035);
-}
-
-// ==========================================================================
-// SECTION HEADER
-// ==========================================================================
-
-.case-section__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  gap: 1rem;
-
-  width: 100%;
-  min-width: 0;
-
-  padding: 1rem 1.15rem;
-
-  color: inherit;
-
-  background: linear-gradient(180deg, rgba($white, 0.98), rgba($slate-50, 0.86));
-
-  border: 0;
-  border-bottom: 1px solid $slate-200;
-
-  font: inherit;
-  text-align: left;
-}
-
-.case-section__header--toggle {
-  cursor: pointer;
-
-  -webkit-tap-highlight-color: transparent;
-
-  transition:
-    background-color $transition,
-    border-color $transition;
-
-  &:hover {
-    background: linear-gradient(180deg, rgba($primary-light, 0.56), rgba($white, 0.96));
-  }
-
-  &:focus-visible {
-    position: relative;
-    z-index: 2;
-
-    outline: 3px solid rgba($primary, 0.2);
-    outline-offset: -3px;
-  }
-}
-
-.case-section--collapsed {
-  .case-section__header {
-    border-bottom-color: transparent;
-  }
-}
-
-.case-section__heading {
-  display: flex;
-  align-items: center;
-
-  gap: 0.85rem;
-
-  min-width: 0;
-
-  > div:last-child {
-    min-width: 0;
-  }
-
-  h2 {
-    margin: 0;
-
-    color: $slate-950;
-
-    font-size: clamp(1.02rem, 1.8vw, 1.2rem);
-    font-weight: 900;
-    letter-spacing: -0.025em;
-  }
-
-  p {
-    margin: 0.22rem 0 0;
-
-    overflow: hidden;
-
-    color: $slate-500;
-
-    font-size: 0.84rem;
-    line-height: 1.4;
-
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-}
-
-// ==========================================================================
-// SECTION CHEVRON
-// ==========================================================================
-
-.case-section__chevron {
-  @include flex-center;
-
-  width: 2.15rem;
-  height: 2.15rem;
-
-  flex: 0 0 2.15rem;
-
-  color: $slate-500;
-  background: $slate-100;
-
-  border: 1px solid $slate-200;
-  border-radius: 0.7rem;
-
-  transition:
-    color $transition,
-    background-color $transition,
-    border-color $transition,
-    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-
-  i,
-  svg {
-    width: 1.05rem;
-    height: 1.05rem;
-
-    pointer-events: none;
-  }
-}
-
-.case-section__chevron--open {
-  color: $primary;
-  background: $primary-light;
-
-  border-color: rgba($primary, 0.16);
-
-  transform: rotate(180deg);
-}
-
-// ==========================================================================
-// SECTION COLLAPSE
-// ==========================================================================
-
-.case-section__collapse {
-  display: grid;
-  grid-template-rows: 0fr;
-
-  min-width: 0;
-
-  opacity: 0;
-  visibility: hidden;
-
-  transition:
-    grid-template-rows 0.34s cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 0.18s ease,
-    visibility 0s linear 0.34s;
-
-  > .case-section__body {
-    min-height: 0;
-
-    overflow: hidden;
-  }
-}
-
-.case-section__collapse--open {
-  grid-template-rows: 1fr;
-
-  opacity: 1;
-  visibility: visible;
-
-  transition:
-    grid-template-rows 0.34s cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 0.23s ease 0.05s,
-    visibility 0s linear;
-}
-
-.case-section__body {
-  display: grid;
-
-  gap: 1rem;
-
-  min-width: 0;
-
-  padding: 1rem 1.15rem 1.15rem;
 }
 
 // ==========================================================================
@@ -618,150 +383,368 @@ $transition: 0.22s ease;
 
   gap: 1rem;
 
-  min-width: 0;
+  margin-bottom: 0.75rem;
+  padding: 0.65rem 0.75rem;
 
-  padding: 0.15rem 0.1rem;
+  border: 1px solid $border;
+  border-radius: 0.85rem;
+
+  background: rgba($surface-soft, 0.84);
 }
 
 .section-controls__label {
-  color: $slate-600;
+  color: $text-secondary;
 
-  font-size: 0.78rem;
-  font-weight: 850;
-  letter-spacing: 0.045em;
-  text-transform: uppercase;
+  font-size: clamp(0.65rem, 1.7cqi, 0.75rem);
+  font-weight: 800;
 }
 
 .section-controls__actions {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
 
-  gap: 0.45rem;
+  gap: 0.4rem;
 
   button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
 
-    gap: 0.4rem;
+    gap: 0.35rem;
 
-    min-height: 2.25rem;
+    min-height: 2rem;
+    padding: 0.42rem 0.58rem;
 
-    padding: 0.45rem 0.65rem;
+    border: 1px solid $border;
+    border-radius: 0.6rem;
 
-    color: $slate-600;
-    background: $white;
-
-    border: 1px solid $slate-200;
-    border-radius: 0.65rem;
-
-    font: inherit;
-    font-size: 0.7rem;
-    font-weight: 800;
+    background: $surface;
+    color: #64748b;
 
     cursor: pointer;
 
+    font: inherit;
+    font-size: clamp(0.58rem, 1.5cqi, 0.66rem);
+    font-weight: 750;
+
     transition:
-      color $transition,
-      background-color $transition,
-      border-color $transition;
+      border-color $transition-fast,
+      background $transition-fast,
+      color $transition-fast,
+      transform $transition-fast;
+
+    i,
+    svg {
+      width: 0.82rem;
+      height: 0.82rem;
+    }
 
     &:hover {
-      color: $primary;
-      background: $primary-light;
+      border-color: rgba($primary, 0.22);
 
-      border-color: rgba($primary, 0.14);
+      background: $primary-soft;
+      color: $primary-dark;
+
+      transform: translateY(-1px);
     }
 
     &:focus-visible {
       outline: 3px solid rgba($primary, 0.18);
       outline-offset: 2px;
     }
-
-    i,
-    svg {
-      width: 0.9rem;
-      height: 0.9rem;
-    }
   }
 }
 
 // ==========================================================================
-// PATIENT DATA
+// MAIN CLINICAL CONTENT
 // ==========================================================================
 
-.patient-summary {
+.case-clinical-content {
+  display: grid;
+
+  gap: 0.8rem;
+}
+
+// ==========================================================================
+// COLLAPSIBLE SECTION
+// ==========================================================================
+
+.case-section {
+  min-width: 0;
+  overflow: hidden;
+
+  border: 1px solid $border;
+  border-radius: 1.05rem;
+
+  background: rgba($surface, 0.96);
+
+  box-shadow:
+    0 8px 22px rgba($text-primary, 0.04),
+    inset 0 1px 0 $surface;
+
+  transition:
+    border-color $transition-fast,
+    box-shadow $transition-base;
+
+  &:has(.case-section__header:hover) {
+    border-color: rgba($primary, 0.18);
+  }
+}
+
+.case-section--collapsed {
+  box-shadow: 0 4px 12px rgba($text-primary, 0.03);
+}
+
+.case-section__header {
+  width: 100%;
+}
+
+.case-section__header--toggle {
   display: flex;
-  align-items: stretch;
+  align-items: center;
   justify-content: space-between;
 
   gap: 1rem;
+
+  min-width: 0;
+  padding: clamp(0.75rem, 2.4cqi, 1rem);
+
+  border: 0;
+
+  background: rgba($surface-soft, 0.74);
+  color: inherit;
+
+  cursor: pointer;
+
+  font: inherit;
+  text-align: left;
+
+  transition: background $transition-fast;
+
+  &:hover {
+    background: $surface-soft;
+  }
+
+  &:focus-visible {
+    position: relative;
+    z-index: 2;
+
+    outline: 3px solid rgba($primary, 0.18);
+    outline-offset: -3px;
+  }
 }
 
-.patient-summary__main,
-.patient-summary__data,
-.patient-summary__item {
-  border: 1px solid $slate-200;
-  background: $slate-50;
+.case-section__heading {
+  display: flex;
+  align-items: center;
+
+  gap: 0.7rem;
+
+  min-width: 0;
+
+  > div:last-child {
+    min-width: 0;
+  }
+
+  h2 {
+    margin: 0;
+
+    color: $text-primary;
+
+    font-size: clamp(0.85rem, 2.5cqi, 1.05rem);
+    font-weight: 850;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+  }
+
+  p {
+    margin: 0.2rem 0 0;
+
+    color: #64748b;
+
+    font-size: clamp(0.62rem, 1.8cqi, 0.73rem);
+    line-height: 1.4;
+  }
+}
+
+.case-section__icon {
+  flex: 0 0 auto;
+
+  display: grid;
+  place-items: center;
+
+  width: clamp(2rem, 5.5cqi, 2.45rem);
+  height: clamp(2rem, 5.5cqi, 2.45rem);
+
+  border-radius: 0.7rem;
+
+  i,
+  svg {
+    width: 45%;
+    height: 45%;
+  }
+}
+
+.case-section__icon--patient {
+  background: $primary-soft;
+  color: $primary;
+}
+
+.case-section__icon--vitals {
+  background: $red-soft;
+  color: $red;
+}
+
+.case-section__icon--neurological {
+  background: $violet-soft;
+  color: $violet;
+}
+
+.case-section__icon--findings {
+  background: $teal-soft;
+  color: $teal;
+}
+
+.case-section__chevron {
+  flex: 0 0 auto;
+
+  display: grid;
+  place-items: center;
+
+  width: 1.9rem;
+  height: 1.9rem;
+
+  border: 1px solid $border;
+  border-radius: 0.55rem;
+
+  background: $surface;
+  color: #64748b;
+
+  transition:
+    transform $transition-base,
+    color $transition-fast,
+    border-color $transition-fast;
+
+  i,
+  svg {
+    width: 0.9rem;
+    height: 0.9rem;
+  }
+}
+
+.case-section__chevron--open {
+  border-color: rgba($primary, 0.18);
+
+  color: $primary;
+
+  transform: rotate(180deg);
+}
+
+.case-section__collapse {
+  display: grid;
+  grid-template-rows: 0fr;
+
+  visibility: hidden;
+
+  transition:
+    grid-template-rows $transition-base,
+    visibility 0s linear $transition-base;
+
+  > .case-section__body {
+    min-height: 0;
+    overflow: hidden;
+  }
+}
+
+.case-section__collapse--open {
+  grid-template-rows: 1fr;
+
+  visibility: visible;
+
+  transition:
+    grid-template-rows $transition-base,
+    visibility 0s linear 0s;
+}
+
+.case-section__body {
+  padding: clamp(0.75rem, 2.6cqi, 1.1rem);
+}
+
+// ==========================================================================
+// PATIENT SUMMARY
+// ==========================================================================
+
+.patient-summary {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(240px, 0.8fr);
+  align-items: stretch;
+
+  gap: 0.75rem;
+
+  margin-bottom: 0.75rem;
 }
 
 .patient-summary__main {
   display: flex;
   align-items: center;
 
-  gap: 0.9rem;
+  gap: 0.75rem;
 
   min-width: 0;
-  flex: 1;
+  padding: 0.85rem;
 
-  padding: 1rem;
+  border: 1px solid rgba($primary, 0.13);
+  border-radius: 0.85rem;
 
-  border-radius: $radius-lg;
+  background: $primary-soft;
 }
 
 .patient-summary__avatar {
-  @include flex-center;
-
   flex: 0 0 auto;
 
-  width: 3.25rem;
-  height: 3.25rem;
+  display: grid;
+  place-items: center;
 
+  width: clamp(2.4rem, 7cqi, 3rem);
+  height: clamp(2.4rem, 7cqi, 3rem);
+
+  border-radius: 0.8rem;
+
+  background: $surface;
   color: $primary;
 
-  border-radius: 1.15rem;
-  background:
-    radial-gradient(circle at 30% 20%, rgba($white, 0.8), transparent 38%), $primary-light;
+  box-shadow: 0 5px 13px rgba($primary, 0.1);
 
   i,
   svg {
-    width: 1.45rem;
-    height: 1.45rem;
+    width: 46%;
+    height: 46%;
   }
 }
 
 .patient-summary__identity {
+  display: grid;
+
   min-width: 0;
 
   span {
-    display: block;
+    color: #64748b;
 
-    color: $slate-500;
-    font-size: 0.75rem;
-    font-weight: 850;
-    letter-spacing: 0.045em;
+    font-size: clamp(0.55rem, 1.5cqi, 0.64rem);
+    font-weight: 800;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
   }
 
   strong {
-    display: block;
-    margin-top: 0.25rem;
-
+    margin-top: 0.2rem;
     overflow: hidden;
 
-    color: $slate-900;
-    font-size: 1rem;
-    font-weight: 900;
+    color: $text-primary;
+
+    font-size: clamp(0.8rem, 2.5cqi, 1rem);
+    font-weight: 850;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
@@ -769,62 +752,72 @@ $transition: 0.22s ease;
 
 .patient-summary__data {
   display: grid;
-  grid-template-columns: repeat(2, minmax(7rem, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 
-  gap: 0.65rem;
-
-  min-width: min(100%, 18rem);
-  padding: 0.65rem;
-
-  border-radius: $radius-lg;
+  gap: 0.6rem;
 }
 
 .patient-summary__item {
   display: grid;
   align-content: center;
-  gap: 0.25rem;
 
-  padding: 0.8rem;
+  min-width: 0;
+  padding: 0.75rem;
 
-  border-radius: $radius-md;
-  background: $white;
+  border: 1px solid $border;
+  border-radius: 0.8rem;
+
+  background: $surface-soft;
 
   span {
-    color: $slate-500;
-    font-size: 0.72rem;
-    font-weight: 850;
-    letter-spacing: 0.045em;
+    color: $text-muted;
+
+    font-size: clamp(0.54rem, 1.4cqi, 0.62rem);
+    font-weight: 800;
+    letter-spacing: 0.055em;
     text-transform: uppercase;
   }
 
   strong {
-    color: $slate-900;
-    font-size: 0.95rem;
-    font-weight: 900;
+    margin-top: 0.25rem;
+    overflow: hidden;
+
+    color: $text-secondary;
+
+    font-size: clamp(0.7rem, 2cqi, 0.82rem);
+    font-weight: 800;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
+
+// ==========================================================================
+// MEDICAL INFORMATION
+// ==========================================================================
 
 .medical-info {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
 
-  gap: 1rem;
+  gap: 0.75rem;
 }
 
 .medical-info__card {
   min-width: 0;
-  padding: 1rem;
+  padding: 0.85rem;
 
-  border: 1px solid $slate-200;
-  border-radius: $radius-lg;
-  background: $slate-50;
+  border: 1px solid $border;
+  border-radius: 0.85rem;
 
-  p {
-    margin: 0.75rem 0 0;
+  background: $surface-soft;
 
-    color: $slate-700;
-    font-size: 0.94rem;
-    line-height: 1.6;
+  > p {
+    margin: 0.6rem 0 0;
+
+    color: $text-secondary;
+
+    font-size: clamp(0.7rem, 1.9cqi, 0.8rem);
+    line-height: 1.55;
   }
 }
 
@@ -832,34 +825,47 @@ $transition: 0.22s ease;
   display: flex;
   align-items: center;
 
-  gap: 0.55rem;
+  gap: 0.4rem;
 
-  color: $slate-700;
-  font-size: 0.82rem;
-  font-weight: 900;
+  color: $primary-dark;
 
   i,
   svg {
-    width: 1rem;
-    height: 1rem;
+    width: 0.9rem;
+    height: 0.9rem;
+  }
 
-    color: $primary;
+  span {
+    font-size: clamp(0.62rem, 1.7cqi, 0.72rem);
+    font-weight: 850;
   }
 }
 
 .medical-info__list {
-  display: grid;
-  gap: 0.45rem;
+  display: flex;
+  flex-wrap: wrap;
 
-  margin: 0.75rem 0 0;
-  padding-left: 1.15rem;
+  gap: 0.4rem;
 
-  color: $slate-700;
-  font-size: 0.94rem;
-  line-height: 1.5;
+  margin: 0.65rem 0 0;
+  padding: 0;
 
-  li::marker {
-    color: $primary;
+  list-style: none;
+
+  li {
+    max-width: 100%;
+    padding: 0.35rem 0.5rem;
+
+    border: 1px solid rgba($primary, 0.12);
+    border-radius: 0.55rem;
+
+    background: $surface;
+    color: $text-secondary;
+
+    font-size: clamp(0.62rem, 1.6cqi, 0.72rem);
+    font-weight: 650;
+
+    overflow-wrap: anywhere;
   }
 }
 
@@ -869,190 +875,232 @@ $transition: 0.22s ease;
 
 .vital-signs {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(145px, 100%), 1fr));
 
-  gap: 0.85rem;
+  gap: 0.65rem;
 }
 
 .vital-card {
-  position: relative;
-
   display: grid;
-  align-content: start;
-  gap: 0.55rem;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+
+  gap: 0.2rem 0.6rem;
 
   min-width: 0;
-  min-height: 8.25rem;
-  padding: 1rem;
+  min-height: 76px;
+  padding: 0.7rem;
 
-  overflow: hidden;
+  border: 1px solid $border;
+  border-radius: 0.8rem;
 
-  border: 1px solid $slate-200;
-  border-radius: $radius-lg;
-  background: radial-gradient(circle at 100% 0%, rgba($primary, 0.045), transparent 35%), $white;
+  background: $surface-soft;
 
   transition:
-    transform $transition,
-    border-color $transition,
-    box-shadow $transition;
+    border-color $transition-fast,
+    transform $transition-fast,
+    box-shadow $transition-fast;
 
   &:hover {
-    transform: translateY(-2px);
-    border-color: rgba($primary, 0.2);
-    box-shadow: $shadow-sm;
+    border-color: rgba($primary, 0.18);
+
+    transform: translateY(-1px);
+
+    box-shadow: 0 7px 16px rgba($text-primary, 0.05);
   }
 
-  span {
-    color: $slate-500;
-    font-size: 0.76rem;
+  > span {
+    grid-column: 2;
+
+    color: $text-muted;
+
+    font-size: clamp(0.54rem, 1.4cqi, 0.62rem);
     font-weight: 850;
-    letter-spacing: 0.045em;
+    letter-spacing: 0.05em;
     text-transform: uppercase;
   }
 
-  strong {
-    color: $slate-950;
-    font-size: clamp(1rem, 1.8vw, 1.25rem);
-    font-weight: 950;
-    letter-spacing: -0.035em;
-    word-break: break-word;
+  > strong {
+    grid-column: 2;
+
+    min-width: 0;
+
+    color: $text-primary;
+
+    font-size: clamp(0.68rem, 2cqi, 0.82rem);
+    font-weight: 850;
+    line-height: 1.25;
+
+    overflow-wrap: anywhere;
   }
 }
 
 .vital-card__icon {
-  @include icon-box($slate-100, $slate-600);
+  grid-row: 1 / span 2;
 
-  width: 2.4rem;
-  height: 2.4rem;
+  display: grid;
+  place-items: center;
 
-  border-radius: 0.9rem;
+  width: 2.1rem;
+  height: 2.1rem;
+
+  border-radius: 0.62rem;
+
+  background: $primary-soft;
+  color: $primary;
+
+  i,
+  svg {
+    width: 0.95rem;
+    height: 0.95rem;
+  }
 }
 
 .vital-card__icon--heart {
-  color: $rose;
-  background: $rose-light;
+  background: $red-soft;
+  color: $red;
 }
 
 .vital-card__icon--respiratory {
-  color: $cyan;
-  background: $cyan-light;
+  background: $teal-soft;
+  color: $teal;
 }
 
 .vital-card__icon--oxygen {
-  color: $teal;
-  background: $teal-light;
+  background: #ecfeff;
+  color: #0891b2;
 }
 
 .vital-card__icon--glucose {
+  background: $violet-soft;
   color: $violet;
-  background: $violet-light;
 }
 
 .vital-card__icon--temperature {
-  color: $amber;
-  background: $amber-light;
+  background: $orange-soft;
+  color: $orange;
 }
 
 .vital-card__icon--capillary {
-  color: $emerald;
-  background: $emerald-light;
+  background: #fff1f2;
+  color: #e11d48;
 }
 
 // ==========================================================================
-// NEUROLOGICAL
+// NEUROLOGICAL SECTION
 // ==========================================================================
 
 .neurological {
   display: grid;
-  grid-template-columns: minmax(14rem, 0.85fr) minmax(0, 1.4fr);
+  grid-template-columns: minmax(200px, 0.42fr) minmax(0, 1fr);
 
-  gap: 1rem;
-}
-
-.glasgow-card,
-.cincinnati-card {
-  min-width: 0;
-  padding: 1rem;
-
-  border: 1px solid $slate-200;
-  border-radius: $radius-lg;
-  background: $slate-50;
+  gap: 0.75rem;
 }
 
 .glasgow-card {
-  display: grid;
-  align-content: space-between;
-  gap: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
-  min-height: 13rem;
+  gap: 0.75rem;
 
-  background: radial-gradient(circle at 90% 0%, rgba($violet, 0.09), transparent 35%), $slate-50;
+  min-width: 0;
+  padding: 0.9rem;
+
+  border: 1px solid rgba($violet, 0.14);
+  border-radius: 0.9rem;
+
+  background:
+    radial-gradient(circle at 100% 0%, rgba($violet, 0.09), transparent 45%), $violet-soft;
 }
 
 .glasgow-card__heading {
   display: flex;
   align-items: center;
 
-  gap: 0.75rem;
+  gap: 0.6rem;
+
+  min-width: 0;
+
+  > div:last-child {
+    display: grid;
+
+    min-width: 0;
+  }
 
   span {
-    display: block;
+    color: #5b21b6;
 
-    color: $slate-800;
-    font-size: 0.9rem;
-    font-weight: 900;
+    font-size: clamp(0.64rem, 1.7cqi, 0.75rem);
+    font-weight: 850;
   }
 
   small {
-    display: block;
     margin-top: 0.15rem;
 
-    color: $slate-500;
-    font-size: 0.78rem;
-    font-weight: 700;
+    color: #8b5cf6;
+
+    font-size: clamp(0.54rem, 1.4cqi, 0.62rem);
   }
 }
 
 .glasgow-card__icon {
-  @include icon-box($violet-light, $violet);
+  flex: 0 0 auto;
 
-  width: 2.65rem;
-  height: 2.65rem;
+  display: grid;
+  place-items: center;
 
-  border-radius: 1rem;
+  width: 2.3rem;
+  height: 2.3rem;
+
+  border-radius: 0.7rem;
+
+  background: $surface;
+  color: $violet;
+
+  i,
+  svg {
+    width: 1rem;
+    height: 1rem;
+  }
 }
 
 .glasgow-card__value {
-  display: block;
+  flex: 0 0 auto;
 
-  color: $violet;
-  font-size: clamp(2.75rem, 7vw, 4.75rem);
-  font-weight: 950;
-  line-height: 0.9;
-  letter-spacing: -0.08em;
+  color: #5b21b6;
+
+  font-size: clamp(1.25rem, 5cqi, 1.8rem);
+  font-weight: 900;
+  letter-spacing: -0.05em;
 }
 
 .cincinnati-card {
-  display: grid;
-  gap: 1rem;
+  min-width: 0;
+  padding: 0.9rem;
+
+  border: 1px solid $border;
+  border-radius: 0.9rem;
+
+  background: $surface-soft;
 }
 
 .cincinnati-card__header {
   h3 {
     margin: 0;
 
-    color: $slate-950;
-    font-size: 1rem;
-    font-weight: 900;
-    letter-spacing: -0.025em;
+    color: $text-primary;
+
+    font-size: clamp(0.75rem, 2.1cqi, 0.9rem);
+    font-weight: 850;
   }
 
   p {
     margin: 0.25rem 0 0;
 
-    color: $slate-500;
-    font-size: 0.86rem;
-    line-height: 1.45;
+    color: #64748b;
+
+    font-size: clamp(0.58rem, 1.6cqi, 0.68rem);
   }
 }
 
@@ -1060,53 +1108,70 @@ $transition: 0.22s ease;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
 
-  gap: 0.75rem;
+  gap: 0.55rem;
+
+  margin-top: 0.75rem;
 }
 
 .neurological-item {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
 
-  gap: 0.65rem;
+  gap: 0.5rem;
 
   min-width: 0;
-  padding: 0.85rem;
+  padding: 0.6rem;
 
-  border: 1px solid $slate-200;
-  border-radius: $radius-md;
-  background: $white;
+  border: 1px solid $border;
+  border-radius: 0.7rem;
+
+  background: $surface;
 }
 
 .neurological-item__icon {
-  @include icon-box($primary-light, $primary);
+  flex: 0 0 auto;
 
-  width: 2.25rem;
-  height: 2.25rem;
+  display: grid;
+  place-items: center;
 
-  border-radius: 0.85rem;
+  width: 1.85rem;
+  height: 1.85rem;
+
+  border-radius: 0.55rem;
+
+  background: $violet-soft;
+  color: $violet;
+
+  i,
+  svg {
+    width: 0.82rem;
+    height: 0.82rem;
+  }
 }
 
 .neurological-item__content {
+  display: grid;
+
   min-width: 0;
 
   span {
-    display: block;
+    color: $text-muted;
 
-    color: $slate-500;
-    font-size: 0.72rem;
-    font-weight: 850;
-    letter-spacing: 0.04em;
+    font-size: clamp(0.5rem, 1.3cqi, 0.58rem);
+    font-weight: 800;
     text-transform: uppercase;
   }
 
   strong {
-    display: block;
-    margin-top: 0.25rem;
+    margin-top: 0.15rem;
 
-    color: $slate-900;
-    font-size: 0.9rem;
-    font-weight: 900;
-    word-break: break-word;
+    color: $text-secondary;
+
+    font-size: clamp(0.6rem, 1.7cqi, 0.7rem);
+    font-weight: 800;
+    line-height: 1.3;
+
+    overflow-wrap: anywhere;
   }
 }
 
@@ -1117,274 +1182,323 @@ $transition: 0.22s ease;
 .findings-box {
   position: relative;
 
-  display: flex;
-  align-items: flex-start;
-
-  gap: 0.85rem;
-
   min-width: 0;
-  padding: 1rem;
+  padding: clamp(0.85rem, 2.5cqi, 1.1rem);
+  padding-left: clamp(2.8rem, 7cqi, 3.5rem);
 
-  border: 1px solid rgba($cyan, 0.16);
-  border-radius: $radius-lg;
-  background: radial-gradient(circle at 100% 0%, rgba($cyan, 0.08), transparent 34%), $cyan-light;
+  border: 1px solid rgba($teal, 0.14);
+  border-radius: 0.9rem;
 
-  i,
-  svg {
-    flex: 0 0 auto;
+  background: radial-gradient(circle at 0% 0%, rgba($teal, 0.08), transparent 36%), $teal-soft;
+
+  > i,
+  > svg {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
 
     width: 1.2rem;
     height: 1.2rem;
-    margin-top: 0.15rem;
 
-    color: $cyan;
+    color: $teal;
   }
 
   p {
     margin: 0;
 
-    color: $slate-800;
-    font-size: 0.96rem;
-    font-weight: 600;
+    color: $text-secondary;
+
+    font-size: clamp(0.72rem, 2cqi, 0.84rem);
     line-height: 1.7;
+    white-space: pre-line;
   }
 }
 
 // ==========================================================================
-// EMBEDDED MODE COMPACT
+// EMBEDDED MODE
 // ==========================================================================
 
 .case-content-view--embedded {
-  .case-clinical-content {
-    gap: 0.7rem;
+  .clinical-overview {
+    margin-bottom: 0.75rem;
   }
 
-  .case-section {
-    border-radius: $radius-lg;
-    box-shadow: none;
-  }
-
-  .case-section__header {
-    padding: 0.8rem 0.9rem;
-  }
-
-  .case-section__heading {
-    gap: 0.65rem;
-
-    h2 {
-      font-size: 0.95rem;
-    }
-
-    p {
-      display: none;
-    }
-  }
-
-  .case-section__icon {
-    width: 2.25rem;
-    height: 2.25rem;
-
-    border-radius: 0.8rem;
-  }
-
-  .case-section__chevron {
-    width: 1.9rem;
-    height: 1.9rem;
-
-    flex-basis: 1.9rem;
-  }
-
-  .case-section__body {
-    padding: 0.85rem 0.9rem 0.95rem;
+  .overview-card {
+    padding: 0.75rem;
   }
 
   .section-controls {
+    padding: 0.55rem 0.65rem;
+  }
+
+  .case-section__header--toggle {
+    padding: 0.75rem;
+  }
+
+  .case-section__body {
+    padding: 0.75rem;
+  }
+
+  .vital-card {
+    min-height: 68px;
+  }
+}
+
+// ==========================================================================
+// CONTAINER QUERIES
+// ==========================================================================
+
+// --------------------------------------------------------------------------
+// MEDIUM CONTAINER
+// --------------------------------------------------------------------------
+
+@container case-content (max-width: 900px) {
+  .case-header {
+    grid-template-columns: minmax(0, 1fr);
+
+    min-height: auto;
+  }
+
+  .case-header__visual {
     display: none;
   }
 
   .patient-summary {
-    flex-direction: column;
-  }
-
-  .patient-summary__data {
-    width: 100%;
-    min-width: 0;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .medical-info {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .neurological {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .cincinnati-card__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+// --------------------------------------------------------------------------
+// NARROW CONTAINER
+// --------------------------------------------------------------------------
+
+@container case-content (max-width: 680px) {
+  .case-content-view--full {
+    padding: 0.7rem;
+  }
+
+  .case-header {
+    padding: 1rem;
+
+    border-radius: 1.05rem;
+  }
+
+  .clinical-overview {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .section-controls {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .section-controls__actions {
+    width: 100%;
+
+    button {
+      flex: 1 1 140px;
+    }
+  }
+
+  .case-section {
+    border-radius: 0.9rem;
+  }
+
+  .case-section__heading p {
+    display: none;
+  }
+
+  .patient-summary__data {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .vital-signs {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .vital-card {
-    min-height: 7.5rem;
-
-    padding: 0.9rem;
-  }
-
-  .neurological {
-    grid-template-columns: 1fr;
-  }
-
-  .glasgow-card {
-    min-height: auto;
-  }
-
-  .glasgow-card__value {
-    font-size: 3rem;
-  }
-
   .cincinnati-card__grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
-  .findings-box {
-    padding: 0.95rem;
+  .neurological-item {
+    padding: 0.65rem;
   }
 }
 
-// ==========================================================================
-// RESPONSIVE
-// ==========================================================================
+// --------------------------------------------------------------------------
+// VERY NARROW CONTAINER
+// --------------------------------------------------------------------------
 
-@include tablet {
+@container case-content (max-width: 460px) {
   .case-content-view--full {
-    padding: 1rem;
+    padding: 0.5rem;
   }
 
   .case-header {
-    flex-direction: column;
+    margin-bottom: 0.7rem;
+    padding: 0.9rem;
 
-    border-radius: $radius-xl;
+    border-radius: 0.95rem;
   }
 
-  .case-header__visual {
-    justify-content: flex-start;
-    min-width: 0;
+  .case-header__meta {
+    gap: 0.4rem;
   }
 
-  .case-header__icon {
-    width: 5.75rem;
-    height: 5.75rem;
-    border-radius: 1.5rem;
+  .case-header__area,
+  .case-header__status {
+    padding: 0.32rem 0.48rem;
   }
 
-  .clinical-overview {
-    grid-template-columns: 1fr;
+  .overview-card {
+    gap: 0.6rem;
+    padding: 0.75rem;
+
+    border-radius: 0.85rem;
   }
 
-  .patient-summary {
-    flex-direction: column;
+  .overview-card__icon {
+    width: 2.15rem;
+    height: 2.15rem;
   }
 
-  .patient-summary__data {
-    width: 100%;
-    min-width: 0;
-  }
-
-  .medical-info {
-    grid-template-columns: 1fr;
-  }
-
-  .vital-signs {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .neurological {
-    grid-template-columns: 1fr;
-  }
-
-  .cincinnati-card__grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-@include mobile {
   .section-controls {
-    align-items: stretch;
-    flex-direction: column;
+    padding: 0.6rem;
 
-    gap: 0.55rem;
+    border-radius: 0.75rem;
   }
 
   .section-controls__actions {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
 
-    width: 100%;
-
     button {
       width: 100%;
       min-width: 0;
+
+      span {
+        overflow: hidden;
+
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
     }
   }
 
-  .case-section__header {
-    gap: 0.65rem;
-
-    padding: 0.8rem;
+  .case-section__header--toggle {
+    padding: 0.7rem;
   }
 
   .case-section__heading {
-    gap: 0.65rem;
-
-    p {
-      display: none;
-    }
+    gap: 0.55rem;
   }
 
   .case-section__icon {
-    width: 2.2rem;
-    height: 2.2rem;
-
-    flex: 0 0 2.2rem;
-
-    border-radius: 0.75rem;
+    width: 2rem;
+    height: 2rem;
   }
 
   .case-section__chevron {
-    width: 1.85rem;
-    height: 1.85rem;
-
-    flex-basis: 1.85rem;
+    width: 1.7rem;
+    height: 1.7rem;
   }
 
   .case-section__body {
-    gap: 0.8rem;
+    padding: 0.65rem;
+  }
 
-    padding: 0.8rem;
+  .patient-summary__main {
+    padding: 0.7rem;
   }
 
   .patient-summary__data {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 1fr);
   }
 
-  .vital-signs,
-  .case-content-view--embedded .vital-signs {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .patient-summary__item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 0.75rem;
+
+    padding: 0.65rem;
+
+    strong {
+      margin: 0;
+
+      text-align: right;
+      white-space: normal;
+    }
+  }
+
+  .medical-info__card {
+    padding: 0.7rem;
+  }
+
+  .vital-signs {
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .vital-card {
-    min-height: 6.75rem;
+    min-height: 64px;
+    padding: 0.65rem;
+  }
 
+  .glasgow-card {
     padding: 0.75rem;
+  }
+
+  .cincinnati-card {
+    padding: 0.75rem;
+  }
+
+  .findings-box {
+    padding: 0.8rem;
+
+    > i,
+    > svg {
+      position: static;
+
+      display: block;
+
+      margin-bottom: 0.5rem;
+    }
   }
 }
 
-@media (max-width: 24rem) {
-  .section-controls__actions {
-    grid-template-columns: 1fr;
-  }
+// ==========================================================================
+// FALLBACK VIEWPORT QUERIES
+// ==========================================================================
 
-  .patient-summary__data {
-    grid-template-columns: 1fr;
+@media (max-width: 640px) {
+  .case-content-view {
+    max-width: 100%;
   }
+}
 
-  .vital-signs,
-  .case-content-view--embedded .vital-signs {
-    grid-template-columns: 1fr;
+// ==========================================================================
+// ACCESSIBILITY
+// ==========================================================================
+
+@media (prefers-reduced-motion: reduce) {
+  .case-section,
+  .case-section__collapse,
+  .case-section__chevron,
+  .section-controls__actions button,
+  .vital-card {
+    transition: none;
   }
 }

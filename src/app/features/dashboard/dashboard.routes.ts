@@ -6,21 +6,31 @@ import { dashboardRedirectGuard } from '../../core/guard/dashboard.guard';
 export const dashboardRoutes: Routes = [
   {
     path: '',
-    canActivate: [dashboardRedirectGuard],
     loadComponent: () => import('./dashboard').then((c) => c.Dashboard),
+
     children: [
       {
-        path: 'teacher',
-        canMatch: [roleGuard],
-        data: { roles: [UserRole.TEACHER] },
-        loadChildren: () => import('./roles/teacher.routes').then((c) => c.teacherRoutes),
+        path: '',
+        pathMatch: 'full',
+        canActivate: [dashboardRedirectGuard],
+        children: [],
       },
 
       {
+        path: 'teacher',
+        canMatch: [roleGuard],
+        data: {
+          roles: [UserRole.TEACHER],
+        },
+        loadChildren: () => import('./roles/teacher.routes').then((routes) => routes.teacherRoutes),
+      },
+      {
         path: 'student',
         canMatch: [roleGuard],
-        data: { roles: [UserRole.STUDENT] },
-        loadChildren: () => import('./roles/student.routes').then((c) => c.studentRoutes),
+        data: {
+          roles: [UserRole.STUDENT],
+        },
+        loadChildren: () => import('./roles/student.routes').then((routes) => routes.studentRoutes),
       },
     ],
   },

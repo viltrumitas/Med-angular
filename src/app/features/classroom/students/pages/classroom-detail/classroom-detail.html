@@ -1,9 +1,13 @@
-<section class="classroom-page">
-  @if (loading()) {
-    <section class="state-container">
-      <div class="spinner"></div>
+<section class="student-classroom">
+  <!-- =========================
+       LOADING
+  ========================== -->
 
-      <div class="state-content">
+  @if (loading()) {
+    <section class="student-classroom__state" aria-live="polite">
+      <div class="student-classroom__spinner" aria-hidden="true"></div>
+
+      <div class="student-classroom__state-content">
         <h2>Cargando clase</h2>
 
         <p>Estamos obteniendo la información de la clase...</p>
@@ -16,70 +20,79 @@
          HEADER
     ========================== -->
 
-    <header class="classroom-header">
-      <div class="header-main">
-        <span class="header-eyebrow"> Clase inscrita </span>
+    <header class="student-classroom__header">
+      <div class="student-classroom__header-main">
+        <div class="student-classroom__header-meta">
+          <span class="student-classroom__eyebrow"> Clase inscrita </span>
 
-        <h1>
+          <span class="student-classroom__status">
+            <span class="student-classroom__status-dot"></span>
+
+            Disponible para estudiantes
+          </span>
+        </div>
+
+        <h1 class="student-classroom__title">
           {{ c.name }}
         </h1>
 
-        <p>
-          {{ c.description || 'Sin descripción.' }}
+        <p class="student-classroom__description">
+          {{ c.description || 'Esta clase todavía no tiene una descripción.' }}
         </p>
-
-        <div class="classroom-status">
-          <span class="status-dot"></span>
-
-          <span> Disponible para estudiantes </span>
-        </div>
       </div>
 
-      <aside class="teacher-card">
-        <div class="teacher-icon">
-          <i data-lucide="graduation-cap"></i>
+      <aside class="student-classroom__teacher" aria-label="Profesor responsable de la clase">
+        <div class="student-classroom__teacher-avatar" aria-hidden="true">
+          {{ c.teacher.firstName.charAt(0).toUpperCase() }}
+          {{ c.teacher.lastName.charAt(0).toUpperCase() }}
         </div>
 
-        <div class="teacher-content">
-          <span>Profesor</span>
+        <div class="student-classroom__teacher-content">
+          <span>Profesor responsable</span>
 
           <strong>
             {{ c.teacher.firstName }}
             {{ c.teacher.lastName }}
           </strong>
 
-          <small> Responsable de la clase </small>
+          <small>Responsable de la clase</small>
+        </div>
+
+        <div class="student-classroom__teacher-icon" aria-hidden="true">
+          <i data-lucide="graduation-cap"></i>
         </div>
       </aside>
+
+      <div class="student-classroom__decoration" aria-hidden="true">
+        <span></span>
+      </div>
     </header>
 
     <!-- =========================
          STATS
     ========================== -->
 
-    <section class="stats-grid">
-      <article class="stat-card">
-        <div class="stat-icon assignments">
+    <section class="student-classroom__stats" aria-label="Resumen de la clase">
+      <article class="student-stat student-stat--assignments">
+        <div class="student-stat__icon" aria-hidden="true">
           <i data-lucide="clipboard-list"></i>
         </div>
 
-        <div class="stat-content">
+        <div class="student-stat__content">
           <span>Actividades</span>
 
-          <strong>
-            {{ c.assignmentsCount }}
-          </strong>
+          <strong>{{ c.assignmentsCount }}</strong>
 
-          <small> Casos clínicos asignados </small>
+          <small>Disponibles en la clase</small>
         </div>
       </article>
 
-      <article class="stat-card">
-        <div class="stat-icon teacher">
+      <article class="student-stat student-stat--teacher">
+        <div class="student-stat__icon" aria-hidden="true">
           <i data-lucide="user-round-check"></i>
         </div>
 
-        <div class="stat-content">
+        <div class="student-stat__content">
           <span>Profesor</span>
 
           <strong>
@@ -92,17 +105,17 @@
         </div>
       </article>
 
-      <article class="stat-card">
-        <div class="stat-icon progress">
+      <article class="student-stat student-stat--status">
+        <div class="student-stat__icon" aria-hidden="true">
           <i data-lucide="activity"></i>
         </div>
 
-        <div class="stat-content">
+        <div class="student-stat__content">
           <span>Estado</span>
 
-          <strong> Activa </strong>
+          <strong>Activa</strong>
 
-          <small> Puedes revisar tus actividades </small>
+          <small>Puedes consultar tus actividades</small>
         </div>
       </article>
     </section>
@@ -111,56 +124,69 @@
          WORKSPACE
     ========================== -->
 
-    <section class="workspace">
-      <div class="workspace-header">
-        <nav class="tabs" aria-label="Secciones de la clase">
-          <button type="button" class="active">
+    <section class="student-workspace">
+      <header class="student-workspace__toolbar">
+        <nav class="student-tabs" aria-label="Secciones de la clase">
+          <button
+            type="button"
+            class="student-tabs__button student-tabs__button--active"
+            aria-current="page"
+          >
             <i data-lucide="clipboard-list"></i>
 
             <span>Actividades</span>
 
-            <span class="tab-count">
+            <span class="student-tabs__count">
               {{ c.assignmentsCount }}
             </span>
           </button>
         </nav>
-      </div>
 
-      <section class="tab-content">
-        <div class="section-header">
-          <div>
-            <h2>Actividades</h2>
+        <span class="student-workspace__message"> Revisa tus actividades y casos asignados </span>
+      </header>
 
-            <p>Casos clínicos asignados por tu profesor.</p>
+      <section class="student-workspace__content">
+        <header class="student-workspace__section-header">
+          <div class="student-workspace__heading">
+            <span class="student-workspace__eyebrow"> Trabajo académico </span>
+
+            <h2>Actividades disponibles</h2>
+
+            <p>Consulta los casos clínicos que tu profesor ha asignado para esta clase.</p>
           </div>
 
-          <span class="section-count">
+          <span class="student-workspace__count">
             {{ c.assignmentsCount }}
-
             {{ c.assignmentsCount === 1 ? 'actividad' : 'actividades' }}
           </span>
-        </div>
+        </header>
 
         @if (c.assignments.length === 0) {
-          <section class="empty-state">
-            <div class="empty-icon">
+          <section class="student-empty">
+            <div class="student-empty__icon" aria-hidden="true">
               <i data-lucide="clipboard-x"></i>
             </div>
 
-            <h3>No hay actividades disponibles</h3>
+            <div class="student-empty__content">
+              <span class="student-empty__label"> Sin actividades </span>
 
-            <p>
-              Tu profesor todavía no ha publicado actividades para esta clase. Cuando haya una
-              nueva, aparecerá aquí.
-            </p>
+              <h3>No hay actividades disponibles</h3>
+
+              <p>
+                Tu profesor todavía no ha publicado actividades para esta clase. Cuando haya una
+                nueva, aparecerá en esta sección.
+              </p>
+            </div>
           </section>
         } @else {
-          <div class="assignment-grid">
+          <div class="student-workspace__grid">
             @for (assignment of c.assignments; track assignment.id) {
-              <app-assignment-card
-                [assignment]="assignment"
-                (viewAssignment)="openAssignment($event)"
-              />
+              <div class="student-workspace__assignment">
+                <app-assignment-card
+                  [assignment]="assignment"
+                  (viewAssignment)="openAssignment($event)"
+                />
+              </div>
             }
           </div>
         }

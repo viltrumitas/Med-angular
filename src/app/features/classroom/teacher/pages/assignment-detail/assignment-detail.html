@@ -1,142 +1,150 @@
 @if (loading()) {
-  <section class="state-container">
-    <div class="spinner"></div>
+  <section class="assignment-detail__state" aria-live="polite">
+    <div class="assignment-detail__spinner" aria-hidden="true"></div>
 
-    <div class="state-content">
+    <div class="assignment-detail__state-content">
       <h2>Cargando actividad</h2>
 
       <p>Estamos obteniendo la información de la actividad...</p>
     </div>
   </section>
 } @else if (assignment(); as assignment) {
-  <main class="assignment-page">
+  <main class="assignment-detail">
     <!-- =========================
-         HERO
+         HEADER
     ========================== -->
 
-    <section class="assignment-hero">
-      <div class="hero-main">
-        <span class="hero-eyebrow"> Actividad </span>
+    <header class="assignment-detail__header">
+      <div class="assignment-detail__header-main">
+        <div class="assignment-detail__header-meta">
+          <span class="assignment-detail__eyebrow"> Actividad académica </span>
 
-        <div class="hero-title">
-          <h1>{{ assignment.title }}</h1>
-
-          <span class="status-badge" [class.published]="assignment.isPublished">
-            <span class="status-dot"></span>
+          <span
+            class="assignment-detail__status"
+            [class.assignment-detail__status--published]="assignment.isPublished"
+          >
+            <span class="assignment-detail__status-dot"></span>
 
             {{ assignment.isPublished ? 'Publicada' : 'Borrador' }}
           </span>
         </div>
 
-        <p class="hero-description">
-          {{ assignment.description || 'Sin descripción.' }}
+        <h1 class="assignment-detail__title">
+          {{ assignment.title }}
+        </h1>
+
+        <p class="assignment-detail__description">
+          {{ assignment.description || 'Esta actividad todavía no tiene una descripción.' }}
         </p>
 
-        <div class="hero-meta">
-          <div>
+        <div class="assignment-detail__metadata">
+          <div class="assignment-detail__metadata-item">
             <i data-lucide="school"></i>
 
-            <span>
-              {{ assignment.classroom.name }}
-            </span>
+            <span>{{ assignment.classroom.name }}</span>
           </div>
 
-          <div>
+          <div class="assignment-detail__metadata-item">
             <i data-lucide="calendar-days"></i>
 
-            <span>
-              Creada el
-              {{ assignment.createdAt | date: 'mediumDate' }}
-            </span>
+            <span> Creada el {{ assignment.createdAt | date: 'mediumDate' }} </span>
           </div>
         </div>
       </div>
 
-      <!-- =========================
-           ACTIONS
-      ========================== -->
-
-      <div class="hero-actions">
+      <div class="assignment-detail__actions">
         @if (!assignment.isPublished) {
-          <button type="button" class="action-btn publish" (click)="publish()">
+          <button
+            type="button"
+            class="assignment-detail__action assignment-detail__action--primary"
+            (click)="publish()"
+          >
             <i data-lucide="send"></i>
-
-            <span>Publicar actividad</span>
+            <span>Publicar</span>
           </button>
         }
 
-        <button type="button" class="action-btn secondary">
+        <button
+          type="button"
+          class="assignment-detail__action assignment-detail__action--secondary"
+        >
           <i data-lucide="pencil"></i>
-
           <span>Editar</span>
         </button>
 
-        <button type="button" class="action-btn danger" (click)="delete()">
+        <button
+          type="button"
+          class="assignment-detail__action assignment-detail__action--danger"
+          (click)="delete()"
+        >
           <i data-lucide="trash-2"></i>
-
           <span>Eliminar</span>
         </button>
       </div>
-    </section>
+
+      <div class="assignment-detail__decoration" aria-hidden="true">
+        <span></span>
+      </div>
+    </header>
 
     <!-- =========================
          STATS
     ========================== -->
 
-    <section class="stats-grid">
-      <article class="stat-card">
-        <div class="stat-icon students">
+    <section class="assignment-detail__stats" aria-label="Resumen de la actividad">
+      <article class="assignment-stat assignment-stat--students">
+        <div class="assignment-stat__icon">
           <i data-lucide="users"></i>
         </div>
 
-        <div class="stat-content">
+        <div class="assignment-stat__content">
           <span>Estudiantes</span>
 
           <strong>{{ totalStudents() }}</strong>
 
-          <small>Asignados a la actividad</small>
+          <small>Asignados</small>
         </div>
       </article>
 
-      <article class="stat-card">
-        <div class="stat-icon cases">
+      <article class="assignment-stat assignment-stat--cases">
+        <div class="assignment-stat__icon">
           <i data-lucide="briefcase-medical"></i>
         </div>
 
-        <div class="stat-content">
+        <div class="assignment-stat__content">
           <span>Casos utilizados</span>
 
           <strong>{{ totalCases() }}</strong>
 
-          <small>Casos clínicos asignados</small>
+          <small>Casos clínicos</small>
         </div>
       </article>
 
-      <article class="stat-card">
-        <div class="stat-icon completed">
+      <article class="assignment-stat assignment-stat--completed">
+        <div class="assignment-stat__icon">
           <i data-lucide="circle-check"></i>
         </div>
 
-        <div class="stat-content">
+        <div class="assignment-stat__content">
           <span>Entregados</span>
 
           <strong>{{ totalCompleted() }}</strong>
 
-          <small>Respuestas recibidas</small>
+          <small>Respuestas</small>
         </div>
       </article>
 
-      <article class="stat-card">
-        <div class="stat-icon pending">
+      <article class="assignment-stat assignment-stat--pending">
+        <div class="assignment-stat__icon">
           <i data-lucide="clock-3"></i>
         </div>
 
-        <div class="stat-content">
+        <div class="assignment-stat__content">
           <span>Pendientes</span>
 
           <strong>{{ totalPending() }}</strong>
 
-          <small>Sin entregar todavía</small>
+          <small>Sin entregar</small>
         </div>
       </article>
     </section>
@@ -145,51 +153,68 @@
          PROGRESS
     ========================== -->
 
-    <section class="progress-card">
-      <div class="progress-content">
-        <div class="progress-icon">
-          <i data-lucide="chart-no-axes-column-increasing"></i>
+    <section class="assignment-progress">
+      <div class="assignment-progress__icon" aria-hidden="true">
+        <i data-lucide="chart-no-axes-column-increasing"></i>
+      </div>
+
+      <div class="assignment-progress__content">
+        <header class="assignment-progress__header">
+          <div>
+            <span class="assignment-progress__eyebrow"> Rendimiento general </span>
+
+            <h2>Progreso de la actividad</h2>
+
+            <p>Seguimiento de las respuestas recibidas hasta el momento.</p>
+          </div>
+
+          <strong class="assignment-progress__percentage"> {{ progress() }}% </strong>
+        </header>
+
+        <div
+          class="assignment-progress__track"
+          role="progressbar"
+          aria-label="Progreso de la actividad"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          [attr.aria-valuenow]="progress()"
+        >
+          <div class="assignment-progress__fill" [style.width.%]="progress()"></div>
         </div>
 
-        <div class="progress-main">
-          <div class="progress-header">
-            <div>
-              <h2>Progreso de la actividad</h2>
+        <footer class="assignment-progress__footer">
+          <span class="assignment-progress__result assignment-progress__result--completed">
+            <span></span>
 
-              <p>Seguimiento general de las entregas realizadas.</p>
-            </div>
+            {{ totalCompleted() }}
+            {{ totalCompleted() === 1 ? 'entregado' : 'entregados' }}
+          </span>
 
-            <strong> {{ progress() }}% </strong>
-          </div>
+          <span class="assignment-progress__result assignment-progress__result--pending">
+            <span></span>
 
-          <div class="progress-track">
-            <div class="progress-fill" [style.width.%]="progress()"></div>
-          </div>
-
-          <div class="progress-footer">
-            <span> {{ totalCompleted() }} entregados </span>
-
-            <span> {{ totalPending() }} pendientes </span>
-          </div>
-        </div>
+            {{ totalPending() }}
+            {{ totalPending() === 1 ? 'pendiente' : 'pendientes' }}
+          </span>
+        </footer>
       </div>
     </section>
 
     <!-- =========================
-         ASSIGNMENTS
+         STUDENTS
     ========================== -->
 
-    <section class="students-section">
-      <header class="section-header">
-        <div>
-          <span class="section-eyebrow"> Seguimiento </span>
+    <section class="assignment-tracking">
+      <header class="assignment-tracking__header">
+        <div class="assignment-tracking__heading">
+          <span class="assignment-tracking__eyebrow"> Seguimiento </span>
 
-          <h2>Asignaciones</h2>
+          <h2>Asignaciones por estudiante</h2>
 
-          <p>Revisa el avance de cada estudiante en esta actividad.</p>
+          <p>Revisa el caso asignado y el estado de entrega de cada alumno.</p>
         </div>
 
-        <div class="section-count">
+        <div class="assignment-tracking__count">
           <i data-lucide="users"></i>
 
           <span>
@@ -200,111 +225,137 @@
       </header>
 
       @if (assignment.assignedCases.length === 0) {
-        <section class="empty-state">
-          <div class="empty-icon">
+        <section class="assignment-empty">
+          <div class="assignment-empty__icon" aria-hidden="true">
             <i data-lucide="user-round-x"></i>
           </div>
 
-          <h3>No hay estudiantes asignados</h3>
+          <div class="assignment-empty__content">
+            <span>Sin asignaciones</span>
 
-          <p>Todavía no existen estudiantes asociados a esta actividad.</p>
+            <h3>No hay estudiantes asignados</h3>
+
+            <p>Todavía no existen estudiantes asociados a esta actividad.</p>
+          </div>
         </section>
       } @else {
-        <div class="assignment-list">
-          @for (assigned of assignment.assignedCases; track assigned.id) {
-            <article class="student-row">
-              <!-- STUDENT -->
+        <div class="assignment-table">
+          <div class="assignment-table__header" aria-hidden="true">
+            <span>Estudiante</span>
+            <span>Caso clínico</span>
+            <span>Fecha de asignación</span>
+            <span>Estado</span>
+            <span>Acción</span>
+          </div>
 
-              <div class="student-info">
-                <div class="student-avatar">
-                  {{ assigned.student.firstName.charAt(0).toUpperCase() }}
+          <div class="assignment-table__body">
+            @for (assigned of assignment.assignedCases; track assigned.id) {
+              <article class="assignment-row">
+                <!-- STUDENT -->
 
-                  {{ assigned.student.lastName.charAt(0).toUpperCase() }}
+                <div class="assignment-row__student" data-label="Estudiante">
+                  <div class="assignment-row__avatar" aria-hidden="true">
+                    {{ assigned.student.firstName.charAt(0).toUpperCase() }}
+                    {{ assigned.student.lastName.charAt(0).toUpperCase() }}
+                  </div>
+
+                  <div class="assignment-row__student-name">
+                    <strong>
+                      {{ assigned.student.firstName }}
+                      {{ assigned.student.lastName }}
+                    </strong>
+
+                    <small>Estudiante asignado</small>
+                  </div>
                 </div>
 
-                <div class="student-name">
-                  <h3>
-                    {{ assigned.student.firstName }}
-                    {{ assigned.student.lastName }}
-                  </h3>
+                <!-- CASE -->
 
-                  <span>
+                <div class="assignment-row__case" data-label="Caso clínico">
+                  <span class="assignment-row__mobile-label"> Caso clínico </span>
+
+                  <strong>
                     {{ assigned.case.title }}
-                  </span>
+                  </strong>
                 </div>
-              </div>
 
-              <!-- CASE -->
+                <!-- DATE -->
 
-              <div class="case-info">
-                <span class="column-label"> Caso clínico </span>
+                <div class="assignment-row__date" data-label="Fecha de asignación">
+                  <span class="assignment-row__mobile-label"> Asignado </span>
 
-                <strong>
-                  {{ assigned.case.title }}
-                </strong>
-              </div>
+                  <strong>
+                    {{ assigned.assignedAt | date: 'mediumDate' }}
+                  </strong>
+                </div>
 
-              <!-- DATE -->
+                <!-- STATUS -->
 
-              <div class="date-info">
-                <span class="column-label"> Asignado </span>
+                <div class="assignment-row__status" data-label="Estado">
+                  @if (!assigned.submission) {
+                    <span class="submission-badge submission-badge--pending">
+                      <span></span>
+                      Pendiente
+                    </span>
+                  } @else if (assigned.submission.status === 'DRAFT') {
+                    <span class="submission-badge submission-badge--draft">
+                      <span></span>
+                      En progreso
+                    </span>
+                  } @else if (assigned.submission.status === 'SUBMITTED') {
+                    <span class="submission-badge submission-badge--submitted">
+                      <span></span>
+                      Entregado
+                    </span>
+                  } @else if (assigned.submission.status === 'REVIEWED') {
+                    <span class="submission-badge submission-badge--reviewed">
+                      <span></span>
+                      Evaluado
+                    </span>
+                  }
+                </div>
 
-                <strong>
-                  {{ assigned.assignedAt | date: 'mediumDate' }}
-                </strong>
-              </div>
+                <!-- ACTION -->
 
-              <!-- STATUS -->
+                <div class="assignment-row__action-container" data-label="Acción">
+                  @if (assigned.submission?.status === 'SUBMITTED') {
+                    <button
+                      type="button"
+                      class="assignment-row__action"
+                      aria-label="Revisar entrega"
+                      (click)="openReview(assigned)"
+                    >
+                      <i data-lucide="clipboard-check"></i>
 
-              <div class="submission-status">
-                @if (!assigned.submission) {
-                  <span class="status pending">
-                    <span class="status-dot"></span>
-                    Pendiente
-                  </span>
-                } @else if (assigned.submission.status === 'DRAFT') {
-                  <span class="status in-progress">
-                    <span class="status-dot"></span>
-                    En progreso
-                  </span>
-                } @else if (assigned.submission.status === 'SUBMITTED') {
-                  <span class="status completed">
-                    <span class="status-dot"></span>
-                    Entregado
-                  </span>
-                }
-              </div>
+                      <span>Revisar</span>
+                    </button>
+                  } @else {
+                    <button
+                      type="button"
+                      class="assignment-row__action assignment-row__action--disabled"
+                      aria-label="Entrega todavía no disponible"
+                      disabled
+                    >
+                      <i data-lucide="clock"></i>
 
-              <!-- ACTION -->
-
-              @if (assigned.submission?.status === 'SUBMITTED') {
-                <button
-                  type="button"
-                  class="row-action"
-                  (click)="openReview(assigned)"
-                >
-                  <i data-lucide="clipboard-check"></i>
-                </button>
-              } @else {
-                <button
-                  type="button"
-                  class="row-action disabled"
-                  disabled
-                >
-                  <i data-lucide="clock"></i>
-                </button>
-              }
-            </article>
-          }
+                      <span>No disponible</span>
+                    </button>
+                  }
+                </div>
+              </article>
+            }
+          </div>
         </div>
       }
     </section>
 
     <!-- =========================
-         FOOTER INFO
+         FOOTER
     ========================== -->
 
-    <footer class="assignment-footer">
+    <footer class="assignment-detail__footer">
+      <i data-lucide="history"></i>
+
       <span>
         Última actualización:
         {{ assignment.updatedAt | date: 'medium' }}
