@@ -121,6 +121,7 @@ export class AssignedDetail implements OnInit, AfterViewInit {
           this.isLoading.set(false);
           this.isStartingSubmission.set(false);
           this.configureResponsivePanels();
+          this.renderIcon();
         },
         error: (err) => {
           console.error('[AssignedDetail] Error al cargar el caso asignado:', err);

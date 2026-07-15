@@ -7,13 +7,12 @@ export const STUDENT_MENU: SidebarItem[] = [
     icon: 'home',
   },
   {
-    name: 'Mis actividades pendientes',
-    path: '/dashboard/student/classrooms/',
+    name: 'Mis actividades pe',
     icon: 'clipboard-clock',
   },
   {
-    name: 'Mis revisiones',
-    path: '/dashboard/student/classrooms/'
+    name: 'Hola',
+    icon: 'list-checks'
   },
   {
     name: 'Cerrar Sesion',
