@@ -1,25 +1,27 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit, AfterViewInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
-import { ReviewApi } from '../../services/review-api';
-import { ReviewResponseDto } from '../../dto/review-response.dto';
-import { mapCreateReview } from '../../mappers/review-mapper';
-import { createReviewForm } from '../../forms/review.form';
+import { ReviewApi } from '../../../services/review-api';
+import { ReviewResponseDto } from '../../../dto/review-response.dto';
+import { mapCreateReview } from '../../../mappers/review-mapper';
+import { createReviewForm } from '../../../forms/review.form';
 
-import { SceneManagement } from '../../components/scene-management/scene-management';
-import { PrimaryAssessment } from '../../components/primary-assessment/primary-assessment';
-import { VitalSigns } from '../../components/vital-signs/vital-signs';
-import { PatientPriority } from '../../components/patient-priority/patient-priority';
-import { PhysicalExamination } from '../../components/physical-examination/physical-examination';
-import { FocusedAssessment } from '../../components/focused-assessment/focused-assessment';
-import { Opqrst } from '../../components/opqrst/opqrst';
-import { Sampler } from '../../components/sampler/sampler';
-import { OtherInterventions } from '../../components/other-interventions/other-interventions';
+import { SceneManagement } from '../../../components/scene-management/scene-management';
+import { PrimaryAssessment } from '../../../components/primary-assessment/primary-assessment';
+import { VitalSigns } from '../../../components/vital-signs/vital-signs';
+import { PatientPriority } from '../../../components/patient-priority/patient-priority';
+import { PhysicalExamination } from '../../../components/physical-examination/physical-examination';
+import { FocusedAssessment } from '../../../components/focused-assessment/focused-assessment';
+import { Opqrst } from '../../../components/opqrst/opqrst';
+import { Sampler } from '../../../components/sampler/sampler';
+import { OtherInterventions } from '../../../components/other-interventions/other-interventions';
 
-import { ButtonComponent } from '../../../../shared/components/button/button';
-import { TextareaComponent } from '../../../../shared/components/text-area/text-area';
-import { CaseContent } from '../../../cases/pages/case-content/case-content';
-import { SubmissionContent } from '../../components/submission-content/submission-content';
+import { ButtonComponent } from '../../../../../shared/components/button/button';
+import { TextareaComponent } from '../../../../../shared/components/text-area/text-area';
+import { CaseContent } from '../../../../cases/pages/case-content/case-content';
+import { SubmissionContent } from '../../../components/submission-content/submission-content';
+
+import { createIcons, icons } from 'lucide';
 
 
 @Component({
@@ -44,7 +46,7 @@ import { SubmissionContent } from '../../components/submission-content/submissio
   templateUrl: './review-edit.html',
   styleUrl: './review-edit.scss',
 })
-export class ReviewEdit implements OnInit {
+export class ReviewEdit implements OnInit, AfterViewInit {
   private readonly api = inject(ReviewApi);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
@@ -58,8 +60,14 @@ export class ReviewEdit implements OnInit {
 
   totalScore = signal(0);
 
+  ngAfterViewInit(): void {
+    this.renderIcon()
+  }
+
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
+
+    console.log('Entre al edit')
 
     if (!id) {
       this.router.navigate([
@@ -78,6 +86,7 @@ export class ReviewEdit implements OnInit {
         this.review.set(review);
         this.patchForm(review);
         this.loading.set(false);
+        this.renderIcon();
       },
 
       error: (err) => {
@@ -87,6 +96,7 @@ export class ReviewEdit implements OnInit {
     });
 
   }
+
 
   save() {
 
@@ -182,5 +192,11 @@ export class ReviewEdit implements OnInit {
     }, 0);
 
     this.totalScore.set(total)
+  }
+
+  private renderIcon() {
+    setTimeout(() => {
+      createIcons({ icons });
+    });
   }
 }

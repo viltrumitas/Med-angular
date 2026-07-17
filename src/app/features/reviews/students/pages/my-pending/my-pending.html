@@ -1,0 +1,99 @@
+<section class="pending-page">
+  <!-- =========================
+       HEADER
+  ========================== -->
+
+  <header class="pending-header">
+    <div class="pending-header__content">
+      <span class="pending-header__eyebrow"> Actividades </span>
+
+      <h1>Mis actividades pendientes</h1>
+
+      <p>
+        Consulta las actividades que aun no has entregado o que siguen en proceso. Selecciona una para continuar con tu
+        caso clinico.
+      </p>
+    </div>
+  </header>
+
+  <!-- =========================
+       LOADING
+  ========================== -->
+
+  @if (loading()) {
+  <section class="pending-state" aria-live="polite">
+    <div class="pending-state__spinner" aria-hidden="true"></div>
+
+    <div class="pending-state__content">
+      <h2>Cargando actividades</h2>
+
+      <p>Estamos obteniendo las actividades que tienes pendientes.</p>
+    </div>
+  </section>
+  }
+
+  <!-- =========================
+       EMPTY
+  ========================== -->
+
+  @else if (submissions().length === 0) {
+  <section class="pending-state pending-state--empty">
+    <div class="pending-state__illustration" aria-hidden="true">
+      <div class="pending-state__document">
+        <span></span>
+        <span></span>
+        <span></span>
+
+        <div class="pending-state__check"></div>
+      </div>
+    </div>
+
+    <div class="pending-state__content">
+      <span class="pending-state__eyebrow"> ¡Buen trabajo! </span>
+
+      <h2>No tienes actividades pendientes</h2>
+
+      <p>
+        Has completado todas tus actividades. Cuando tu profesor publique una nueva, aparecerá aquí automáticamente.
+      </p>
+    </div>
+  </section>
+  }
+
+  <!-- =========================
+       CONTENT
+  ========================== -->
+
+  @else {
+  <section class="pending-workspace">
+    <header class="pending-workspace__header">
+      <div>
+        <span class="pending-workspace__eyebrow"> Actividades asignadas </span>
+
+        <h2>Continua tus actividades</h2>
+
+        <p>Selecciona una actividad para continuar o completar tu entrega.</p>
+      </div>
+
+      <div class="pending-workspace__counter">
+        <strong>
+          {{ submissions().length }}
+        </strong>
+
+        <span>
+          {{ submissions().length === 1 ? 'actividad' : 'actividades' }}
+        </span>
+      </div>
+    </header>
+
+    <div class="pending-grid">
+      @for (submission of submissions(); track submission.id) {
+      <article class="pending-grid__item">
+        <app-student-pending-card [submission]="submission" (submissionSelected)="openSubmission($event)">
+        </app-student-pending-card>
+      </article>
+      }
+    </div>
+  </section>
+  }
+</section>

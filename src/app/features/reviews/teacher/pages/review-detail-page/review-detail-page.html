@@ -1,0 +1,10 @@
+@if (loading()) {
+  <p>Cargando revisión...</p>
+} @else if (review(); as r) {
+  <app-review-detail
+    [review]="r"
+    [loading]="loading()"
+    [canEdit]="true"
+    (edit)="editReview($event)"
+  />
+}

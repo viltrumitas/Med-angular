@@ -6,6 +6,8 @@ import { CaseResponseDto } from '../../cases/dto/case-response.dto';
 export interface SubmissionsListItem {
   id: string;
 
+  assignedCaseId: string; 
+
   reviewId: string;
 
   student: User;

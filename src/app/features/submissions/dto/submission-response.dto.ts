@@ -10,7 +10,7 @@ export interface SubmissionResponseDto {
   reviewId: string;
 
   student: User;
-
+  
   assignment: AssignmentResponseDto;
   case: CaseResponseDto;
   sceneManagement?: string | null;

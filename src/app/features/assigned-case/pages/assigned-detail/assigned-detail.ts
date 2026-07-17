@@ -15,7 +15,7 @@ import { AssignedStudentCase } from '../../model/assigned-case.model';
 
 import { CaseContent } from '../../../cases/pages/case-content/case-content';
 import { ButtonComponent } from '../../../../shared/components/button/button';
-import { SubmissionsDetail } from '../../../submissions/pages/submissions-detail/submissions-detail';
+import { SubmissionsDetail } from '../../../submissions/components/submissions-detail/submissions-detail';
 import { createIcons, icons } from 'lucide';
 
 @Component({

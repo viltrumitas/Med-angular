@@ -1,8 +1,8 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ReviewApi } from '../../services/review-api';
-import { ReviewResponseDto } from '../../dto/review-response.dto';
+import { ReviewApi } from '../../../services/review-api';
 import { CommonModule } from '@angular/common';
+import { ReviewSummaryResponseDto } from '../../../dto/review-summary-response.dto';
 
 @Component({
   selector: 'app-my-reviews',
@@ -14,11 +14,11 @@ export class MyReviews {
   private readonly api = inject(ReviewApi);
   private readonly router = inject(Router);
 
-  reviews = signal<ReviewResponseDto[]>([]);
+  reviews = signal<ReviewSummaryResponseDto[]>([]);
   loading = signal(true);
 
   ngOnInit() {
-    this.api.getMyReviews().subscribe({
+    this.api.getReview().subscribe({
       next: (data) => {
         this.reviews.set(data);
         this.loading.set(false);

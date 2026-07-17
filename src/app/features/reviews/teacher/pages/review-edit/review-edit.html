@@ -1,0 +1,515 @@
+@if (loading()) {
+
+<section class="review-state" aria-live="polite">
+  <div class="review-state__spinner" aria-hidden="true"></div>
+
+  <div class="review-state__content">
+    <h2>Cargando entrega</h2>
+
+    <p>
+      Estamos obteniendo el caso clínico, las respuestas del estudiante y los criterios de
+      evaluación.
+    </p>
+  </div>
+</section>
+
+} @else if (review(); as r) {
+
+
+<!-- =========================
+         PAGE HEADER
+    ========================== -->
+
+<header class="review-page__header">
+  <div class="review-page__header-content">
+    <span class="review-page__eyebrow"> Evaluación académica </span>
+
+    <h1>Modificar entrega</h1>
+
+    <p>Analiza la respuesta del estudiante y registra el puntaje obtenido en cada apartado.</p>
+  </div>
+
+  <div class="review-page__student">
+    <span class="review-page__avatar" aria-hidden="true">
+      {{ r.student.firstName.charAt(0) }}
+      {{ r.student.lastName.charAt(0) }}
+    </span>
+
+    <div class="review-page__student-info">
+      <span>Estudiante</span>
+
+      <strong>
+        {{ r.student.firstName }}
+        {{ r.student.lastName }}
+      </strong>
+
+      <small>
+        {{ r.assignment.title }}
+      </small>
+    </div>
+  </div>
+
+  <div class="review-page__decoration" aria-hidden="true"></div>
+</header>
+
+<!-- =========================
+         REVIEW WORKSPACE
+    ========================== -->
+
+<div class="review-layout">
+  <!-- =========================
+           CONTEXT
+      ========================== -->
+
+  <aside class="review-context" aria-label="Información de consulta">
+    <header class="review-context__header">
+      <span class="review-context__eyebrow"> Material de consulta </span>
+
+      <h2>Información de referencia</h2>
+
+      <p>Consulta el caso clínico y la respuesta enviada mientras realizas la evaluación.</p>
+    </header>
+
+    <!-- CASO CLÍNICO -->
+
+    <details class="context-panel">
+      <summary class="context-panel__trigger">
+        <div class="context-panel__heading">
+          <span class="context-panel__icon context-panel__icon--case" aria-hidden="true">
+            <i data-lucide="briefcase-medical"></i>
+          </span>
+
+          <span class="context-panel__title">
+            <small>Información original</small>
+            <strong>Caso clínico</strong>
+          </span>
+        </div>
+
+        <span class="context-panel__chevron" aria-hidden="true">
+          <i data-lucide="chevron-down"></i>
+        </span>
+      </summary>
+
+      <div class="context-panel__body">
+        <app-case-content [case]="r.case" />
+      </div>
+    </details>
+
+    <!-- RESPUESTA DEL ESTUDIANTE -->
+
+    <details class="context-panel" open>
+      <summary class="context-panel__trigger">
+        <div class="context-panel__heading">
+          <span class="context-panel__icon context-panel__icon--submission" aria-hidden="true">
+            <i data-lucide="file-check-2"></i>
+          </span>
+
+          <span class="context-panel__title">
+            <small>Entrega recibida</small>
+            <strong>Respuesta del estudiante</strong>
+          </span>
+        </div>
+
+        <span class="context-panel__chevron" aria-hidden="true">
+          <i data-lucide="chevron-down"></i>
+        </span>
+      </summary>
+
+      <div class="context-panel__body context-panel__body--submission">
+        <app-submission-content class="submission-section" [submission]="r.submission" />
+      </div>
+    </details>
+  </aside>
+
+  <!-- =========================
+           EVALUATION
+      ========================== -->
+
+  <main class="evaluation-panel">
+    <form class="evaluation-form" [formGroup]="reviewForm" (ngSubmit)="save()">
+      <!-- =========================
+               EVALUATION HEADER
+          ========================== -->
+
+      <header class="evaluation-panel__header">
+        <div class="evaluation-panel__heading">
+          <span class="evaluation-panel__icon" aria-hidden="true">
+            <i data-lucide="clipboard-check"></i>
+          </span>
+
+          <div class="evaluation-panel__title">
+            <span class="evaluation-panel__eyebrow"> Formulario principal </span>
+
+            <h2>Evaluación de la entrega</h2>
+
+            <p>Abre cada sección para asignar puntajes y registrar observaciones.</p>
+          </div>
+        </div>
+
+        <div class="evaluation-panel__actions">
+          <div class="evaluation-panel__score">
+            <span>Puntaje actual</span>
+
+            <div>
+              <strong>
+                {{ totalScore() }}
+              </strong>
+
+              <small>pts</small>
+            </div>
+          </div>
+
+          <div class="evaluation-panel__save">
+            <app-button type="submit" text="Guardar evaluación" />
+          </div>
+        </div>
+      </header>
+
+      <!-- =========================
+               FORM INTRODUCTION
+          ========================== -->
+
+      <section class="evaluation-overview">
+        <div class="evaluation-overview__icon" aria-hidden="true">
+          <i data-lucide="list-checks"></i>
+        </div>
+
+        <div class="evaluation-overview__content">
+          <span>Secciones de evaluación</span>
+
+          <p>
+            Puedes abrir varias secciones al mismo tiempo para comparar criterios y completar la
+            calificación.
+          </p>
+        </div>
+
+        <strong> 9 secciones </strong>
+      </section>
+
+      <!-- =========================
+               EVALUATION ACCORDIONS
+          ========================== -->
+
+      <div class="evaluation-accordions">
+        <!-- 01 MANEJO DE ESCENA -->
+
+        <details class="evaluation-accordion" open>
+          <summary class="evaluation-accordion__trigger">
+            <div class="evaluation-accordion__heading">
+              <span class="evaluation-accordion__number"> 01 </span>
+
+              <span class="evaluation-accordion__icon" aria-hidden="true">
+                <i data-lucide="shield-check"></i>
+              </span>
+
+              <span class="evaluation-accordion__title">
+                <small>Seguridad y control inicial</small>
+                <strong>Manejo de escena</strong>
+              </span>
+            </div>
+
+            <span class="evaluation-accordion__chevron" aria-hidden="true">
+              <i data-lucide="chevron-down"></i>
+            </span>
+          </summary>
+
+          <div class="evaluation-accordion__body">
+            <app-scene-management [group]="reviewForm.controls.sceneManagement" />
+          </div>
+        </details>
+
+        <!-- 02 EVALUACIÓN PRIMARIA -->
+
+        <details class="evaluation-accordion">
+          <summary class="evaluation-accordion__trigger">
+            <div class="evaluation-accordion__heading">
+              <span class="evaluation-accordion__number"> 02 </span>
+
+              <span class="evaluation-accordion__icon" aria-hidden="true">
+                <i data-lucide="stethoscope"></i>
+              </span>
+
+              <span class="evaluation-accordion__title">
+                <small>Valoración inicial del paciente</small>
+                <strong>Evaluación primaria</strong>
+              </span>
+            </div>
+
+            <span class="evaluation-accordion__chevron" aria-hidden="true">
+              <i data-lucide="chevron-down"></i>
+            </span>
+          </summary>
+
+          <div class="evaluation-accordion__body">
+            <app-primary-assessment [group]="reviewForm.controls.primaryAssessment" />
+          </div>
+        </details>
+
+        <!-- 03 PRIORIDAD DEL PACIENTE -->
+
+        <details class="evaluation-accordion">
+          <summary class="evaluation-accordion__trigger">
+            <div class="evaluation-accordion__heading">
+              <span class="evaluation-accordion__number"> 03 </span>
+
+              <span class="evaluation-accordion__icon" aria-hidden="true">
+                <i data-lucide="siren"></i>
+              </span>
+
+              <span class="evaluation-accordion__title">
+                <small>Clasificación y urgencia</small>
+                <strong>Prioridad del paciente</strong>
+              </span>
+            </div>
+
+            <span class="evaluation-accordion__chevron" aria-hidden="true">
+              <i data-lucide="chevron-down"></i>
+            </span>
+          </summary>
+
+          <div class="evaluation-accordion__body">
+            <app-patient-priority [group]="reviewForm.controls.patientPriority" />
+          </div>
+        </details>
+
+        <!-- 04 SIGNOS VITALES -->
+
+        <details class="evaluation-accordion">
+          <summary class="evaluation-accordion__trigger">
+            <div class="evaluation-accordion__heading">
+              <span class="evaluation-accordion__number"> 04 </span>
+
+              <span class="evaluation-accordion__icon" aria-hidden="true">
+                <i data-lucide="activity"></i>
+              </span>
+
+              <span class="evaluation-accordion__title">
+                <small>Registro e interpretación</small>
+                <strong>Signos vitales</strong>
+              </span>
+            </div>
+
+            <span class="evaluation-accordion__chevron" aria-hidden="true">
+              <i data-lucide="chevron-down"></i>
+            </span>
+          </summary>
+
+          <div class="evaluation-accordion__body">
+            <app-vital-signs [group]="reviewForm.controls.vitalSigns" />
+          </div>
+        </details>
+
+        <!-- 05 EVALUACIÓN ENFOCADA -->
+
+        <details class="evaluation-accordion">
+          <summary class="evaluation-accordion__trigger">
+            <div class="evaluation-accordion__heading">
+              <span class="evaluation-accordion__number"> 05 </span>
+
+              <span class="evaluation-accordion__icon" aria-hidden="true">
+                <i data-lucide="scan-search"></i>
+              </span>
+
+              <span class="evaluation-accordion__title">
+                <small>Análisis dirigido</small>
+                <strong>Evaluación enfocada</strong>
+              </span>
+            </div>
+
+            <span class="evaluation-accordion__chevron" aria-hidden="true">
+              <i data-lucide="chevron-down"></i>
+            </span>
+          </summary>
+
+          <div class="evaluation-accordion__body">
+            <app-focused-assessment [group]="reviewForm.controls.focusedAssessment" />
+          </div>
+        </details>
+
+        <!-- 06 EXAMEN FÍSICO -->
+
+        <details class="evaluation-accordion">
+          <summary class="evaluation-accordion__trigger">
+            <div class="evaluation-accordion__heading">
+              <span class="evaluation-accordion__number"> 06 </span>
+
+              <span class="evaluation-accordion__icon" aria-hidden="true">
+                <i data-lucide="person-standing"></i>
+              </span>
+
+              <span class="evaluation-accordion__title">
+                <small>Exploración del paciente</small>
+                <strong>Examen físico</strong>
+              </span>
+            </div>
+
+            <span class="evaluation-accordion__chevron" aria-hidden="true">
+              <i data-lucide="chevron-down"></i>
+            </span>
+          </summary>
+
+          <div class="evaluation-accordion__body">
+            <app-physical-examination [group]="reviewForm.controls.physicalExamination" />
+          </div>
+        </details>
+
+        <!-- 07 SAMPLER -->
+
+        <details class="evaluation-accordion">
+          <summary class="evaluation-accordion__trigger">
+            <div class="evaluation-accordion__heading">
+              <span class="evaluation-accordion__number"> 07 </span>
+
+              <span class="evaluation-accordion__icon" aria-hidden="true">
+                <i data-lucide="clipboard-list"></i>
+              </span>
+
+              <span class="evaluation-accordion__title">
+                <small>Historial clínico dirigido</small>
+                <strong>SAMPLER</strong>
+              </span>
+            </div>
+
+            <span class="evaluation-accordion__chevron" aria-hidden="true">
+              <i data-lucide="chevron-down"></i>
+            </span>
+          </summary>
+
+          <div class="evaluation-accordion__body">
+            <app-sampler [group]="reviewForm.controls.sampler" />
+          </div>
+        </details>
+
+        <!-- 08 OPQRST -->
+
+        <details class="evaluation-accordion">
+          <summary class="evaluation-accordion__trigger">
+            <div class="evaluation-accordion__heading">
+              <span class="evaluation-accordion__number"> 08 </span>
+
+              <span class="evaluation-accordion__icon" aria-hidden="true">
+                <i data-lucide="message-circle-question"></i>
+              </span>
+
+              <span class="evaluation-accordion__title">
+                <small>Valoración del síntoma</small>
+                <strong>OPQRST</strong>
+              </span>
+            </div>
+
+            <span class="evaluation-accordion__chevron" aria-hidden="true">
+              <i data-lucide="chevron-down"></i>
+            </span>
+          </summary>
+
+          <div class="evaluation-accordion__body">
+            <app-opqrst [group]="reviewForm.controls.opqrst" />
+          </div>
+        </details>
+
+        <!-- 09 OTRAS INTERVENCIONES -->
+
+        <details class="evaluation-accordion">
+          <summary class="evaluation-accordion__trigger">
+            <div class="evaluation-accordion__heading">
+              <span class="evaluation-accordion__number"> 09 </span>
+
+              <span class="evaluation-accordion__icon" aria-hidden="true">
+                <i data-lucide="heart-pulse"></i>
+              </span>
+
+              <span class="evaluation-accordion__title">
+                <small>Procedimientos complementarios</small>
+                <strong>Otras intervenciones</strong>
+              </span>
+            </div>
+
+            <span class="evaluation-accordion__chevron" aria-hidden="true">
+              <i data-lucide="chevron-down"></i>
+            </span>
+          </summary>
+
+          <div class="evaluation-accordion__body">
+            <app-other-interventions [group]="reviewForm.controls.otherInterventions" />
+          </div>
+        </details>
+      </div>
+
+      <!-- =========================
+               TOTAL SCORE
+          ========================== -->
+
+      <section class="score-card">
+        <div class="score-card__icon" aria-hidden="true">
+          <i data-lucide="award"></i>
+        </div>
+
+        <div class="score-card__content">
+          <span class="score-label"> Puntaje total </span>
+
+          <p>Resultado acumulado de todas las secciones de la evaluación.</p>
+        </div>
+
+        <div class="score-value">
+          <strong>
+            {{ totalScore() }}
+          </strong>
+
+          <span>puntos</span>
+        </div>
+      </section>
+
+      <!-- =========================
+               FEEDBACK
+          ========================== -->
+
+      <details class="feedback-accordion" open>
+        <summary class="feedback-accordion__trigger">
+          <div class="feedback-accordion__heading">
+            <span class="feedback-accordion__icon" aria-hidden="true">
+              <i data-lucide="message-square-text"></i>
+            </span>
+
+            <span class="feedback-accordion__title">
+              <small>Comentarios finales</small>
+              <strong>Retroalimentación</strong>
+            </span>
+          </div>
+
+          <span class="feedback-accordion__chevron" aria-hidden="true">
+            <i data-lucide="chevron-down"></i>
+          </span>
+        </summary>
+
+        <div class="feedback-accordion__body">
+          <p class="feedback-description">
+            Escribe fortalezas, errores detectados y recomendaciones para mejorar el desempeño
+            del estudiante.
+          </p>
+
+          <app-text-area formControlName="feedback" labelText="Feedback"
+            placeHolderText="Escribe aquí la retroalimentación del estudiante..." />
+        </div>
+      </details>
+
+      <!-- =========================
+               BOTTOM SUMMARY
+          ========================== -->
+
+      <footer class="evaluation-footer">
+        <div class="evaluation-footer__message">
+          <i data-lucide="info"></i>
+
+          <span> Verifica los puntajes y la retroalimentación antes de guardar. </span>
+        </div>
+
+        <div class="evaluation-footer__score">
+          <span>Total</span>
+
+          <strong> {{ totalScore() }} pts </strong>
+        </div>
+      </footer>
+    </form>
+  </main>
+</div>
+}

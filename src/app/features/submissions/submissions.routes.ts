@@ -9,6 +9,6 @@ export const submissionRoutes: Routes = [
   {
     path: ':id',
     loadComponent: () =>
-      import('./pages/submissions-detail/submissions-detail').then((c) => c.SubmissionsDetail),
+      import('./pages/submission-detail-page/submission-detail-page').then((c) => c.SubmissionDetailPage),
   },
 ];

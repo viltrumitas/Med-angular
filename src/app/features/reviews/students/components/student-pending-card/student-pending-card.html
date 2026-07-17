@@ -1,0 +1,74 @@
+<article class="student-card">
+
+  <header class="student-card__header">
+
+    <div class="student-card__badge-wrapper">
+
+      @if (submission.status === 'DRAFT') {
+
+        <span class="student-card__badge student-card__badge--draft">
+          En progreso
+        </span>
+
+      } @else if (submission.status === 'SUBMITTED') {
+
+        <span class="student-card__badge student-card__badge--submitted">
+          Esperando revisión
+        </span>
+
+      }
+
+    </div>
+
+  </header>
+
+  <div class="student-card__content">
+
+    <div class="student-card__field">
+
+      <span>Actividad</span>
+
+      <h2>
+        {{ submission.assignment.title }}
+      </h2>
+
+    </div>
+
+    <div class="student-card__field">
+
+      <span>Caso clínico</span>
+
+      <p>
+        {{ submission.case.title }}
+      </p>
+
+    </div>
+
+  </div>
+
+  <footer class="student-card__footer">
+
+    <div class="student-card__date">
+
+      <span>Asignada</span>
+
+      <time [attr.datetime]="submission.createdAt">
+        {{ submission.createdAt | date:'dd MMM yyyy, HH:mm' }}
+      </time>
+
+    </div>
+
+    <div class="student-card__actions">
+
+      <app-button
+        [text]="submission.status === 'DRAFT'
+          ? 'Continuar actividad'
+          : 'Ver entrega'"
+        (clicked)="open()"
+      />
+
+    </div>
+
+  </footer>
+
+</article>

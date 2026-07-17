@@ -6,6 +6,7 @@ import { ReviewResponseDto } from '../dto/review-response.dto';
 import { Observable } from 'rxjs';
 import { UpdateReview } from '../dto/update-review.dto';
 import { SubmissionResponseDto } from '../dto/submission-response.dto';
+import { ReviewSummaryResponseDto } from '../dto/review-summary-response.dto';
 
 @Service()
 export class ReviewApi {
@@ -34,8 +35,8 @@ export class ReviewApi {
     return this.http.patch<ReviewResponseDto>(`${this.apiUrl}/reviews/${id}`, data)
   }
 
-  getReview(): Observable<ReviewResponseDto[]> {
-    return this.http.get<ReviewResponseDto[]>(`${this.apiUrl}/reviews`)
+  getReview(): Observable<ReviewSummaryResponseDto[]> {
+    return this.http.get<ReviewSummaryResponseDto[]>(`${this.apiUrl}/reviews`)
   }
 
   getSubmissionById(id: string): Observable<SubmissionResponseDto> {
@@ -43,6 +44,6 @@ export class ReviewApi {
   }
 
   getMyReviews() {
-    return this.http.get<ReviewResponseDto[]>(`${this.apiUrl}/reviews`)
+    return this.http.get<ReviewSummaryResponseDto[]>(`${this.apiUrl}/reviews/my`)
   }
 }

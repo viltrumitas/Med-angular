@@ -1,7 +1,5 @@
-import { Component, inject, signal, OnInit, computed, AfterViewInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, computed, AfterViewInit, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReviewApi } from '../../services/review-api';
 import { ReviewResponseDto } from '../../dto/review-response.dto';
 import { createIcons, icons } from 'lucide';
 
@@ -17,12 +15,16 @@ interface ReviewSection {
   templateUrl: './review-detail.html',
   styleUrl: './review-detail.scss',
 })
-export class ReviewDetail implements OnInit, AfterViewInit {
-  private readonly router = inject(Router);
+export class ReviewDetail implements AfterViewInit {
 
-  private readonly route = inject(ActivatedRoute);
+  readonly review = input<ReviewResponseDto | null>(null);
 
-  private readonly api = inject(ReviewApi);
+  readonly canEdit = input(false);
+
+  readonly loading = input(false);
+
+  readonly edit = output<string>();
+
 
   private readonly labels: Record<string, string> = {
     // Manejo de escena
@@ -254,43 +256,12 @@ export class ReviewDetail implements OnInit, AfterViewInit {
     otherInterventions: 'Otras intervenciones',
   };
 
-  review = signal<ReviewResponseDto | null>(null);
-  loading = signal(true);
-
   ngAfterViewInit(): void {
     this.renderIcon();
   }
 
-  ngOnInit() {
-    const id = this.route.snapshot.paramMap.get('id');
-
-    if (!id) {
-      this.loading.set(false);
-      return;
-    }
-
-    this.api.getReviewById(id).subscribe({
-      next: (review) => {
-        console.log('[Review detail]', review);
-        this.review.set(review);
-        this.loading.set(false);
-        this.renderIcon();
-      },
-
-      error: (err) => {
-        console.error(err);
-
-        this.loading.set(false);
-      },
-    });
-  }
-
-  editReview(id: string) {
-    const review = this.review();
-
-    if (!review) return;
-
-    this.router.navigate(['/dashboard/teacher/reviews', id, 'edit']);
+  onEdit(id: string) {
+    this.edit.emit(id);
   }
 
   getEntries(section: unknown, sectionKey?: string) {

@@ -1,0 +1,288 @@
+<section class="review-history">
+
+  <!-- HEADER -->
+  <header class="review-history__header">
+    <div class="review-history__header-content">
+      <span class="review-history__eyebrow">
+        Mi rendimiento académico
+      </span>
+
+      <h1 class="review-history__title">
+        Mis evaluaciones
+      </h1>
+
+      <p class="review-history__description">
+        Consulta las evaluaciones realizadas por tus docentes y revisa tus resultados.
+      </p>
+    </div>
+  </header>
+
+
+  <!-- LOADING -->
+
+  @if (loading()) {
+
+    <section class="review-history__state" aria-live="polite">
+
+      <div class="review-history__loader" aria-hidden="true"></div>
+
+      <div class="review-history__state-content">
+        <h2>Cargando evaluaciones</h2>
+
+        <p>
+          Estamos obteniendo tus resultados académicos.
+        </p>
+      </div>
+
+    </section>
+
+  }
+
+
+  <!-- EMPTY -->
+
+  @else if (reviews().length === 0) {
+
+    <section class="review-history__state review-history__state--empty">
+
+      <div class="review-history__empty-icon" aria-hidden="true">
+        <div class="review-history__empty-sheet">
+
+          <span></span>
+          <span></span>
+          <span></span>
+
+          <div class="review-history__empty-score">
+            0
+          </div>
+
+        </div>
+      </div>
+
+
+      <div class="review-history__state-content">
+
+        <span class="review-history__state-label">
+          Sin evaluaciones
+        </span>
+
+        <h2>
+          Aún no tienes evaluaciones
+        </h2>
+
+        <p>
+          Cuando un docente revise tus entregas,
+          aparecerán aquí los resultados.
+        </p>
+
+      </div>
+
+    </section>
+
+  }
+
+
+  <!-- CONTENT -->
+
+  @else {
+
+    <section class="review-history__workspace">
+
+
+      <header class="review-history__workspace-header">
+
+        <div>
+
+          <span class="review-history__workspace-eyebrow">
+            Resultados obtenidos
+          </span>
+
+          <h2>
+            Historial de evaluaciones
+          </h2>
+
+          <p>
+            Selecciona una evaluación para consultar la retroalimentación.
+          </p>
+
+        </div>
+
+
+        <div class="review-history__counter">
+
+          <strong>
+            {{ reviews().length }}
+          </strong>
+
+          <span>
+            {{ reviews().length === 1
+              ? 'evaluación'
+              : 'evaluaciones'
+            }}
+          </span>
+
+        </div>
+
+
+      </header>
+
+
+
+      <div class="review-history__grid">
+
+
+        @for (r of reviews(); track r.id) {
+
+
+          <article
+            class="review-card"
+            tabindex="0"
+            role="button"
+
+            (click)="openReview(r.id)"
+            (keydown.enter)="openReview(r.id)"
+            (keydown.space)="openReview(r.id)"
+          >
+
+
+            <header class="review-card__header">
+
+
+              <div class="review-card__student">
+
+                <span class="review-card__avatar">
+
+                  <!-- Ahora mostramos docente -->
+                  {{ r.teacher.firstName.charAt(0) }}
+                  {{ r.teacher.lastName.charAt(0) }}
+
+                </span>
+
+
+                <div class="review-card__student-info">
+
+                  <span class="review-card__eyebrow">
+                    Evaluado por
+                  </span>
+
+
+                  <h3>
+                    {{ r.teacher.firstName }}
+                    {{ r.teacher.lastName }}
+                  </h3>
+
+
+                </div>
+
+
+              </div>
+
+
+
+              <div class="review-card__score">
+
+                <strong>
+                  {{ r.totalScore }}
+                </strong>
+
+                <span>
+                  pts
+                </span>
+
+              </div>
+
+
+            </header>
+
+
+
+
+            <div class="review-card__content">
+
+
+              <div class="review-card__field">
+
+                <span>
+                  Actividad
+                </span>
+
+
+                <p>
+                  {{ r.assignment.title }}
+                </p>
+
+              </div>
+
+
+
+              <div class="review-card__field">
+
+                <span>
+                  Caso clínico
+                </span>
+
+
+                <p>
+                  {{ r.case.title }}
+                </p>
+
+              </div>
+
+
+
+            </div>
+
+
+
+
+            <footer class="review-card__footer">
+
+
+              <div class="review-card__date">
+
+                <span>
+                  Evaluada
+                </span>
+
+
+                <time [attr.datetime]="r.createdAt">
+
+                  {{ r.createdAt | date:'dd MMM yyyy, HH:mm' }}
+
+                </time>
+
+
+              </div>
+
+
+
+              <span class="review-card__action">
+
+                Ver retroalimentación
+
+                <span aria-hidden="true">
+                  →
+                </span>
+
+              </span>
+
+
+            </footer>
+
+
+          </article>
+
+
+        }
+
+
+      </div>
+
+
+    </section>
+
+
+  }
+
+
+</section>

@@ -22,9 +22,9 @@ import { mapSubmissionFormValue } from '../../mappers/submission-form.mapper';
 import { Priority } from '../../../../core/enum/priority.enum';
 import { SubmissionStatus } from '../../../../core/models/submission-status.enum';
 
-import { Clinical } from '../../components/clinical/clinical';
-import { Diagnostic } from '../../components/diagnostic/diagnostic';
-import { Treatment } from '../../components/treatment/treatment';
+import { Clinical } from '../clinical/clinical';
+import { Diagnostic } from '../diagnostic/diagnostic';
+import { Treatment } from '../treatment/treatment';
 import { createIcons, icons } from 'lucide';
 import { switchMap } from 'rxjs';
 
@@ -39,6 +39,7 @@ export class SubmissionsDetail implements OnInit, AfterViewInit {
   private readonly destroyRef = inject(DestroyRef);
 
   readonly submissionId = input.required<string>();
+
   readonly submissions = signal<SubmissionResponseDto | null>(null);
   readonly isLoading = signal(false);
   readonly isSaving = signal(false);
@@ -133,13 +134,14 @@ export class SubmissionsDetail implements OnInit, AfterViewInit {
   }
 
   private loadSubmission(): void {
-    const submissionId = this.submissionId();
 
     this.isLoading.set(true);
     this.loadError.set(null);
 
+    const id = this.submissionId();
+
     this.api
-      .findOne(submissionId)
+      .findOne(id)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response) => {

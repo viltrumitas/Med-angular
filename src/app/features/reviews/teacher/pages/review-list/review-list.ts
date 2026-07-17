@@ -1,10 +1,10 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { SubmissionCard } from '../../components/review-card/review-card';
-import { ReviewApi } from '../../services/review-api';
-import { SubmissionsListItem } from '../../models/submissions-list.model';
-import { SubmissionApi } from '../../../submissions/service/submission-api.service';
+import { SubmissionCard } from '../../../components/review-card/review-card';
+import { ReviewApi } from '../../../services/review-api';
+import { SubmissionsListItem } from '../../../models/submissions-list.model';
+import { SubmissionApi } from '../../../../submissions/service/submission-api.service';
 
 @Component({
   selector: 'app-review-list',

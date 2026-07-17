@@ -27,6 +27,12 @@ export class SubmissionApi {
     );
   }
 
+  findPendingStudent(): Observable<SubmissionsListItem[]> {
+    return this.http.get<SubmissionsListItem[]>(
+      `${this.api}/my-pending`
+    );
+  }
+
   getMyPending(): Observable<SubmissionResponseDto[]> {
     return this.http.get<SubmissionResponseDto[]>(`${this.api}/submissions/pending`)
   }
