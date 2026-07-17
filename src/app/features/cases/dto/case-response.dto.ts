@@ -2,6 +2,7 @@ import { TeacherModel } from './teacher-response.dto';
 import { CincinnatiModel } from '../models/cincinnati.model';
 import { Gender } from '../models/patient.model';
 import { Area } from '../models/area.model';
+import { Glasgow } from '../models/glasgow.model';
 
 export interface CaseResponseDto {
   id: string;
@@ -32,7 +33,7 @@ export interface CaseResponseDto {
 
   cincinnati: CincinnatiModel | null;
 
-  glasgow: number | null;
+  glasgow: Glasgow | null;
 
   area: Area;
 

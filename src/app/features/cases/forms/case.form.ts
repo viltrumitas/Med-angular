@@ -62,7 +62,11 @@ export function createCaseForm() {
         speech: new FormControl<'NORMAL' | 'ABNORMAL' | null>(null),
       }),
 
-      glasgow: new FormControl<number | null>(null),
+      glasgow: new FormGroup({
+        ocular: new FormControl<number | null>(null),
+        verbal: new FormControl<number | null>(null),
+        motora: new FormControl<number | null>(null),
+      }),
     }),
 
     medicalArea: new FormGroup({
