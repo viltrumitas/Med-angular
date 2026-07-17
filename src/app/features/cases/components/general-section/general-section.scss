@@ -1,20 +1,53 @@
-.section {
+// ==========================================================================
+// GENERAL SECTION
+// ==========================================================================
+
+.general-section {
   display: grid;
-  grid-template-columns: repeat(1, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
   gap: 1rem;
+  width: 100%;
+}
 
-  app-input {
-    min-width: 50%;
-    width: 100%;
-  }
+.general-section__field {
+  min-width: 0;
 
+  app-input,
   app-text-area {
+    display: block;
     width: 100%;
   }
 }
 
-@media (max-width: 768px) {
-  .section {
-    grid-template-rows: 3fr;
+.general-section__field--title {
+  grid-column: 1 / -1;
+}
+
+.general-section__field--wide {
+  grid-column: span 1;
+}
+
+// ==========================================================================
+// RESPONSIVE
+// ==========================================================================
+
+@media (max-width: 900px) {
+  .general-section {
+    grid-template-columns: minmax(0, 1fr);
+
+    gap: 0.85rem;
+  }
+
+  .general-section__field,
+  .general-section__field--title,
+  .general-section__field--wide {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .general-section {
+    gap: 0.75rem;
   }
 }

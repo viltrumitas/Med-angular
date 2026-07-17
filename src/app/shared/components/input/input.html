@@ -1,21 +1,32 @@
-<div class="input-control" [class.input-control--disabled]="disabled">
-  @if (labelText) {
+<div
+  class="input-control"
+  [class.input-control--disabled]="disabled"
+  [class.input-control--with-suffix]="suffix()"
+>
+  @if (labelText()) {
     <label class="input-control__label">
-      {{ labelText }}
+      {{ labelText() }}
     </label>
   }
 
   <div class="input-control__field">
     <input
       class="input-control__input"
-      [type]="type === 'number' ? 'text' : type"
-      [inputMode]="type === 'number' ? 'numeric' : 'text'"
+      [type]="type() === 'number' ? 'text' : type"
+      [inputMode]="type() === 'number' ? 'decimal' : 'text'"
       [value]="value"
-      [placeholder]="placeHolderText"
+      [placeholder]="placeHolderText()"
       [disabled]="disabled"
+      [attr.maxlength]="maxLength()"
       (keydown)="onKeyDown($event)"
       (input)="onInput($event)"
       (blur)="onBlur()"
     />
+
+    @if (suffix(); as suffixText) {
+      <span class="input-control__suffix" aria-hidden="true">
+        {{ suffixText }}
+      </span>
+    }
   </div>
 </div>

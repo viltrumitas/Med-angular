@@ -6,7 +6,7 @@ import { SelectComponent } from '../../../../shared/components/select/select';
 
 @Component({
   selector: 'app-neurological',
-  imports: [ReactiveFormsModule, InputComponent, SelectComponent],
+  imports: [ReactiveFormsModule, SelectComponent],
   templateUrl: './neurological.html',
   styleUrl: './neurological.scss',
 })

@@ -1,9 +1,13 @@
-<div [formGroup]="group" class="section">
-  <app-input labelText="Nombre del paciente" formControlName="patientName" type="text" />
+<div class="patient-section" [formGroup]="group">
+  <div class="patient-section__field patient-section__field--name">
+    <app-input labelText="Nombre del paciente" formControlName="patientName" type="text" />
+  </div>
 
-  <div class="general">
+  <div class="patient-section__field patient-section__field--age">
     <app-input labelText="Edad" formControlName="age" type="number" />
+  </div>
 
+  <div class="patient-section__field patient-section__field--gender">
     <app-select
       formControlName="gender"
       labelText="Género"
@@ -15,7 +19,11 @@
     />
   </div>
 
-  <app-input labelText="Historial Medico" formControlName="medicalHistory" />
+  <div class="patient-section__field patient-section__field--history">
+    <app-input labelText="Historial médico" formControlName="medicalHistory" type="text" />
+  </div>
 
-  <app-text-area labelText="Medicamentos" formControlName="medications" />
+  <div class="patient-section__field patient-section__field--medications">
+    <app-text-area labelText="Medicamentos" formControlName="medications" />
+  </div>
 </div>

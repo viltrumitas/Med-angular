@@ -1,162 +1,272 @@
-<div class="create-case-container">
-  <!-- HEADER -->
-  <header class="page-header">
-    <div class="page-heading">
-      <span class="breadcrumb">Casos / Crear caso</span>
+<section class="case-create">
+  <!-- =========================
+       HEADER
+  ========================== -->
 
-      <h1>Nuevo caso clínico</h1>
+  <header class="case-create__header">
+    <div class="case-create__heading">
+      <span class="case-create__eyebrow"> Gestión de casos </span>
 
-      <p>Completa la información clínica del paciente para registrar el caso.</p>
+      <div class="case-create__title-row">
+        <div>
+          <h1>Nuevo caso clínico</h1>
+
+          <p>
+            Completa la información médica necesaria para crear un nuevo escenario de evaluación.
+          </p>
+        </div>
+
+        <span class="case-create__status"> Borrador </span>
+      </div>
     </div>
 
-    <div class="header-actions">
-      <button class="btn btn-secondary" type="button" (click)="cancel()">Cancelar</button>
+    <div class="case-create__header-actions">
+      <button type="button" class="button button--secondary" (click)="cancel()">Cancelar</button>
 
-      <button class="btn btn-primary" type="submit" form="create-case-form" (click)="submitCase()">
-        <i data-lucide="clipboard-plus"></i>
-        Guardar caso
+      <button type="submit" class="button button--primary" form="create-case-form">
+        <i data-lucide="clipboard-plus" aria-hidden="true"></i>
+
+        <span>Guardar caso</span>
       </button>
+    </div>
+
+    <div class="case-create__header-decoration" aria-hidden="true">
+      <span class="case-create__decoration-circle"></span>
+      <span class="case-create__decoration-grid"></span>
     </div>
   </header>
 
-  <!-- FORMULARIO -->
-  <form id="create-case-form" [formGroup]="caseForm" (ngSubmit)="submitCase()">
-    <div class="form-grid">
-      <!-- INFORMACIÓN GENERAL -->
-      <section class="section-card">
-        <div class="section-header">
-          <div class="section-icon">
-            <i data-lucide="info"></i>
+  <!-- =========================
+       FORM
+  ========================== -->
+
+  <form id="create-case-form" class="case-form" [formGroup]="caseForm" (ngSubmit)="submitCase()">
+    <div class="case-form__intro">
+      <div>
+        <span class="case-form__intro-label"> Formulario clínico </span>
+
+        <h2>Información del caso</h2>
+
+        <p>
+          Registra los datos generales, antecedentes, valoración y clasificación médica del
+          paciente.
+        </p>
+      </div>
+
+      <div class="case-form__required">
+        <span aria-hidden="true">*</span>
+        Campos obligatorios
+      </div>
+    </div>
+
+    <div class="case-form__grid">
+      <!-- =========================
+           GENERAL
+      ========================== -->
+
+      <section class="form-section form-section--general">
+        <header class="form-section__header">
+          <div class="form-section__icon">
+            <i data-lucide="info" aria-hidden="true"></i>
           </div>
 
-          <div>
-            <h2>Información general</h2>
-            <p>Datos principales del caso clínico.</p>
-          </div>
-        </div>
+          <div class="form-section__heading">
+            <span class="form-section__step">01</span>
 
-        <div class="section-content">
+            <div>
+              <h2>Información general</h2>
+
+              <p>Define el título, motivo de consulta y contexto del caso.</p>
+            </div>
+          </div>
+        </header>
+
+        <div class="form-section__content">
           <app-general-section [group]="caseForm.controls.general" />
         </div>
       </section>
 
-      <!-- PACIENTE -->
-      <section class="section-card">
-        <div class="section-header">
-          <div class="section-icon">
-            <i data-lucide="user-round"></i>
+      <!-- =========================
+           PATIENT
+      ========================== -->
+
+      <section class="form-section form-section--patient">
+        <header class="form-section__header">
+          <div class="form-section__icon">
+            <i data-lucide="user-round" aria-hidden="true"></i>
           </div>
 
-          <div>
-            <h2>Paciente</h2>
-            <p>Información y antecedentes del paciente.</p>
-          </div>
-        </div>
+          <div class="form-section__heading">
+            <span class="form-section__step">02</span>
 
-        <div class="section-content">
+            <div>
+              <h2>Información del paciente</h2>
+
+              <p>Registra datos personales, antecedentes y medicamentos.</p>
+            </div>
+          </div>
+        </header>
+
+        <div class="form-section__content">
           <app-patient-section [group]="caseForm.controls.patient" />
         </div>
       </section>
 
-      <!-- HALLAZGOS -->
-      <section class="section-card">
-        <div class="section-header">
-          <div class="section-icon">
-            <i data-lucide="user-round-search"></i>
+      <!-- =========================
+           FINDINGS
+      ========================== -->
+
+      <section class="form-section form-section--findings">
+        <header class="form-section__header">
+          <div class="form-section__icon">
+            <i data-lucide="user-round-search" aria-hidden="true"></i>
           </div>
 
-          <div>
-            <h2>Hallazgos generales</h2>
-            <p>Observaciones obtenidas durante la valoración.</p>
-          </div>
-        </div>
+          <div class="form-section__heading">
+            <span class="form-section__step">03</span>
 
-        <div class="section-content">
+            <div>
+              <h2>Hallazgos generales</h2>
+
+              <p>Describe las observaciones obtenidas durante la valoración.</p>
+            </div>
+          </div>
+        </header>
+
+        <div class="form-section__content">
           <app-findings [group]="caseForm.controls.findings" />
         </div>
       </section>
 
-      <!-- SIGNOS VITALES -->
-      <section class="section-card">
-        <div class="section-header">
-          <div class="section-icon">
-            <i data-lucide="activity"></i>
+      <!-- =========================
+           VITAL SIGNS
+      ========================== -->
+
+      <section class="form-section form-section--vitals">
+        <header class="form-section__header">
+          <div class="form-section__icon">
+            <i data-lucide="activity" aria-hidden="true"></i>
           </div>
 
-          <div>
-            <h2>Signos vitales</h2>
-            <p>Registra las mediciones actuales del paciente.</p>
-          </div>
-        </div>
+          <div class="form-section__heading">
+            <span class="form-section__step">04</span>
 
-        <div class="section-content">
+            <div>
+              <h2>Signos vitales</h2>
+
+              <p>Captura las mediciones clínicas actuales del paciente.</p>
+            </div>
+          </div>
+        </header>
+
+        <div class="form-section__content">
           <app-vital-signs [group]="caseForm.controls.vitalSigns" />
         </div>
       </section>
 
-      <!-- NEUROLÓGICO -->
-      <section class="section-card">
-        <div class="section-header">
-          <div class="section-icon">
-            <i data-lucide="brain-cog"></i>
+      <!-- =========================
+           NEUROLOGICAL
+      ========================== -->
+
+      <section class="form-section form-section--neurological">
+        <header class="form-section__header">
+          <div class="form-section__icon">
+            <i data-lucide="brain-cog" aria-hidden="true"></i>
           </div>
 
-          <div>
-            <h2>Evaluación neurológica</h2>
-            <p>Escalas y pruebas neurológicas del paciente.</p>
-          </div>
-        </div>
+          <div class="form-section__heading">
+            <span class="form-section__step">05</span>
 
-        <div class="section-content">
+            <div>
+              <h2>Valoración neurológica</h2>
+
+              <p>Registra escalas y pruebas neurológicas aplicadas.</p>
+            </div>
+          </div>
+        </header>
+
+        <div class="form-section__content">
           <app-neurological [group]="caseForm.controls.neurological" />
         </div>
       </section>
 
-      <!-- ÁREA -->
-      <section class="section-card">
-        <div class="section-header">
-          <div class="section-icon">
-            <i data-lucide="briefcase-medical"></i>
+      <!-- =========================
+           MEDICAL AREA
+      ========================== -->
+
+      <section class="form-section form-section--medical-area">
+        <header class="form-section__header">
+          <div class="form-section__icon">
+            <i data-lucide="briefcase-medical" aria-hidden="true"></i>
           </div>
 
-          <div>
-            <h2>Área médica</h2>
-            <p>Clasifica el caso dentro de un área clínica.</p>
-          </div>
-        </div>
+          <div class="form-section__heading">
+            <span class="form-section__step">06</span>
 
-        <div class="section-content">
+            <div>
+              <h2>Área médica</h2>
+
+              <p>Clasifica el caso dentro de la especialidad correspondiente.</p>
+            </div>
+          </div>
+        </header>
+
+        <div class="form-section__content">
           <app-medical-area [group]="caseForm.controls.medicalArea" />
         </div>
       </section>
 
-      <!-- RETROALIMENTACIÓN -->
-      <section class="section-card section-card--full">
-        <div class="section-header">
-          <div class="section-icon">
-            <i data-lucide="message-square-more"></i>
+      <!-- =========================
+           FEEDBACK
+      ========================== -->
+
+      <section class="form-section form-section--feedback">
+        <header class="form-section__header">
+          <div class="form-section__icon">
+            <i data-lucide="message-square-more" aria-hidden="true"></i>
           </div>
 
-          <div>
-            <h2>Retroalimentación</h2>
-            <p>Información que recibirá el estudiante después de resolver el caso.</p>
-          </div>
-        </div>
+          <div class="form-section__heading">
+            <span class="form-section__step">07</span>
 
-        <div class="section-content">
+            <div>
+              <h2>Retroalimentación</h2>
+
+              <p>Escribe la información que recibirá el estudiante al finalizar.</p>
+            </div>
+          </div>
+        </header>
+
+        <div class="form-section__content">
           <app-feedback [control]="caseForm.controls.feedback" />
         </div>
       </section>
     </div>
 
-    <!-- ACCIONES MÓVIL / FINAL -->
-    <div class="form-actions">
-      <button class="btn btn-secondary" type="button">Cancelar</button>
+    <!-- =========================
+         FORM FOOTER
+    ========================== -->
 
-      <button class="btn btn-primary" type="submit">
-        <i data-lucide="clipboard-plus"></i>
-        Crear caso
-      </button>
-    </div>
+    <footer class="case-form__footer">
+      <div class="case-form__footer-message">
+        <i data-lucide="shield-check" aria-hidden="true"></i>
+
+        <div>
+          <strong>Revisa la información antes de guardar</strong>
+
+          <span> Podrás editar y publicar el caso posteriormente. </span>
+        </div>
+      </div>
+
+      <div class="case-form__footer-actions">
+        <button type="button" class="button button--secondary" (click)="cancel()">Cancelar</button>
+
+        <button type="submit" class="button button--primary">
+          <i data-lucide="clipboard-plus" aria-hidden="true"></i>
+
+          <span>Crear caso</span>
+        </button>
+      </div>
+    </footer>
   </form>
-</div>
+</section>

@@ -1,3 +1,5 @@
-<div [formGroup]="group" class="section">
-  <app-text-area labelText="Hallasgos general" formControlName="generalFindings" />
+<div class="findings-section" [formGroup]="group">
+  <div class="findings-section__field">
+    <app-text-area formControlName="generalFindings" labelText="Hallazgos generales" />
+  </div>
 </div>

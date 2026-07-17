@@ -1,11 +1,80 @@
-<div class="section" [formGroup]="group">
-  <div class="vital-grid">
-    <app-input labelText="TA" formControlName="ta" type="text" />
-    <app-input labelText="FC" formControlName="fc" type="number" />
-    <app-input labelText="FR" formControlName="fr" type="number" />
-    <app-input labelText="SPO2" formControlName="spo2" type="number" />
-    <app-input labelText="Glucosa" formControlName="glucose" type="number" />
-    <app-input labelText="Temperatura" formControlName="temperature" type="number" />
-    <app-input labelText="Filtro Capilar" formControlName="capillaryFiller" type="number" />
+<div class="vital-signs" [formGroup]="group">
+  <div class="vital-signs__grid">
+    <app-input
+      class="vital-signs__field vital-signs__field--ta"
+      labelText="TA"
+      formControlName="ta"
+      type="text"
+      placeHolderText="120/80"
+      suffix="mmHg"
+      [compact]="true"
+      [maxLength]="7"
+    />
+
+    <app-input
+      class="vital-signs__field"
+      labelText="FC"
+      formControlName="fc"
+      type="number"
+      placeHolderText="80"
+      suffix="lpm"
+      [compact]="true"
+      [maxLength]="3"
+    />
+
+    <app-input
+      class="vital-signs__field"
+      labelText="FR"
+      formControlName="fr"
+      type="number"
+      placeHolderText="18"
+      suffix="rpm"
+      [compact]="true"
+      [maxLength]="3"
+    />
+
+    <app-input
+      class="vital-signs__field"
+      labelText="SPO₂"
+      formControlName="spo2"
+      type="number"
+      placeHolderText="98"
+      suffix="%"
+      [compact]="true"
+      [maxLength]="3"
+    />
+
+    <app-input
+      class="vital-signs__field"
+      labelText="Glucosa"
+      formControlName="glucose"
+      type="number"
+      placeHolderText="100"
+      suffix="mg/dL"
+      [compact]="true"
+      [maxLength]="3"
+    />
+
+    <app-input
+      class="vital-signs__field"
+      labelText="Temperatura"
+      formControlName="temperature"
+      type="number"
+      placeHolderText="36.5"
+      suffix="°C"
+      [compact]="true"
+      [maxLength]="4"
+    />
+
+    <app-input
+      class="vital-signs__field"
+      labelText="Llenado capilar"
+      formControlName="capillaryFiller"
+      type="number"
+      placeHolderText="2"
+      suffix="s"
+      [compact]="true"
+      [maxLength]="2"
+    />
   </div>
 </div>

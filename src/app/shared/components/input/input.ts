@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, forwardRef, Input } from '@angular/core';
+import { Component, forwardRef, input, Input } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
@@ -17,17 +17,18 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   ],
 })
 export class InputComponent implements ControlValueAccessor {
-  @Input() labelText!: string;
-  @Input() type: 'text' | 'number' | 'email' | 'password' = 'text';
-  @Input() placeHolderText = '';
-  @Input() min?: number;
-  @Input() max?: number;
+  readonly labelText = input<string | null>(null);
+  readonly type = input<'text' | 'number' | 'email' | 'password'>('text');
+  readonly placeHolderText = input('');
+  readonly maxLength = input<number | null>(null);
+  readonly suffix = input<string | null>(null);
+  readonly compact = input(false);
 
   value: string | number | null = null;
   disabled = false;
 
-  private onChange: (value: string | number | null) => void = () => { };
-  private onTouched: () => void = () => { };
+  private onChange: (value: string | number | null) => void = () => {};
+  private onTouched: () => void = () => {};
 
   writeValue(value: string | number | null): void {
     this.value = value;
@@ -50,7 +51,7 @@ export class InputComponent implements ControlValueAccessor {
   }
 
   onKeyDown(event: KeyboardEvent): void {
-    if (this.type !== 'number') {
+    if (this.type() !== 'number') {
       return;
     }
 
@@ -84,18 +85,14 @@ export class InputComponent implements ControlValueAccessor {
 
   onInput(event: Event): void {
     const input = event.target as HTMLInputElement;
-
     let newValue: string | number | null = input.value;
 
-    if (this.type === 'number') {
-
+    if (this.type() === 'number') {
       newValue = input.value.replace(/\D/g, '');
 
       input.value = newValue;
 
-      newValue = newValue === ''
-        ? null
-        : Number(newValue);
+      newValue = newValue === '' ? null : Number(newValue);
     }
 
     this.value = newValue;

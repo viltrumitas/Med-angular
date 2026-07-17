@@ -1,7 +1,13 @@
-<div class="section" [formGroup]="group">
-  <app-input formControlName="title" type="text" labelText="Consulta" />
+<div class="general-section" [formGroup]="group">
+  <div class="general-section__field general-section__field--title">
+    <app-input formControlName="title" type="text" labelText="Consulta" />
+  </div>
 
-  <app-text-area labelText="Motivo" formControlName="consult" />
+  <div class="general-section__field general-section__field--wide">
+    <app-text-area formControlName="consult" labelText="Motivo de atención" />
+  </div>
 
-  <app-text-area formControlName="scenery" type="text" labelText="Escenario" />
+  <div class="general-section__field general-section__field--wide">
+    <app-text-area formControlName="scenery" labelText="Escenario" />
+  </div>
 </div>
