@@ -1,0 +1,68 @@
+<div class="checkbox-control" [class.checkbox-control--disabled]="disabled">
+  @if (labelText) {
+    <div class="checkbox-control__header">
+      <span class="checkbox-control__label">
+        {{ labelText }}
+
+        @if (required) {
+          <span class="checkbox-control__required" aria-hidden="true"> * </span>
+        }
+      </span>
+
+      @if (helperText) {
+        <span class="checkbox-control__helper">
+          {{ helperText }}
+        </span>
+      }
+    </div>
+  }
+
+  <div
+    class="checkbox-control__options"
+    [class.checkbox-control__options--row]="direction === 'row'"
+    [class.checkbox-control__options--column]="direction === 'column'"
+    role="group"
+    [attr.aria-label]="labelText || 'Opciones'"
+  >
+    @for (option of options; track trackOption($index, option)) {
+      <label
+        class="checkbox-option"
+        [class.checkbox-option--selected]="isSelected(option.value)"
+        [class.checkbox-option--disabled]="disabled || option.disabled"
+      >
+        <input
+          class="checkbox-option__input"
+          type="checkbox"
+          [checked]="isSelected(option.value)"
+          [disabled]="disabled || option.disabled"
+          (change)="toggleOption(option)"
+          (blur)="markAsTouched()"
+        />
+
+        <span class="checkbox-option__check" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path
+              d="M5 12.5L9.5 17L19 7.5"
+              stroke="currentColor"
+              stroke-width="3"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+
+        <span class="checkbox-option__content">
+          <span class="checkbox-option__label">
+            {{ option.label }}
+          </span>
+
+          @if (option.description) {
+            <span class="checkbox-option__description">
+              {{ option.description }}
+            </span>
+          }
+        </span>
+      </label>
+    }
+  </div>
+</div>

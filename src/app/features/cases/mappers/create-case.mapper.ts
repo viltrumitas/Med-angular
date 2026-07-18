@@ -43,7 +43,22 @@ export function mapCreateCase(form: CaseFormValue): CreateCaseModel {
     neurological: {
       ...form.neurological,
 
-      glasgow: form.neurological.glasgow,
+      glasgow: form.neurological.glasgow
+        ? {
+            ocular:
+              form.neurological.glasgow.ocular !== null
+                ? Number(form.neurological.glasgow.ocular)
+                : null,
+            verbal:
+              form.neurological.glasgow.verbal !== null
+                ? Number(form.neurological.glasgow.verbal)
+                : null,
+            motora:
+              form.neurological.glasgow.motora !== null
+                ? Number(form.neurological.glasgow.motora)
+                : null,
+          }
+        : null,
     },
 
     area: form.medicalArea.area,

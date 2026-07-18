@@ -1,10 +1,109 @@
-<div class="section" [formGroup]="group">
-  <div class="cincinnati" formGroupName="cincinnati">
-    <app-select formControlName="facialDroop" labelText="Ocular" [options]="cincinnatiOptions" />
+<div class="neurological-section" [formGroup]="group">
+  <!-- =========================
+       CINCINNATI
+  ========================== -->
 
-    <app-select formControlName="armDrift" labelText="Verbal" [options]="cincinnatiOptions" />
+  <section class="neurological-scale neurological-scale--cincinnati" formGroupName="cincinnati">
+    <header class="neurological-scale__header">
+      <div class="neurological-scale__heading">
+        <span class="neurological-scale__badge"> Evaluación rápida </span>
 
-    <app-select formControlName="speech" labelText="Motora" [options]="cincinnatiOptions" />
-  </div>
-  <div class="glasgow-table"></div>
+        <h3>Escala de Cincinnati</h3>
+
+        <p>Registra los hallazgos obtenidos durante la valoración neurológica inicial.</p>
+      </div>
+
+      <span class="neurological-scale__code" aria-hidden="true"> 01 </span>
+    </header>
+
+    <div class="cincinnati-grid">
+      <div class="cincinnati-grid__field">
+        <app-select
+          formControlName="facialDroop"
+          labelText="Caída facial"
+          [options]="cincinnatiOptions"
+        />
+      </div>
+
+      <div class="cincinnati-grid__field">
+        <app-select
+          formControlName="armDrift"
+          labelText="Deriva del brazo"
+          [options]="cincinnatiOptions"
+        />
+      </div>
+
+      <div class="cincinnati-grid__field">
+        <app-select
+          formControlName="speech"
+          labelText="Alteración del habla"
+          [options]="cincinnatiOptions"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================
+       GLASGOW
+  ========================== -->
+
+  <section class="neurological-scale neurological-scale--glasgow" formGroupName="glasgow">
+    <header class="neurological-scale__header">
+      <div class="neurological-scale__heading">
+        <span class="neurological-scale__badge"> Nivel de conciencia </span>
+
+        <h3>Escala de Glasgow</h3>
+
+        <p>Selecciona una respuesta para cada categoría de valoración.</p>
+      </div>
+
+      <span class="neurological-scale__code" aria-hidden="true"> 02 </span>
+    </header>
+
+    <div class="glasgow-grid">
+      <article class="glasgow-grid__item">
+        <div class="glasgow-grid__number" aria-hidden="true">O</div>
+
+        <div class="glasgow-grid__content">
+          <app-checkbox
+            formControlName="ocular"
+            labelText="Apertura ocular"
+            helperText="Selecciona una opción"
+            mode="single"
+            [options]="ocularOption"
+          />
+        </div>
+      </article>
+
+      <article class="glasgow-grid__item">
+        <div class="glasgow-grid__number" aria-hidden="true">V</div>
+
+        <div class="glasgow-grid__content">
+          <app-checkbox
+            formControlName="verbal"
+            labelText="Respuesta verbal"
+            helperText="Selecciona una opción"
+            mode="single"
+            [options]="verbalOption"
+          />
+        </div>
+      </article>
+
+      <article class="glasgow-grid__item">
+        <div class="glasgow-grid__number" aria-hidden="true">M</div>
+
+        <div class="glasgow-grid__content">
+          <app-checkbox
+            formControlName="motora"
+            labelText="Respuesta motora"
+            helperText="Selecciona una opción"
+            mode="single"
+            [options]="motorOption"
+          />
+        </div>
+      </article>
+    </div>
+
+    <div class="total"></div>
+  </section>
 </div>
