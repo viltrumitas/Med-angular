@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, forwardRef, input, Input } from '@angular/core';
+import { Component, forwardRef, input } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
@@ -26,9 +26,33 @@ export class InputComponent implements ControlValueAccessor {
 
   value: string | number | null = null;
   disabled = false;
+  passwordVisible = false;
 
   private onChange: (value: string | number | null) => void = () => {};
   private onTouched: () => void = () => {};
+
+  get inputType(): 'text' | 'email' | 'password' {
+    const currentType = this.type();
+
+    if (currentType === 'number') {
+      return 'text';
+    }
+    if (currentType === 'password' && this.passwordVisible) {
+      return 'text';
+    }
+    return currentType;
+  }
+  get inputMode(): 'text' | 'decimal' | 'email' {
+    if (this.type() === 'number') {
+      return 'decimal';
+    }
+
+    if (this.type() === 'email') {
+      return 'email';
+    }
+
+    return 'text';
+  }
 
   writeValue(value: string | number | null): void {
     this.value = value;
@@ -48,6 +72,14 @@ export class InputComponent implements ControlValueAccessor {
 
   onBlur(): void {
     this.onTouched();
+  }
+
+  togglePasswordVisibility(): void {
+    if (this.disabled || this.type() !== 'password') {
+      return;
+    }
+
+    this.passwordVisible = !this.passwordVisible;
   }
 
   onKeyDown(event: KeyboardEvent): void {
@@ -84,19 +116,19 @@ export class InputComponent implements ControlValueAccessor {
   }
 
   onInput(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    let newValue: string | number | null = input.value;
+    const inputElement = event.target as HTMLInputElement;
+
+    let newValue: string | number | null = inputElement.value;
 
     if (this.type() === 'number') {
-      newValue = input.value.replace(/\D/g, '');
+      const sanitizedValue = inputElement.value.replace(/\D/g, '');
 
-      input.value = newValue;
+      inputElement.value = sanitizedValue;
 
-      newValue = newValue === '' ? null : Number(newValue);
+      newValue = sanitizedValue === '' ? null : Number(sanitizedValue);
     }
 
     this.value = newValue;
-
     this.onChange(this.value);
   }
 }

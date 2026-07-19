@@ -73,8 +73,6 @@ export class AuthComponent {
 
     const data: RegisterModel = {
       matricula: Number(v.matricula),
-      firstName: v.firstName,
-      lastName: v.lastName,
       password: v.password,
     };
 
@@ -87,7 +85,7 @@ export class AuthComponent {
         console.log('COMPONENTE ERROR:', err);
 
         if (err.status === 409) {
-          this.registerError = 'La matrícula ya existe';
+          this.registerError = 'La matrícula no existe';
           return;
         }
 

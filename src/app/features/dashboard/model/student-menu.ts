@@ -14,7 +14,7 @@ export const STUDENT_MENU: SidebarItem[] = [
   {
     name: 'Mis revisiones',
     path: '/dashboard/student/reviews',
-    icon: 'file-check'
+    icon: 'file-check',
   },
   {
     name: 'Cerrar Sesion',

@@ -1,12 +1,62 @@
 .input-control {
-  display: flex;
-  flex-direction: column;
+  &__field {
+    position: relative;
+  }
 
-  gap: 0.4rem;
+  &__input {
+    background: transparent;
 
-  width: 100%;
+    &:-webkit-autofill,
+    &:-webkit-autofill:hover,
+    &:-webkit-autofill:focus,
+    &:-webkit-autofill:active {
+      -webkit-text-fill-color: inherit;
+      caret-color: inherit;
+      box-shadow: 0 0 0 1000px transparent inset;
+      transition: background-color 9999s ease-in-out 0s;
+    }
+  }
+
+  &--password &__input {
+    padding-right: 3rem;
+  }
+
+  &__password-button {
+    position: absolute;
+    top: 50%;
+    right: 0.75rem;
+    display: grid;
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    color: inherit;
+    background: transparent;
+    border: 0;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    place-items: center;
+    transform: translateY(-50%);
+
+    &:hover:not(:disabled) {
+      background: rgb(15 23 42 / 8%);
+    }
+
+    &:focus-visible {
+      outline: 2px solid currentColor;
+      outline-offset: 2px;
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+  }
+
+  &__password-icon {
+    width: 1.15rem;
+    height: 1.15rem;
+  }
 }
-
 .input-control__label {
   color: #334155;
 

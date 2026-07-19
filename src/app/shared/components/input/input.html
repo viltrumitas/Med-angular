@@ -2,6 +2,8 @@
   class="input-control"
   [class.input-control--disabled]="disabled"
   [class.input-control--with-suffix]="suffix()"
+  [class.input-control--password]="type() === 'password'"
+  [class.input-control--compact]="compact()"
 >
   @if (labelText()) {
     <label class="input-control__label">
@@ -12,16 +14,66 @@
   <div class="input-control__field">
     <input
       class="input-control__input"
-      [type]="type() === 'number' ? 'text' : type"
-      [inputMode]="type() === 'number' ? 'decimal' : 'text'"
-      [value]="value"
+      [type]="inputType"
+      [inputMode]="inputMode"
+      [value]="value ?? ''"
       [placeholder]="placeHolderText()"
       [disabled]="disabled"
       [attr.maxlength]="maxLength()"
+      [attr.autocomplete]="type() === 'password' ? 'current-password' : null"
       (keydown)="onKeyDown($event)"
       (input)="onInput($event)"
       (blur)="onBlur()"
     />
+
+    @if (type() === 'password') {
+      <button
+        type="button"
+        class="input-control__password-button"
+        [disabled]="disabled"
+        [attr.aria-label]="passwordVisible ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+        [attr.aria-pressed]="passwordVisible"
+        (click)="togglePasswordVisibility()"
+      >
+        @if (passwordVisible) {
+          <svg
+            class="input-control__password-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="m2 2 20 20"></path>
+            <path
+              d="M6.71 6.71C4.68 8.1 3.15 9.93 2 12c2.4 4.27 6 6.5 10 6.5a10.7 10.7 0 0 0 5.29-1.39"
+            ></path>
+            <path
+              d="M10.73 5.08A10.8 10.8 0 0 1 12 5c4 0 7.6 2.23 10 7a14.7 14.7 0 0 1-1.67 2.68"
+            ></path>
+            <path d="M14.12 14.12a3 3 0 0 1-4.24-4.24"></path>
+          </svg>
+        } @else {
+          <svg
+            class="input-control__password-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path
+              d="M2.06 12.35a1 1 0 0 1 0-.7C4.3 7.48 7.79 5 12 5c4.21 0 7.7 2.48 9.94 6.65a1 1 0 0 1 0 .7C19.7 16.52 16.21 19 12 19c-4.21 0-7.7-2.48-9.94-6.65"
+            ></path>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+        }
+      </button>
+    }
 
     @if (suffix(); as suffixText) {
       <span class="input-control__suffix" aria-hidden="true">
