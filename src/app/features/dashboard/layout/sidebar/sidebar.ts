@@ -49,6 +49,9 @@ export class Sidebar {
       case 'STUDENT':
         return 'Alumno';
 
+      case 'ADMIN':
+        return 'Administrador'
+
       default:
         return 'Usuario';
     }
@@ -63,6 +66,9 @@ export class Sidebar {
 
       case 'STUDENT':
         return 'A';
+      
+      case 'ADMIN':
+        return 'AD'
 
       default:
         return 'U';

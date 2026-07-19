@@ -5,6 +5,7 @@ import { TEACHER_MENU } from './model/teacher-menu';
 import { STUDENT_MENU } from './model/student-menu';
 import { SidebarItem } from './model/menu.types';
 import { RouterOutlet } from '@angular/router';
+import { ADMIN_MENU } from './model/admin-menu';
 
 @Component({
   selector: 'app-dashboard',
@@ -22,6 +23,9 @@ export class Dashboard {
 
       case 'STUDENT':
         return STUDENT_MENU;
+
+      case 'ADMIN':
+        return ADMIN_MENU;
 
       default:
         return [];

@@ -1,0 +1,30 @@
+<section class="dashboard">
+
+  <header>
+
+    <h1>Panel de Administración</h1>
+
+    <p>
+      Administra la plataforma MedCases.
+    </p>
+
+  </header>
+
+  <div class="cards">
+
+    <app-admin-card
+      title="Usuarios autorizados"
+      description="Administra estudiantes y docentes autorizados."
+      icon="group"
+      route="/dashboard/admin/authorized-users" />
+
+    <app-admin-card
+      title="Estadísticas"
+      description="Visualiza información general del sistema."
+      icon="analytics"
+      route="/dashboard/admin/statistics"
+      [disabled]="true" />
+
+  </div>
+
+</section>

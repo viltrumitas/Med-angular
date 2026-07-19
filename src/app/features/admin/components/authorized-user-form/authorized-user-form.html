@@ -1,0 +1,44 @@
+<form
+  [formGroup]="form()"
+  (ngSubmit)="submit()">
+
+  <label>Matrícula</label>
+
+  <input
+    type="number"
+    formControlName="matricula">
+
+  <label>Nombre</label>
+
+  <input
+    type="text"
+    formControlName="firstName">
+
+  <label>Apellido</label>
+
+  <input
+    type="text"
+    formControlName="lastName">
+
+  <label>Rol</label>
+
+  <select
+    formControlName="role">
+
+    <option value="STUDENT">
+      Estudiante
+    </option>
+
+    <option value="TEACHER">
+      Docente
+    </option>
+
+  </select>
+
+  <button type="submit">
+
+    {{ submitLabel( )}}
+
+  </button>
+
+</form>

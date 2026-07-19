@@ -1,0 +1,64 @@
+.dashboard {
+  padding: 2rem;
+}
+
+.dashboard-header {
+  margin-bottom: 2rem;
+
+  h1 {
+    margin: 0;
+    font-size: 2rem;
+  }
+
+  p {
+    color: #666;
+    margin-top: .5rem;
+  }
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.card {
+  padding: 1.5rem;
+
+  border-radius: 16px;
+
+  border: 1px solid #d9d9d9;
+
+  background: white;
+
+  cursor: pointer;
+
+  transition: .2s;
+
+  h2 {
+    margin-top: 0;
+  }
+
+  p {
+    margin: 1rem 0;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(0,0,0,.08);
+  }
+}
+
+.disabled {
+  cursor: default;
+  opacity: .7;
+
+  &:hover {
+    transform: none;
+    box-shadow: none;
+  }
+}

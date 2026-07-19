@@ -1,0 +1,30 @@
+<article
+  class="card"
+  [class.disabled]="disabled()"
+  [routerLink]="disabled() ? null : route()">
+
+  <div class="icon">
+
+    <span class="material-symbols-rounded">
+      {{ icon() }}
+    </span>
+
+  </div>
+
+  <div class="content">
+
+    <h2>{{ title() }}</h2>
+
+    <p>{{ description() }}</p>
+
+  </div>
+
+  @if (!disabled()) {
+
+    <span class="material-symbols-rounded arrow">
+      arrow_forward
+    </span>
+
+  }
+
+</article>

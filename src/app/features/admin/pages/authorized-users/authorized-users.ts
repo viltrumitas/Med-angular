@@ -17,7 +17,7 @@ export class AuthorizedUsers implements OnInit {
   readonly error = signal<string | null>(null);
 
   ngOnInit(): void {
-    
+    this.loadUsers();
   }
 
   loadUsers() {

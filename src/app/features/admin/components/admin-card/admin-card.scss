@@ -1,0 +1,64 @@
+.card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  padding: 1.5rem;
+
+  border-radius: 18px;
+
+  border: 1px solid var(--surface-border);
+
+  background: var(--surface-card);
+
+  cursor: pointer;
+
+  transition: all .2s ease;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(0,0,0,.08);
+  }
+}
+
+.icon {
+  display: grid;
+  place-items: center;
+
+  width: 56px;
+  height: 56px;
+
+  border-radius: 14px;
+
+  background: var(--primary-color);
+  color: white;
+}
+
+.content {
+  flex: 1;
+
+  h2 {
+    margin: 0;
+    font-size: 1.1rem;
+  }
+
+  p {
+    margin-top: .35rem;
+    color: var(--text-color-secondary);
+  }
+}
+
+.arrow {
+  color: var(--primary-color);
+}
+
+.disabled {
+
+  cursor: default;
+  opacity: .6;
+
+  &:hover {
+    transform: none;
+    box-shadow: none;
+  }
+}
