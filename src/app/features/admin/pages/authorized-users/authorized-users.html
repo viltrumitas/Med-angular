@@ -1,0 +1,46 @@
+<h1>Usuarios autorizados</h1>
+
+@if (loading()) {
+
+<p>Cargando usuarios...</p>
+
+} @else if (error()) {
+
+<p>{{ error() }}</p>
+
+} @else {
+
+<table>
+
+  <thead>
+    <tr>
+      <th>Matrícula</th>
+      <th>Nombre</th>
+      <th>Rol</th>
+    </tr>
+  </thead>
+
+  <tbody>
+
+    @for (user of users(); track user.id) {
+
+    <tr>
+
+      <td>{{ user.matricula }}</td>
+
+      <td>
+        {{ user.firstName }}
+        {{ user.lastName }}
+      </td>
+
+      <td>{{ user.role }}</td>
+
+    </tr>
+
+    }
+
+  </tbody>
+
+</table>
+
+}

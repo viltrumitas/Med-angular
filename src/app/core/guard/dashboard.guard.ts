@@ -21,5 +21,9 @@ export const dashboardRedirectGuard: CanActivateFn = (_route, state) => {
     return router.createUrlTree(['/dashboard/student']);
   }
 
+  if (role === UserRole.ADMIN) {
+    return router.createUrlTree(['/dashboard/admin']);
+  }
+
   return router.createUrlTree(['/auth']);
 };

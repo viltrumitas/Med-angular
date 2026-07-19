@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { roleGuard } from '../../core/guard/role-guard';
 import { UserRole } from '../../core/enum/user-role.enum';
 import { dashboardRedirectGuard } from '../../core/guard/dashboard.guard';
+import { routes } from '../../app.routes';
 
 export const dashboardRoutes: Routes = [
   {
@@ -24,6 +25,7 @@ export const dashboardRoutes: Routes = [
         },
         loadChildren: () => import('./roles/teacher.routes').then((routes) => routes.teacherRoutes),
       },
+
       {
         path: 'student',
         canMatch: [roleGuard],
@@ -31,6 +33,15 @@ export const dashboardRoutes: Routes = [
           roles: [UserRole.STUDENT],
         },
         loadChildren: () => import('./roles/student.routes').then((routes) => routes.studentRoutes),
+      },
+
+      {
+        path: 'admin',
+        canMatch: [roleGuard],
+        data: {
+          roles: [UserRole.ADMIN],
+        },
+        loadChildren: () => import('./roles/admin.routes').then((routes) => routes.adminRoutes),
       },
     ],
   },

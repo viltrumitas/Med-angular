@@ -1,20 +1,16 @@
 import { inject, Service } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ClassroomModel } from '../models/classroom.model';
-import { ClassroomDetailModel } from '../models/classroom-detail.model';
 import { User } from '../../../core/models/user.model';
 import { CreateClassroomDto } from '../dto/create-classroom.dto';
 import { UpdateClassroomDto } from '../dto/update-classroom.dto';
 import { JoinClassroomDto } from '../dto/join-classroom.dto';
 import { CreateAssignment } from '../../assignments/models/create-assignment.model';
 import { Assignment } from '../models/assignment.model';
-import { ClassroomTeacherModel } from '../models/classroom-teacher.model';
-import { ClassroomStudentModel } from '../models/classroom-student.model';
 import { ClassroomTeacherDetailModel } from '../models/classroom-teacher-detail.model';
 import { ClassroomStudentDetailModel } from '../models/classroom-student-detail.model';
-import { AssignedStudentCase } from '../../assigned-case/model/assigned-case.model';
 
 @Service()
 export class ClassroomApi {
