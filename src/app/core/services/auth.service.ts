@@ -1,5 +1,4 @@
-import { computed, inject, Service, signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { computed, Service, signal } from '@angular/core';
 import { UserRole } from '../enum/user-role.enum';
 
 @Service()
@@ -21,24 +20,40 @@ export class AuthService {
     localStorage.removeItem('token');
     this._token.set(null);
     this._role.set(null);
-    // this.router.navigate(['/auth']);
   }
 
   private getStoredToken(): string | null {
     try {
       return localStorage.getItem('token');
     } catch {
-      // SSR o contexto sin acceso a localStorage
       return null;
     }
   }
 
   private decodeRole(token: string | null): UserRole | null {
-    if (!token) return null;
+    if (!token) {
+      return null;
+    }
+
     try {
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      return payload?.role ?? null;
-    } catch {
+      const payloadPart = token.split('.')[1];
+
+      if (!payloadPart) {
+        return null;
+      }
+
+      const normalizedPayload = payloadPart
+        .replace(/-/g, '+')
+        .replace(/_/g, '/')
+        .padEnd(Math.ceil(payloadPart.length / 4) * 4, '=');
+
+      const payload = JSON.parse(atob(normalizedPayload));
+
+      console.log('JWT payload:', payload);
+
+      return payload.role ?? null;
+    } catch (error) {
+      console.error('No se pudo decodificar el JWT:', error);
       return null;
     }
   }

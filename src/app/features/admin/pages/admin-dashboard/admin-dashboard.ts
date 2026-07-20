@@ -13,8 +13,6 @@ export class AdminDashboard {
   private readonly router = inject(Router);
 
   goToAuthorizedUsers() {
-    this.router.navigate([
-      '/dashboard/admin/authorized-users',
-    ]);
+    this.router.navigate(['/dashboard/admin/authorized-users']);
   }
 }

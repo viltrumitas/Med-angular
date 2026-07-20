@@ -13,38 +13,26 @@ export class AdminApi {
   private readonly api = `${environment.apiUrl}/admin/authorized-users`;
 
   getAuthorizedUsers(): Observable<AuthorizedUserSummaryDto[]> {
-    console.log('Llamando admin api')
+    console.log('Llamando admin api');
     return this.http.get<AuthorizedUserSummaryDto[]>(this.api);
   }
 
   getAuthorizedUser(id: string): Observable<AuthorizedUserResponseDto> {
-    return this.http.get<AuthorizedUserResponseDto>(
-      `${this.api}/${id}`,
-    );
+    return this.http.get<AuthorizedUserResponseDto>(`${this.api}/${id}`);
   }
 
-  createAuthorizedUser(
-    dto: CreateAuthorizedUserDto,
-  ): Observable<AuthorizedUserResponseDto>{
-    return this.http.post<AuthorizedUserResponseDto>(
-      this.api,
-      dto,
-    );
+  createAuthorizedUser(dto: CreateAuthorizedUserDto): Observable<AuthorizedUserResponseDto> {
+    return this.http.post<AuthorizedUserResponseDto>(this.api, dto);
   }
 
   updateAuthorizedUser(
-    id: string, 
-    dto: UpdateAuthorizedUserDto
+    id: string,
+    dto: UpdateAuthorizedUserDto,
   ): Observable<AuthorizedUserResponseDto> {
-    return this.http.patch<AuthorizedUserResponseDto>(
-      `${this.api}/${id}`,
-      dto,
-    );
+    return this.http.patch<AuthorizedUserResponseDto>(`${this.api}/${id}`, dto);
   }
 
   deleteAuthorizedUser(id: string): Observable<void> {
-    return this.http.delete<void>(
-      `${this.api}/${id}`
-    )
+    return this.http.delete<void>(`${this.api}/${id}`);
   }
 }

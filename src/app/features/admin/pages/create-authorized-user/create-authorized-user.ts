@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { AuthorizedUserFormComponent } from "../../components/authorized-user-form/authorized-user-form";
+import { AuthorizedUserFormComponent } from '../../components/authorized-user-form/authorized-user-form';
 import { createAuthorizedUserForm } from '../../forms/authorized-user.form';
 import { mapCreateAuthorizedUser } from '../../mappers/authorized-user.mapper';
 import { AdminApi } from '../../services/admin-api';
@@ -20,17 +20,12 @@ export class CreateAuthorizedUser {
   readonly form = createAuthorizedUserForm();
 
   createUser() {
-    const dto = mapCreateAuthorizedUser(
-      this.form.getRawValue(),
-    );
+    const dto = mapCreateAuthorizedUser(this.form.getRawValue());
 
-    this.api.createAuthorizedUser(dto)
-      .subscribe({
-        next: () => {
-          this.router.navigate([
-            `/dashboard/admin/authorized-users`,
-          ]);
-        },
-      });
+    this.api.createAuthorizedUser(dto).subscribe({
+      next: () => {
+        this.router.navigate([`/dashboard/admin/authorized-users`]);
+      },
+    });
   }
 }

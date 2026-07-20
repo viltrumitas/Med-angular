@@ -1,13 +1,6 @@
-import {
-  Component,
-  inject,
-  OnInit,
-} from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 
-import {
-  ActivatedRoute,
-  Router,
-} from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthorizedUserFormComponent } from '../../components/authorized-user-form/authorized-user-form';
 import { createAuthorizedUserForm } from '../../forms/authorized-user.form';
@@ -22,7 +15,6 @@ import { AdminApi } from '../../services/admin-api';
   styleUrl: './edit-authorized-user.scss',
 })
 export class EditAuthorizedUser implements OnInit {
-
   private readonly api = inject(AdminApi);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
@@ -51,18 +43,11 @@ export class EditAuthorizedUser implements OnInit {
   }
 
   updateUser() {
-    const dto = mapUpdateAuthorizedUser(
-      this.form.getRawValue(),
-    );
+    const dto = mapUpdateAuthorizedUser(this.form.getRawValue());
 
-    this.api.updateAuthorizedUser(
-      this.userId,
-      dto,
-    ).subscribe({
+    this.api.updateAuthorizedUser(this.userId, dto).subscribe({
       next: () => {
-        this.router.navigate([
-          '/dashboard/admin/authorized-users',
-        ]);
+        this.router.navigate(['/dashboard/admin/authorized-users']);
       },
     });
   }
