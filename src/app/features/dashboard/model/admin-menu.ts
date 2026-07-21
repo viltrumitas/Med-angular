@@ -1,4 +1,4 @@
-import { SidebarItem } from "./menu.types";
+import { SidebarItem } from './menu.types';
 
 export const ADMIN_MENU: SidebarItem[] = [
   {
@@ -6,11 +6,11 @@ export const ADMIN_MENU: SidebarItem[] = [
     path: '/dashboard/admin',
     icon: 'home',
   },
-  
+
   {
     name: 'Usuarios autorizados',
     path: '/dashboard/admin/authorized-users',
-    icon: 'users',
+    icon: 'users-round',
   },
 
   {
@@ -19,4 +19,4 @@ export const ADMIN_MENU: SidebarItem[] = [
     icon: 'log-out',
     seciton: 'footer',
   },
-]
+];
