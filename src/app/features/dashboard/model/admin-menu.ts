@@ -4,13 +4,13 @@ export const ADMIN_MENU: SidebarItem[] = [
   {
     name: 'Home',
     path: '/dashboard/admin',
-    icon: 'dashboard',
+    icon: 'home',
   },
   
   {
     name: 'Usuarios autorizados',
     path: '/dashboard/admin/authorized-users',
-    icon: 'group',
+    icon: 'users',
   },
 
   {

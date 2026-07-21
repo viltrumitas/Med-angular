@@ -6,10 +6,9 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const token = authService.tokeValue();
 
-  console.log(req.method, req.url);
-  console.log(token);
-
-  const isAuthRequest = req.url.endsWith('/auth');
+  const isAuthRequest =
+    req.url.includes('/auth/login') ||
+    req.url.includes('/auth/register');
 
   if (!token || isAuthRequest) {
     return next(req);

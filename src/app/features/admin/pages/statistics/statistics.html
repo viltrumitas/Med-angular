@@ -1,0 +1,83 @@
+<h1>Estadísticas</h1>
+
+@if (loading()) {
+
+<p>Cargando...</p>
+
+}
+
+@else if (error()) {
+
+<p>{{ error() }}</p>
+
+}
+
+@else {
+
+@let s = statistics()!;
+
+<div class="statistics-grid">
+
+  <app-statistic-card
+    title="Estudiantes"
+    [value]="s.totalStudents"
+    icon="graduation-cap" />
+
+  <app-statistic-card
+    title="Docentes"
+    [value]="s.totalTeachers"
+    icon="briefcase" />
+
+  <app-statistic-card
+    title="Administradores"
+    [value]="s.totalAdmins"
+    icon="shield-check" />
+
+  <app-statistic-card
+    title="Usuarios autorizados"
+    [value]="s.totalAuthorizedUsers"
+    icon="users" />
+
+  <app-statistic-card
+    title="Casos"
+    [value]="s.totalCases"
+    icon="file-text" />
+
+  <app-statistic-card
+    title="Casos publicados"
+    [value]="s.publishedCases"
+    icon="check-circle" />
+
+  <app-statistic-card
+    title="Borradores"
+    [value]="s.draftCases"
+    icon="file-pen" />
+
+  <app-statistic-card
+    title="Aulas"
+    [value]="s.totalClassrooms"
+    icon="school" />
+
+  <app-statistic-card
+    title="Asignaciones"
+    [value]="s.totalAssignments"
+    icon="clipboard-list" />
+
+  <app-statistic-card
+    title="Entregas"
+    [value]="s.totalSubmissions"
+    icon="inbox" />
+
+  <app-statistic-card
+    title="Evaluadas"
+    [value]="s.reviewedSubmissions"
+    icon="badge-check" />
+
+  <app-statistic-card
+    title="Pendientes"
+    [value]="s.pendingSubmissions"
+    icon="clock-3" />
+
+</div>
+
+}

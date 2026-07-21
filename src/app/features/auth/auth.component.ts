@@ -43,7 +43,7 @@ export class AuthComponent {
 
     this.authApi.login(data).subscribe({
       next: (res) => {
-        console.log('Incio de sasion exitoso', res.user);
+        console.log('Incio de sesion exitoso', res.user);
         this.router.navigate(this.authService.getDashboardRoute());
       },
       error: (err) => {
@@ -75,7 +75,7 @@ export class AuthComponent {
       matricula: Number(v.matricula),
       password: v.password,
     };
-
+    console.log('REGISTER DATA:', data);
     this.authApi.register(data).subscribe({
       next: (res) => {
         console.log('Usuario creado', res);

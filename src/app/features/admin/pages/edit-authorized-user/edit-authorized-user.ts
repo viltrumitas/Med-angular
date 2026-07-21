@@ -24,9 +24,19 @@ export class EditAuthorizedUser implements OnInit {
   private userId!: string;
 
   ngOnInit() {
-    this.userId = this.route.snapshot.paramMap.get('id')!;
 
-    this.loadUser();
+    this.route.paramMap.subscribe(params => {
+
+      const id = params.get('id');
+
+      if (!id) return;
+
+      this.userId = id;
+
+      this.loadUser();
+
+    });
+
   }
 
   loadUser() {
@@ -43,12 +53,29 @@ export class EditAuthorizedUser implements OnInit {
   }
 
   updateUser() {
-    const dto = mapUpdateAuthorizedUser(this.form.getRawValue());
 
-    this.api.updateAuthorizedUser(this.userId, dto).subscribe({
-      next: () => {
-        this.router.navigate(['/dashboard/admin/authorized-users']);
-      },
-    });
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
+
+    const dto = mapUpdateAuthorizedUser(
+      this.form.getRawValue()
+    );
+
+
+    this.api.updateAuthorizedUser(
+      this.userId,
+      dto
+    )
+      .subscribe({
+        next: () => {
+          this.router.navigate([
+            '/dashboard/admin/authorized-users'
+          ]);
+        }
+      });
+
   }
 }

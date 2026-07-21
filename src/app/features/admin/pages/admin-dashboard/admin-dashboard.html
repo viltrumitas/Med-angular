@@ -1,30 +1,61 @@
-<section class="dashboard">
+<header>
+  <h1>Panel de Administración</h1>
 
-  <header>
+  <p>
+    Bienvenido al panel de administración de MedCases.
+  </p>
+</header>
 
-    <h1>Panel de Administración</h1>
+@if (loading()) {
 
-    <p>
-      Administra la plataforma MedCases.
-    </p>
+<p>Cargando resumen...</p>
 
-  </header>
+}
 
-  <div class="cards">
+@else {
 
-    <app-admin-card
-      title="Usuarios autorizados"
-      description="Administra estudiantes y docentes autorizados."
-      icon="group"
-      route="/dashboard/admin/authorized-users" />
+@let s = summary()!;
 
-    <app-admin-card
-      title="Estadísticas"
-      description="Visualiza información general del sistema."
-      icon="analytics"
-      route="/dashboard/admin/statistics"
-      [disabled]="true" />
+<div class="summary">
 
-  </div>
+  <app-statistic-card
+    title="Estudiantes"
+    [value]="s.totalStudents"
+    icon="graduation-cap" />
 
-</section>
+  <app-statistic-card
+    title="Docentes"
+    [value]="s.totalTeachers"
+    icon="briefcase" />
+
+  <app-statistic-card
+    title="Casos"
+    [value]="s.totalCases"
+    icon="file-text" />
+
+  <app-statistic-card
+    title="Entregas"
+    [value]="s.totalSubmissions"
+    icon="inbox" />
+
+</div>
+
+<h2>Accesos rápidos</h2>
+
+<div class="cards">
+
+  <app-admin-card
+    title="Usuarios autorizados"
+    description="Administra estudiantes y docentes autorizados."
+    icon="users"
+    route="/dashboard/admin/authorized-users" />
+
+  <app-admin-card
+    title="Estadísticas"
+    description="Consulta todas las métricas del sistema."
+    icon="chart-column"
+    route="/dashboard/admin/statistics" />
+
+</div>
+
+}

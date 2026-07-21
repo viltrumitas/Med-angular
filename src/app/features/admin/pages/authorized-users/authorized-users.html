@@ -1,32 +1,189 @@
-<h1>Usuarios autorizados</h1>
+<section class="page">
 
-@if (loading()) {
-  <p>Cargando usuarios...</p>
-} @else if (error()) {
-  <p>{{ error() }}</p>
-} @else {
-  <table>
-    <thead>
-      <tr>
-        <th>Matrícula</th>
-        <th>Nombre</th>
-        <th>Rol</th>
-      </tr>
-    </thead>
 
-    <tbody>
-      @for (user of users(); track user.id) {
+  <header class="header">
+
+    <div>
+      <h1>
+        Usuarios autorizados
+      </h1>
+
+      <p>
+        Gestiona las matrículas permitidas para registrarse.
+      </p>
+    </div>
+
+
+    <button class="primary" (click)="createUser()">
+      + Nuevo usuario
+    </button>
+
+
+  </header>
+
+  <div class="search-box">
+
+    <input type="text" placeholder="Buscar por matrícula, nombre o rol..." [value]="search()"
+      (input)="updateSearch($any($event.target).value)" />
+
+  </div>
+
+
+
+  @if(loading()) {
+
+  <div class="state">
+    Cargando usuarios...
+  </div>
+
+
+  } @else if(error()) {
+
+
+  <div class="state error">
+    {{ error() }}
+  </div>
+
+
+  } @else {
+
+
+  <div class="card">
+
+
+    <div class="table-header">
+
+      <h2>
+        Usuarios ({{filteredUsers().length}})
+      </h2>
+
+
+    </div>
+
+
+
+    <table>
+
+
+      <thead>
+
         <tr>
-          <td>{{ user.matricula }}</td>
+
+          <th>
+            Matrícula
+          </th>
+
+          <th>
+            Nombre
+          </th>
+
+          <th>
+            Rol
+          </th>
+
+          <th>
+            Acciones
+          </th>
+
+
+        </tr>
+
+      </thead>
+
+
+
+      <tbody>
+
+
+        @for(user of filteredUsers(); track user.id){
+
+
+        <tr>
+
 
           <td>
-            {{ user.firstName }}
-            {{ user.lastName }}
+            {{user.matricula}}
           </td>
 
-          <td>{{ user.role }}</td>
+
+
+          <td>
+
+            <div class="user">
+
+              <strong>
+                {{user.firstName}}
+                {{user.lastName}}
+              </strong>
+
+            </div>
+
+          </td>
+
+
+
+          <td>
+
+            <span class="badge" [class.teacher]="user.role === 'TEACHER'" [class.student]="user.role === 'STUDENT'"
+              [class.admin]="user.role === 'ADMIN'">
+
+              {{user.role}}
+
+            </span>
+
+
+          </td>
+
+
+
+          <td>
+
+
+            <div class="actions">
+
+
+              <button class="edit" (click)="editUser(user.id)">
+                Editar
+              </button>
+
+
+              <button class="delete" (click)="deleteUser(user.id)">
+                Eliminar
+              </button>
+
+
+            </div>
+
+
+          </td>
+
+
+
         </tr>
-      }
-    </tbody>
-  </table>
-}
+
+
+        }
+
+
+      </tbody>
+
+
+    </table>
+
+
+    @if(users().length === 0){
+
+    <p class="empty">
+      No hay usuarios autorizados.
+    </p>
+
+    }
+
+
+  </div>
+
+
+  }
+
+
+</section>

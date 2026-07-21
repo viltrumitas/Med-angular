@@ -19,14 +19,6 @@ export function createRegisterForm() {
       nonNullable: true,
       validators: [Validators.required, Validators.pattern(/^\d+$/)],
     }),
-    firstName: new FormControl('', {
-      nonNullable: true,
-      validators: [Validators.required],
-    }),
-    lastName: new FormControl('', {
-      nonNullable: true,
-      validators: [Validators.required],
-    }),
     password: new FormControl('', {
       nonNullable: true,
       validators: [Validators.required, Validators.minLength(8)],

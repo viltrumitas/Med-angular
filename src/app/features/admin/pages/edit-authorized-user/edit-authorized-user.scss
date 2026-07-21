@@ -1,0 +1,214 @@
+.page {
+
+  padding: 1.5rem;
+
+}
+
+
+.header {
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+
+
+  h1 {
+
+    margin: 0;
+    font-size: 1.8rem;
+
+  }
+
+
+  p {
+
+    color: #64748b;
+
+  }
+
+}
+
+
+
+.primary {
+
+  background: #0d9488;
+  color: white;
+
+  border: none;
+
+  padding: .7rem 1.2rem;
+
+  border-radius: .6rem;
+
+  cursor: pointer;
+
+
+}
+
+
+
+.card {
+
+  background: white;
+
+  border-radius: 1rem;
+
+  padding: 1rem;
+
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, .05);
+
+}
+
+
+
+.table-header {
+
+  margin-bottom: 1rem;
+
+}
+
+
+
+table {
+
+  width: 100%;
+  border-collapse: collapse;
+
+}
+
+
+
+th {
+
+  text-align: left;
+
+  font-size: .85rem;
+
+  color: #64748b;
+
+}
+
+
+
+td,
+th {
+
+  padding: 1rem;
+
+  border-bottom: 1px solid #e2e8f0;
+
+}
+
+
+
+.badge {
+
+  padding: .3rem .7rem;
+
+  border-radius: 999px;
+
+  font-size: .75rem;
+
+  font-weight: 600;
+
+  background: #e2e8f0;
+
+}
+
+
+
+.teacher {
+
+  background: #ccfbf1;
+  color: #0f766e;
+
+}
+
+
+
+.student {
+
+  background: #dbeafe;
+  color: #1d4ed8;
+
+}
+
+
+
+.admin {
+
+  background: #fee2e2;
+  color: #b91c1c;
+
+}
+
+
+
+.actions {
+
+  display: flex;
+  gap: .5rem;
+
+}
+
+
+
+.actions button {
+
+  border: none;
+
+  padding: .4rem .8rem;
+
+  border-radius: .5rem;
+
+  cursor: pointer;
+
+}
+
+
+
+.edit {
+
+  background: #e0f2fe;
+
+}
+
+
+
+.delete {
+
+  background: #fee2e2;
+
+}
+
+
+
+.state {
+
+  padding: 2rem;
+
+  text-align: center;
+
+}
+
+
+
+.error {
+
+  color: #dc2626;
+
+}
+
+
+
+.empty {
+
+  padding: 2rem;
+  text-align: center;
+
+  color: #64748b;
+
+}
