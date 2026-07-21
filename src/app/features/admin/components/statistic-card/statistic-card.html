@@ -1,19 +1,21 @@
-<div class="stat-card">
+<article class="stat-card">
+  <div class="stat-card__icon" aria-hidden="true">
+    <i [attr.data-lucide]="icon()"></i>
+  </div>
 
-  <div class="stat-card__header">
-
-    <div class="stat-card__icon">
-      <i [attr.data-lucide]="icon()"></i>
-    </div>
-
+  <div class="stat-card__content">
     <span class="stat-card__title">
       {{ title() }}
     </span>
 
+    <strong class="stat-card__value">
+      {{ value() }}
+    </strong>
+
+    <span class="stat-card__caption"> Registro total </span>
   </div>
 
-  <div class="stat-card__value">
-    {{ value() }}
+  <div class="stat-card__decoration" aria-hidden="true">
+    <i data-lucide="trending-up"></i>
   </div>
-
-</div>
+</article>

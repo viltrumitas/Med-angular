@@ -2,6 +2,7 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { AdminApi } from '../../services/admin-api';
 import { StatisticsResponseDto } from '../../dto/statistics-response.dto';
 import { StatisticCard } from '../../components/statistic-card/statistic-card';
+import { createIcons, icons } from 'lucide';
 
 @Component({
   selector: 'app-statistics',
@@ -30,14 +31,19 @@ export class Statistics implements OnInit {
       next: (statistics) => {
         this.statistics.set(statistics);
         this.loading.set(false);
+        this.renderIcon();
       },
       error: () => {
-        this.error.set(
-          `No se pudieron cargar las estadisticas.`,
-        );
+        this.error.set(`No se pudieron cargar las estadisticas.`);
 
         this.loading.set(false);
       },
+    });
+  }
+
+  private renderIcon() {
+    setTimeout(() => {
+      createIcons({ icons });
     });
   }
 }

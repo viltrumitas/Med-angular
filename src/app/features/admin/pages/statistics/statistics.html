@@ -1,83 +1,213 @@
-<h1>Estadísticas</h1>
+<section class="statistics-page">
+  <!-- =========================
+       HEADER
+  ========================== -->
 
-@if (loading()) {
+  <header class="page-header">
+    <div class="header-content">
+      <span class="header-eyebrow">Administración</span>
 
-<p>Cargando...</p>
+      <h1>Estadísticas</h1>
 
-}
+      <p>
+        Consulta el resumen general de usuarios, casos clínicos, aulas, asignaciones y entregas
+        registradas en MedCases.
+      </p>
+    </div>
 
-@else if (error()) {
+    <div class="header-decoration" aria-hidden="true">
+      <div class="header-icon">
+        <i data-lucide="chart-no-axes-combined"></i>
+      </div>
+    </div>
+  </header>
 
-<p>{{ error() }}</p>
+  <!-- =========================
+       LOADING
+  ========================== -->
 
-}
+  @if (loading()) {
+    <section class="state-container" aria-live="polite">
+      <div class="spinner" aria-hidden="true"></div>
 
-@else {
+      <div class="state-content">
+        <h2>Cargando estadísticas</h2>
 
-@let s = statistics()!;
+        <p>Estamos obteniendo las métricas generales del sistema...</p>
+      </div>
+    </section>
+  }
 
-<div class="statistics-grid">
+  <!-- =========================
+       ERROR
+  ========================== -->
 
-  <app-statistic-card
-    title="Estudiantes"
-    [value]="s.totalStudents"
-    icon="graduation-cap" />
+  @else if (error()) {
+    <section class="state-container state-container--error" role="alert">
+      <div class="state-icon">
+        <i data-lucide="triangle-alert"></i>
+      </div>
 
-  <app-statistic-card
-    title="Docentes"
-    [value]="s.totalTeachers"
-    icon="briefcase" />
+      <div class="state-content">
+        <h2>No pudimos cargar las estadísticas</h2>
 
-  <app-statistic-card
-    title="Administradores"
-    [value]="s.totalAdmins"
-    icon="shield-check" />
+        <p>
+          {{ error() }}
+        </p>
+      </div>
+    </section>
+  }
 
-  <app-statistic-card
-    title="Usuarios autorizados"
-    [value]="s.totalAuthorizedUsers"
-    icon="users" />
+  <!-- =========================
+       CONTENT
+  ========================== -->
 
-  <app-statistic-card
-    title="Casos"
-    [value]="s.totalCases"
-    icon="file-text" />
+  @else {
+    @let s = statistics()!;
 
-  <app-statistic-card
-    title="Casos publicados"
-    [value]="s.publishedCases"
-    icon="check-circle" />
+    <!-- =========================
+         OVERVIEW
+    ========================== -->
 
-  <app-statistic-card
-    title="Borradores"
-    [value]="s.draftCases"
-    icon="file-pen" />
+    <section class="overview-card">
+      <div class="overview-content">
+        <div class="overview-icon">
+          <i data-lucide="activity"></i>
+        </div>
 
-  <app-statistic-card
-    title="Aulas"
-    [value]="s.totalClassrooms"
-    icon="school" />
+        <div>
+          <span class="overview-eyebrow">Resumen del sistema</span>
 
-  <app-statistic-card
-    title="Asignaciones"
-    [value]="s.totalAssignments"
-    icon="clipboard-list" />
+          <h2>Actividad general de MedCases</h2>
 
-  <app-statistic-card
-    title="Entregas"
-    [value]="s.totalSubmissions"
-    icon="inbox" />
+          <p>
+            Visualiza las métricas principales y el estado actual de los recursos registrados en la
+            plataforma.
+          </p>
+        </div>
+      </div>
 
-  <app-statistic-card
-    title="Evaluadas"
-    [value]="s.reviewedSubmissions"
-    icon="badge-check" />
+      <div class="overview-status">
+        <span class="status-dot"></span>
 
-  <app-statistic-card
-    title="Pendientes"
-    [value]="s.pendingSubmissions"
-    icon="clock-3" />
+        Datos actualizados
+      </div>
+    </section>
 
-</div>
+    <!-- =========================
+         USERS
+    ========================== -->
 
-}
+    <section class="statistics-section">
+      <header class="section-header">
+        <div class="section-heading">
+          <div class="section-icon section-icon--users">
+            <i data-lucide="users-round"></i>
+          </div>
+
+          <div>
+            <span class="section-eyebrow">Usuarios</span>
+
+            <h2>Comunidad registrada</h2>
+
+            <p>Distribución de estudiantes, docentes, administradores y usuarios autorizados.</p>
+          </div>
+        </div>
+
+        <span class="section-count">4 métricas</span>
+      </header>
+
+      <div class="statistics-grid statistics-grid--users">
+        <app-statistic-card title="Estudiantes" [value]="s.totalStudents" icon="graduation-cap" />
+
+        <app-statistic-card title="Docentes" [value]="s.totalTeachers" icon="briefcase-business" />
+
+        <app-statistic-card title="Administradores" [value]="s.totalAdmins" icon="shield-check" />
+
+        <app-statistic-card
+          title="Usuarios autorizados"
+          [value]="s.totalAuthorizedUsers"
+          icon="user-check"
+        />
+      </div>
+    </section>
+
+    <!-- =========================
+         CASES AND CLASSROOMS
+    ========================== -->
+
+    <section class="statistics-section">
+      <header class="section-header">
+        <div class="section-heading">
+          <div class="section-icon section-icon--cases">
+            <i data-lucide="briefcase-medical"></i>
+          </div>
+
+          <div>
+            <span class="section-eyebrow">Contenido académico</span>
+
+            <h2>Casos clínicos y aulas</h2>
+
+            <p>
+              Consulta la cantidad de casos creados, su estado de publicación y las aulas activas.
+            </p>
+          </div>
+        </div>
+
+        <span class="section-count">4 métricas</span>
+      </header>
+
+      <div class="statistics-grid statistics-grid--content">
+        <app-statistic-card title="Casos clínicos" [value]="s.totalCases" icon="file-text" />
+
+        <app-statistic-card
+          title="Casos publicados"
+          [value]="s.publishedCases"
+          icon="circle-check"
+        />
+
+        <app-statistic-card title="Borradores" [value]="s.draftCases" icon="file-pen-line" />
+
+        <app-statistic-card title="Aulas" [value]="s.totalClassrooms" icon="school" />
+      </div>
+    </section>
+
+    <!-- =========================
+         ACTIVITY
+    ========================== -->
+
+    <section class="statistics-section">
+      <header class="section-header">
+        <div class="section-heading">
+          <div class="section-icon section-icon--activity">
+            <i data-lucide="clipboard-check"></i>
+          </div>
+
+          <div>
+            <span class="section-eyebrow">Actividad académica</span>
+
+            <h2>Asignaciones y entregas</h2>
+
+            <p>Revisa el volumen de actividades creadas y el progreso general de las entregas.</p>
+          </div>
+        </div>
+
+        <span class="section-count">4 métricas</span>
+      </header>
+
+      <div class="statistics-grid statistics-grid--activity">
+        <app-statistic-card
+          title="Asignaciones"
+          [value]="s.totalAssignments"
+          icon="clipboard-list"
+        />
+
+        <app-statistic-card title="Entregas" [value]="s.totalSubmissions" icon="inbox" />
+
+        <app-statistic-card title="Evaluadas" [value]="s.reviewedSubmissions" icon="badge-check" />
+
+        <app-statistic-card title="Pendientes" [value]="s.pendingSubmissions" icon="clock-3" />
+      </div>
+    </section>
+  }
+</section>

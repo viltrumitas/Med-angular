@@ -1,61 +1,110 @@
-<header>
-  <h1>Panel de Administración</h1>
+<section class="admin-dashboard">
+  <!-- =========================
+       HEADER
+  ========================== -->
 
-  <p>
-    Bienvenido al panel de administración de MedCases.
-  </p>
-</header>
+  <header class="page-header">
+    <div class="header-content">
+      <span class="header-eyebrow">Administración</span>
 
-@if (loading()) {
+      <h1>Panel de Administración</h1>
 
-<p>Cargando resumen...</p>
+      <p>
+        Supervisa la actividad general de MedCases y administra los principales recursos del
+        sistema.
+      </p>
+    </div>
 
-}
+    <div class="header-decoration" aria-hidden="true">
+      <div class="header-icon">
+        <i data-lucide="shield-check"></i>
+      </div>
+    </div>
+  </header>
 
-@else {
+  <!-- =========================
+       LOADING
+  ========================== -->
 
-@let s = summary()!;
+  @if (loading()) {
+    <section class="state-container" aria-live="polite">
+      <div class="spinner" aria-hidden="true"></div>
 
-<div class="summary">
+      <div class="state-content">
+        <h2>Cargando panel administrativo</h2>
 
-  <app-statistic-card
-    title="Estudiantes"
-    [value]="s.totalStudents"
-    icon="graduation-cap" />
+        <p>Estamos obteniendo el resumen general del sistema...</p>
+      </div>
+    </section>
+  } @else {
+    @let s = summary()!;
 
-  <app-statistic-card
-    title="Docentes"
-    [value]="s.totalTeachers"
-    icon="briefcase" />
+    <!-- =========================
+         SUMMARY HEADER
+    ========================== -->
 
-  <app-statistic-card
-    title="Casos"
-    [value]="s.totalCases"
-    icon="file-text" />
+    <section class="section-header">
+      <div>
+        <span class="section-eyebrow">Resumen general</span>
 
-  <app-statistic-card
-    title="Entregas"
-    [value]="s.totalSubmissions"
-    icon="inbox" />
+        <h2>Actividad del sistema</h2>
 
-</div>
+        <p>Consulta rápidamente la cantidad de usuarios, casos clínicos y entregas registradas.</p>
+      </div>
 
-<h2>Accesos rápidos</h2>
+      <div class="section-badge">
+        <span class="status-dot"></span>
 
-<div class="cards">
+        Sistema activo
+      </div>
+    </section>
 
-  <app-admin-card
-    title="Usuarios autorizados"
-    description="Administra estudiantes y docentes autorizados."
-    icon="users"
-    route="/dashboard/admin/authorized-users" />
+    <!-- =========================
+         STATISTICS
+    ========================== -->
 
-  <app-admin-card
-    title="Estadísticas"
-    description="Consulta todas las métricas del sistema."
-    icon="chart-column"
-    route="/dashboard/admin/statistics" />
+    <section class="summary-grid" aria-label="Resumen del sistema">
+      <app-statistic-card title="Estudiantes" [value]="s.totalStudents" icon="graduation-cap" />
 
-</div>
+      <app-statistic-card title="Docentes" [value]="s.totalTeachers" icon="briefcase-business" />
 
-}
+      <app-statistic-card title="Casos clínicos" [value]="s.totalCases" icon="briefcase-medical" />
+
+      <app-statistic-card title="Entregas" [value]="s.totalSubmissions" icon="inbox" />
+    </section>
+
+    <!-- =========================
+         QUICK ACCESS HEADER
+    ========================== -->
+
+    <section class="section-header section-header--access">
+      <div>
+        <span class="section-eyebrow">Herramientas</span>
+
+        <h2>Accesos rápidos</h2>
+
+        <p>Ingresa directamente a las funciones principales de administración.</p>
+      </div>
+    </section>
+
+    <!-- =========================
+         QUICK ACCESS CARDS
+    ========================== -->
+
+    <section class="access-grid" aria-label="Accesos rápidos">
+      <app-admin-card
+        title="Usuarios autorizados"
+        description="Administra los estudiantes y docentes que pueden registrarse en la plataforma."
+        icon="users"
+        route="/dashboard/admin/authorized-users"
+      />
+
+      <app-admin-card
+        title="Estadísticas"
+        description="Consulta métricas detalladas sobre usuarios, casos clínicos y actividad del sistema."
+        icon="chart-column"
+        route="/dashboard/admin/statistics"
+      />
+    </section>
+  }
+</section>
