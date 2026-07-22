@@ -14,7 +14,7 @@ export class AdminApi {
   private readonly api = `${environment.apiUrl}/admin`;
 
   getAuthorizedUsers(): Observable<AuthorizedUserSummaryDto[]> {
-    return this.http.get<AuthorizedUserSummaryDto[]>(this.api);
+    return this.http.get<AuthorizedUserSummaryDto[]>(`${this.api}/authorized-users`);
   }
 
   getAuthorizedUser(id: string): Observable<AuthorizedUserResponseDto> {

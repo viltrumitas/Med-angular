@@ -1,189 +1,311 @@
-<section class="page">
+<section class="authorized-users-page">
+  <!-- =========================
+       HEADER
+  ========================== -->
 
+  <header class="page-header">
+    <div class="header-content">
+      <span class="header-eyebrow">Administración</span>
 
-  <header class="header">
+      <h1>Usuarios autorizados</h1>
 
-    <div>
-      <h1>
-        Usuarios autorizados
-      </h1>
-
-      <p>
-        Gestiona las matrículas permitidas para registrarse.
-      </p>
+      <p>Gestiona las matrículas y los perfiles que tienen permitido registrarse en MedCases.</p>
     </div>
 
+    <button type="button" class="create-user-button" (click)="createUser()">
+      <i data-lucide="user-plus"></i>
 
-    <button class="primary" (click)="createUser()">
-      + Nuevo usuario
+      <span>Nuevo usuario</span>
     </button>
-
-
   </header>
 
-  <div class="search-box">
-
-    <input type="text" placeholder="Buscar por matrícula, nombre o rol..." [value]="search()"
-      (input)="updateSearch($any($event.target).value)" />
-
-  </div>
-
-
-
-  @if(loading()) {
-
-  <div class="state">
-    Cargando usuarios...
-  </div>
-
-
-  } @else if(error()) {
-
-
-  <div class="state error">
-    {{ error() }}
-  </div>
-
-
-  } @else {
-
-
-  <div class="card">
-
-
-    <div class="table-header">
-
-      <h2>
-        Usuarios ({{filteredUsers().length}})
-      </h2>
-
-
-    </div>
-
-
-
-    <table>
-
-
-      <thead>
-
-        <tr>
-
-          <th>
-            Matrícula
-          </th>
-
-          <th>
-            Nombre
-          </th>
-
-          <th>
-            Rol
-          </th>
-
-          <th>
-            Acciones
-          </th>
-
-
-        </tr>
-
-      </thead>
-
-
-
-      <tbody>
-
-
-        @for(user of filteredUsers(); track user.id){
-
-
-        <tr>
-
-
-          <td>
-            {{user.matricula}}
-          </td>
-
-
-
-          <td>
-
-            <div class="user">
-
-              <strong>
-                {{user.firstName}}
-                {{user.lastName}}
-              </strong>
-
-            </div>
-
-          </td>
-
-
-
-          <td>
-
-            <span class="badge" [class.teacher]="user.role === 'TEACHER'" [class.student]="user.role === 'STUDENT'"
-              [class.admin]="user.role === 'ADMIN'">
-
-              {{user.role}}
-
-            </span>
-
-
-          </td>
-
-
-
-          <td>
-
-
-            <div class="actions">
-
-
-              <button class="edit" (click)="editUser(user.id)">
-                Editar
-              </button>
-
-
-              <button class="delete" (click)="deleteUser(user.id)">
-                Eliminar
-              </button>
-
-
-            </div>
-
-
-          </td>
-
-
-
-        </tr>
-
-
-        }
-
-
-      </tbody>
-
-
-    </table>
-
-
-    @if(users().length === 0){
-
-    <p class="empty">
-      No hay usuarios autorizados.
-    </p>
-
-    }
-
-
-  </div>
-
-
+  <!-- =========================
+       LOADING
+  ========================== -->
+
+  @if (loading()) {
+    <section class="state-container" aria-live="polite">
+      <div class="spinner" aria-hidden="true"></div>
+
+      <div class="state-content">
+        <h2>Cargando usuarios</h2>
+
+        <p>Estamos obteniendo la lista de usuarios autorizados...</p>
+      </div>
+    </section>
   }
 
+  <!-- =========================
+       ERROR
+  ========================== -->
 
+  @else if (error()) {
+    <section class="state-container error-state" role="alert">
+      <div class="state-icon">
+        <i data-lucide="triangle-alert"></i>
+      </div>
+
+      <div class="state-content">
+        <h2>No pudimos cargar los usuarios</h2>
+
+        <p>
+          {{ error() }}
+        </p>
+      </div>
+    </section>
+  }
+
+  <!-- =========================
+       CONTENT
+  ========================== -->
+
+  @else {
+    <!-- =========================
+         SUMMARY
+    ========================== -->
+
+    <section class="summary-grid">
+      <article class="summary-card">
+        <div class="summary-icon total">
+          <i data-lucide="users"></i>
+        </div>
+
+        <div class="summary-content">
+          <span>Total autorizados</span>
+
+          <strong>
+            {{ users().length }}
+          </strong>
+
+          <small>Usuarios registrados en la lista</small>
+        </div>
+      </article>
+
+      <article class="summary-card">
+        <div class="summary-icon results">
+          <i data-lucide="list-filter"></i>
+        </div>
+
+        <div class="summary-content">
+          <span>Resultados visibles</span>
+
+          <strong>
+            {{ filteredUsers().length }}
+          </strong>
+
+          <small>Coincidencias con la búsqueda</small>
+        </div>
+      </article>
+    </section>
+
+    <!-- =========================
+         TOOLBAR
+    ========================== -->
+
+    <section class="users-toolbar">
+      <div class="search-field">
+        <i data-lucide="search"></i>
+
+        <input
+          type="search"
+          placeholder="Buscar por matrícula, nombre o rol..."
+          aria-label="Buscar usuarios autorizados"
+          [value]="search()"
+          (input)="updateSearch($any($event.target).value)"
+        />
+
+        @if (search()) {
+          <button
+            type="button"
+            class="clear-search"
+            aria-label="Limpiar búsqueda"
+            (click)="updateSearch('')"
+          >
+            <i data-lucide="x"></i>
+          </button>
+        }
+      </div>
+
+      <div class="toolbar-info">
+        <strong>
+          {{ filteredUsers().length }}
+        </strong>
+
+        <span>
+          {{ filteredUsers().length === 1 ? 'usuario' : 'usuarios' }}
+        </span>
+      </div>
+    </section>
+
+    <!-- =========================
+         EMPTY
+    ========================== -->
+
+    @if (users().length === 0) {
+      <section class="empty-state">
+        <div class="empty-icon">
+          <i data-lucide="user-round-x"></i>
+        </div>
+
+        <h2>No hay usuarios autorizados</h2>
+
+        <p>
+          Agrega estudiantes, docentes o administradores para permitirles crear una cuenta en la
+          plataforma.
+        </p>
+
+        <button type="button" class="empty-action" (click)="createUser()">
+          <i data-lucide="user-plus"></i>
+
+          <span>Agregar primer usuario</span>
+        </button>
+      </section>
+    }
+
+    <!-- =========================
+         NO RESULTS
+    ========================== -->
+
+    @else if (filteredUsers().length === 0) {
+      <section class="no-results">
+        <div class="no-results-icon">
+          <i data-lucide="search-x"></i>
+        </div>
+
+        <h2>No encontramos usuarios</h2>
+
+        <p>
+          No hay resultados que coincidan con
+          <strong>“{{ search() }}”</strong>.
+        </p>
+
+        <button type="button" class="clear-results-button" (click)="updateSearch('')">
+          Limpiar búsqueda
+        </button>
+      </section>
+    }
+
+    <!-- =========================
+         USERS TABLE
+    ========================== -->
+
+    @else {
+      <section class="users-card">
+        <header class="table-header">
+          <div>
+            <span class="table-eyebrow">Directorio</span>
+
+            <h2>Usuarios autorizados</h2>
+
+            <p>Consulta y administra las matrículas disponibles para registro.</p>
+          </div>
+
+          <div class="table-counter">
+            {{ filteredUsers().length }}
+          </div>
+        </header>
+
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Matrícula</th>
+
+                <th>Nombre</th>
+
+                <th>Rol</th>
+
+                <th class="actions-heading">Acciones</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              @for (user of filteredUsers(); track user.id) {
+                <tr>
+                  <td data-label="Matrícula">
+                    <span class="matricula">
+                      {{ user.matricula }}
+                    </span>
+                  </td>
+
+                  <td data-label="Nombre">
+                    <div class="user-info">
+                      <div class="user-avatar" aria-hidden="true">
+                        {{ user.firstName.charAt(0) }}
+                        {{ user.lastName.charAt(0) }}
+                      </div>
+
+                      <div class="user-name">
+                        <strong>
+                          {{ user.firstName }}
+                          {{ user.lastName }}
+                        </strong>
+
+                        <span>Usuario autorizado</span>
+                      </div>
+                    </div>
+                  </td>
+
+                  <td data-label="Rol">
+                    <span
+                      class="role-badge"
+                      [class.role-badge--teacher]="user.role === 'TEACHER'"
+                      [class.role-badge--student]="user.role === 'STUDENT'"
+                      [class.role-badge--admin]="user.role === 'ADMIN'"
+                    >
+                      <span class="role-dot"></span>
+
+                      @switch (user.role) {
+                        @case ('TEACHER') {
+                          Docente
+                        }
+
+                        @case ('STUDENT') {
+                          Estudiante
+                        }
+
+                        @case ('ADMIN') {
+                          Administrador
+                        }
+
+                        @default {
+                          {{ user.role }}
+                        }
+                      }
+                    </span>
+                  </td>
+
+                  <td data-label="Acciones">
+                    <div class="actions">
+                      <button
+                        type="button"
+                        class="action-button action-button--edit"
+                        aria-label="Editar usuario"
+                        (click)="editUser(user.id)"
+                      >
+                        <i data-lucide="pencil"></i>
+
+                        <span>Editar</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        class="action-button action-button--delete"
+                        aria-label="Eliminar usuario"
+                        (click)="deleteUser(user.id)"
+                      >
+                        <i data-lucide="trash-2"></i>
+
+                        <span>Eliminar</span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
+    }
+  }
 </section>

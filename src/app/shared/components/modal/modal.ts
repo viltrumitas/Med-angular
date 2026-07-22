@@ -2,12 +2,15 @@ import { afterRenderEffect, Component, ElementRef, input, output, viewChild } fr
 
 @Component({
   selector: 'app-modal',
+  standalone: true,
   imports: [],
   templateUrl: './modal.html',
   styleUrl: './modal.scss',
 })
 export class Modal {
   readonly isOpen = input.required<boolean>();
+  readonly preventClose = input(false);
+
   readonly closed = output<void>();
 
   private readonly dialog = viewChild.required<ElementRef<HTMLDialogElement>>('dialog');
@@ -18,13 +21,20 @@ export class Modal {
 
       if (this.isOpen() && !dialogElement.open) {
         dialogElement.showModal();
-      } else if (!this.isOpen() && dialogElement.open) {
+        return;
+      }
+
+      if (!this.isOpen() && dialogElement.open) {
         dialogElement.close();
       }
     });
   }
 
   requestClose(): void {
+    if (this.preventClose()) {
+      return;
+    }
+
     this.closed.emit();
   }
 

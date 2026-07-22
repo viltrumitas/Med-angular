@@ -1,44 +1,243 @@
-<form
-  [formGroup]="form()"
-  (ngSubmit)="submit()">
+<app-modal [isOpen]="isOpen()" [preventClose]="submitting()" (closed)="onCancel()">
+  <form class="authorized-user-form" [formGroup]="form()" (ngSubmit)="submit()" novalidate>
+    <!-- =========================
+         HEADER
+    ========================== -->
 
-  <label>Matrícula</label>
+    <header class="form-header">
+      <div class="form-header__icon" aria-hidden="true">
+        <i data-lucide="user-round-plus"></i>
+      </div>
 
-  <input
-    type="number"
-    formControlName="matricula">
+      <div class="form-header__content">
+        <span class="form-header__eyebrow"> Administración de usuarios </span>
 
-  <label>Nombre</label>
+        <h2>{{ submitLabel() }}</h2>
 
-  <input
-    type="text"
-    formControlName="firstName">
+        <p>
+          Registra la información del usuario y define el rol con el que podrá acceder a MedCases.
+        </p>
+      </div>
 
-  <label>Apellido</label>
+      <button
+        type="button"
+        class="form-header__close"
+        aria-label="Cerrar modal"
+        [disabled]="submitting()"
+        (click)="onCancel()"
+      >
+        <i data-lucide="x"></i>
+      </button>
+    </header>
 
-  <input
-    type="text"
-    formControlName="lastName">
+    <!-- =========================
+         BODY
+    ========================== -->
 
-  <label>Rol</label>
+    <section class="form-body">
+      @if (error()) {
+        <div class="form-alert" role="alert">
+          <i data-lucide="triangle-alert"></i>
 
-  <select
-    formControlName="role">
+          <div>
+            <strong>No se pudo guardar el usuario</strong>
+            <p>{{ error() }}</p>
+          </div>
+        </div>
+      }
 
-    <option value="STUDENT">
-      Estudiante
-    </option>
+      <div class="form-section-header">
+        <div>
+          <span class="form-section-header__eyebrow"> Información personal </span>
 
-    <option value="TEACHER">
-      Docente
-    </option>
+          <h3>Datos del usuario</h3>
 
-  </select>
+          <p>Ingresa los datos que identificarán al usuario en el sistema.</p>
+        </div>
+      </div>
 
-  <button type="submit">
+      <div class="form-grid">
+        <!-- MATRÍCULA -->
 
-    {{ submitLabel( )}}
+        <div
+          class="form-field form-field--full"
+          [class.form-field--invalid]="
+            form().controls.matricula.invalid && form().controls.matricula.touched
+          "
+        >
+          <label for="authorized-user-matricula">
+            Matrícula
+            <span aria-hidden="true">*</span>
+          </label>
 
-  </button>
+          <div class="input-control">
+            <i data-lucide="id-card"></i>
 
-</form>
+            <input
+              id="authorized-user-matricula"
+              type="number"
+              formControlName="matricula"
+              placeholder="Ej. 20260001"
+              inputmode="numeric"
+              autocomplete="off"
+            />
+          </div>
+
+          <small class="field-help"> La matrícula debe ser única dentro de la plataforma. </small>
+
+          @if (form().controls.matricula.invalid && form().controls.matricula.touched) {
+            <small class="field-error">
+              <i data-lucide="circle-alert"></i>
+              Ingresa una matrícula válida.
+            </small>
+          }
+        </div>
+
+        <!-- NOMBRE -->
+
+        <div
+          class="form-field"
+          [class.form-field--invalid]="
+            form().controls.firstName.invalid && form().controls.firstName.touched
+          "
+        >
+          <label for="authorized-user-first-name">
+            Nombre
+            <span aria-hidden="true">*</span>
+          </label>
+
+          <div class="input-control">
+            <i data-lucide="user"></i>
+
+            <input
+              id="authorized-user-first-name"
+              type="text"
+              formControlName="firstName"
+              placeholder="Ej. Alejandra"
+              autocomplete="given-name"
+            />
+          </div>
+
+          @if (form().controls.firstName.invalid && form().controls.firstName.touched) {
+            <small class="field-error">
+              <i data-lucide="circle-alert"></i>
+              Ingresa el nombre del usuario.
+            </small>
+          }
+        </div>
+
+        <!-- APELLIDO -->
+
+        <div
+          class="form-field"
+          [class.form-field--invalid]="
+            form().controls.lastName.invalid && form().controls.lastName.touched
+          "
+        >
+          <label for="authorized-user-last-name">
+            Apellido
+            <span aria-hidden="true">*</span>
+          </label>
+
+          <div class="input-control">
+            <i data-lucide="user-round"></i>
+
+            <input
+              id="authorized-user-last-name"
+              type="text"
+              formControlName="lastName"
+              placeholder="Ej. Ramírez"
+              autocomplete="family-name"
+            />
+          </div>
+
+          @if (form().controls.lastName.invalid && form().controls.lastName.touched) {
+            <small class="field-error">
+              <i data-lucide="circle-alert"></i>
+              Ingresa el apellido del usuario.
+            </small>
+          }
+        </div>
+
+        <!-- ROL -->
+
+        <div
+          class="form-field form-field--full"
+          [class.form-field--invalid]="form().controls.role.invalid && form().controls.role.touched"
+        >
+          <label for="authorized-user-role">
+            Rol
+            <span aria-hidden="true">*</span>
+          </label>
+
+          <div class="select-control">
+            <i data-lucide="shield-user"></i>
+
+            <select
+              id="authorized-user-role"
+              formControlName="role"
+              aria-describedby="authorized-user-role-help"
+            >
+              <option value="STUDENT">Estudiante</option>
+              <option value="TEACHER">Docente</option>
+            </select>
+
+            <i class="select-control__chevron" data-lucide="chevron-down"></i>
+          </div>
+
+          <small id="authorized-user-role-help" class="field-help">
+            El rol determina los permisos y las funciones disponibles.
+          </small>
+
+          @if (form().controls.role.invalid && form().controls.role.touched) {
+            <small class="field-error">
+              <i data-lucide="circle-alert"></i>
+              Selecciona un rol válido.
+            </small>
+          }
+        </div>
+      </div>
+
+      <aside class="role-info">
+        <div class="role-info__icon" aria-hidden="true">
+          <i data-lucide="info"></i>
+        </div>
+
+        <div>
+          <strong>Permisos del usuario</strong>
+
+          <p>
+            Los estudiantes podrán unirse a aulas y realizar entregas. Los docentes podrán crear
+            casos, aulas y asignaciones.
+          </p>
+        </div>
+      </aside>
+    </section>
+
+    <!-- =========================
+         ACTIONS
+    ========================== -->
+
+    <footer class="form-actions">
+      <button
+        type="button"
+        class="form-button form-button--secondary"
+        [disabled]="submitting()"
+        (click)="onCancel()"
+      >
+        <i data-lucide="x"></i>
+        <span>Cancelar</span>
+      </button>
+
+      <button type="submit" class="form-button form-button--primary" [disabled]="submitting()">
+        @if (submitting()) {
+          <span class="form-button__spinner" aria-hidden="true"></span>
+          <span>Guardando...</span>
+        } @else {
+          <i data-lucide="save"></i>
+          <span>{{ submitLabel() }}</span>
+        }
+      </button>
+    </footer>
+  </form>
+</app-modal>

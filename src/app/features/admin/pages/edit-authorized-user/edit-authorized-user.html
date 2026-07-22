@@ -1,4 +1,9 @@
 <app-authorized-user-form
   [form]="form"
+  [isOpen]="isModalOpen()"
+  [submitting]="saving()"
+  [error]="submitError()"
   submitLabel="Guardar cambios"
-  (submitted)="updateUser()" />
+  (submitted)="updateUser()"
+  (closeRequested)="closeModal()"
+/>

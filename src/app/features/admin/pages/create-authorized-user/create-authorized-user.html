@@ -1,4 +1,9 @@
 <app-authorized-user-form
   [form]="form"
+  [isOpen]="isOpen()"
+  [submitting]="loading()"
+  [error]="error()"
   submitLabel="Crear usuario"
-  (submitted)="createUser()" />
+  (submitted)="createUser()"
+  (closeRequested)="closeModal()"
+/>
