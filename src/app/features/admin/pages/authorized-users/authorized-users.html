@@ -12,11 +12,19 @@
       <p>Gestiona las matrículas y los perfiles que tienen permitido registrarse en MedCases.</p>
     </div>
 
-    <button type="button" class="create-user-button" (click)="createUser()">
-      <i data-lucide="user-plus"></i>
+    <div class="header-btn-container">
+      <button type="button" class="create-user-button" (click)="createUser()">
+        <i data-lucide="user-plus"></i>
 
-      <span>Nuevo usuario</span>
-    </button>
+        <span>Nuevo usuario</span>
+      </button>
+
+      <button type="button" class="import-button" (click)="openImportModal()">
+        <i data-lucide="file-up"></i>
+        <span>Importar CSV</span>
+      </button>
+    </div>
+
   </header>
 
   <!-- =========================
@@ -24,15 +32,15 @@
   ========================== -->
 
   @if (loading()) {
-    <section class="state-container" aria-live="polite">
-      <div class="spinner" aria-hidden="true"></div>
+  <section class="state-container" aria-live="polite">
+    <div class="spinner" aria-hidden="true"></div>
 
-      <div class="state-content">
-        <h2>Cargando usuarios</h2>
+    <div class="state-content">
+      <h2>Cargando usuarios</h2>
 
-        <p>Estamos obteniendo la lista de usuarios autorizados...</p>
-      </div>
-    </section>
+      <p>Estamos obteniendo la lista de usuarios autorizados...</p>
+    </div>
+  </section>
   }
 
   <!-- =========================
@@ -40,19 +48,19 @@
   ========================== -->
 
   @else if (error()) {
-    <section class="state-container error-state" role="alert">
-      <div class="state-icon">
-        <i data-lucide="triangle-alert"></i>
-      </div>
+  <section class="state-container error-state" role="alert">
+    <div class="state-icon">
+      <i data-lucide="triangle-alert"></i>
+    </div>
 
-      <div class="state-content">
-        <h2>No pudimos cargar los usuarios</h2>
+    <div class="state-content">
+      <h2>No pudimos cargar los usuarios</h2>
 
-        <p>
-          {{ error() }}
-        </p>
-      </div>
-    </section>
+      <p>
+        {{ error() }}
+      </p>
+    </div>
+  </section>
   }
 
   <!-- =========================
@@ -60,252 +68,234 @@
   ========================== -->
 
   @else {
-    <!-- =========================
+  <!-- =========================
          SUMMARY
     ========================== -->
 
-    <section class="summary-grid">
-      <article class="summary-card">
-        <div class="summary-icon total">
-          <i data-lucide="users"></i>
-        </div>
-
-        <div class="summary-content">
-          <span>Total autorizados</span>
-
-          <strong>
-            {{ users().length }}
-          </strong>
-
-          <small>Usuarios registrados en la lista</small>
-        </div>
-      </article>
-
-      <article class="summary-card">
-        <div class="summary-icon results">
-          <i data-lucide="list-filter"></i>
-        </div>
-
-        <div class="summary-content">
-          <span>Resultados visibles</span>
-
-          <strong>
-            {{ filteredUsers().length }}
-          </strong>
-
-          <small>Coincidencias con la búsqueda</small>
-        </div>
-      </article>
-    </section>
-
-    <!-- =========================
-         TOOLBAR
-    ========================== -->
-
-    <section class="users-toolbar">
-      <div class="search-field">
-        <i data-lucide="search"></i>
-
-        <input
-          type="search"
-          placeholder="Buscar por matrícula, nombre o rol..."
-          aria-label="Buscar usuarios autorizados"
-          [value]="search()"
-          (input)="updateSearch($any($event.target).value)"
-        />
-
-        @if (search()) {
-          <button
-            type="button"
-            class="clear-search"
-            aria-label="Limpiar búsqueda"
-            (click)="updateSearch('')"
-          >
-            <i data-lucide="x"></i>
-          </button>
-        }
+  <section class="summary-grid">
+    <article class="summary-card">
+      <div class="summary-icon total">
+        <i data-lucide="users"></i>
       </div>
 
-      <div class="toolbar-info">
+      <div class="summary-content">
+        <span>Total autorizados</span>
+
+        <strong>
+          {{ users().length }}
+        </strong>
+
+        <small>Usuarios registrados en la lista</small>
+      </div>
+    </article>
+
+    <article class="summary-card">
+      <div class="summary-icon results">
+        <i data-lucide="list-filter"></i>
+      </div>
+
+      <div class="summary-content">
+        <span>Resultados visibles</span>
+
         <strong>
           {{ filteredUsers().length }}
         </strong>
 
-        <span>
-          {{ filteredUsers().length === 1 ? 'usuario' : 'usuarios' }}
-        </span>
+        <small>Coincidencias con la búsqueda</small>
       </div>
-    </section>
+    </article>
+  </section>
 
-    <!-- =========================
+  <!-- =========================
+         TOOLBAR
+    ========================== -->
+
+  <section class="users-toolbar">
+    <div class="search-field">
+      <i data-lucide="search"></i>
+
+      <input type="search" placeholder="Buscar por matrícula, nombre o rol..." aria-label="Buscar usuarios autorizados"
+        [value]="search()" (input)="updateSearch($any($event.target).value)" />
+
+      @if (search()) {
+      <button type="button" class="clear-search" aria-label="Limpiar búsqueda" (click)="updateSearch('')">
+        <i data-lucide="x"></i>
+      </button>
+      }
+    </div>
+
+    <div class="toolbar-info">
+      <strong>
+        {{ filteredUsers().length }}
+      </strong>
+
+      <span>
+        {{ filteredUsers().length === 1 ? 'usuario' : 'usuarios' }}
+      </span>
+    </div>
+  </section>
+
+  <!-- =========================
          EMPTY
     ========================== -->
 
-    @if (users().length === 0) {
-      <section class="empty-state">
-        <div class="empty-icon">
-          <i data-lucide="user-round-x"></i>
-        </div>
+  @if (users().length === 0) {
+  <section class="empty-state">
+    <div class="empty-icon">
+      <i data-lucide="user-round-x"></i>
+    </div>
 
-        <h2>No hay usuarios autorizados</h2>
+    <h2>No hay usuarios autorizados</h2>
 
-        <p>
-          Agrega estudiantes, docentes o administradores para permitirles crear una cuenta en la
-          plataforma.
-        </p>
+    <p>
+      Agrega estudiantes, docentes o administradores para permitirles crear una cuenta en la
+      plataforma.
+    </p>
 
-        <button type="button" class="empty-action" (click)="createUser()">
-          <i data-lucide="user-plus"></i>
+    <button type="button" class="empty-action" (click)="createUser()">
+      <i data-lucide="user-plus"></i>
 
-          <span>Agregar primer usuario</span>
-        </button>
-      </section>
-    }
+      <span>Agregar primer usuario</span>
+    </button>
+  </section>
+  }
 
-    <!-- =========================
+  <!-- =========================
          NO RESULTS
     ========================== -->
 
-    @else if (filteredUsers().length === 0) {
-      <section class="no-results">
-        <div class="no-results-icon">
-          <i data-lucide="search-x"></i>
-        </div>
+  @else if (filteredUsers().length === 0) {
+  <section class="no-results">
+    <div class="no-results-icon">
+      <i data-lucide="search-x"></i>
+    </div>
 
-        <h2>No encontramos usuarios</h2>
+    <h2>No encontramos usuarios</h2>
 
-        <p>
-          No hay resultados que coincidan con
-          <strong>“{{ search() }}”</strong>.
-        </p>
+    <p>
+      No hay resultados que coincidan con
+      <strong>“{{ search() }}”</strong>.
+    </p>
 
-        <button type="button" class="clear-results-button" (click)="updateSearch('')">
-          Limpiar búsqueda
-        </button>
-      </section>
-    }
+    <button type="button" class="clear-results-button" (click)="updateSearch('')">
+      Limpiar búsqueda
+    </button>
+  </section>
+  }
 
-    <!-- =========================
+  <!-- =========================
          USERS TABLE
     ========================== -->
 
-    @else {
-      <section class="users-card">
-        <header class="table-header">
-          <div>
-            <span class="table-eyebrow">Directorio</span>
+  @else {
+  <section class="users-card">
+    <header class="table-header">
+      <div>
+        <span class="table-eyebrow">Directorio</span>
 
-            <h2>Usuarios autorizados</h2>
+        <h2>Usuarios autorizados</h2>
 
-            <p>Consulta y administra las matrículas disponibles para registro.</p>
-          </div>
+        <p>Consulta y administra las matrículas disponibles para registro.</p>
+      </div>
 
-          <div class="table-counter">
-            {{ filteredUsers().length }}
-          </div>
-        </header>
+      <div class="table-counter">
+        {{ filteredUsers().length }}
+      </div>
+    </header>
 
-        <div class="table-wrapper">
-          <table>
-            <thead>
-              <tr>
-                <th>Matrícula</th>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Matrícula</th>
 
-                <th>Nombre</th>
+            <th>Nombre</th>
 
-                <th>Rol</th>
+            <th>Rol</th>
 
-                <th class="actions-heading">Acciones</th>
-              </tr>
-            </thead>
+            <th class="actions-heading">Acciones</th>
+          </tr>
+        </thead>
 
-            <tbody>
-              @for (user of filteredUsers(); track user.id) {
-                <tr>
-                  <td data-label="Matrícula">
-                    <span class="matricula">
-                      {{ user.matricula }}
-                    </span>
-                  </td>
+        <tbody>
+          @for (user of filteredUsers(); track user.id) {
+          <tr>
+            <td data-label="Matrícula">
+              <span class="matricula">
+                {{ user.matricula }}
+              </span>
+            </td>
 
-                  <td data-label="Nombre">
-                    <div class="user-info">
-                      <div class="user-avatar" aria-hidden="true">
-                        {{ user.firstName.charAt(0) }}
-                        {{ user.lastName.charAt(0) }}
-                      </div>
+            <td data-label="Nombre">
+              <div class="user-info">
+                <div class="user-avatar" aria-hidden="true">
+                  {{ user.firstName.charAt(0) }}
+                  {{ user.lastName.charAt(0) }}
+                </div>
 
-                      <div class="user-name">
-                        <strong>
-                          {{ user.firstName }}
-                          {{ user.lastName }}
-                        </strong>
+                <div class="user-name">
+                  <strong>
+                    {{ user.firstName }}
+                    {{ user.lastName }}
+                  </strong>
 
-                        <span>Usuario autorizado</span>
-                      </div>
-                    </div>
-                  </td>
+                  <span>Usuario autorizado</span>
+                </div>
+              </div>
+            </td>
 
-                  <td data-label="Rol">
-                    <span
-                      class="role-badge"
-                      [class.role-badge--teacher]="user.role === 'TEACHER'"
-                      [class.role-badge--student]="user.role === 'STUDENT'"
-                      [class.role-badge--admin]="user.role === 'ADMIN'"
-                    >
-                      <span class="role-dot"></span>
+            <td data-label="Rol">
+              <span class="role-badge" [class.role-badge--teacher]="user.role === 'TEACHER'"
+                [class.role-badge--student]="user.role === 'STUDENT'" [class.role-badge--admin]="user.role === 'ADMIN'">
+                <span class="role-dot"></span>
 
-                      @switch (user.role) {
-                        @case ('TEACHER') {
-                          Docente
-                        }
+                @switch (user.role) {
+                @case ('TEACHER') {
+                Docente
+                }
 
-                        @case ('STUDENT') {
-                          Estudiante
-                        }
+                @case ('STUDENT') {
+                Estudiante
+                }
 
-                        @case ('ADMIN') {
-                          Administrador
-                        }
+                @case ('ADMIN') {
+                Administrador
+                }
 
-                        @default {
-                          {{ user.role }}
-                        }
-                      }
-                    </span>
-                  </td>
+                @default {
+                {{ user.role }}
+                }
+                }
+              </span>
+            </td>
 
-                  <td data-label="Acciones">
-                    <div class="actions">
-                      <button
-                        type="button"
-                        class="action-button action-button--edit"
-                        aria-label="Editar usuario"
-                        (click)="editUser(user.id)"
-                      >
-                        <i data-lucide="pencil"></i>
+            <td data-label="Acciones">
+              <div class="actions">
+                <button type="button" class="action-button action-button--edit" aria-label="Editar usuario"
+                  (click)="editUser(user.id)">
+                  <i data-lucide="pencil"></i>
 
-                        <span>Editar</span>
-                      </button>
+                  <span>Editar</span>
+                </button>
 
-                      <button
-                        type="button"
-                        class="action-button action-button--delete"
-                        aria-label="Eliminar usuario"
-                        (click)="deleteUser(user.id)"
-                      >
-                        <i data-lucide="trash-2"></i>
+                <button type="button" class="action-button action-button--delete" aria-label="Eliminar usuario"
+                  (click)="deleteUser(user.id)">
+                  <i data-lucide="trash-2"></i>
 
-                        <span>Eliminar</span>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              }
-            </tbody>
-          </table>
-        </div>
-      </section>
-    }
+                  <span>Eliminar</span>
+                </button>
+              </div>
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+  }
+  }
+
+  @if (importOpen()) {
+  <app-import-authorized-users (closeRequested)="closeImportModal()" (importCompleted)="onImportCompleted($event)" />
   }
 </section>

@@ -3,12 +3,14 @@ import { Router } from '@angular/router';
 
 import { AdminApi } from '../../services/admin-api';
 import { AuthorizedUserSummaryDto } from '../../dto/authorized-user-summary.dto';
+import { ImportAuthorizedUsersResponseDto } from '../../dto/import-authorized-users-response-.dto';
 import { createIcons, icons } from 'lucide';
+import { ImportAuthorizedUsers } from '../../components/import-authorized-users/import-authorized-users';
 
 @Component({
   selector: 'app-authorized-users',
   standalone: true,
-  imports: [],
+  imports: [ImportAuthorizedUsers],
   templateUrl: './authorized-users.html',
   styleUrl: './authorized-users.scss',
 })
@@ -20,6 +22,7 @@ export class AuthorizedUsers implements OnInit {
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
   readonly search = signal('');
+  readonly importOpen = signal(false);
   readonly filteredUsers = computed(() => {
     const value = this.search().toLowerCase().trim();
 
@@ -91,6 +94,23 @@ export class AuthorizedUsers implements OnInit {
         this.error.set('No se pudo eliminar el usuario.');
       },
     });
+  }
+
+  openImportModal() {
+    console.log('Abrir modal');
+    this.importOpen.set(true);
+  }
+
+  closeImportModal() {
+    this.importOpen.set(false);
+  }
+
+  onImportCompleted(result: ImportAuthorizedUsersResponseDto) {
+
+    this.loadUsers();
+
+    console.log(result);
+
   }
 
   private renderIcons() {

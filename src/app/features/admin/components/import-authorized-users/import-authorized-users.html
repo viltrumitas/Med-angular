@@ -1,0 +1,178 @@
+<app-modal [isOpen]="isOpen()" [preventClose]="loading()" (closed)="closeModal()">
+
+  @if (!result()) {
+
+  <div class="modal-header">
+    <h2>Importar usuarios</h2>
+
+    <p>
+      Arrastra un archivo CSV o selecciónalo desde tu equipo.
+    </p>
+  </div>
+
+  <div class="dropzone" [class.dropzone--active]="dragging()" (dragover)="onDragOver($event)"
+    (dragleave)="onDragLeave()" (drop)="onDrop($event)" (click)="fileInput.click()">
+
+    <input #fileInput hidden type="file" accept=".csv" (change)="onFileSelected($event)" />
+
+    @if (!file()) {
+
+    <div class="dropzone-content">
+
+      <div class="dropzone-icon">
+        <i data-lucide="file-text"></i>
+      </div>
+
+      <strong>
+        Arrastra un archivo CSV aquí
+      </strong>
+
+      <span>
+        o haz clic para seleccionarlo
+      </span>
+
+    </div>
+
+    } @else {
+
+    <div class="selected-file">
+
+      <div class="file-icon">
+        <i data-lucide="file-text"></i>
+      </div>
+
+      <div>
+
+        <strong>
+          {{ file()!.name }}
+        </strong>
+
+        <p>
+          Archivo listo para importar
+        </p>
+
+      </div>
+
+    </div>
+
+    }
+
+  </div>
+
+  @if (error()) {
+
+  <div class="error">
+    {{ error() }}
+  </div>
+
+  }
+
+  <div class="modal-actions">
+
+    <button type="button" (click)="closeModal()">
+
+      Cancelar
+
+    </button>
+
+    <button type="button" [disabled]="!file() || loading()" (click)="importUsers()">
+
+      {{ loading() ? 'Importando...' : 'Importar' }}
+
+    </button>
+
+  </div>
+
+  }
+
+  @else {
+
+  @let response = result()!;
+
+  <div class="import-result">
+
+    <h3>Resultado de la importación</h3>
+
+    <p>
+      <i data-lucide="user-round-check"></i>
+      <span>Importados: </span>
+      <strong>{{ response.imported }}</strong>
+    </p>
+
+    <p>
+      <i data-lucide="sticky-notes"></i>
+      <span>Duplicados: </span>
+      <strong>{{ response.duplicates.count }}</strong>
+    </p>
+
+    <p>
+      <i data-lucide="list-check"></i>
+      <span>Filas procesadas</span>
+      <strong>{{ response.totalRows }}</strong>
+    </p>
+
+    @if (response.duplicates.count > 0) {
+
+    <div class="duplicates-section">
+
+      <h4>Usuarios ya registrados</h4>
+
+      <ul>
+
+        @for (user of response.duplicates.users; track user.matricula) {
+
+        <li>
+
+          <strong>{{ user.matricula }}</strong>
+
+          {{ user.firstName }}
+          {{ user.lastName }}
+
+          <span class="role">
+            {{ getRoleLabel(user.role) }}
+          </span>
+
+        </li>
+
+        }
+
+      </ul>
+
+    </div>
+
+    }
+
+    @if (response.errors.length > 0) {
+
+    <h4>Errores encontrados</h4>
+
+    <ul>
+
+      @for (error of response.errors; track error.row) {
+
+      <li>
+        Fila {{ error.row }}:
+        {{ error.message }}
+      </li>
+
+      }
+
+    </ul>
+
+    }
+
+    <div class="modal-actions">
+
+      <button type="button" (click)="closeModal()">
+
+        Cerrar
+
+      </button>
+
+    </div>
+
+  </div>
+
+  }
+
+</app-modal>

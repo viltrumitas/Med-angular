@@ -7,6 +7,7 @@ import { AuthorizedUserResponseDto } from '../dto/authorized-user-response.dto';
 import { CreateAuthorizedUserDto } from '../dto/create-authorized-user.dto';
 import { UpdateAuthorizedUserDto } from '../dto/update-authorized-user.dto';
 import { StatisticsResponseDto } from '../dto/statistics-response.dto';
+import { ImportAuthorizedUsersResponseDto } from '../dto/import-authorized-users-response-.dto';
 
 @Service()
 export class AdminApi {
@@ -38,5 +39,17 @@ export class AdminApi {
 
   getStatistics(): Observable<StatisticsResponseDto> {
     return this.http.get<StatisticsResponseDto>(`${this.api}/statistics`);
+  }
+
+  importAuthorizedUsers(
+    file: File,
+  ): Observable<ImportAuthorizedUsersResponseDto> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return this.http.post<ImportAuthorizedUsersResponseDto>(
+      `${this.api}/authorized-users/import`,
+      formData,
+    )
   }
 }
