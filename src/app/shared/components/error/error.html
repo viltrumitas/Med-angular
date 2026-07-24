@@ -1,0 +1,21 @@
+@if (errorService.error(); as error) {
+  <div class="error-alert" role="alert">
+    <div class="error-alert__icon">
+      <i data-lucide="triangle-alert"></i>
+    </div>
+
+    <div class="error-alert__content">
+      <strong>{{ error.title }}</strong>
+      <p>{{ error.message }}</p>
+    </div>
+
+    <button
+      type="button"
+      class="error-alert__close"
+      aria-label="Cerrar mensaje"
+      (click)="errorService.clear()"
+    >
+      <i data-lucide="x"></i>
+    </button>
+  </div>
+}

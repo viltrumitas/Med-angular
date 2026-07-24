@@ -1,7 +1,8 @@
-import { Component, signal, inject, Output, EventEmitter } from '@angular/core';
+import { Component, signal, inject, Output, EventEmitter, AfterViewInit } from '@angular/core';
 import { ImportAuthorizedUsersResponseDto } from '../../dto/import-authorized-users-response-.dto';
 import { AdminApi } from '../../services/admin-api';
 import { Modal } from '../../../../shared/components/modal/modal';
+import { createIcons, icons } from 'lucide';
 
 @Component({
   selector: 'app-import-authorized-users',
@@ -10,26 +11,22 @@ import { Modal } from '../../../../shared/components/modal/modal';
   templateUrl: './import-authorized-users.html',
   styleUrl: './import-authorized-users.scss',
 })
-export class ImportAuthorizedUsers {
-
-  private readonly api = inject(AdminApi)
+export class ImportAuthorizedUsers implements AfterViewInit {
+  private readonly api = inject(AdminApi);
 
   readonly isOpen = signal(true);
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
   readonly file = signal<File | null>(null);
   readonly dragging = signal(false);
-
   readonly result = signal<ImportAuthorizedUsersResponseDto | null>(null);
 
   @Output()
   closeRequested = new EventEmitter<void>();
-
   @Output()
   importCompleted = new EventEmitter<ImportAuthorizedUsersResponseDto>();
 
   private setSelectedFile(file: File) {
-
     this.result.set(null);
     this.error.set(null);
 
@@ -40,6 +37,10 @@ export class ImportAuthorizedUsers {
     }
 
     this.file.set(file);
+  }
+
+  ngAfterViewInit(): void {
+    this.renderIcons();
   }
 
   onFileSelected(event: Event) {
@@ -60,7 +61,6 @@ export class ImportAuthorizedUsers {
     }
 
     this.error.set(null);
-
     this.loading.set(true);
 
     this.api.importAuthorizedUsers(file).subscribe({
@@ -71,13 +71,14 @@ export class ImportAuthorizedUsers {
         if (result.success) {
           this.importCompleted.emit(result);
         }
+
+        this.renderIcons();
       },
-      error: err => {
-        this.error.set(
-          err.error?.message ?? 'No se pudo importar el archivo.'
-        );
+      error: (err) => {
+        this.error.set(err.error?.message ?? 'No se pudo importar el archivo.');
         this.loading.set(false);
-      }
+        this.renderIcons();
+      },
     });
   }
 
@@ -122,7 +123,6 @@ export class ImportAuthorizedUsers {
     event.preventDefault();
 
     this.dragging.set(false);
-
     const files = event.dataTransfer?.files;
 
     if (!files?.length) {
@@ -130,5 +130,11 @@ export class ImportAuthorizedUsers {
     }
 
     this.setSelectedFile(files[0]);
+  }
+
+  private renderIcons() {
+    setTimeout(() => {
+      createIcons({ icons });
+    });
   }
 }

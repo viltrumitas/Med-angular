@@ -1,178 +1,348 @@
 <app-modal [isOpen]="isOpen()" [preventClose]="loading()" (closed)="closeModal()">
+  <section class="import-modal">
+    @if (!result()) {
+      <!-- =========================
+           HEADER
+      ========================== -->
 
-  @if (!result()) {
+      <header class="modal-header">
+        <div class="modal-header__icon" aria-hidden="true">
+          <i data-lucide="file-up"></i>
+        </div>
 
-  <div class="modal-header">
-    <h2>Importar usuarios</h2>
+        <div class="modal-header__content">
+          <span class="modal-eyebrow">Carga masiva</span>
 
-    <p>
-      Arrastra un archivo CSV o selecciónalo desde tu equipo.
-    </p>
-  </div>
+          <h2>Importar usuarios</h2>
 
-  <div class="dropzone" [class.dropzone--active]="dragging()" (dragover)="onDragOver($event)"
-    (dragleave)="onDragLeave()" (drop)="onDrop($event)" (click)="fileInput.click()">
+          <p>Agrega varios usuarios autorizados mediante un archivo en formato CSV.</p>
+        </div>
+      </header>
 
-    <input #fileInput hidden type="file" accept=".csv" (change)="onFileSelected($event)" />
+      <!-- =========================
+           FILE DROPZONE
+      ========================== -->
 
-    @if (!file()) {
+      <div
+        class="dropzone"
+        role="button"
+        tabindex="0"
+        [class.dropzone--active]="dragging()"
+        [class.dropzone--selected]="file()"
+        [class.dropzone--disabled]="loading()"
+        (dragover)="onDragOver($event)"
+        (dragleave)="onDragLeave()"
+        (drop)="onDrop($event)"
+        (click)="fileInput.click()"
+        (keydown.enter)="fileInput.click()"
+        (keydown.space)="fileInput.click(); $event.preventDefault()"
+      >
+        <input
+          #fileInput
+          hidden
+          type="file"
+          accept=".csv,text/csv"
+          [disabled]="loading()"
+          (change)="onFileSelected($event)"
+        />
 
-    <div class="dropzone-content">
+        @if (!file()) {
+          <div class="dropzone-content">
+            <div class="dropzone-icon" aria-hidden="true">
+              <i data-lucide="cloud-upload"></i>
+            </div>
 
-      <div class="dropzone-icon">
-        <i data-lucide="file-text"></i>
-      </div>
+            <div class="dropzone-copy">
+              <strong>Arrastra tu archivo CSV aquí</strong>
 
-      <strong>
-        Arrastra un archivo CSV aquí
-      </strong>
+              <span> También puedes hacer clic para buscarlo en tu equipo. </span>
+            </div>
 
-      <span>
-        o haz clic para seleccionarlo
-      </span>
+            <span class="file-format">
+              <i data-lucide="file-spreadsheet"></i>
 
-    </div>
+              Solo archivos .CSV
+            </span>
+          </div>
+        } @else {
+          <div class="selected-file">
+            <div class="file-icon" aria-hidden="true">
+              <i data-lucide="file-spreadsheet"></i>
+            </div>
 
-    } @else {
+            <div class="selected-file__content">
+              <span class="selected-file__label">Archivo seleccionado</span>
 
-    <div class="selected-file">
+              <strong>
+                {{ file()!.name }}
+              </strong>
 
-      <div class="file-icon">
-        <i data-lucide="file-text"></i>
-      </div>
+              <p>
+                <i data-lucide="circle-check"></i>
 
-      <div>
+                Listo para importar
+              </p>
+            </div>
 
-        <strong>
-          {{ file()!.name }}
-        </strong>
+            @if (!loading()) {
+              <div class="change-file" aria-hidden="true">
+                <i data-lucide="refresh-cw"></i>
 
-        <p>
-          Archivo listo para importar
-        </p>
-
-      </div>
-
-    </div>
-
-    }
-
-  </div>
-
-  @if (error()) {
-
-  <div class="error">
-    {{ error() }}
-  </div>
-
-  }
-
-  <div class="modal-actions">
-
-    <button type="button" (click)="closeModal()">
-
-      Cancelar
-
-    </button>
-
-    <button type="button" [disabled]="!file() || loading()" (click)="importUsers()">
-
-      {{ loading() ? 'Importando...' : 'Importar' }}
-
-    </button>
-
-  </div>
-
-  }
-
-  @else {
-
-  @let response = result()!;
-
-  <div class="import-result">
-
-    <h3>Resultado de la importación</h3>
-
-    <p>
-      <i data-lucide="user-round-check"></i>
-      <span>Importados: </span>
-      <strong>{{ response.imported }}</strong>
-    </p>
-
-    <p>
-      <i data-lucide="sticky-notes"></i>
-      <span>Duplicados: </span>
-      <strong>{{ response.duplicates.count }}</strong>
-    </p>
-
-    <p>
-      <i data-lucide="list-check"></i>
-      <span>Filas procesadas</span>
-      <strong>{{ response.totalRows }}</strong>
-    </p>
-
-    @if (response.duplicates.count > 0) {
-
-    <div class="duplicates-section">
-
-      <h4>Usuarios ya registrados</h4>
-
-      <ul>
-
-        @for (user of response.duplicates.users; track user.matricula) {
-
-        <li>
-
-          <strong>{{ user.matricula }}</strong>
-
-          {{ user.firstName }}
-          {{ user.lastName }}
-
-          <span class="role">
-            {{ getRoleLabel(user.role) }}
-          </span>
-
-        </li>
-
+                <span>Cambiar</span>
+              </div>
+            }
+          </div>
         }
+      </div>
 
-      </ul>
+      <!-- =========================
+           INFORMATION
+      ========================== -->
 
-    </div>
+      <div class="import-info">
+        <div class="import-info__icon" aria-hidden="true">
+          <i data-lucide="info"></i>
+        </div>
 
-    }
+        <div>
+          <strong>Formato esperado</strong>
 
-    @if (response.errors.length > 0) {
+          <p>
+            Verifica que el archivo incluya matrícula, nombre, apellidos y rol para cada usuario.
+          </p>
+        </div>
+      </div>
 
-    <h4>Errores encontrados</h4>
+      <!-- =========================
+           ERROR
+      ========================== -->
 
-    <ul>
+      @if (error()) {
+        <div class="error-message" role="alert">
+          <div class="error-message__icon" aria-hidden="true">
+            <i data-lucide="triangle-alert"></i>
+          </div>
 
-      @for (error of response.errors; track error.row) {
+          <div>
+            <strong>No se pudo importar el archivo</strong>
 
-      <li>
-        Fila {{ error.row }}:
-        {{ error.message }}
-      </li>
-
+            <p>
+              {{ error() }}
+            </p>
+          </div>
+        </div>
       }
 
-    </ul>
+      <!-- =========================
+           ACTIONS
+      ========================== -->
 
+      <footer class="modal-actions">
+        <button
+          type="button"
+          class="modal-button modal-button--secondary"
+          [disabled]="loading()"
+          (click)="closeModal()"
+        >
+          Cancelar
+        </button>
+
+        <button
+          type="button"
+          class="modal-button modal-button--primary"
+          [disabled]="!file() || loading()"
+          (click)="importUsers()"
+        >
+          @if (loading()) {
+            <span class="button-spinner" aria-hidden="true"></span>
+
+            <span>Importando...</span>
+          } @else {
+            <i data-lucide="upload"></i>
+
+            <span>Importar usuarios</span>
+          }
+        </button>
+      </footer>
+    } @else {
+      @let response = result()!;
+
+      <!-- =========================
+           RESULT HEADER
+      ========================== -->
+
+      <section class="import-result">
+        <header class="result-header">
+          <div class="result-header__icon" aria-hidden="true">
+            <i data-lucide="circle-check-big"></i>
+          </div>
+
+          <div>
+            <span class="modal-eyebrow">Proceso completado</span>
+
+            <h2>Resultado de la importación</h2>
+
+            <p>El archivo fue procesado. Revisa el resumen y los detalles encontrados.</p>
+          </div>
+        </header>
+
+        <!-- =========================
+             RESULT SUMMARY
+        ========================== -->
+
+        <section class="result-summary">
+          <article class="result-card result-card--success">
+            <div class="result-card__icon">
+              <i data-lucide="user-round-check"></i>
+            </div>
+
+            <div>
+              <span>Importados</span>
+
+              <strong>
+                {{ response.imported }}
+              </strong>
+
+              <small>Nuevos usuarios agregados</small>
+            </div>
+          </article>
+
+          <article class="result-card result-card--warning">
+            <div class="result-card__icon">
+              <i data-lucide="copy"></i>
+            </div>
+
+            <div>
+              <span>Duplicados</span>
+
+              <strong>
+                {{ response.duplicates.count }}
+              </strong>
+
+              <small>Ya estaban registrados</small>
+            </div>
+          </article>
+
+          <article class="result-card result-card--primary">
+            <div class="result-card__icon">
+              <i data-lucide="list-checks"></i>
+            </div>
+
+            <div>
+              <span>Filas procesadas</span>
+
+              <strong>
+                {{ response.totalRows }}
+              </strong>
+
+              <small>Total leído del archivo</small>
+            </div>
+          </article>
+        </section>
+
+        <!-- =========================
+             DUPLICATES
+        ========================== -->
+
+        @if (response.duplicates.count > 0) {
+          <section class="result-section duplicates-section">
+            <header class="result-section__header">
+              <div>
+                <span class="result-section__eyebrow">Duplicados</span>
+
+                <h3>Usuarios ya registrados</h3>
+              </div>
+
+              <span class="section-count section-count--warning">
+                {{ response.duplicates.count }}
+              </span>
+            </header>
+
+            <div class="result-list">
+              @for (user of response.duplicates.users; track user.matricula) {
+                <article class="result-list__item">
+                  <div class="result-list__icon result-list__icon--warning">
+                    <i data-lucide="user-round-minus"></i>
+                  </div>
+
+                  <div class="result-list__content">
+                    <strong>
+                      {{ user.firstName }}
+                      {{ user.lastName }}
+                    </strong>
+
+                    <span>
+                      Matrícula:
+                      <b>{{ user.matricula }}</b>
+                    </span>
+                  </div>
+
+                  <span
+                    class="role-badge"
+                    [class.role-badge--teacher]="user.role === 'TEACHER'"
+                    [class.role-badge--student]="user.role === 'STUDENT'"
+                    [class.role-badge--admin]="user.role === 'ADMIN'"
+                  >
+                    {{ getRoleLabel(user.role) }}
+                  </span>
+                </article>
+              }
+            </div>
+          </section>
+        }
+
+        <!-- =========================
+             ERRORS
+        ========================== -->
+
+        @if (response.errors.length > 0) {
+          <section class="result-section errors-section">
+            <header class="result-section__header">
+              <div>
+                <span class="result-section__eyebrow result-section__eyebrow--error">
+                  Revisión requerida
+                </span>
+
+                <h3>Errores encontrados</h3>
+              </div>
+
+              <span class="section-count section-count--danger">
+                {{ response.errors.length }}
+              </span>
+            </header>
+
+            <div class="result-list">
+              @for (item of response.errors; track item.row) {
+                <article class="result-list__item result-list__item--error">
+                  <div class="result-list__icon result-list__icon--error">
+                    <i data-lucide="triangle-alert"></i>
+                  </div>
+
+                  <div class="result-list__content">
+                    <strong>Fila {{ item.row }}</strong>
+
+                    <span>
+                      {{ item.message }}
+                    </span>
+                  </div>
+                </article>
+              }
+            </div>
+          </section>
+        }
+
+        <!-- =========================
+             RESULT ACTIONS
+        ========================== -->
+
+        <footer class="modal-actions modal-actions--result">
+          <button type="button" class="modal-button modal-button--primary" (click)="closeModal()">
+            <i data-lucide="check"></i>
+
+            <span>Finalizar</span>
+          </button>
+        </footer>
+      </section>
     }
-
-    <div class="modal-actions">
-
-      <button type="button" (click)="closeModal()">
-
-        Cerrar
-
-      </button>
-
-    </div>
-
-  </div>
-
-  }
-
+  </section>
 </app-modal>
