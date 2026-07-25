@@ -82,6 +82,30 @@ export class ImportAuthorizedUsers implements AfterViewInit {
     });
   }
 
+  downloadTemplate() {
+    this.api.downloadTemplate().subscribe({
+      next: blob => {
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+
+        a.href = url;
+        a.download = 'plantilla-usuarios-autorizados.csv';
+        a.click();
+
+        URL.revokeObjectURL(url);
+      },
+
+      error: err => {
+        console.error(err);
+
+        this.error.set(
+          'No se pudo descargar la plantilla.'
+        );
+      },
+    });
+  }
+
   getRoleLabel(role: string): string {
     switch (role) {
       case 'STUDENT':

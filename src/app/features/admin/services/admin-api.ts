@@ -52,4 +52,13 @@ export class AdminApi {
       formData,
     )
   }
+
+  downloadTemplate() {
+    return this.http.get(
+      `${this.api}/authorized-users/import/template`,
+      {
+        responseType: 'blob',
+      },
+    );
+  }
 }
