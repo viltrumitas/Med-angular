@@ -1,16 +1,20 @@
-import { Component, forwardRef, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  forwardRef,
+  input,
+  signal,
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-
-export interface SelectOption {
-  label: string;
-  value: string;
-}
+import { SelectOption, SelectValue } from './models/select.model';
 
 @Component({
   selector: 'app-select',
-  imports: [],
+  standalone: true,
   templateUrl: './select.html',
   styleUrl: './select.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -20,21 +24,28 @@ export interface SelectOption {
   ],
 })
 export class SelectComponent implements ControlValueAccessor {
-  readonly labelText = input('');
+  private static nextId = 0;
+
+  readonly labelText = input<string | null>(null);
   readonly placeHolderText = input('Seleccione una opción');
-  readonly options = input<SelectOption[]>([]);
+  readonly options = input<readonly SelectOption[]>([]);
+  readonly value = signal('');
+  readonly disabled = signal(false);
+  readonly selectId = input<string>();
+  readonly generatedId = `app-select-${SelectComponent.nextId++}`;
 
-  value = '';
-  disabled = false;
+  readonly resolvedId = computed(() => {
+    return this.selectId() || this.generatedId;
+  });
 
-  private onChange: (value: string) => void = () => {};
-  private onTouched: () => void = () => {};
+  private onChange: (value: SelectValue) => void = () => undefined;
+  private onTouched: () => void = () => undefined;
 
-  writeValue(value: string | null): void {
-    this.value = value ?? '';
+  writeValue(value: SelectValue): void {
+    this.value.set(value ?? '');
   }
 
-  registerOnChange(fn: (value: string) => void): void {
+  registerOnChange(fn: (value: SelectValue) => void): void {
     this.onChange = fn;
   }
 
@@ -42,18 +53,19 @@ export class SelectComponent implements ControlValueAccessor {
     this.onTouched = fn;
   }
 
-  setDisabledState(isDisabled: boolean): void {
-    this.disabled = isDisabled;
+  setDisabledState(disabled: boolean): void {
+    this.disabled.set(disabled);
   }
 
-  onSelectChange(event: Event): void {
-    const select = event.target as HTMLSelectElement;
+  handleChange(event: Event): void {
+    const element = event.target as HTMLSelectElement;
+    const value = element.value;
 
-    this.value = select.value;
-    this.onChange(this.value);
+    this.value.set(value);
+    this.onChange(value === '' ? null : value);
   }
 
-  onBlur(): void {
+  handleBlur(): void {
     this.onTouched();
   }
 }

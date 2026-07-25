@@ -26,6 +26,10 @@ export class ImportAuthorizedUsers implements AfterViewInit {
   @Output()
   importCompleted = new EventEmitter<ImportAuthorizedUsersResponseDto>();
 
+  ngAfterViewInit(): void {
+    this.renderIcons();
+  }
+
   private setSelectedFile(file: File) {
     this.result.set(null);
     this.error.set(null);
@@ -39,10 +43,6 @@ export class ImportAuthorizedUsers implements AfterViewInit {
     this.file.set(file);
   }
 
-  ngAfterViewInit(): void {
-    this.renderIcons();
-  }
-
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
 
@@ -51,6 +51,7 @@ export class ImportAuthorizedUsers implements AfterViewInit {
     }
 
     this.setSelectedFile(input.files[0]);
+    this.renderIcons();
   }
 
   importUsers() {
@@ -154,6 +155,7 @@ export class ImportAuthorizedUsers implements AfterViewInit {
     }
 
     this.setSelectedFile(files[0]);
+    this.renderIcons();
   }
 
   private renderIcons() {

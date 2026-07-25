@@ -1,24 +1,26 @@
-<div class="select-control" [class.select-control--disabled]="disabled">
-  @if (labelText()) {
-    <label class="select-control__label">
-      {{ labelText() }}
+<div class="select-control" [class.select-control--disabled]="disabled()">
+  @if (labelText(); as label) {
+    <label class="select-control__label" [for]="resolvedId()">
+      {{ label }}
     </label>
   }
 
   <div class="select-control__field">
     <select
       class="select-control__select"
-      [value]="value"
-      [disabled]="disabled"
-      (change)="onSelectChange($event)"
-      (blur)="onBlur()"
+      [id]="resolvedId()"
+      [value]="value()"
+      [disabled]="disabled()"
+      [attr.aria-label]="labelText() ? null : placeHolderText()"
+      (change)="handleChange($event)"
+      (blur)="handleBlur()"
     >
-      <option value="">
+      <option value="" disabled>
         {{ placeHolderText() }}
       </option>
 
       @for (option of options(); track option.value) {
-        <option [value]="option.value">
+        <option [value]="option.value" [disabled]="option.disabled ?? false">
           {{ option.label }}
         </option>
       }

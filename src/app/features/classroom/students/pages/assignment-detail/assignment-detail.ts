@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { createIcons, icons } from 'lucide';
 
 import { AssignedCaseApiService } from '../../../../assigned-case/services/assigned-case-api.service';
-import { AssignedStudentCase } from '../../../../assigned-case/model/assigned-case.model';
+import { AssignedStudentCase } from '../../../../assigned-case/models/assigned-case.model';
 
 @Component({
   selector: 'app-assignment-detail',

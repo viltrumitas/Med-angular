@@ -1,7 +1,7 @@
 import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { AssignedCaseApiService } from '../../services/assigned-case-api.service';
-import { AssignedStudentCase } from '../../model/assigned-case.model';
+import { AssignedStudentCase } from '../../models/assigned-case.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({

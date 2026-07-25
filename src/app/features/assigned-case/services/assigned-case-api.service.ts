@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { map, Observable } from 'rxjs';
-import { AssignedStudentCase } from '../model/assigned-case.model';
+import { AssignedStudentCase } from '../models/assigned-case.model';
 import { AssignedCaseMapper } from '../mapper/assigned-case.mapper';
 import { AssignedCaseDto } from '../dto/assigned-case.dto';
 

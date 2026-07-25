@@ -8,8 +8,6 @@ export function minArrayLength(min: number) {
       return { notArray: true };
     }
 
-    return value.length >= min
-      ? null
-      : { minArrayLength: { required: min, actual: value.length } };
+    return value.length >= min ? null : { minArrayLength: { required: min, actual: value.length } };
   };
 }

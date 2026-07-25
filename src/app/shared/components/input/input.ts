@@ -1,13 +1,22 @@
-import { CommonModule } from '@angular/common';
-import { Component, forwardRef, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  forwardRef,
+  input,
+  signal,
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+
+export type InputType = 'text' | 'number' | 'email' | 'password';
+export type InputValue = string | number | null;
 
 @Component({
   selector: 'app-input',
   standalone: true,
-  imports: [CommonModule],
   templateUrl: './input.html',
   styleUrl: './input.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -17,48 +26,57 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   ],
 })
 export class InputComponent implements ControlValueAccessor {
+  private static nextId = 0;
+
   readonly labelText = input<string | null>(null);
-  readonly type = input<'text' | 'number' | 'email' | 'password'>('text');
+  readonly type = input<InputType>('text');
   readonly placeHolderText = input('');
   readonly maxLength = input<number | null>(null);
   readonly suffix = input<string | null>(null);
   readonly compact = input(false);
+  readonly value = signal<InputValue>(null);
+  readonly disabled = signal(false);
+  readonly passwordVisible = signal(false);
+  readonly inputId = input<string>();
+  readonly autocomplete = input<string | null>(null);
+  readonly generatedId = `app-input-${InputComponent.nextId++}`;
+  readonly resolvedId = computed(() => this.inputId() || this.generatedId);
 
-  value: string | number | null = null;
-  disabled = false;
-  passwordVisible = false;
+  readonly inputType = computed<'text' | 'email' | 'password'>(() => {
+    const type = this.type();
 
-  private onChange: (value: string | number | null) => void = () => {};
-  private onTouched: () => void = () => {};
-
-  get inputType(): 'text' | 'email' | 'password' {
-    const currentType = this.type();
-
-    if (currentType === 'number') {
+    if (type === 'number') {
       return 'text';
     }
-    if (currentType === 'password' && this.passwordVisible) {
+
+    if (type === 'password' && this.passwordVisible()) {
       return 'text';
     }
-    return currentType;
-  }
-  get inputMode(): 'text' | 'decimal' | 'email' {
-    if (this.type() === 'number') {
-      return 'decimal';
+
+    return type;
+  });
+
+  readonly inputMode = computed<'text' | 'numeric' | 'email'>(() => {
+    switch (this.type()) {
+      case 'number':
+        return 'numeric';
+
+      case 'email':
+        return 'email';
+
+      default:
+        return 'text';
     }
+  });
 
-    if (this.type() === 'email') {
-      return 'email';
-    }
+  private onChange: (value: InputValue) => void = () => undefined;
+  private onTouched: () => void = () => undefined;
 
-    return 'text';
+  writeValue(value: InputValue): void {
+    this.value.set(value ?? null);
   }
 
-  writeValue(value: string | number | null): void {
-    this.value = value;
-  }
-
-  registerOnChange(fn: (value: string | number | null) => void): void {
+  registerOnChange(fn: (value: InputValue) => void): void {
     this.onChange = fn;
   }
 
@@ -67,68 +85,40 @@ export class InputComponent implements ControlValueAccessor {
   }
 
   setDisabledState(disabled: boolean): void {
-    this.disabled = disabled;
+    this.disabled.set(disabled);
   }
 
-  onBlur(): void {
+  handleInput(event: Event): void {
+    const element = event.target as HTMLInputElement;
+    const value = this.normalizeValue(element.value);
+
+    if (this.type() === 'number') {
+      element.value = value === null ? '' : String(value);
+    }
+
+    this.value.set(value);
+    this.onChange(value);
+  }
+
+  handleBlur(): void {
     this.onTouched();
   }
 
   togglePasswordVisibility(): void {
-    if (this.disabled || this.type() !== 'password') {
+    if (this.disabled() || this.type() !== 'password') {
       return;
     }
 
-    this.passwordVisible = !this.passwordVisible;
+    this.passwordVisible.update((visible) => !visible);
   }
 
-  onKeyDown(event: KeyboardEvent): void {
+  private normalizeValue(rawValue: string): InputValue {
     if (this.type() !== 'number') {
-      return;
+      return rawValue;
     }
 
-    const allowedKeys = [
-      'Backspace',
-      'Delete',
-      'Tab',
-      'Escape',
-      'Enter',
-      'ArrowLeft',
-      'ArrowRight',
-      'Home',
-      'End',
-    ];
+    const sanitizedValue = rawValue.replace(/\D/g, '');
 
-    if (allowedKeys.includes(event.key)) {
-      return;
-    }
-
-    if (
-      (event.ctrlKey || event.metaKey) &&
-      ['a', 'c', 'v', 'x'].includes(event.key.toLowerCase())
-    ) {
-      return;
-    }
-
-    if (!/^\d$/.test(event.key)) {
-      event.preventDefault();
-    }
-  }
-
-  onInput(event: Event): void {
-    const inputElement = event.target as HTMLInputElement;
-
-    let newValue: string | number | null = inputElement.value;
-
-    if (this.type() === 'number') {
-      const sanitizedValue = inputElement.value.replace(/\D/g, '');
-
-      inputElement.value = sanitizedValue;
-
-      newValue = sanitizedValue === '' ? null : Number(sanitizedValue);
-    }
-
-    this.value = newValue;
-    this.onChange(this.value);
+    return sanitizedValue === '' ? null : Number(sanitizedValue);
   }
 }

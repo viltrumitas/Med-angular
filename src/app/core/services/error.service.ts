@@ -1,5 +1,5 @@
 import { Service, signal } from '@angular/core';
-import { AppError } from '../models/error.model';
+import { AppError, ErrorDisplay } from '../errors/error.model';
 
 @Service()
 export class ErrorService {
@@ -7,7 +7,7 @@ export class ErrorService {
 
   readonly error = this._error.asReadonly();
 
-  show(message: string, title = 'Ocurrio  un error'): void {
+  show(message: string, title = 'Ocurrió un error'): void {
     this._error.set({
       title,
       message,

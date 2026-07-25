@@ -1,12 +1,22 @@
 <button
   class="btn"
-  [class]="'btn btn--' + variant"
-  [type]="type"
-  [disabled]="disabled"
-  [attr.aria-disabled]="disabled"
-  (click)="onClick()"
+  [class.btn--primary]="variant() === 'primary'"
+  [class.btn--secondary]="variant() === 'secondary'"
+  [class.btn--danger]="variant() === 'danger'"
+  [class.btn--teal]="variant() === 'teal'"
+  [class.btn--ghost]="variant() === 'ghost'"
+  [class.btn--loading]="loading()"
+  [type]="type()"
+  [disabled]="disabled() || loading()"
+  [attr.aria-disabled]="disabled() || loading()"
+  [attr.aria-busy]="loading()"
+  (click)="handleClick($event)"
 >
+  @if (loading()) {
+    <span class="btn__spinner" aria-hidden="true"></span>
+  }
+
   <span class="btn__content">
-    {{ text }}
+    {{ text() }}
   </span>
 </button>

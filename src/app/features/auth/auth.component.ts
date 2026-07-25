@@ -8,8 +8,7 @@ import { RegisterModel } from './models/register.model';
 import { createLoginForm, createRegisterForm } from './forms/auth.forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../core/services/auth.service';
-import { UserRole } from '../../core/enum/user-role.enum';
-import { User } from 'lucide';
+import { ErrorService } from '../../core/services/error.service';
 
 @Component({
   selector: 'app-login',
@@ -21,100 +20,67 @@ import { User } from 'lucide';
 export class AuthComponent {
   private readonly authApi = inject(AuthApi);
   private readonly authService = inject(AuthService);
+  private readonly errorService = inject(ErrorService);
   private readonly router = inject(Router);
 
   loginForm = createLoginForm();
   registerForm = createRegisterForm();
-  loginError = '';
-  registerError = '';
+  isActive = false;
 
   onLogin(): void {
-    this.loginError = '';
-    this.registerError = '';
+    this.errorService.clear();
 
-    if (this.loginForm.invalid) return;
+    if (this.loginForm.invalid) {
+      this.loginForm.markAllAsTouched();
+      return;
+    }
 
-    const v = this.loginForm.getRawValue();
+    const value = this.loginForm.getRawValue();
 
     const data: LoginModel = {
-      matricula: Number(v.matricula),
-      password: v.password,
+      matricula: Number(value.matricula),
+      password: value.password,
     };
 
     this.authApi.login(data).subscribe({
-      next: (res) => {
-        console.log('Incio de sesion exitoso', res.user);
+      next: () => {
         this.router.navigate(this.authService.getDashboardRoute());
       },
-      error: (err) => {
-        console.log('COMPONENTE ERROR:', err);
-
-        if (err.status === 401) {
-          this.loginError = 'Matrícula o contraseña incorrecta';
-          return;
-        }
-
-        if (err.status === 500) {
-          this.loginError = 'Error interno del servidor';
-          return;
-        }
-
-        this.loginError = err.message || 'Error desconocido';
-      },
+      error: () => {},
     });
   }
 
   onRegister(): void {
-    this.loginError = '';
-    this.registerError = '';
-    if (this.registerForm.invalid) return;
+    this.errorService.clear();
 
-    const v = this.registerForm.getRawValue();
+    if (this.registerForm.invalid) {
+      this.registerForm.markAllAsTouched();
+      return;
+    }
+
+    const value = this.registerForm.getRawValue();
 
     const data: RegisterModel = {
-      matricula: Number(v.matricula),
-      password: v.password,
+      matricula: Number(value.matricula),
+      password: value.password,
     };
-    console.log('REGISTER DATA:', data);
+
     this.authApi.register(data).subscribe({
-      next: (res) => {
-        console.log('Usuario creado', res);
+      next: () => {
         this.router.navigate(this.authService.getDashboardRoute());
       },
-      error: (err) => {
-        console.log('COMPONENTE ERROR:', err);
-
-        if (err.status === 409) {
-          this.registerError = 'La matrícula no existe';
-          return;
-        }
-
-        if (err.status === 500) {
-          this.registerError = 'Error interno del servidor';
-          return;
-        }
-
-        this.registerError = err.message || 'Error desconocido';
-      },
+      error: () => {},
     });
   }
 
-  logOut(): void {
-    this.authService.removeToken();
-    this.router.navigate(['/auth']);
-  }
-
   // ESTO ES DE LA ANIMACION
-  isActive = false;
   showRegister() {
     this.isActive = true;
-    this.loginError = '';
-    this.registerError = '';
+    this.errorService.clear();
   }
 
   showLogin() {
     this.isActive = false;
-    this.loginError = '';
-    this.registerError = '';
+    this.errorService.clear();
   }
 }

@@ -1,11 +1,20 @@
-<div class="control--input">
-  <label>{{ labelText }}</label>
+<div class="text-area-control" [class.text-area-control--disabled]="disabled()">
+  @if (labelText(); as label) {
+    <label class="text-area-control__label" [for]="resolvedId()">
+      {{ label }}
+    </label>
+  }
+
   <textarea
-    [rows]="rows"
-    [placeholder]="placeHolderText"
-    [disabled]="disabled"
-    [value]="value"
-    (input)="onInput($event)"
-    (blur)="onBlur()"
+    class="text-area-control__textarea"
+    [id]="resolvedId()"
+    [rows]="rows()"
+    [placeholder]="placeHolderText()"
+    [disabled]="disabled()"
+    [value]="value()"
+    [attr.maxlength]="maxLength()"
+    [attr.aria-label]="labelText() ? null : placeHolderText() || 'Área de texto'"
+    (input)="handleInput($event)"
+    (blur)="handleBlur()"
   ></textarea>
 </div>

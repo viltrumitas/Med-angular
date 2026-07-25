@@ -1,32 +1,30 @@
-import { afterRenderEffect, Component, ElementRef, input, output, viewChild } from '@angular/core';
+import {
+  afterRenderEffect,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  input,
+  output,
+  viewChild,
+} from '@angular/core';
 
 @Component({
   selector: 'app-modal',
   standalone: true,
-  imports: [],
   templateUrl: './modal.html',
   styleUrl: './modal.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Modal {
   readonly isOpen = input.required<boolean>();
   readonly preventClose = input(false);
-
   readonly closed = output<void>();
 
   private readonly dialog = viewChild.required<ElementRef<HTMLDialogElement>>('dialog');
 
   constructor() {
     afterRenderEffect(() => {
-      const dialogElement = this.dialog().nativeElement;
-
-      if (this.isOpen() && !dialogElement.open) {
-        dialogElement.showModal();
-        return;
-      }
-
-      if (!this.isOpen() && dialogElement.open) {
-        dialogElement.close();
-      }
+      this.syncDialogState();
     });
   }
 
@@ -38,8 +36,32 @@ export class Modal {
     this.closed.emit();
   }
 
-  onCancel(event: Event): void {
+  handleCancel(event: Event): void {
     event.preventDefault();
     this.requestClose();
+  }
+
+  handleBackdropClick(event: MouseEvent): void {
+    if (event.target !== event.currentTarget) {
+      return;
+    }
+
+    this.requestClose();
+  }
+
+  private syncDialogState(): void {
+    const dialog = this.dialog().nativeElement;
+    const shouldBeOpen = this.isOpen();
+
+    if (shouldBeOpen === dialog.open) {
+      return;
+    }
+
+    if (shouldBeOpen) {
+      dialog.showModal();
+      return;
+    }
+
+    dialog.close();
   }
 }

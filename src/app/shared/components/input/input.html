@@ -1,41 +1,42 @@
 <div
   class="input-control"
-  [class.input-control--disabled]="disabled"
+  [class.input-control--disabled]="disabled()"
   [class.input-control--with-suffix]="suffix()"
   [class.input-control--password]="type() === 'password'"
   [class.input-control--compact]="compact()"
 >
-  @if (labelText()) {
-    <label class="input-control__label">
-      {{ labelText() }}
+  @if (labelText(); as label) {
+    <label class="input-control__label" [for]="resolvedId()">
+      {{ label }}
     </label>
   }
 
   <div class="input-control__field">
     <input
       class="input-control__input"
-      [type]="inputType"
-      [inputMode]="inputMode"
-      [value]="value ?? ''"
+      [id]="resolvedId()"
+      [type]="inputType()"
+      [inputMode]="inputMode()"
+      [value]="value() ?? ''"
       [placeholder]="placeHolderText()"
-      [disabled]="disabled"
+      [disabled]="disabled()"
       [attr.maxlength]="maxLength()"
-      [attr.autocomplete]="type() === 'password' ? 'current-password' : null"
-      (keydown)="onKeyDown($event)"
-      (input)="onInput($event)"
-      (blur)="onBlur()"
+      [attr.autocomplete]="autocomplete()"
+      [attr.aria-label]="labelText() ? null : placeHolderText() || 'Campo de texto'"
+      (input)="handleInput($event)"
+      (blur)="handleBlur()"
     />
 
     @if (type() === 'password') {
       <button
         type="button"
         class="input-control__password-button"
-        [disabled]="disabled"
-        [attr.aria-label]="passwordVisible ? 'Ocultar contraseña' : 'Mostrar contraseña'"
-        [attr.aria-pressed]="passwordVisible"
+        [disabled]="disabled()"
+        [attr.aria-label]="passwordVisible() ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+        [attr.aria-pressed]="passwordVisible()"
         (click)="togglePasswordVisibility()"
       >
-        @if (passwordVisible) {
+        @if (passwordVisible()) {
           <svg
             class="input-control__password-icon"
             viewBox="0 0 24 24"

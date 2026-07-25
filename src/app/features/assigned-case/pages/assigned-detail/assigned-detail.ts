@@ -11,7 +11,7 @@ import { ActivatedRoute } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { AssignedCaseApiService } from '../../services/assigned-case-api.service';
-import { AssignedStudentCase } from '../../model/assigned-case.model';
+import { AssignedStudentCase } from '../../models/assigned-case.model';
 
 import { CaseContent } from '../../../cases/pages/case-content/case-content';
 import { ButtonComponent } from '../../../../shared/components/button/button';

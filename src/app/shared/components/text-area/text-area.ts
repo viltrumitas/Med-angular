@@ -1,11 +1,19 @@
-import { Component, forwardRef, Input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  forwardRef,
+  input,
+  signal,
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
   selector: 'app-text-area',
-  imports: [],
+  standalone: true,
   templateUrl: './text-area.html',
   styleUrl: './text-area.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -15,18 +23,25 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   ],
 })
 export class TextareaComponent implements ControlValueAccessor {
-  @Input() labelText!: string;
-  @Input() placeHolderText = '';
-  @Input() rows = 4;
+  private static nextId = 0;
 
-  value: string = '';
-  disabled = false;
+  readonly textareaId = input<string>();
+  readonly labelText = input<string | null>(null);
+  readonly placeHolderText = input('');
+  readonly rows = input(4);
+  readonly maxLength = input<number | null>(null);
+  readonly value = signal('');
+  readonly disabled = signal(false);
+  readonly generatedId = `app-text-area-${TextareaComponent.nextId++}`;
+  readonly resolvedId = computed(() => {
+    return this.textareaId() || this.generatedId;
+  });
 
-  private onChange: (value: string) => void = () => {};
-  private onTouched: () => void = () => {};
+  private onChange: (value: string) => void = () => undefined;
+  private onTouched: () => void = () => undefined;
 
-  writeValue(value: string): void {
-    this.value = value ?? '';
+  writeValue(value: string | null): void {
+    this.value.set(value ?? '');
   }
 
   registerOnChange(fn: (value: string) => void): void {
@@ -37,17 +52,19 @@ export class TextareaComponent implements ControlValueAccessor {
     this.onTouched = fn;
   }
 
-  setDisabledState(isDisabled: boolean): void {
-    this.disabled = isDisabled;
+  setDisabledState(disabled: boolean): void {
+    this.disabled.set(disabled);
   }
 
-  onInput(event: Event) {
-    const value = (event.target as HTMLTextAreaElement).value;
-    this.value = value;
+  handleInput(event: Event): void {
+    const element = event.target as HTMLTextAreaElement;
+    const value = element.value;
+
+    this.value.set(value);
     this.onChange(value);
   }
 
-  onBlur() {
+  handleBlur(): void {
     this.onTouched();
   }
 }

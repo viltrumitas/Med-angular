@@ -1,12 +1,14 @@
-import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, forwardRef, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, forwardRef, input, signal } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+
 import { CheckboxOption, CheckboxSelectionMode } from './model/option.model';
+
+export type CheckboxDirection = 'row' | 'column';
+export type CheckboxValue<T> = T | readonly T[] | null;
 
 @Component({
   selector: 'app-checkbox',
   standalone: true,
-  imports: [CommonModule],
   templateUrl: './checkbox.html',
   styleUrl: './checkbox.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -19,29 +21,31 @@ import { CheckboxOption, CheckboxSelectionMode } from './model/option.model';
   ],
 })
 export class Checkbox<T = string> implements ControlValueAccessor {
-  @Input() labelText = '';
-  @Input() helperText = '';
-  @Input() options: CheckboxOption<T>[] = [];
-  @Input() mode: CheckboxSelectionMode = 'multiple';
-  @Input() direction: 'row' | 'column' = 'column';
-  @Input() required = false;
-  @Input() compareWith: (first: T, second: T) => boolean = Object.is;
+  private static nextId = 0;
 
-  value: T | T[] | null = null;
+  readonly labelText = input('');
+  readonly helperText = input('');
+  readonly options = input<readonly CheckboxOption<T>[]>([]);
+  readonly mode = input<CheckboxSelectionMode>('multiple');
+  readonly direction = input<CheckboxDirection>('column');
+  readonly required = input(false);
+  readonly compareWith = input<(first: T, second: T) => boolean>(Object.is);
+  readonly value = signal<T | T[] | null>(null);
+  readonly disabled = signal(false);
+  readonly instanceId = Checkbox.nextId++;
+  readonly groupName = `app-checkbox-group-${this.instanceId}`;
+  readonly helperId = `app-checkbox-helper-${this.instanceId}`;
 
-  disabled = false;
+  private onChange: (value: T | T[] | null) => void = () => undefined;
+  private onTouched: () => void = () => undefined;
 
-  private onChange: (value: T | T[] | null) => void = () => {};
-
-  private onTouched: () => void = () => {};
-
-  writeValue(value: T | T[] | null): void {
-    if (this.mode === 'multiple') {
-      this.value = Array.isArray(value) ? [...value] : [];
+  writeValue(value: CheckboxValue<T>): void {
+    if (this.mode() === 'multiple') {
+      this.value.set(Array.isArray(value) ? [...value] : []);
       return;
     }
 
-    this.value = Array.isArray(value) ? (value[0] ?? null) : (value ?? null);
+    this.value.set(Array.isArray(value) ? (value[0] ?? null) : (value ?? null));
   }
 
   registerOnChange(fn: (value: T | T[] | null) => void): void {
@@ -52,16 +56,16 @@ export class Checkbox<T = string> implements ControlValueAccessor {
     this.onTouched = fn;
   }
 
-  setDisabledState(isDisabled: boolean): void {
-    this.disabled = isDisabled;
+  setDisabledState(disabled: boolean): void {
+    this.disabled.set(disabled);
   }
 
   toggleOption(option: CheckboxOption<T>): void {
-    if (this.disabled || option.disabled) {
+    if (this.disabled() || option.disabled) {
       return;
     }
 
-    if (this.mode === 'single') {
+    if (this.mode() === 'single') {
       this.toggleSingleOption(option.value);
     } else {
       this.toggleMultipleOption(option.value);
@@ -71,48 +75,52 @@ export class Checkbox<T = string> implements ControlValueAccessor {
   }
 
   isSelected(optionValue: T): boolean {
-    if (this.mode === 'multiple') {
-      const selectedValues = Array.isArray(this.value) ? this.value : [];
+    const currentValue = this.value();
+    const compare = this.compareWith();
 
-      return selectedValues.some((value) => this.compareWith(value, optionValue));
+    if (this.mode() === 'multiple') {
+      const selectedValues = Array.isArray(currentValue) ? currentValue : [];
+
+      return selectedValues.some((value) => compare(value, optionValue));
     }
 
-    if (this.value === null || Array.isArray(this.value)) {
+    if (currentValue === null || Array.isArray(currentValue)) {
       return false;
     }
 
-    return this.compareWith(this.value, optionValue);
+    return compare(currentValue, optionValue);
   }
 
   markAsTouched(): void {
     this.onTouched();
   }
 
-  trackOption(index: number, option: CheckboxOption<T>): T | number {
-    return option.value ?? index;
+  trackOption(index: number): number {
+    return index;
   }
 
   private toggleSingleOption(optionValue: T): void {
-    const alreadySelected = this.isSelected(optionValue);
+    const nextValue = this.isSelected(optionValue) ? null : optionValue;
 
-    this.value = alreadySelected ? null : optionValue;
-
-    this.onChange(this.value);
+    this.value.set(nextValue);
+    this.onChange(nextValue);
   }
 
   private toggleMultipleOption(optionValue: T): void {
-    const selectedValues = Array.isArray(this.value) ? [...this.value] : [];
+    const currentValue = this.value();
 
-    const selectedIndex = selectedValues.findIndex((value) => this.compareWith(value, optionValue));
+    const selectedValues = Array.isArray(currentValue) ? [...currentValue] : [];
 
-    if (selectedIndex >= 0) {
-      selectedValues.splice(selectedIndex, 1);
-    } else {
-      selectedValues.push(optionValue);
-    }
+    const compare = this.compareWith();
 
-    this.value = selectedValues;
+    const selectedIndex = selectedValues.findIndex((value) => compare(value, optionValue));
 
-    this.onChange(selectedValues);
+    const nextValues =
+      selectedIndex >= 0
+        ? selectedValues.filter((_, index) => index !== selectedIndex)
+        : [...selectedValues, optionValue];
+
+    this.value.set(nextValues);
+    this.onChange(nextValues);
   }
 }

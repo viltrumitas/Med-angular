@@ -1,53 +1,64 @@
-<div class="checkbox-control" [class.checkbox-control--disabled]="disabled">
-  @if (labelText) {
-    <div class="checkbox-control__header">
+<fieldset
+  class="checkbox-control"
+  [class.checkbox-control--disabled]="disabled()"
+  [attr.aria-describedby]="helperText() ? helperId : null"
+>
+  @if (labelText()) {
+    <legend class="checkbox-control__header">
       <span class="checkbox-control__label">
-        {{ labelText }}
+        {{ labelText() }}
 
-        @if (required) {
+        @if (required()) {
           <span class="checkbox-control__required" aria-hidden="true"> * </span>
         }
       </span>
 
-      @if (helperText) {
-        <span class="checkbox-control__helper">
-          {{ helperText }}
+      @if (helperText()) {
+        <span class="checkbox-control__helper" [id]="helperId">
+          {{ helperText() }}
         </span>
       }
-    </div>
+    </legend>
   }
 
   <div
     class="checkbox-control__options"
-    [class.checkbox-control__options--row]="direction === 'row'"
-    [class.checkbox-control__options--column]="direction === 'column'"
-    role="group"
-    [attr.aria-label]="labelText || 'Opciones'"
+    [class.checkbox-control__options--row]="direction() === 'row'"
+    [class.checkbox-control__options--column]="direction() === 'column'"
+    [attr.role]="mode() === 'single' ? 'radiogroup' : 'group'"
+    [attr.aria-label]="labelText() || 'Opciones'"
+    [attr.aria-required]="required()"
   >
-    @for (option of options; track trackOption($index, option)) {
+    @for (option of options(); track $index) {
       <label
         class="checkbox-option"
         [class.checkbox-option--selected]="isSelected(option.value)"
-        [class.checkbox-option--disabled]="disabled || option.disabled"
+        [class.checkbox-option--disabled]="disabled() || option.disabled"
       >
         <input
           class="checkbox-option__input"
-          type="checkbox"
+          [type]="mode() === 'single' ? 'radio' : 'checkbox'"
+          [name]="mode() === 'single' ? groupName : null"
           [checked]="isSelected(option.value)"
-          [disabled]="disabled || option.disabled"
+          [disabled]="disabled() || option.disabled"
+          [attr.aria-checked]="isSelected(option.value)"
           (change)="toggleOption(option)"
           (blur)="markAsTouched()"
         />
 
         <span class="checkbox-option__check" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none">
-            <path
-              d="M5 12.5L9.5 17L19 7.5"
-              stroke="currentColor"
-              stroke-width="3"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
+            @if (mode() === 'single') {
+              <circle cx="12" cy="12" r="4" fill="currentColor" />
+            } @else {
+              <path
+                d="M5 12.5L9.5 17L19 7.5"
+                stroke="currentColor"
+                stroke-width="3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            }
           </svg>
         </span>
 
@@ -65,4 +76,4 @@
       </label>
     }
   </div>
-</div>
+</fieldset>

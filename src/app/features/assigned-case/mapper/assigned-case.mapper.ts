@@ -1,5 +1,5 @@
 import { AssignedCaseDto } from '../dto/assigned-case.dto';
-import { AssignedStudentCase } from '../model/assigned-case.model';
+import { AssignedStudentCase } from '../models/assigned-case.model';
 
 export class AssignedCaseMapper {
   static toModel(dto: AssignedCaseDto): AssignedStudentCase {
