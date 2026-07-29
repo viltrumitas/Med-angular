@@ -14,11 +14,15 @@
       </p>
     </div>
 
-    <button type="button" class="teacher-classrooms__create-button" (click)="openCreateClassroom()">
-      <i data-lucide="plus" aria-hidden="true"></i>
-
-      <span>Nueva clase</span>
-    </button>
+    <div class="teacher-classrooms__header-action">
+      <app-button
+        type="button"
+        text="Nueva clase"
+        variant="primary"
+        icon="plus"
+        (clicked)="openCreateClassroom()"
+      />
+    </div>
 
     <div class="teacher-classrooms__header-decoration" aria-hidden="true">
       <span class="teacher-classrooms__decoration-circle"></span>
@@ -31,7 +35,7 @@
   ========================== -->
 
   @if (loading()) {
-    <section class="teacher-classrooms__state" aria-live="polite">
+    <section class="teacher-classrooms__state" aria-live="polite" aria-busy="true">
       <div class="teacher-classrooms__loader" aria-hidden="true">
         <span></span>
       </div>
@@ -45,12 +49,47 @@
   }
 
   <!-- =========================
+       ERROR
+  ========================== -->
+
+  @else if (loadError()) {
+    <section class="teacher-classrooms__state teacher-classrooms__state--error" role="alert">
+      <div
+        class="teacher-classrooms__state-icon teacher-classrooms__state-icon--error"
+        aria-hidden="true"
+      >
+        <i data-lucide="triangle-alert"></i>
+      </div>
+
+      <div class="teacher-classrooms__state-content">
+        <span class="teacher-classrooms__state-label"> Error de carga </span>
+
+        <h2>No pudimos cargar tus clases</h2>
+
+        <p>
+          {{ loadError() }}
+        </p>
+      </div>
+
+      <div class="teacher-classrooms__state-action">
+        <app-button
+          type="button"
+          text="Intentar de nuevo"
+          variant="secondary"
+          icon="refresh-cw"
+          (clicked)="loadClassrooms()"
+        />
+      </div>
+    </section>
+  }
+
+  <!-- =========================
        EMPTY
   ========================== -->
 
   @else if (classrooms().length === 0) {
     <section class="teacher-classrooms__state teacher-classrooms__state--empty">
-      <div class="teacher-classrooms__empty-icon" aria-hidden="true">
+      <div class="teacher-classrooms__state-icon" aria-hidden="true">
         <i data-lucide="school"></i>
       </div>
 
@@ -64,15 +103,15 @@
         </p>
       </div>
 
-      <button
-        type="button"
-        class="teacher-classrooms__empty-action"
-        (click)="openCreateClassroom()"
-      >
-        <i data-lucide="plus" aria-hidden="true"></i>
-
-        <span>Crear primera clase</span>
-      </button>
+      <div class="teacher-classrooms__state-action">
+        <app-button
+          type="button"
+          text="Crear primera clase"
+          variant="primary"
+          icon="plus"
+          (clicked)="openCreateClassroom()"
+        />
+      </div>
     </section>
   }
 
@@ -83,7 +122,7 @@
   @else {
     <section class="teacher-classrooms__workspace">
       <header class="teacher-classrooms__workspace-header">
-        <div>
+        <div class="teacher-classrooms__workspace-heading">
           <span class="teacher-classrooms__workspace-eyebrow"> Clases administradas </span>
 
           <h2>Todas las clases</h2>
@@ -91,7 +130,12 @@
           <p>Consulta cada clase para gestionar estudiantes, actividades y casos clínicos.</p>
         </div>
 
-        <div class="teacher-classrooms__counter" aria-label="Cantidad de clases creadas">
+        <div
+          class="teacher-classrooms__counter"
+          [attr.aria-label]="
+            classrooms().length === 1 ? '1 clase creada' : classrooms().length + ' clases creadas'
+          "
+        >
           <span class="teacher-classrooms__counter-value">
             {{ classrooms().length }}
           </span>
@@ -104,9 +148,7 @@
 
       <div class="teacher-classrooms__grid">
         @for (classroom of classrooms(); track classroom.id) {
-          <div class="teacher-classrooms__card">
-            <app-classroom-card [classroom]="classroom" />
-          </div>
+          <app-classroom-card [classroom]="classroom" />
         }
       </div>
     </section>
@@ -117,50 +159,15 @@
   ========================== -->
 
   @if (showCreateClassroom()) {
-    <div
-      class="teacher-classrooms__modal-backdrop"
-      role="presentation"
-      (click)="closeCreateClassroom()"
+    <app-modal
+      title="Crear clase"
+      eyebrow="Nueva clase"
+      description="Crea un espacio para organizar estudiantes y actividades clínicas."
+      icon="school"
+      [isOpen]="showCreateClassroom()"
+      (closed)="closeCreateClassroom()"
     >
-      <section
-        class="teacher-classrooms__modal"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="create-classroom-title"
-        (click)="$event.stopPropagation()"
-      >
-        <header class="teacher-classrooms__modal-header">
-          <div class="teacher-classrooms__modal-heading">
-            <div class="teacher-classrooms__modal-icon" aria-hidden="true">
-              <i data-lucide="school"></i>
-            </div>
-
-            <div class="teacher-classrooms__modal-title">
-              <span class="teacher-classrooms__modal-eyebrow"> Nueva clase </span>
-
-              <h2 id="create-classroom-title">Crear clase</h2>
-
-              <p>Crea un espacio para organizar estudiantes y actividades clínicas.</p>
-            </div>
-          </div>
-
-          <button
-            type="button"
-            class="teacher-classrooms__modal-close"
-            aria-label="Cerrar modal"
-            (click)="closeCreateClassroom()"
-          >
-            <i data-lucide="x" aria-hidden="true"></i>
-          </button>
-        </header>
-
-        <div class="teacher-classrooms__modal-content">
-          <app-create-classroom
-            (created)="onClassroomCreated()"
-            (cancelled)="closeCreateClassroom()"
-          />
-        </div>
-      </section>
-    </div>
+      <app-create-classroom (created)="onClassroomCreated()" (cancelled)="closeCreateClassroom()" />
+    </app-modal>
   }
 </section>

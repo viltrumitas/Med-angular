@@ -1,66 +1,81 @@
-<form class="create-classroom-form" [formGroup]="form" (ngSubmit)="submit()">
+<form class="create-classroom-form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
   <!-- =========================
-       NAME
+       INTRO
   ========================== -->
 
-  <div class="form-group">
-    <label for="classroom-name">
-      Nombre de la clase
-
-      <span class="required">*</span>
-    </label>
-
-    <input
-      id="classroom-name"
-      type="text"
-      formControlName="name"
-      placeholder="Ej. Urgencias Médicas 2026"
-      autocomplete="off"
-    />
-
-    @if (form.controls.name.invalid && form.controls.name.touched) {
-      <small class="field-error"> El nombre es obligatorio. </small>
-    }
-  </div>
-
-  <!-- =========================
-       DESCRIPTION
-  ========================== -->
-
-  <div class="form-group">
-    <div class="label-row">
-      <label for="classroom-description"> Descripción </label>
-
-      <span class="optional"> Opcional </span>
+  <section class="create-classroom-form__intro">
+    <div class="create-classroom-form__intro-icon" aria-hidden="true">
+      <i data-lucide="school"></i>
     </div>
 
-    <textarea
-      id="classroom-description"
-      rows="5"
+    <div>
+      <span>Información general</span>
+
+      <h3>Configura tu nueva clase</h3>
+
+      <p>
+        Define un nombre claro y agrega una descripción para que tus estudiantes puedan
+        identificarla fácilmente.
+      </p>
+    </div>
+  </section>
+
+  <!-- =========================
+       FIELDS
+  ========================== -->
+
+  <section class="create-classroom-form__fields">
+    <app-input
+      labelText="Nombre de la clase"
+      helperText="Usa un nombre que tus estudiantes puedan identificar fácilmente."
+      placeHolderText="Ej. Urgencias Médicas 2026"
+      type="text"
+      autocomplete="off"
+      formControlName="name"
+      [required]="true"
+    />
+
+    <app-text-area
+      labelText="Descripción"
+      helperText="Opcional"
+      placeHolderText="Describe brevemente el propósito de esta clase..."
       formControlName="description"
-      placeholder="Describe brevemente el propósito de esta clase..."
-    ></textarea>
-  </div>
+    />
+  </section>
+
+  <!-- =========================
+       INFORMATION
+  ========================== -->
+
+  <aside class="create-classroom-form__info">
+    <div class="create-classroom-form__info-icon" aria-hidden="true">
+      <i data-lucide="info"></i>
+    </div>
+
+    <p>Después de crear la clase se generará un código que podrás compartir con tus estudiantes.</p>
+  </aside>
 
   <!-- =========================
        ACTIONS
   ========================== -->
 
-  <div class="actions">
-    <button type="button" class="secondary" [disabled]="loading()" (click)="cancelled.emit()">
-      Cancelar
-    </button>
+  <footer class="create-classroom-form__actions">
+    <app-button
+      type="button"
+      text="Cancelar"
+      variant="secondary"
+      [disabled]="loading()"
+      (clicked)="cancel()"
+    />
 
-    <button type="submit" class="primary" [disabled]="loading()">
-      @if (loading()) {
-        <span class="button-spinner"></span>
-
-        <span>Creando...</span>
-      } @else {
-        <i data-lucide="plus"></i>
-
-        <span>Crear clase</span>
-      }
-    </button>
-  </div>
+    <app-button
+      type="submit"
+      text="Crear clase"
+      loadingText="Creando..."
+      variant="primary"
+      icon="plus"
+      [loading]="loading()"
+      [disabled]="loading()"
+    />
+  </footer>
 </form>

@@ -4,17 +4,53 @@
   ========================== -->
 
   @if (loading()) {
-    <section class="classroom-detail__state" aria-live="polite">
+    <section class="classroom-detail__state" aria-live="polite" aria-busy="true">
       <div class="classroom-detail__spinner" aria-hidden="true"></div>
 
       <div class="classroom-detail__state-content">
         <h2>Cargando clase</h2>
+
         <p>Estamos obteniendo la información de la clase...</p>
       </div>
     </section>
-  } @else {
-    @let c = classroom()!;
+  }
 
+  <!-- =========================
+       ERROR
+  ========================== -->
+
+  @else if (loadError()) {
+    <section class="classroom-detail__state classroom-detail__state--error" role="alert">
+      <div
+        class="classroom-detail__state-icon classroom-detail__state-icon--error"
+        aria-hidden="true"
+      >
+        <i data-lucide="triangle-alert"></i>
+      </div>
+
+      <div class="classroom-detail__state-content">
+        <span class="classroom-detail__state-label"> Error de carga </span>
+
+        <h2>No pudimos cargar la clase</h2>
+
+        <p>{{ loadError() }}</p>
+      </div>
+
+      <app-button
+        type="button"
+        text="Intentar de nuevo"
+        variant="secondary"
+        icon="refresh-cw"
+        (clicked)="loadClassroom()"
+      />
+    </section>
+  }
+
+  <!-- =========================
+       CONTENT
+  ========================== -->
+
+  @else if (classroom(); as c) {
     <!-- =========================
          HEADER
     ========================== -->
@@ -22,13 +58,13 @@
     <header class="classroom-detail__header">
       <div class="classroom-detail__header-main">
         <div class="classroom-detail__header-meta">
-          <span class="classroom-detail__eyebrow">Gestión de clase</span>
+          <span class="classroom-detail__eyebrow"> Gestión de clase </span>
 
           <div
             class="classroom-detail__status"
             [class.classroom-detail__status--inactive]="!c.isActive"
           >
-            <span class="classroom-detail__status-dot"></span>
+            <span class="classroom-detail__status-dot" aria-hidden="true"></span>
 
             <span>
               {{ c.isActive ? 'Clase activa' : 'Clase inactiva' }}
@@ -76,7 +112,9 @@
 
         <div class="classroom-stat__content">
           <span>Estudiantes</span>
+
           <strong>{{ c.studentsCount }}</strong>
+
           <small>Inscritos</small>
         </div>
       </article>
@@ -88,7 +126,9 @@
 
         <div class="classroom-stat__content">
           <span>Actividades</span>
+
           <strong>{{ c.assignmentsCount }}</strong>
+
           <small>Disponibles</small>
         </div>
       </article>
@@ -100,7 +140,13 @@
 
         <div class="classroom-stat__content">
           <span>Pendientes</span>
-          <strong>{{ pendingReviews().length }}</strong>
+
+          @if (loadingPendingReviews()) {
+            <strong aria-label="Cargando revisiones pendientes"> — </strong>
+          } @else {
+            <strong>{{ pendingReviews().length }}</strong>
+          }
+
           <small>Por revisar</small>
         </div>
       </article>
@@ -112,15 +158,19 @@
 
     <section class="classroom-workspace">
       <header class="classroom-workspace__toolbar">
-        <nav class="classroom-tabs" aria-label="Secciones de la clase">
+        <nav class="classroom-tabs" role="tablist" aria-label="Secciones de la clase">
           <button
             type="button"
+            id="assignments-tab"
             class="classroom-tabs__button"
+            role="tab"
+            aria-controls="assignments-panel"
+            [attr.aria-selected]="activeTab() === 'assignments'"
+            [tabindex]="activeTab() === 'assignments' ? 0 : -1"
             [class.classroom-tabs__button--active]="activeTab() === 'assignments'"
-            [attr.aria-current]="activeTab() === 'assignments' ? 'page' : null"
             (click)="changeTab('assignments')"
           >
-            <i data-lucide="clipboard-list"></i>
+            <i data-lucide="clipboard-list" aria-hidden="true"></i>
 
             <span>Actividades</span>
 
@@ -131,28 +181,40 @@
 
           <button
             type="button"
+            id="pending-tab"
             class="classroom-tabs__button"
+            role="tab"
+            aria-controls="pending-panel"
+            [attr.aria-selected]="activeTab() === 'pending'"
+            [tabindex]="activeTab() === 'pending' ? 0 : -1"
             [class.classroom-tabs__button--active]="activeTab() === 'pending'"
-            [attr.aria-current]="activeTab() === 'pending' ? 'page' : null"
             (click)="changeTab('pending')"
           >
-            <i data-lucide="file-check"></i>
+            <i data-lucide="file-check" aria-hidden="true"></i>
 
             <span>Pendientes</span>
 
             <span class="classroom-tabs__count">
-              {{ pendingReviews().length }}
+              @if (loadingPendingReviews()) {
+                …
+              } @else {
+                {{ pendingReviews().length }}
+              }
             </span>
           </button>
 
           <button
             type="button"
+            id="students-tab"
             class="classroom-tabs__button"
+            role="tab"
+            aria-controls="students-panel"
+            [attr.aria-selected]="activeTab() === 'students'"
+            [tabindex]="activeTab() === 'students' ? 0 : -1"
             [class.classroom-tabs__button--active]="activeTab() === 'students'"
-            [attr.aria-current]="activeTab() === 'students' ? 'page' : null"
             (click)="changeTab('students')"
           >
-            <i data-lucide="users"></i>
+            <i data-lucide="users" aria-hidden="true"></i>
 
             <span>Estudiantes</span>
 
@@ -163,26 +225,33 @@
         </nav>
 
         @if (activeTab() === 'assignments') {
-          <button
-            type="button"
-            class="classroom-workspace__create"
-            (click)="openCreateAssignment()"
-          >
-            <i data-lucide="plus"></i>
-            <span>Nueva actividad</span>
-          </button>
+          <div class="button">
+            <app-button
+              type="button"
+              text="Nueva actividad"
+              variant="primary"
+              icon="plus"
+              (clicked)="openCreateAssignment()"
+            />
+          </div>
         }
       </header>
 
       <!-- =========================
-           ACTIVIDADES
+           ASSIGNMENTS
       ========================== -->
 
       @if (activeTab() === 'assignments') {
-        <section class="classroom-panel">
+        <section
+          id="assignments-panel"
+          class="classroom-panel"
+          role="tabpanel"
+          aria-labelledby="assignments-tab"
+          tabindex="0"
+        >
           <header class="classroom-panel__header">
             <div class="classroom-panel__heading">
-              <span class="classroom-panel__eyebrow">Actividades</span>
+              <span class="classroom-panel__eyebrow"> Actividades </span>
 
               <h2>Casos asignados</h2>
 
@@ -209,24 +278,23 @@
                 <p>Agrega casos clínicos para que tus estudiantes puedan comenzar a trabajar.</p>
               </div>
 
-              <button
-                type="button"
-                class="classroom-empty__action"
-                (click)="openCreateAssignment()"
-              >
-                <i data-lucide="plus"></i>
-                <span>Crear actividad</span>
-              </button>
+              <div class="button">
+                <app-button
+                  type="button"
+                  text="Crear actividad"
+                  variant="primary"
+                  icon="plus"
+                  (clicked)="openCreateAssignment()"
+                />
+              </div>
             </section>
           } @else {
             <div class="classroom-panel__assignment-grid">
               @for (assignment of c.assignments; track assignment.id) {
-                <div class="classroom-panel__assignment">
-                  <app-assignment-card
-                    [assignment]="assignment"
-                    (viewAssignment)="openAssignment($event)"
-                  />
-                </div>
+                <app-assignment-card
+                  [assignment]="assignment"
+                  (viewAssignment)="openAssignment($event)"
+                />
               }
             </div>
           }
@@ -234,11 +302,17 @@
       }
 
       <!-- =========================
-           PENDIENTES
+           PENDING REVIEWS
       ========================== -->
 
       @if (activeTab() === 'pending') {
-        <section class="classroom-panel">
+        <section
+          id="pending-panel"
+          class="classroom-panel"
+          role="tabpanel"
+          aria-labelledby="pending-tab"
+          tabindex="0"
+        >
           <header class="classroom-panel__header">
             <div class="classroom-panel__heading">
               <span class="classroom-panel__eyebrow"> Evaluación </span>
@@ -249,12 +323,48 @@
             </div>
 
             <span class="classroom-panel__count classroom-panel__count--pending">
-              {{ pendingReviews().length }}
-              {{ pendingReviews().length === 1 ? 'entrega' : 'entregas' }}
+              @if (loadingPendingReviews()) {
+                Cargando...
+              } @else {
+                {{ pendingReviews().length }}
+                {{ pendingReviews().length === 1 ? 'entrega' : 'entregas' }}
+              }
             </span>
           </header>
 
-          @if (pendingReviews().length === 0) {
+          @if (loadingPendingReviews()) {
+            <section class="classroom-panel__state" aria-live="polite" aria-busy="true">
+              <div class="classroom-panel__spinner" aria-hidden="true"></div>
+
+              <div>
+                <h3>Cargando revisiones</h3>
+
+                <p>Estamos consultando las entregas pendientes.</p>
+              </div>
+            </section>
+          } @else if (pendingReviewsError()) {
+            <section class="classroom-empty classroom-empty--error" role="alert">
+              <div class="classroom-empty__icon classroom-empty__icon--error" aria-hidden="true">
+                <i data-lucide="triangle-alert"></i>
+              </div>
+
+              <div class="classroom-empty__content">
+                <span class="classroom-empty__label"> Error de carga </span>
+
+                <h3>No pudimos cargar las revisiones</h3>
+
+                <p>{{ pendingReviewsError() }}</p>
+              </div>
+
+              <app-button
+                type="button"
+                text="Intentar de nuevo"
+                variant="secondary"
+                icon="refresh-cw"
+                (clicked)="retryPendingReviews()"
+              />
+            </section>
+          } @else if (pendingReviews().length === 0) {
             <section class="classroom-empty classroom-empty--success">
               <div class="classroom-empty__icon classroom-empty__icon--success" aria-hidden="true">
                 <i data-lucide="circle-check"></i>
@@ -271,57 +381,55 @@
           } @else {
             <div class="classroom-reviews">
               @for (review of pendingReviews(); track review.id) {
-                <article
+                <button
+                  type="button"
                   class="classroom-review"
-                  role="button"
-                  tabindex="0"
                   (click)="openSubmissionReview(review.id)"
-                  (keydown.enter)="openSubmissionReview(review.id)"
-                  (keydown.space)="openSubmissionReview(review.id)"
                 >
-                  <header class="classroom-review__header">
-                    <div class="classroom-review__icon" aria-hidden="true">
+                  <span class="classroom-review__header">
+                    <span class="classroom-review__icon" aria-hidden="true">
                       <i data-lucide="file-text"></i>
-                    </div>
+                    </span>
 
                     <span class="classroom-review__status"> Pendiente </span>
-                  </header>
+                  </span>
 
-                  <div class="classroom-review__content">
+                  <span class="classroom-review__content">
                     <span class="classroom-review__label"> Actividad </span>
 
-                    <h3>
+                    <strong class="classroom-review__title">
                       {{ review.assignment.title }}
-                    </h3>
+                    </strong>
 
-                    <div class="classroom-review__student">
+                    <span class="classroom-review__student">
                       <span class="classroom-review__avatar" aria-hidden="true">
                         {{ review.student.firstName.charAt(0) }}
                       </span>
 
-                      <div>
+                      <span class="classroom-review__student-content">
                         <small>Entrega de</small>
 
                         <strong>
                           {{ review.student.firstName }}
                         </strong>
-                      </div>
-                    </div>
+                      </span>
+                    </span>
 
-                    <div class="classroom-review__case">
+                    <span class="classroom-review__case">
                       <span>Caso clínico</span>
 
                       <strong>
                         {{ review.case.title }}
                       </strong>
-                    </div>
-                  </div>
+                    </span>
+                  </span>
 
-                  <footer class="classroom-review__footer">
+                  <span class="classroom-review__footer">
                     <span>Revisar entrega</span>
-                    <i data-lucide="arrow-up-right"></i>
-                  </footer>
-                </article>
+
+                    <i data-lucide="arrow-up-right" aria-hidden="true"></i>
+                  </span>
+                </button>
               }
             </div>
           }
@@ -329,11 +437,17 @@
       }
 
       <!-- =========================
-           ESTUDIANTES
+           STUDENTS
       ========================== -->
 
-      @if ('students' in c && activeTab() === 'students') {
-        <section class="classroom-panel">
+      @if (activeTab() === 'students') {
+        <section
+          id="students-panel"
+          class="classroom-panel"
+          role="tabpanel"
+          aria-labelledby="students-tab"
+          tabindex="0"
+        >
           <header class="classroom-panel__header">
             <div class="classroom-panel__heading">
               <span class="classroom-panel__eyebrow"> Estudiantes </span>
@@ -377,42 +491,24 @@
     </section>
 
     <!-- =========================
-         MODAL
+         CREATE ASSIGNMENT MODAL
     ========================== -->
 
     @if (showCreateAssignment()) {
-      <div class="classroom-modal" role="presentation" (click)="closeCreateAssignment()">
-        <section
-          class="classroom-modal__dialog"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="create-assignment-title"
-          (click)="$event.stopPropagation()"
-        >
-          <header class="classroom-modal__header">
-            <div class="classroom-modal__heading">
-              <span class="classroom-modal__eyebrow"> Nueva actividad </span>
-
-              <h2 id="create-assignment-title">Crear actividad</h2>
-
-              <p>Selecciona los casos clínicos que formarán parte de la actividad.</p>
-            </div>
-
-            <button
-              type="button"
-              class="classroom-modal__close"
-              aria-label="Cerrar modal"
-              (click)="closeCreateAssignment()"
-            >
-              <i data-lucide="x"></i>
-            </button>
-          </header>
-
-          <div class="classroom-modal__content">
-            <app-assignment-create [classroomId]="c.id" (created)="onAssignmentCreated()" />
-          </div>
-        </section>
-      </div>
+      <app-modal
+        title="Crear actividad"
+        eyebrow="Nueva actividad"
+        description="Selecciona los casos clínicos que formarán parte de la actividad."
+        icon="clipboard-plus"
+        [isOpen]="showCreateAssignment()"
+        (closed)="closeCreateAssignment()"
+      >
+        <app-assignment-create
+          [classroomId]="c.id"
+          (created)="onAssignmentCreated()"
+          (cancelled)="closeCreateAssignment()"
+        />
+      </app-modal>
     }
   }
 </section>

@@ -1,100 +1,142 @@
-import { AfterViewInit, Component, inject, Input, OnInit, signal } from '@angular/core';
+import { AfterViewInit, Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ClassroomApi } from '../../../service/clasroom-api.service';
-import { ClassroomDetailModel } from '../../../models/classroom-detail.model';
-import { AssignmentCreate } from '../../../components/assignment-create/assignment-create';
-import { AssignmentCard } from '../../../components/assignment-card/assignment-card';
+import { finalize } from 'rxjs';
 import { createIcons, icons } from 'lucide';
+import { ErrorService } from '../../../../../core/services/error.service';
+import { AssignmentCard } from '../../../components/assignment-card/assignment-card';
+import { AssignmentCreate } from '../../../components/assignment-create/assignment-create';
 import { StudentCard } from '../../../components/student-card/student-card';
 import { ClassroomTeacherDetailModel } from '../../../models/classroom-teacher-detail.model';
-import { SubmissionApi } from '../../../../submissions/service/submission-api.service';
+import { ClassroomApi } from '../../../service/clasroom-api.service';
 import { SubmissionsListItem } from '../../../../reviews/models/submissions-list.model';
+import { SubmissionApi } from '../../../../submissions/service/submission-api.service';
+import { Modal } from '../../../../../shared/components/modal/modal';
+import { ButtonComponent } from '../../../../../shared/components/button/button';
+
+type ClassroomTab = 'assignments' | 'students' | 'pending';
 
 @Component({
   selector: 'app-classroom-detail',
   standalone: true,
-  imports: [AssignmentCreate, AssignmentCard, StudentCard],
+  imports: [AssignmentCreate, AssignmentCard, StudentCard, Modal, ButtonComponent],
   templateUrl: './classroom-detail.html',
   styleUrl: './classroom-detail.scss',
 })
-export class ClassroomDetail implements AfterViewInit, OnInit {
+export class ClassroomDetail implements OnInit, AfterViewInit {
   private readonly api = inject(ClassroomApi);
   private readonly submissionApi = inject(SubmissionApi);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly errorService = inject(ErrorService);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly classroom = signal<ClassroomTeacherDetailModel | null>(null);
   readonly loading = signal(true);
+  readonly loadError = signal<string | null>(null);
 
   readonly pendingReviews = signal<SubmissionsListItem[]>([]);
   readonly loadingPendingReviews = signal(false);
+  readonly pendingReviewsError = signal<string | null>(null);
 
-  readonly activeTab = signal<'assignments' | 'students' | 'pending'>('assignments');
+  readonly activeTab = signal<ClassroomTab>('assignments');
   readonly showCreateAssignment = signal(false);
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.loadClassroom();
   }
 
   ngAfterViewInit(): void {
-    this.renderIcon();
+    this.renderIcons();
   }
 
-  loadClassroom() {
-    const id = this.route.snapshot.paramMap.get('id')!;
+  loadClassroom(): void {
+    const classroomId = this.getClassroomId();
 
-    this.api.findTeacherDetail(id).subscribe({
-      next: (data) => {
-        this.classroom.set(data);
-        this.loading.set(false);
-        this.loadPendingReviews();
-        this.renderIcon();
-      },
-      error: () => {
-        this.loading.set(false);
-        this.renderIcon();
-      },
-    });
+    if (!classroomId) {
+      this.loading.set(false);
+      this.loadError.set('No se encontró el identificador de la clase.');
+      return;
+    }
+
+    this.errorService.clear();
+    this.loadError.set(null);
+    this.loading.set(true);
+
+    this.api
+      .findTeacherDetail(classroomId)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => {
+          this.loading.set(false);
+          this.renderIcons();
+        }),
+      )
+      .subscribe({
+        next: (classroom) => {
+          this.classroom.set(classroom);
+          this.loadPendingReviews(classroom.id);
+        },
+        error: () => {
+          this.classroom.set(null);
+          this.pendingReviews.set([]);
+          this.loadError.set('No pudimos cargar la información de la clase. Intenta nuevamente.');
+        },
+      });
   }
 
-  loadPendingReviews() {
-    const classroomId = this.classroom()?.id;
+  loadPendingReviews(classroomId?: string): void {
+    const resolvedClassroomId = classroomId ?? this.classroom()?.id;
 
-    if (!classroomId) return;
+    if (!resolvedClassroomId || this.loadingPendingReviews()) {
+      return;
+    }
 
+    this.pendingReviewsError.set(null);
     this.loadingPendingReviews.set(true);
 
-    this.submissionApi.findPendingByClassroom(classroomId).subscribe({
-      next: (submissions) => {
-        console.log('[Pending reviews]', submissions);
-
-        this.pendingReviews.set(submissions);
-        this.loadingPendingReviews.set(false);
-      },
-
-      error: (err) => {
-        console.error('Error cargando revisiones pendientes', err)
-
-        this.loadingPendingReviews.set(false);
-      }
-    });
+    this.submissionApi
+      .findPendingByClassroom(resolvedClassroomId)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => {
+          this.loadingPendingReviews.set(false);
+          this.renderIcons();
+        }),
+      )
+      .subscribe({
+        next: (submissions) => {
+          this.pendingReviews.set(submissions);
+        },
+        error: () => {
+          this.pendingReviews.set([]);
+          this.pendingReviewsError.set('No pudimos cargar las revisiones pendientes.');
+        },
+      });
   }
 
-  openSubmissionReview(submissionId: string) {
-    this.router.navigate([
-      '/dashboard/teacher/reviews/crear',
-      submissionId,
-    ], {
+  openSubmissionReview(submissionId: string): void {
+    const classroomId = this.classroom()?.id;
+
+    if (!classroomId) {
+      return;
+    }
+
+    void this.router.navigate(['/dashboard/teacher/reviews/crear', submissionId], {
       queryParams: {
-        classroomId: this.classroom()!.id
-      }
+        classroomId,
+      },
     });
   }
 
-  openAssignment(assignmentId: string) {
-    const classroomId = this.classroom()!.id;
+  openAssignment(assignmentId: string): void {
+    const classroomId = this.classroom()?.id;
 
-    this.router.navigate([
+    if (!classroomId) {
+      return;
+    }
+
+    void this.router.navigate([
       '/dashboard/teacher/classrooms',
       classroomId,
       'assignments',
@@ -102,48 +144,40 @@ export class ClassroomDetail implements AfterViewInit, OnInit {
     ]);
   }
 
-  toggleCreateAssignment() {
-    this.showCreateAssignment.update((value) => !value);
-    this.renderIcon();
-  }
+  changeTab(tab: ClassroomTab): void {
+    if (this.activeTab() === tab) {
+      return;
+    }
 
-  changeTab(tab: 'assignments' | 'students' | 'pending') {
     this.activeTab.set(tab);
-    this.renderIcon();
+    this.renderIcons();
   }
-
-  // =========================
-  // MODAL
-  // =========================
 
   openCreateAssignment(): void {
+    this.errorService.clear();
     this.showCreateAssignment.set(true);
-    document.body.style.overflow = 'hidden';
-    this.renderIcon();
   }
 
   closeCreateAssignment(): void {
     this.showCreateAssignment.set(false);
-    document.body.style.overflow = '';
+    this.errorService.clear();
   }
 
   onAssignmentCreated(): void {
-    this.closeCreateAssignment();
+    this.showCreateAssignment.set(false);
     this.loadClassroom();
   }
 
-  reload() {
-    const id = this.route.snapshot.paramMap.get('id')!;
-
-    this.api.findTeacherDetail(id).subscribe((data) => {
-      this.classroom.set(data);
-      this.showCreateAssignment.set(false);
-      this.renderIcon();
-    });
+  retryPendingReviews(): void {
+    this.loadPendingReviews();
   }
 
-  private renderIcon() {
-    setTimeout(() => {
+  private getClassroomId(): string | null {
+    return this.route.snapshot.paramMap.get('id');
+  }
+
+  private renderIcons(): void {
+    queueMicrotask(() => {
       createIcons({ icons });
     });
   }

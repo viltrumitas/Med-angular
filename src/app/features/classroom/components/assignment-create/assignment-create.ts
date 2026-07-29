@@ -1,50 +1,66 @@
 import {
   AfterViewInit,
   Component,
-  EventEmitter,
+  DestroyRef,
+  computed,
   inject,
-  Input,
-  OnInit,
-  Output,
+  input,
+  output,
   signal,
 } from '@angular/core';
-
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule } from '@angular/forms';
+import { finalize, startWith } from 'rxjs';
 import { createIcons, icons } from 'lucide';
+
+import { ErrorService } from '../../../../core/services/error.service';
+import { InputComponent } from '../../../../shared/components/input/input';
+import { TextareaComponent } from '../../../../shared/components/text-area/text-area';
 
 import { createAssignmentForm } from '../../../assignments/forms/create-assignment-form';
 import { mapCreateAssignment } from '../../../assignments/mappers/create-assignment.mapper';
 import { AssignmentApi } from '../../../assignments/services/assignment-api';
-
 import { CaseResponseDto } from '../../../cases/dto/case-response.dto';
 
 import { ClassroomApi } from '../../service/clasroom-api.service';
-
-import { InputComponent } from '../../../../shared/components/input/input';
-import { TextareaComponent } from '../../../../shared/components/text-area/text-area';
-import { LateSubmissionPolicy } from '../../../../core/enum/late-submission-policy';
+import { ButtonComponent } from '../../../../shared/components/button/button';
 
 @Component({
   selector: 'app-assignment-create',
   standalone: true,
-  imports: [ReactiveFormsModule, InputComponent, TextareaComponent],
+  imports: [ReactiveFormsModule, InputComponent, TextareaComponent, ButtonComponent],
   templateUrl: './assignment-create.html',
   styleUrl: './assignment-create.scss',
 })
-export class AssignmentCreate implements OnInit, AfterViewInit {
-  private readonly assignmentService = inject(AssignmentApi);
-  private readonly classroomService = inject(ClassroomApi);
+export class AssignmentCreate implements AfterViewInit {
+  private readonly assignmentApi = inject(AssignmentApi);
+  private readonly classroomApi = inject(ClassroomApi);
+  private readonly errorService = inject(ErrorService);
+  private readonly destroyRef = inject(DestroyRef);
 
-  assignmentForm = createAssignmentForm();
+  readonly classroomId = input.required<string>();
+  readonly created = output<void>();
+  readonly assignmentForm = createAssignmentForm();
+  readonly cases = signal<CaseResponseDto[]>([]);
+  readonly isLoadingCases = signal(false);
+  readonly isSubmitting = signal(false);
+  readonly casesLoadError = signal<string | null>(null);
+  readonly submitError = signal<string | null>(null);
 
-  cases: CaseResponseDto[] = [];
+  private readonly initialFormValue = this.assignmentForm.getRawValue();
 
-  isLoadingCases = signal(false);
-  isSubmitting = signal(false);
+  private readonly selectedCaseIds = toSignal(
+    this.assignmentForm.controls.caseIds.valueChanges.pipe(
+      startWith(this.assignmentForm.controls.caseIds.value),
+    ),
+    {
+      initialValue: this.assignmentForm.controls.caseIds.value,
+    },
+  );
 
-  @Input({ required: true })
-  classroomId!: string;
+  readonly selectedCasesCount = computed(() => this.selectedCaseIds().length);
 
+<<<<<<< HEAD
   @Output()
   created = new EventEmitter<void>();
 
@@ -64,6 +80,9 @@ export class AssignmentCreate implements OnInit, AfterViewInit {
         }
       }
     );
+=======
+  constructor() {
+>>>>>>> d036172 (v1)
     this.loadCases();
   }
 
@@ -71,102 +90,124 @@ export class AssignmentCreate implements OnInit, AfterViewInit {
     this.renderIcons();
   }
 
-  // =========================
-  // CASES
-  // =========================
-
   toggleCase(caseId: string): void {
-    const current = this.assignmentForm.controls.caseIds.value;
+    if (this.isSubmitting()) {
+      return;
+    }
 
-    const updated = current.includes(caseId)
-      ? current.filter((id) => id !== caseId)
-      : [...current, caseId];
+    const control = this.assignmentForm.controls.caseIds;
+    const currentIds = control.value;
 
-    this.assignmentForm.controls.caseIds.setValue(updated);
+    const updatedIds = currentIds.includes(caseId)
+      ? currentIds.filter((id) => id !== caseId)
+      : [...currentIds, caseId];
+
+    control.setValue(updatedIds);
+    control.markAsTouched();
+    control.markAsDirty();
+
+    this.submitError.set(null);
+    this.errorService.clear();
 
     this.renderIcons();
   }
 
-  selectedCasesCount(): number {
-    return this.assignmentForm.controls.caseIds.value.length;
-  }
-
   isCaseSelected(caseId: string): boolean {
-    return this.assignmentForm.controls.caseIds.value.includes(caseId);
+    return this.selectedCaseIds().includes(caseId);
   }
-
-  // =========================
-  // SUBMIT
-  // =========================
 
   submitAssignment(): void {
     if (this.isSubmitting()) {
       return;
     }
 
-    const value = this.assignmentForm.getRawValue();
+    this.errorService.clear();
+    this.submitError.set(null);
 
-    if (value.caseIds.length === 0) {
+    const caseIdsControl = this.assignmentForm.controls.caseIds;
+
+    if (caseIdsControl.value.length === 0) {
+      caseIdsControl.markAsTouched();
+
+      this.submitError.set('Selecciona al menos un caso clínico para crear la actividad.');
+
       return;
     }
 
     if (this.assignmentForm.invalid) {
       this.assignmentForm.markAllAsTouched();
-
       return;
     }
 
-    const dto = mapCreateAssignment(value);
+    const dto = mapCreateAssignment(this.assignmentForm.getRawValue());
 
     this.isSubmitting.set(true);
+    this.assignmentForm.disable();
 
-    this.classroomService.createAssignment(this.classroomId, dto).subscribe({
-      next: () => {
-        this.assignmentForm.reset(createAssignmentForm().getRawValue());
-
-        this.isSubmitting.set(false);
-
-        this.created.emit();
-      },
-
-      error: (err) => {
-        console.error('[AssignmentCreate] Error al crear actividad:', err);
-
-        this.isSubmitting.set(false);
-      },
-    });
+    this.classroomApi
+      .createAssignment(this.classroomId(), dto)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => {
+          this.isSubmitting.set(false);
+          this.assignmentForm.enable();
+          this.renderIcons();
+        }),
+      )
+      .subscribe({
+        next: () => {
+          this.resetForm();
+          this.created.emit();
+        },
+        error: () => {
+          this.submitError.set(
+            'No pudimos crear la actividad. Revisa la información e intenta nuevamente.',
+          );
+        },
+      });
   }
 
-  // =========================
-  // API
-  // =========================
+  loadCases(): void {
+    if (this.isLoadingCases()) {
+      return;
+    }
 
-  private loadCases(): void {
+    this.errorService.clear();
+    this.casesLoadError.set(null);
     this.isLoadingCases.set(true);
 
-    this.assignmentService.findMyPublishedCases().subscribe({
-      next: (data) => {
-        this.cases = data;
+    this.assignmentApi
+      .findMyPublishedCases()
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => {
+          this.isLoadingCases.set(false);
+          this.renderIcons();
+        }),
+      )
+      .subscribe({
+        next: (cases) => {
+          this.cases.set(cases);
+        },
+        error: () => {
+          this.cases.set([]);
 
-        this.isLoadingCases.set(false);
-
-        this.renderIcons();
-      },
-
-      error: (err) => {
-        console.error('[AssignmentCreate] Error al cargar casos:', err);
-
-        this.isLoadingCases.set(false);
-      },
-    });
+          this.casesLoadError.set('No pudimos cargar tus casos publicados. Intenta nuevamente.');
+        },
+      });
   }
 
-  // =========================
-  // LUCIDE
-  // =========================
+  private resetForm(): void {
+    this.assignmentForm.reset(this.initialFormValue);
+
+    this.assignmentForm.markAsPristine();
+    this.assignmentForm.markAsUntouched();
+
+    this.submitError.set(null);
+  }
 
   private renderIcons(): void {
-    setTimeout(() => {
+    queueMicrotask(() => {
       createIcons({ icons });
     });
   }

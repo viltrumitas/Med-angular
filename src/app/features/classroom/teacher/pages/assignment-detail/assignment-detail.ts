@@ -181,10 +181,7 @@ export class AssignmentDetailPage implements AfterViewInit, OnInit {
 
     const classroomId = this.route.snapshot.paramMap.get('classroomId');
 
-    this.router.navigate([
-      '/dashboard/teacher/reviews/crear',
-      assigned.submission.id,
-    ], {
+    this.router.navigate(['/dashboard/teacher/reviews/crear', assigned.submission.id], {
       queryParams: {
         classroomId,
       },

@@ -1,11 +1,16 @@
-<form [formGroup]="assignmentForm" (ngSubmit)="submitAssignment()" class="assignment-form">
+<form
+  class="assignment-form"
+  [formGroup]="assignmentForm"
+  (ngSubmit)="submitAssignment()"
+  novalidate
+>
   <!-- =========================
        ACTIVITY INFORMATION
   ========================== -->
 
   <section class="form-section">
     <div class="section-heading">
-      <div class="section-number">1</div>
+      <div class="section-number" aria-hidden="true">1</div>
 
       <div>
         <h3>Información de la actividad</h3>
@@ -19,20 +24,27 @@
 
     <div class="form-fields">
       <div class="field-group">
-        <app-input formControlName="title" type="text" placeHolderText="Ej. Evaluación inicial del paciente"
-          labelText="Título" />
+        <app-input
+          formControlName="title"
+          type="text"
+          placeHolderText="Ej. Evaluación inicial del paciente"
+          labelText="Título"
+        />
 
         @if (assignmentForm.controls.title.invalid && assignmentForm.controls.title.touched) {
-        <div class="field-error">
-          <i data-lucide="circle-alert"></i>
+          <div class="field-error">
+            <i data-lucide="circle-alert"></i>
 
-          <span> El título es obligatorio. </span>
-        </div>
+            <span> El título es obligatorio. </span>
+          </div>
         }
       </div>
 
-      <app-text-area formControlName="description" labelText="Descripción"
-        placeHolderText="Describe brevemente el objetivo de la actividad..." />
+      <app-text-area
+        formControlName="description"
+        labelText="Descripción"
+        placeHolderText="Describe brevemente el objetivo de la actividad..."
+      />
     </div>
   </section>
 
@@ -41,75 +53,43 @@
   ========================== -->
 
   <section class="form-section">
-
     <div class="section-heading">
       <div class="section-number">2</div>
 
       <div>
         <h3>Configuración de entrega</h3>
 
-        <p>
-          Define si esta actividad tendrá fecha límite.
-        </p>
+        <p>Define si esta actividad tendrá fecha límite.</p>
       </div>
     </div>
-
 
     <div class="delivery-settings">
-
       <label class="checkbox-option">
-
         <input type="checkbox" formControlName="hasDueDate" />
 
-        <span>
-          Esta actividad tiene fecha límite
-        </span>
-
+        <span> Esta actividad tiene fecha límite </span>
       </label>
 
-
       @if (assignmentForm.controls.hasDueDate.value) {
+        <div class="form-fields">
+          <div class="field-group">
+            <label> Fecha límite </label>
 
-      <div class="form-fields">
+            <input type="datetime-local" formControlName="dueDate" />
+          </div>
 
-        <div class="field-group">
+          <div class="field-group">
+            <label> Política de entrega </label>
 
-          <label>
-            Fecha límite
-          </label>
+            <select formControlName="lateSubmissionPolicy">
+              <option value="ACCEPT_LATE">Aceptar entregas tardías</option>
 
-          <input type="datetime-local" formControlName="dueDate" />
-
+              <option value="REJECT_LATE">No aceptar después de la fecha límite</option>
+            </select>
+          </div>
         </div>
-
-
-        <div class="field-group">
-
-          <label>
-            Política de entrega
-          </label>
-
-
-          <select formControlName="lateSubmissionPolicy">
-
-            <option value="ACCEPT_LATE">
-              Aceptar entregas tardías
-            </option>
-
-            <option value="REJECT_LATE">
-              No aceptar después de la fecha límite
-            </option>
-
-          </select>
-
-        </div>
-
-      </div>
-
       }
-
     </div>
-
   </section>
 
   <!-- =========================
@@ -119,7 +99,7 @@
   <section class="form-section cases-section">
     <div class="section-heading cases-heading">
       <div class="heading-main">
-        <div class="section-number">3</div>
+        <div class="section-number" aria-hidden="true">2</div>
 
         <div>
           <h3>Selecciona los casos clínicos</h3>
@@ -128,75 +108,145 @@
         </div>
       </div>
 
-      <span class="selection-counter" [class.has-selection]="selectedCasesCount() > 0">
+      <span
+        class="selection-counter"
+        [class.selection-counter--active]="selectedCasesCount() > 0"
+        aria-live="polite"
+      >
         {{ selectedCasesCount() }}
 
         {{ selectedCasesCount() === 1 ? 'seleccionado' : 'seleccionados' }}
       </span>
     </div>
 
-    <!-- LOADING CASES -->
+    <!-- =========================
+         CASES LOADING
+    ========================== -->
 
     @if (isLoadingCases()) {
-    <div class="cases-loading">
-      <div class="mini-spinner"></div>
+      <div class="cases-state cases-state--loading" aria-live="polite" aria-busy="true">
+        <div class="mini-spinner" aria-hidden="true"></div>
 
-      <span> Cargando casos disponibles... </span>
-    </div>
+        <div class="cases-state__content">
+          <h4>Cargando casos</h4>
+
+          <p>Estamos obteniendo tus casos clínicos publicados.</p>
+        </div>
+      </div>
     }
 
-    <!-- EMPTY CASES -->
+    <!-- =========================
+         CASES ERROR
+    ========================== -->
 
-    @else if (cases.length === 0) {
-    <div class="cases-empty">
-      <div class="empty-icon">
-        <i data-lucide="folder-open"></i>
+    @else if (casesLoadError()) {
+      <div class="cases-state cases-state--error" role="alert">
+        <div class="cases-state__icon cases-state__icon--error" aria-hidden="true">
+          <i data-lucide="triangle-alert"></i>
+        </div>
+
+        <div class="cases-state__content">
+          <h4>No pudimos cargar los casos</h4>
+
+          <p>{{ casesLoadError() }}</p>
+        </div>
+
+        <app-button
+          type="button"
+          text="Intentar de nuevo"
+          variant="secondary"
+          (clicked)="loadCases()"
+        />
+      </div>
+    }
+
+    <!-- =========================
+         CASES EMPTY
+    ========================== -->
+
+    @else if (cases().length === 0) {
+      <div class="cases-state cases-state--empty">
+        <div class="cases-state__icon" aria-hidden="true">
+          <i data-lucide="folder-open"></i>
+        </div>
+
+        <div class="cases-state__content">
+          <h4>No hay casos disponibles</h4>
+
+          <p>
+            Necesitas tener casos clínicos publicados antes de poder agregarlos a una actividad.
+          </p>
+        </div>
       </div>
 
       <h4>No hay casos disponibles</h4>
 
       <p>Necesitas tener casos clínicos publicados antes de poder agregarlos a una actividad.</p>
-    </div>
     }
 
-    <!-- CASE GRID -->
+    <!-- =========================
+         CASES GRID
+    ========================== -->
 
     @else {
-    <div class="cases-container">
-      @for (c of cases; track c.id) {
-      <button type="button" class="case-card" [class.selected]="isCaseSelected(c.id)" (click)="toggleCase(c.id)">
-        <div class="case-icon">
-          <i data-lucide="clipboard-plus"></i>
+      <div class="cases-container" role="group" aria-label="Casos clínicos disponibles">
+        @for (clinicalCase of cases(); track clinicalCase.id) {
+          <button
+            type="button"
+            class="case-card"
+            [class.case-card--selected]="isCaseSelected(clinicalCase.id)"
+            [attr.aria-pressed]="isCaseSelected(clinicalCase.id)"
+            [disabled]="isSubmitting()"
+            (click)="toggleCase(clinicalCase.id)"
+          >
+            <div class="case-icon" aria-hidden="true">
+              <i data-lucide="clipboard-plus"></i>
+            </div>
+
+            <div class="case-content">
+              <h4>{{ clinicalCase.title }}</h4>
+
+              <div class="patient-info">
+                <i data-lucide="user-round" aria-hidden="true"></i>
+
+                <span>{{ clinicalCase.patientName }}</span>
+              </div>
+
+              <span class="area-badge">
+                {{ clinicalCase.area }}
+              </span>
+            </div>
+
+            <div class="selection-indicator" aria-hidden="true">
+              @if (isCaseSelected(clinicalCase.id)) {
+                <i data-lucide="check"></i>
+              }
+            </div>
+          </button>
+        }
+      </div>
+
+      @if (assignmentForm.controls.caseIds.invalid && assignmentForm.controls.caseIds.touched) {
+        <div class="cases-validation" role="alert">
+          <i data-lucide="circle-alert" aria-hidden="true"></i>
+
+          <span>Selecciona al menos un caso clínico.</span>
         </div>
-
-        <div class="case-content">
-          <h4>
-            {{ c.title }}
-          </h4>
-
-          <div class="patient-info">
-            <i data-lucide="user-round"></i>
-
-            <span>
-              {{ c.patientName }}
-            </span>
-          </div>
-
-          <span class="area-badge">
-            {{ c.area }}
-          </span>
-        </div>
-
-        <div class="selection-indicator">
-          @if (isCaseSelected(c.id)) {
-          <i data-lucide="check"></i>
-          }
-        </div>
-      </button>
       }
-    </div>
     }
   </section>
+
+  <!-- =========================
+       SUBMIT ERROR
+  ========================== -->
+
+  @if (submitError()) {
+    <div class="assignment-form__error" role="alert">
+      <i data-lucide="triangle-alert" aria-hidden="true"></i>
+
+      <span>{{ submitError() }}</span>
+    </div>
+  }
 
   <!-- =========================
        FOOTER
@@ -204,7 +254,7 @@
 
   <footer class="form-footer">
     <div class="footer-summary">
-      <div class="summary-icon">
+      <div class="summary-icon" aria-hidden="true">
         <i data-lucide="clipboard-check"></i>
       </div>
 
@@ -219,17 +269,39 @@
       </div>
     </div>
 
-    <button type="submit" class="submit-button"
-      [disabled]="assignmentForm.invalid || selectedCasesCount() === 0 || isSubmitting()">
+    <<<<<<< HEAD
+    <button
+      type="submit"
+      class="submit-button"
+      [disabled]="assignmentForm.invalid || selectedCasesCount() === 0 || isSubmitting()"
+    >
       @if (isSubmitting()) {
-      <span class="button-spinner"></span>
+        <span class="button-spinner"></span>
 
-      <span> Creando... </span>
+        <span> Creando... </span>
       } @else {
-      <span> Crear actividad </span>
+        <span> Crear actividad </span>
 
-      <i data-lucide="arrow-right"></i>
+        <i data-lucide="arrow-right"></i>
       }
     </button>
+    =======
+    <div class="footer-action">
+      <app-button
+        type="submit"
+        text="Crear actividad"
+        loadingText="Creando actividad..."
+        variant="primary"
+        [loading]="isSubmitting()"
+        [disabled]="
+          assignmentForm.invalid ||
+          selectedCasesCount() === 0 ||
+          isSubmitting() ||
+          isLoadingCases() ||
+          !!casesLoadError()
+        "
+      />
+    </div>
+    >>>>>>> d036172 (v1)
   </footer>
 </form>
