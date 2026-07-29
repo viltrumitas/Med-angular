@@ -1,21 +1,11 @@
-<article
-  class="assignment-card"
-  [class.assignment-card--published]="assignment.isPublished"
-  role="button"
-  tabindex="0"
-  (click)="open()"
-  (keydown.enter)="open()"
-  (keydown.space)="open()"
->
+<article class="assignment-card" [class.assignment-card--published]="assignment.isPublished" role="button" tabindex="0"
+  (click)="open()" (keydown.enter)="open()" (keydown.space)="open()">
   <header class="assignment-card__header">
     <div class="assignment-card__icon" aria-hidden="true">
       <i data-lucide="clipboard-list"></i>
     </div>
 
-    <span
-      class="assignment-card__status"
-      [class.assignment-card__status--published]="assignment.isPublished"
-    >
+    <span class="assignment-card__status" [class.assignment-card__status--published]="assignment.isPublished">
       <span class="assignment-card__status-dot"></span>
 
       {{ assignment.isPublished ? 'Publicada' : 'Borrador' }}
@@ -38,14 +28,33 @@
     <div class="assignment-card__meta">
       <i data-lucide="calendar-days"></i>
 
-      <span>Actividad de clase</span>
+      @if (assignment.dueDate) {
+      <span>
+        Entrega:
+        {{ assignment.dueDate | date:'dd/MM/yyyy HH:mm' }}
+      </span>
+      } @else {
+      <span>
+        Sin fecha límite
+      </span>
+      }
     </div>
 
-    <button
-      type="button"
-      class="assignment-card__action"
-      (click)="$event.stopPropagation(); open()"
-    >
+    @if (assignment.dueDate) {
+    <div class="assignment-card__meta">
+      <i data-lucide="clock-alert"></i>
+
+      <span>
+        {{
+        assignment.lateSubmissionPolicy === 'ACCEPT_LATE'
+        ? 'Acepta entregas tardías'
+        : 'No acepta entregas tardías'
+        }}
+      </span>
+    </div>
+    }
+
+    <button type="button" class="assignment-card__action" (click)="$event.stopPropagation(); open()">
       <span>Ver actividad</span>
 
       <i data-lucide="arrow-up-right"></i>

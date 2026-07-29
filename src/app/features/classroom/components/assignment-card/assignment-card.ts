@@ -1,11 +1,12 @@
 import { AfterViewInit, Component, EventEmitter, Input, Output } from '@angular/core';
 import { AssignmentSummaryModel } from '../../models/assignment-summary.model';
 import { createIcons, icons } from 'lucide';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-assignment-card',
   standalone: true,
-  imports: [],
+  imports: [DatePipe],
   templateUrl: './assignment-card.html',
   styleUrl: './assignment-card.scss',
 })

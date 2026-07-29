@@ -1,3 +1,4 @@
+import { LateSubmissionPolicy } from '../../../core/enum/late-submission-policy';
 import { ClassroomSummaryModel } from './classroom-summary.model';
 
 export interface Assignment {
@@ -10,6 +11,10 @@ export interface Assignment {
   classroom: ClassroomSummaryModel;
 
   isPublished: boolean;
+
+  dueDate: string | null;
+
+  lateSubmissionPolicy: LateSubmissionPolicy;
 
   createdAt: string;
 

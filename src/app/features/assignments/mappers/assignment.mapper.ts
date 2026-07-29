@@ -6,7 +6,6 @@ import { Assignment } from '../../classroom/models/assignment.model';
 import { AssignmentListItem } from '../../classroom/models/assignment-list.model';
 import { AssignmentDetail } from '../../classroom/models/assignment-detail.model'; 
 import { AssignedCase } from '../../classroom/models/assigned-case.model';
-import { mapCreateClassroom } from '../../classroom/mappers/map-clasroom.mapper';
 
 export class AssignmentMapper {
   static toModel(dto: AssignmentResponseDto): Assignment {
@@ -20,6 +19,10 @@ export class AssignmentMapper {
       classroom: dto.classroom,
 
       isPublished: dto.isPublished,
+
+      dueDate: dto.dueDate,
+
+      lateSubmissionPolicy: dto.lateSubmissionPolicy,
 
       createdAt: dto.createdAt,
 

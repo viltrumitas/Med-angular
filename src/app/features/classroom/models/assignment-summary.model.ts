@@ -1,3 +1,5 @@
+import { LateSubmissionPolicy } from "../../../core/enum/late-submission-policy";
+
 export interface AssignmentSummaryModel {
   id: string;
 
@@ -6,6 +8,10 @@ export interface AssignmentSummaryModel {
   description: string | null;
 
   isPublished: boolean;
+
+  dueDate: string | null;
+
+  lateSubmissionPolicy: LateSubmissionPolicy;
 
   createdAt: string;
 

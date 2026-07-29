@@ -1,3 +1,4 @@
+import { SubmissionTiming } from "../../../core/enum/submission-timing";
 import { User } from "../../../core/models/user.model";
 import { AssignmentResponseDto } from "../../assignments/dto/assignment-response.dto";
 import { CaseResponseDto } from "../../cases/dto/case-response.dto";
@@ -35,5 +36,10 @@ export interface ReviewResponseDto {
   otherInterventions: OtherInterventionsModel;
   totalScore: number;
   feedback: string | null;
+
+  submissionTiming: SubmissionTiming;
+
+  submittedAt: string | null;
+
   createdAt: Date;
 }

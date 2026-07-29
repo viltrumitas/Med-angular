@@ -1,3 +1,4 @@
+import { SubmissionTiming } from '../../../core/enum/submission-timing';
 import { SubmissionStatus } from '../../../core/models/submission-status.enum';
 import { User } from '../../../core/models/user.model';
 import { AssignmentResponseDto } from '../../assignments/dto/assignment-response.dto';
@@ -14,6 +15,10 @@ export interface SubmissionsListItem {
 
   assignment: AssignmentResponseDto;
   case: CaseResponseDto;
+
+  submissionTiming: SubmissionTiming;
+
+  submittedAt: string | null;
 
   status: SubmissionStatus;
   createdAt: Date;

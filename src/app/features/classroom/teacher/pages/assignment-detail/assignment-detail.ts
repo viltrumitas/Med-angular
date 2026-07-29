@@ -5,6 +5,7 @@ import { AssignmentApi } from '../../../../assignments/services/assignment-api';
 import { AssignmentDetail as AssignmentDetailModel } from '../../../models/assignment-detail.model';
 import { createIcons, icons } from 'lucide';
 import { AssignedCase } from '../../../models/assigned-case.model';
+import { LateSubmissionPolicy } from '../../../../../core/enum/late-submission-policy';
 
 @Component({
   selector: 'app-assignment-detail',
@@ -51,6 +52,90 @@ export class AssignmentDetailPage implements AfterViewInit, OnInit {
     if (total === 0) return 0;
 
     return Math.round((this.totalCompleted() / total) * 100);
+  });
+
+  readonly deadlineInfo = computed(() => {
+    const assignment = this.assignment();
+
+    if (!assignment) {
+      return {
+        hasDueDate: false,
+        expired: false,
+        acceptsLate: false,
+        message: 'Sin fecha límite',
+      };
+    }
+
+    if (!assignment.dueDate) {
+      return {
+        hasDueDate: false,
+        expired: false,
+        acceptsLate:
+          assignment.lateSubmissionPolicy ===
+          LateSubmissionPolicy.ACCEPT_LATE,
+        message: 'Sin fecha límite',
+      };
+    }
+
+    const due = new Date(assignment.dueDate);
+    const now = new Date();
+
+    const diff = due.getTime() - now.getTime();
+
+    const minute = 60 * 1000;
+    const hour = 60 * minute;
+    const day = 24 * hour;
+
+    const abs = Math.abs(diff);
+
+    let message = '';
+
+    if (diff < 0) {
+      if (abs >= day) {
+        const days = Math.floor(abs / day);
+
+        message = `Venció hace ${days} ${days === 1 ? 'día' : 'días'}`;
+      } else if (abs >= hour) {
+        const hours = Math.floor(abs / hour);
+
+        message = `Venció hace ${hours} ${hours === 1 ? 'hora' : 'horas'}`;
+      } else {
+        const minutes = Math.max(1, Math.floor(abs / minute));
+
+        message = `Venció hace ${minutes} ${minutes === 1 ? 'minuto' : 'minutos'}`;
+      }
+    } else {
+      if (diff > 30 * day) {
+        message = `Vence el ${due.toLocaleDateString('es-MX', {
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric',
+        })}`;
+      } else if (diff >= day) {
+        const days = Math.ceil(diff / day);
+
+        message = `Queda${days > 1 ? 'n' : ''} ${days} ${days === 1 ? 'día' : 'días'}`;
+      } else if (diff >= hour) {
+        const hours = Math.ceil(diff / hour);
+
+        message = `Queda${hours > 1 ? 'n' : ''} ${hours} ${hours === 1 ? 'hora' : 'horas'}`;
+      } else if (diff >= minute) {
+        const minutes = Math.ceil(diff / minute);
+
+        message = `Queda${minutes > 1 ? 'n' : ''} ${minutes} ${minutes === 1 ? 'minuto' : 'minutos'}`;
+      } else {
+        message = 'Vence en unos segundos';
+      }
+    }
+
+    return {
+      hasDueDate: true,
+      expired: diff < 0,
+      acceptsLate:
+        assignment.lateSubmissionPolicy ===
+        LateSubmissionPolicy.ACCEPT_LATE,
+      message,
+    };
   });
 
   loading = signal(true);

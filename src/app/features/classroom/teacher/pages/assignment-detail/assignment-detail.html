@@ -1,365 +1,445 @@
 @if (loading()) {
-  <section class="assignment-detail__state" aria-live="polite">
-    <div class="assignment-detail__spinner" aria-hidden="true"></div>
+<section class="assignment-detail__state" aria-live="polite">
+  <div class="assignment-detail__spinner" aria-hidden="true"></div>
 
-    <div class="assignment-detail__state-content">
-      <h2>Cargando actividad</h2>
+  <div class="assignment-detail__state-content">
+    <h2>Cargando actividad</h2>
 
-      <p>Estamos obteniendo la información de la actividad...</p>
-    </div>
-  </section>
+    <p>Estamos obteniendo la información de la actividad...</p>
+  </div>
+</section>
 } @else if (assignment(); as assignment) {
-  <main class="assignment-detail">
-    <!-- =========================
+<main class="assignment-detail">
+  <!-- =========================
          HEADER
     ========================== -->
 
-    <header class="assignment-detail__header">
-      <div class="assignment-detail__header-main">
-        <div class="assignment-detail__header-meta">
-          <span class="assignment-detail__eyebrow"> Actividad académica </span>
+  <header class="assignment-detail__header">
+    <div class="assignment-detail__header-main">
+      <div class="assignment-detail__header-meta">
+        <span class="assignment-detail__eyebrow"> Actividad académica </span>
 
-          <span
-            class="assignment-detail__status"
-            [class.assignment-detail__status--published]="assignment.isPublished"
-          >
-            <span class="assignment-detail__status-dot"></span>
+        <span class="assignment-detail__status" [class.assignment-detail__status--published]="assignment.isPublished">
+          <span class="assignment-detail__status-dot"></span>
 
-            {{ assignment.isPublished ? 'Publicada' : 'Borrador' }}
-          </span>
-        </div>
-
-        <h1 class="assignment-detail__title">
-          {{ assignment.title }}
-        </h1>
-
-        <p class="assignment-detail__description">
-          {{ assignment.description || 'Esta actividad todavía no tiene una descripción.' }}
-        </p>
-
-        <div class="assignment-detail__metadata">
-          <div class="assignment-detail__metadata-item">
-            <i data-lucide="school"></i>
-
-            <span>{{ assignment.classroom.name }}</span>
-          </div>
-
-          <div class="assignment-detail__metadata-item">
-            <i data-lucide="calendar-days"></i>
-
-            <span> Creada el {{ assignment.createdAt | date: 'mediumDate' }} </span>
-          </div>
-        </div>
+          {{ assignment.isPublished ? 'Publicada' : 'Borrador' }}
+        </span>
       </div>
 
-      <div class="assignment-detail__actions">
-        @if (!assignment.isPublished) {
-          <button
-            type="button"
-            class="assignment-detail__action assignment-detail__action--primary"
-            (click)="publish()"
-          >
-            <i data-lucide="send"></i>
-            <span>Publicar</span>
-          </button>
-        }
+      <h1 class="assignment-detail__title">
+        {{ assignment.title }}
+      </h1>
 
-        <button
-          type="button"
-          class="assignment-detail__action assignment-detail__action--secondary"
-        >
-          <i data-lucide="pencil"></i>
-          <span>Editar</span>
-        </button>
+      <p class="assignment-detail__description">
+        {{ assignment.description || 'Esta actividad todavía no tiene una descripción.' }}
+      </p>
 
-        <button
-          type="button"
-          class="assignment-detail__action assignment-detail__action--danger"
-          (click)="delete()"
-        >
-          <i data-lucide="trash-2"></i>
-          <span>Eliminar</span>
-        </button>
+      <div class="assignment-detail__metadata">
+        <div class="assignment-detail__metadata-item">
+          <i data-lucide="school"></i>
+
+          <span>{{ assignment.classroom.name }}</span>
+        </div>
+
+        <div class="assignment-detail__metadata-item">
+          <i data-lucide="calendar-days"></i>
+
+          <span> Creada el {{ assignment.createdAt | date: 'mediumDate' }} </span>
+        </div>
       </div>
+    </div>
 
-      <div class="assignment-detail__decoration" aria-hidden="true">
-        <span></span>
+    <div class="assignment-detail__actions">
+      @if (!assignment.isPublished) {
+      <button type="button" class="assignment-detail__action assignment-detail__action--primary" (click)="publish()">
+        <i data-lucide="send"></i>
+        <span>Publicar</span>
+      </button>
+      }
+
+      <button type="button" class="assignment-detail__action assignment-detail__action--secondary">
+        <i data-lucide="pencil"></i>
+        <span>Editar</span>
+      </button>
+
+      <button type="button" class="assignment-detail__action assignment-detail__action--danger" (click)="delete()">
+        <i data-lucide="trash-2"></i>
+        <span>Eliminar</span>
+      </button>
+    </div>
+
+    <div class="assignment-detail__decoration" aria-hidden="true">
+      <span></span>
+    </div>
+
+
+  </header>
+
+  <section class="assignment-settings">
+    <header class="assignment-settings__header">
+      <i data-lucide="settings-2"></i>
+
+      <div>
+        <h2>Configuración de la actividad</h2>
+        <p>Opciones definidas para esta actividad.</p>
       </div>
     </header>
 
-    <!-- =========================
+    <div class="assignment-settings__grid">
+
+      <article class="assignment-setting">
+        <i data-lucide="calendar-days"></i>
+
+        <div>
+          <span>Fecha límite</span>
+
+          <strong>
+            @if (assignment.dueDate) {
+            {{ assignment.dueDate | date:"EEEE d 'de' MMMM 'de' y, HH:mm" }}
+            } @else {
+            Sin fecha límite
+            }
+          </strong>
+
+          @if (deadlineInfo().hasDueDate) {
+          <small [class.assignment-setting__status--expired]="deadlineInfo().expired">
+            {{ deadlineInfo().message }}
+          </small>
+          }
+        </div>
+      </article>
+
+      <article class="assignment-setting">
+        <i data-lucide="clock-alert"></i>
+
+        <div>
+          <span>Entregas tardías</span>
+
+          <strong>
+            @switch (assignment.lateSubmissionPolicy) {
+            @case ('ACCEPT_LATE') {
+            Permitidas
+            }
+
+            @case ('REJECT_LATE') {
+            No permitidas
+            }
+
+            @default {
+            Sin configurar
+            }
+            }
+          </strong>
+        </div>
+      </article>
+
+      <article class="assignment-setting">
+        <i data-lucide="badge-check"></i>
+
+        <div>
+          <span>Estado</span>
+
+          <strong>
+            {{ assignment.isPublished ? 'Publicada' : 'Borrador' }}
+          </strong>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- =========================
+         Mensaje dependiendo del tipo de entrega de cada tarea
+    ========================== -->
+
+  @if (deadlineInfo().expired) {
+  <div class="assignment-detail__late-message" [class.assignment-detail__late-message--danger]="
+      !deadlineInfo().acceptsLate
+    " [class.assignment-detail__late-message--warning]="
+      deadlineInfo().acceptsLate
+    ">
+    <i [attr.data-lucide]="
+        deadlineInfo().acceptsLate ? 'clock-alert' : 'circle-x'
+      "></i>
+
+    <div>
+      @if (deadlineInfo().acceptsLate) {
+      <strong>La fecha límite de esta actividad ha expirado.</strong>
+
+      <p>
+        Los estudiantes todavía pueden enviar sus respuestas, pero todas las
+        entregas se registrarán como tardías.
+      </p>
+      } @else {
+      <strong>La fecha límite de esta actividad ha expirado.</strong>
+
+      <p>
+        Ya no se permiten nuevas entregas para esta actividad.
+      </p>
+      }
+    </div>
+  </div>
+  }
+
+  <!-- =========================
          STATS
     ========================== -->
 
-    <section class="assignment-detail__stats" aria-label="Resumen de la actividad">
-      <article class="assignment-stat assignment-stat--students">
-        <div class="assignment-stat__icon">
-          <i data-lucide="users"></i>
-        </div>
+  <section class="assignment-detail__stats" aria-label="Resumen de la actividad">
+    <article class="assignment-stat assignment-stat--students">
+      <div class="assignment-stat__icon">
+        <i data-lucide="users"></i>
+      </div>
 
-        <div class="assignment-stat__content">
-          <span>Estudiantes</span>
+      <div class="assignment-stat__content">
+        <span>Estudiantes</span>
 
-          <strong>{{ totalStudents() }}</strong>
+        <strong>{{ totalStudents() }}</strong>
 
-          <small>Asignados</small>
-        </div>
-      </article>
+        <small>Asignados</small>
+      </div>
+    </article>
 
-      <article class="assignment-stat assignment-stat--cases">
-        <div class="assignment-stat__icon">
-          <i data-lucide="briefcase-medical"></i>
-        </div>
+    <article class="assignment-stat assignment-stat--cases">
+      <div class="assignment-stat__icon">
+        <i data-lucide="briefcase-medical"></i>
+      </div>
 
-        <div class="assignment-stat__content">
-          <span>Casos utilizados</span>
+      <div class="assignment-stat__content">
+        <span>Casos utilizados</span>
 
-          <strong>{{ totalCases() }}</strong>
+        <strong>{{ totalCases() }}</strong>
 
-          <small>Casos clínicos</small>
-        </div>
-      </article>
+        <small>Casos clínicos</small>
+      </div>
+    </article>
 
-      <article class="assignment-stat assignment-stat--completed">
-        <div class="assignment-stat__icon">
-          <i data-lucide="circle-check"></i>
-        </div>
+    <article class="assignment-stat assignment-stat--completed">
+      <div class="assignment-stat__icon">
+        <i data-lucide="circle-check"></i>
+      </div>
 
-        <div class="assignment-stat__content">
-          <span>Entregados</span>
+      <div class="assignment-stat__content">
+        <span>Entregados</span>
 
-          <strong>{{ totalCompleted() }}</strong>
+        <strong>{{ totalCompleted() }}</strong>
 
-          <small>Respuestas</small>
-        </div>
-      </article>
+        <small>Respuestas</small>
+      </div>
+    </article>
 
-      <article class="assignment-stat assignment-stat--pending">
-        <div class="assignment-stat__icon">
-          <i data-lucide="clock-3"></i>
-        </div>
+    <article class="assignment-stat assignment-stat--pending">
+      <div class="assignment-stat__icon">
+        <i data-lucide="clock-3"></i>
+      </div>
 
-        <div class="assignment-stat__content">
-          <span>Pendientes</span>
+      <div class="assignment-stat__content">
+        <span>Pendientes</span>
 
-          <strong>{{ totalPending() }}</strong>
+        <strong>{{ totalPending() }}</strong>
 
-          <small>Sin entregar</small>
-        </div>
-      </article>
-    </section>
+        <small>Sin entregar</small>
+      </div>
+    </article>
+  </section>
 
-    <!-- =========================
+  <!-- =========================
          PROGRESS
     ========================== -->
 
-    <section class="assignment-progress">
-      <div class="assignment-progress__icon" aria-hidden="true">
-        <i data-lucide="chart-no-axes-column-increasing"></i>
-      </div>
+  <section class="assignment-progress">
+    <div class="assignment-progress__icon" aria-hidden="true">
+      <i data-lucide="chart-no-axes-column-increasing"></i>
+    </div>
 
-      <div class="assignment-progress__content">
-        <header class="assignment-progress__header">
-          <div>
-            <span class="assignment-progress__eyebrow"> Rendimiento general </span>
+    <div class="assignment-progress__content">
+      <header class="assignment-progress__header">
+        <div>
+          <span class="assignment-progress__eyebrow"> Rendimiento general </span>
 
-            <h2>Progreso de la actividad</h2>
+          <h2>Progreso de la actividad</h2>
 
-            <p>Seguimiento de las respuestas recibidas hasta el momento.</p>
-          </div>
-
-          <strong class="assignment-progress__percentage"> {{ progress() }}% </strong>
-        </header>
-
-        <div
-          class="assignment-progress__track"
-          role="progressbar"
-          aria-label="Progreso de la actividad"
-          aria-valuemin="0"
-          aria-valuemax="100"
-          [attr.aria-valuenow]="progress()"
-        >
-          <div class="assignment-progress__fill" [style.width.%]="progress()"></div>
+          <p>Seguimiento de las respuestas recibidas hasta el momento.</p>
         </div>
 
-        <footer class="assignment-progress__footer">
-          <span class="assignment-progress__result assignment-progress__result--completed">
-            <span></span>
+        <strong class="assignment-progress__percentage"> {{ progress() }}% </strong>
+      </header>
 
-            {{ totalCompleted() }}
-            {{ totalCompleted() === 1 ? 'entregado' : 'entregados' }}
-          </span>
-
-          <span class="assignment-progress__result assignment-progress__result--pending">
-            <span></span>
-
-            {{ totalPending() }}
-            {{ totalPending() === 1 ? 'pendiente' : 'pendientes' }}
-          </span>
-        </footer>
+      <div class="assignment-progress__track" role="progressbar" aria-label="Progreso de la actividad" aria-valuemin="0"
+        aria-valuemax="100" [attr.aria-valuenow]="progress()">
+        <div class="assignment-progress__fill" [style.width.%]="progress()"></div>
       </div>
-    </section>
 
-    <!-- =========================
+      <footer class="assignment-progress__footer">
+        <span class="assignment-progress__result assignment-progress__result--completed">
+          <span></span>
+
+          {{ totalCompleted() }}
+          {{ totalCompleted() === 1 ? 'entregado' : 'entregados' }}
+        </span>
+
+        <span class="assignment-progress__result assignment-progress__result--pending">
+          <span></span>
+
+          {{ totalPending() }}
+          {{ totalPending() === 1 ? 'pendiente' : 'pendientes' }}
+        </span>
+      </footer>
+    </div>
+  </section>
+
+  <!-- =========================
          STUDENTS
     ========================== -->
 
-    <section class="assignment-tracking">
-      <header class="assignment-tracking__header">
-        <div class="assignment-tracking__heading">
-          <span class="assignment-tracking__eyebrow"> Seguimiento </span>
+  <section class="assignment-tracking">
+    <header class="assignment-tracking__header">
+      <div class="assignment-tracking__heading">
+        <span class="assignment-tracking__eyebrow"> Seguimiento </span>
 
-          <h2>Asignaciones por estudiante</h2>
+        <h2>Asignaciones por estudiante</h2>
 
-          <p>Revisa el caso asignado y el estado de entrega de cada alumno.</p>
-        </div>
+        <p>Revisa el caso asignado y el estado de entrega de cada alumno.</p>
+      </div>
 
-        <div class="assignment-tracking__count">
-          <i data-lucide="users"></i>
+      <div class="assignment-tracking__count">
+        <i data-lucide="users"></i>
 
-          <span>
-            {{ assignment.assignedCases.length }}
-            {{ assignment.assignedCases.length === 1 ? 'estudiante' : 'estudiantes' }}
-          </span>
-        </div>
-      </header>
+        <span>
+          {{ assignment.assignedCases.length }}
+          {{ assignment.assignedCases.length === 1 ? 'estudiante' : 'estudiantes' }}
+        </span>
+      </div>
+    </header>
 
-      @if (assignment.assignedCases.length === 0) {
-        <section class="assignment-empty">
-          <div class="assignment-empty__icon" aria-hidden="true">
-            <i data-lucide="user-round-x"></i>
+    @if (assignment.assignedCases.length === 0) {
+    <section class="assignment-empty">
+      <div class="assignment-empty__icon" aria-hidden="true">
+        <i data-lucide="user-round-x"></i>
+      </div>
+
+      <div class="assignment-empty__content">
+        <span>Sin asignaciones</span>
+
+        <h3>No hay estudiantes asignados</h3>
+
+        <p>Todavía no existen estudiantes asociados a esta actividad.</p>
+      </div>
+    </section>
+    } @else {
+    <div class="assignment-table">
+      <div class="assignment-table__header" aria-hidden="true">
+        <span>Estudiante</span>
+        <span>Caso clínico</span>
+        <span>Fecha de asignación</span>
+        <span>Estado</span>
+        <span>Acción</span>
+      </div>
+
+      <div class="assignment-table__body">
+        @for (assigned of assignment.assignedCases; track assigned.id) {
+        <article class="assignment-row">
+          <!-- STUDENT -->
+
+          <div class="assignment-row__student" data-label="Estudiante">
+            <div class="assignment-row__avatar" aria-hidden="true">
+              {{ assigned.student.firstName.charAt(0).toUpperCase() }}
+              {{ assigned.student.lastName.charAt(0).toUpperCase() }}
+            </div>
+
+            <div class="assignment-row__student-name">
+              <strong>
+                {{ assigned.student.firstName }}
+                {{ assigned.student.lastName }}
+              </strong>
+
+              <small>Estudiante asignado</small>
+            </div>
           </div>
 
-          <div class="assignment-empty__content">
-            <span>Sin asignaciones</span>
+          <!-- CASE -->
 
-            <h3>No hay estudiantes asignados</h3>
+          <div class="assignment-row__case" data-label="Caso clínico">
+            <span class="assignment-row__mobile-label"> Caso clínico </span>
 
-            <p>Todavía no existen estudiantes asociados a esta actividad.</p>
-          </div>
-        </section>
-      } @else {
-        <div class="assignment-table">
-          <div class="assignment-table__header" aria-hidden="true">
-            <span>Estudiante</span>
-            <span>Caso clínico</span>
-            <span>Fecha de asignación</span>
-            <span>Estado</span>
-            <span>Acción</span>
+            <strong>
+              {{ assigned.case.title }}
+            </strong>
           </div>
 
-          <div class="assignment-table__body">
-            @for (assigned of assignment.assignedCases; track assigned.id) {
-              <article class="assignment-row">
-                <!-- STUDENT -->
+          <!-- DATE -->
 
-                <div class="assignment-row__student" data-label="Estudiante">
-                  <div class="assignment-row__avatar" aria-hidden="true">
-                    {{ assigned.student.firstName.charAt(0).toUpperCase() }}
-                    {{ assigned.student.lastName.charAt(0).toUpperCase() }}
-                  </div>
+          <div class="assignment-row__date" data-label="Fecha de asignación">
+            <span class="assignment-row__mobile-label"> Asignado </span>
 
-                  <div class="assignment-row__student-name">
-                    <strong>
-                      {{ assigned.student.firstName }}
-                      {{ assigned.student.lastName }}
-                    </strong>
+            <strong>
+              {{ assigned.assignedAt | date: 'mediumDate' }}
+            </strong>
+          </div>
 
-                    <small>Estudiante asignado</small>
-                  </div>
-                </div>
+          <!-- STATUS -->
 
-                <!-- CASE -->
-
-                <div class="assignment-row__case" data-label="Caso clínico">
-                  <span class="assignment-row__mobile-label"> Caso clínico </span>
-
-                  <strong>
-                    {{ assigned.case.title }}
-                  </strong>
-                </div>
-
-                <!-- DATE -->
-
-                <div class="assignment-row__date" data-label="Fecha de asignación">
-                  <span class="assignment-row__mobile-label"> Asignado </span>
-
-                  <strong>
-                    {{ assigned.assignedAt | date: 'mediumDate' }}
-                  </strong>
-                </div>
-
-                <!-- STATUS -->
-
-                <div class="assignment-row__status" data-label="Estado">
-                  @if (!assigned.submission) {
-                    <span class="submission-badge submission-badge--pending">
-                      <span></span>
-                      Pendiente
-                    </span>
-                  } @else if (assigned.submission.status === 'DRAFT') {
-                    <span class="submission-badge submission-badge--draft">
-                      <span></span>
-                      En progreso
-                    </span>
-                  } @else if (assigned.submission.status === 'SUBMITTED') {
-                    <span class="submission-badge submission-badge--submitted">
-                      <span></span>
-                      Entregado
-                    </span>
-                  } @else if (assigned.submission.status === 'REVIEWED') {
-                    <span class="submission-badge submission-badge--reviewed">
-                      <span></span>
-                      Evaluado
-                    </span>
-                  }
-                </div>
-
-                <!-- ACTION -->
-
-                <div class="assignment-row__action-container" data-label="Acción">
-                  @if (assigned.submission?.status === 'SUBMITTED') {
-                    <button
-                      type="button"
-                      class="assignment-row__action"
-                      aria-label="Revisar entrega"
-                      (click)="openReview(assigned)"
-                    >
-                      <i data-lucide="clipboard-check"></i>
-
-                      <span>Revisar</span>
-                    </button>
-                  } @else {
-                    <button
-                      type="button"
-                      class="assignment-row__action assignment-row__action--disabled"
-                      aria-label="Entrega todavía no disponible"
-                      disabled
-                    >
-                      <i data-lucide="clock"></i>
-
-                      <span>No disponible</span>
-                    </button>
-                  }
-                </div>
-              </article>
+          <div class="assignment-row__status" data-label="Estado">
+            @if (!assigned.submission) {
+            <span class="submission-badge submission-badge--pending">
+              <span></span>
+              Pendiente
+            </span>
+            } @else if (assigned.submission.status === 'DRAFT') {
+            <span class="submission-badge submission-badge--draft">
+              <span></span>
+              En progreso
+            </span>
+            } @else if (assigned.submission.status === 'SUBMITTED') {
+            <span class="submission-badge submission-badge--submitted">
+              <span></span>
+              Entregado
+            </span>
+            } @else if (assigned.submission.status === 'REVIEWED') {
+            <span class="submission-badge submission-badge--reviewed">
+              <span></span>
+              Evaluado
+            </span>
             }
           </div>
-        </div>
-      }
-    </section>
 
-    <!-- =========================
+          <!-- ACTION -->
+
+          <div class="assignment-row__action-container" data-label="Acción">
+            @if (assigned.submission?.status === 'SUBMITTED') {
+            <button type="button" class="assignment-row__action" aria-label="Revisar entrega"
+              (click)="openReview(assigned)">
+              <i data-lucide="clipboard-check"></i>
+
+              <span>Revisar</span>
+            </button>
+            } @else {
+            <button type="button" class="assignment-row__action assignment-row__action--disabled"
+              aria-label="Entrega todavía no disponible" disabled>
+              <i data-lucide="clock"></i>
+
+              <span>No disponible</span>
+            </button>
+            }
+          </div>
+        </article>
+        }
+      </div>
+    </div>
+    }
+  </section>
+
+  <!-- =========================
          FOOTER
     ========================== -->
 
-    <footer class="assignment-detail__footer">
-      <i data-lucide="history"></i>
+  <footer class="assignment-detail__footer">
+    <i data-lucide="history"></i>
 
-      <span>
-        Última actualización:
-        {{ assignment.updatedAt | date: 'medium' }}
-      </span>
-    </footer>
-  </main>
+    <span>
+      Última actualización:
+      {{ assignment.updatedAt | date: 'medium' }}
+    </span>
+  </footer>
+</main>
 }

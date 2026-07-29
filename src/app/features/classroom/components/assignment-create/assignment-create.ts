@@ -22,6 +22,7 @@ import { ClassroomApi } from '../../service/clasroom-api.service';
 
 import { InputComponent } from '../../../../shared/components/input/input';
 import { TextareaComponent } from '../../../../shared/components/text-area/text-area';
+import { LateSubmissionPolicy } from '../../../../core/enum/late-submission-policy';
 
 @Component({
   selector: 'app-assignment-create',
@@ -52,6 +53,17 @@ export class AssignmentCreate implements OnInit, AfterViewInit {
   // =========================
 
   ngOnInit(): void {
+    this.assignmentForm.controls.hasDueDate.valueChanges.subscribe(
+      enabled => {
+        if (!enabled) {
+          this.assignmentForm.patchValue({
+            dueDate: null,
+            lateSubmissionPolicy:
+              LateSubmissionPolicy.ACCEPT_LATE,
+          });
+        }
+      }
+    );
     this.loadCases();
   }
 

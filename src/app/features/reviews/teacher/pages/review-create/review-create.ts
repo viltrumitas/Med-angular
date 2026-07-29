@@ -19,6 +19,7 @@ import { CaseContent } from '../../../../cases/pages/case-content/case-content';
 import { SubmissionContent } from '../../../components/submission-content/submission-content';
 import { TextareaComponent } from '../../../../../shared/components/text-area/text-area';
 import { createIcons, icons } from 'lucide';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-review-create',
@@ -38,6 +39,7 @@ import { createIcons, icons } from 'lucide';
     CaseContent,
     SubmissionContent,
     TextareaComponent,
+    DatePipe
   ],
   templateUrl: './review-create.html',
   styleUrl: './review-create.scss',

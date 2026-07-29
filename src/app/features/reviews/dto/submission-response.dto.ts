@@ -1,4 +1,5 @@
 import { Priority } from '../../../core/enum/priority.enum';
+import { SubmissionTiming } from '../../../core/enum/submission-timing';
 import { SubmissionStatus } from '../../../core/models/submission-status.enum';
 import { User } from '../../../core/models/user.model';
 import { AssignmentResponseDto } from '../../assignments/dto/assignment-response.dto';
@@ -24,6 +25,10 @@ export interface SubmissionResponseDto {
   treatmentPlan: string;
   reportPatient: string;
   status: SubmissionStatus;
+
+  submissionTiming: SubmissionTiming;
+
+  submittedAt: string | null;
 
   createdAt: Date;
   updatedAt: Date;

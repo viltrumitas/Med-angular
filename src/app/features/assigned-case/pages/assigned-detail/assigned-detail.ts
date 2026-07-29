@@ -6,6 +6,7 @@ import {
   OnInit,
   signal,
   viewChild,
+  computed
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -17,6 +18,8 @@ import { CaseContent } from '../../../cases/pages/case-content/case-content';
 import { ButtonComponent } from '../../../../shared/components/button/button';
 import { SubmissionsDetail } from '../../../submissions/components/submissions-detail/submissions-detail';
 import { createIcons, icons } from 'lucide';
+import { LateSubmissionPolicy } from '../../../../core/enum/late-submission-policy';
+import { SubmissionTiming } from '../../../../core/enum/submission-timing';
 
 @Component({
   selector: 'app-assigned-detail',
@@ -36,6 +39,26 @@ export class AssignedDetail implements OnInit, AfterViewInit {
   readonly error = signal<string | null>(null);
   readonly casePanelOpen = signal(true);
   readonly submissionPanelOpen = signal(true);
+
+  readonly assignmentStatus = computed(() => {
+    const assignment = this.assignedCase()?.assignment;
+
+    if (!assignment) {
+      return 'AVAILABLE';
+    }
+
+    if (!assignment.dueDate) {
+      return 'NO_LIMIT';
+    }
+
+    const dueDate = new Date(assignment.dueDate);
+
+    if (new Date() <= dueDate) {
+      return 'AVAILABLE';
+    }
+
+    return assignment.lateSubmissionPolicy === LateSubmissionPolicy.ACCEPT_LATE ? 'LATE_ALLOWED' : 'EXPIRED';
+  })
 
   toggleCasePanel(): void {
     this.casePanelOpen.update((isOpen) => !isOpen);

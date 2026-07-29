@@ -1,3 +1,4 @@
+import { SubmissionTiming } from "../../../core/enum/submission-timing";
 import { User } from "../../../core/models/user.model";
 import { CaseSummaryModel } from "../../cases/dto/case-summary.dto";
 import { TeacherModel } from "../../cases/dto/teacher-response.dto";
@@ -15,6 +16,8 @@ export interface ReviewSummaryResponseDto {
   assignment: AssignmentSummaryModel;
 
   totalScore: number;
+
+  submissionTiming: SubmissionTiming;
 
   createdAt: Date;
 }

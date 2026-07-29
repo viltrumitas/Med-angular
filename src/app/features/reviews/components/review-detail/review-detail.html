@@ -59,6 +59,58 @@
     </header>
 
     <!-- =========================
+         Entrega pendiente o a tiempo
+    ========================== -->
+
+    <section class="submission-info">
+      <header class="submission-info__header">
+        <i data-lucide="clock-3"></i>
+
+        <div>
+          <h3>Información de la entrega</h3>
+          <p>Datos de envío del estudiante.</p>
+        </div>
+      </header>
+
+      <div class="submission-info__grid">
+
+        <article class="submission-info__item">
+          <span>Estado</span>
+
+          <strong [class.submission-info__status--late]="r.submissionTiming === 'LATE'"
+            [class.submission-info__status--ontime]="r.submissionTiming === 'ON_TIME'">
+            @if (r.submissionTiming === 'LATE') {
+            🟠 Entrega tardía
+            } @else {
+            🟢 Entrega a tiempo
+            }
+          </strong>
+        </article>
+
+        <article class="submission-info__item">
+          <span>Fecha límite</span>
+
+          <strong>
+            @if (r.assignment.dueDate) {
+            {{ r.assignment.dueDate | date:"d MMM y · HH:mm" }}
+            } @else {
+            Sin fecha límite
+            }
+          </strong>
+        </article>
+
+        <article class="submission-info__item">
+          <span>Entregado</span>
+
+          <strong>
+            {{ r.submittedAt | date:"d MMM y · HH:mm" }}
+          </strong>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- =========================
            SUMMARY
       ========================== -->
 

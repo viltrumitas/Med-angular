@@ -17,10 +17,10 @@
     </div>
 
     @if (submission.status === 'SUBMITTED') {
-      <span class="submission-card__status">
-        <span class="submission-card__status-dot"></span>
-        Entregado
-      </span>
+    <span class="submission-card__status">
+      <span class="submission-card__status-dot"></span>
+      Entregado
+    </span>
     }
   </header>
 
@@ -40,14 +40,34 @@
         {{ submission.case.title }}
       </p>
     </div>
+
+    <div class="submission-card__field">
+      <span>Estado de entrega</span>
+
+      <span class="submission-card__timing-badge"
+        [class.submission-card__timing-badge--late]="submission.submissionTiming === 'LATE'"
+        [class.submission-card__timing-badge--ontime]="submission.submissionTiming === 'ON_TIME'">
+        <i [attr.data-lucide]="
+        submission.submissionTiming === 'LATE'
+          ? 'clock-alert'
+          : 'badge-check'
+      "></i>
+
+        {{
+        submission.submissionTiming === 'LATE'
+        ? 'Entrega tardía'
+        : 'Entrega a tiempo'
+        }}
+      </span>
+    </div>
   </div>
 
   <footer class="submission-card__footer">
     <div class="submission-card__date">
       <span>Enviado</span>
 
-      <time [attr.datetime]="submission.createdAt">
-        {{ submission.createdAt | date: 'dd MMM yyyy, HH:mm' }}
+      <time [attr.datetime]="submission.submittedAt">
+        {{ submission.submittedAt | date: 'dd MMM yyyy, HH:mm' }}
       </time>
     </div>
 
