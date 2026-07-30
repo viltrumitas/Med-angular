@@ -1,220 +1,333 @@
-import { Component, inject, signal, computed, AfterViewInit, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  DestroyRef,
+  OnInit,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AssignmentApi } from '../../../../assignments/services/assignment-api';
-import { AssignmentDetail as AssignmentDetailModel } from '../../../models/assignment-detail.model';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { finalize } from 'rxjs';
 import { createIcons, icons } from 'lucide';
-import { AssignedCase } from '../../../models/assigned-case.model';
 import { LateSubmissionPolicy } from '../../../../../core/enum/late-submission-policy';
+import { AssignmentApi } from '../../../../assignments/services/assignment-api';
+import { AssignedCase } from '../../../models/assigned-case.model';
+import { AssignmentDetail as AssignmentDetailModel } from '../../../models/assignment-detail.model';
 
 @Component({
   selector: 'app-assignment-detail',
+  standalone: true,
   imports: [DatePipe],
   templateUrl: './assignment-detail.html',
   styleUrl: './assignment-detail.scss',
 })
-export class AssignmentDetailPage implements AfterViewInit, OnInit {
+export class AssignmentDetailPage implements OnInit, AfterViewInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly api = inject(AssignmentApi);
+  private readonly destroyRef = inject(DestroyRef);
 
-  assignment = signal<AssignmentDetailModel | null>(null);
-
-  readonly totalStudents = computed(() => {
-    return this.assignment()?.assignedCases.length ?? 0;
-  });
-
+  readonly assignment = signal<AssignmentDetailModel | null>(null);
+  readonly loading = signal(true);
+  readonly loadError = signal<string | null>(null);
+  readonly isPublishing = signal(false);
+  readonly publishError = signal<string | null>(null);
+  readonly isDeleting = signal(false);
+  readonly deleteError = signal<string | null>(null);
+  readonly totalStudents = computed(() => this.assignment()?.assignedCases.length ?? 0);
   readonly totalCases = computed(() => {
-    const assignment = this.assignment();
+    const assignedCases = this.assignment()?.assignedCases ?? [];
 
-    if (!assignment) return 0;
-
-    return new Set(assignment.assignedCases.map((a) => a.case.id)).size;
+    return new Set(assignedCases.map((assignedCase) => assignedCase.case.id)).size;
   });
 
   readonly totalCompleted = computed(() => {
-    const assignment = this.assignment();
-    if (!assignment) return 0;
+    const assignedCases = this.assignment()?.assignedCases ?? [];
 
-    return assignment.assignedCases.filter((a) => a.submission?.status === 'SUBMITTED').length;
+    return assignedCases.filter((assignedCase) => {
+      const status = assignedCase.submission?.status;
+
+      return status === 'SUBMITTED' || status === 'REVIEWED';
+    }).length;
+  });
+
+  readonly totalReviewed = computed(() => {
+    const assignedCases = this.assignment()?.assignedCases ?? [];
+
+    return assignedCases.filter((assignedCase) => assignedCase.submission?.status === 'REVIEWED')
+      .length;
   });
 
   readonly totalPending = computed(() => {
-    const assignment = this.assignment();
-    if (!assignment) return 0;
+    const assignedCases = this.assignment()?.assignedCases ?? [];
 
-    return assignment.assignedCases.filter((a) => !a.submission).length;
+    return assignedCases.filter((assignedCase) => {
+      const status = assignedCase.submission?.status;
+
+      return !status || status === 'DRAFT';
+    }).length;
+  });
+
+  readonly totalAwaitingReview = computed(() => {
+    const assignedCases = this.assignment()?.assignedCases ?? [];
+
+    return assignedCases.filter((assignedCase) => assignedCase.submission?.status === 'SUBMITTED')
+      .length;
   });
 
   readonly progress = computed(() => {
     const total = this.totalStudents();
 
-    if (total === 0) return 0;
+    if (total === 0) {
+      return 0;
+    }
 
     return Math.round((this.totalCompleted() / total) * 100);
+  });
+
+  readonly reviewProgress = computed(() => {
+    const total = this.totalCompleted();
+
+    if (total === 0) {
+      return 0;
+    }
+
+    return Math.round((this.totalReviewed() / total) * 100);
   });
 
   readonly deadlineInfo = computed(() => {
     const assignment = this.assignment();
 
-    if (!assignment) {
+    if (!assignment?.dueDate) {
       return {
         hasDueDate: false,
         expired: false,
-        acceptsLate: false,
+        acceptsLate: assignment?.lateSubmissionPolicy === LateSubmissionPolicy.ACCEPT_LATE,
         message: 'Sin fecha límite',
       };
     }
 
-    if (!assignment.dueDate) {
-      return {
-        hasDueDate: false,
-        expired: false,
-        acceptsLate:
-          assignment.lateSubmissionPolicy ===
-          LateSubmissionPolicy.ACCEPT_LATE,
-        message: 'Sin fecha límite',
-      };
-    }
-
-    const due = new Date(assignment.dueDate);
-    const now = new Date();
-
-    const diff = due.getTime() - now.getTime();
-
+    const dueDate = new Date(assignment.dueDate);
+    const difference = dueDate.getTime() - Date.now();
     const minute = 60 * 1000;
     const hour = 60 * minute;
     const day = 24 * hour;
+    const absoluteDifference = Math.abs(difference);
 
-    const abs = Math.abs(diff);
+    let message: string;
 
-    let message = '';
-
-    if (diff < 0) {
-      if (abs >= day) {
-        const days = Math.floor(abs / day);
+    if (difference < 0) {
+      if (absoluteDifference >= day) {
+        const days = Math.floor(absoluteDifference / day);
 
         message = `Venció hace ${days} ${days === 1 ? 'día' : 'días'}`;
-      } else if (abs >= hour) {
-        const hours = Math.floor(abs / hour);
+      } else if (absoluteDifference >= hour) {
+        const hours = Math.floor(absoluteDifference / hour);
 
         message = `Venció hace ${hours} ${hours === 1 ? 'hora' : 'horas'}`;
       } else {
-        const minutes = Math.max(1, Math.floor(abs / minute));
+        const minutes = Math.max(1, Math.floor(absoluteDifference / minute));
 
         message = `Venció hace ${minutes} ${minutes === 1 ? 'minuto' : 'minutos'}`;
       }
+    } else if (difference > 30 * day) {
+      message = `Vence el ${dueDate.toLocaleDateString('es-MX', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+      })}`;
+    } else if (difference >= day) {
+      const days = Math.ceil(difference / day);
+
+      message = `Queda${days === 1 ? '' : 'n'} ${days} ${days === 1 ? 'día' : 'días'}`;
+    } else if (difference >= hour) {
+      const hours = Math.ceil(difference / hour);
+
+      message = `Queda${hours === 1 ? '' : 'n'} ${hours} ${hours === 1 ? 'hora' : 'horas'}`;
+    } else if (difference >= minute) {
+      const minutes = Math.ceil(difference / minute);
+
+      message = `Queda${minutes === 1 ? '' : 'n'} ${minutes} ${
+        minutes === 1 ? 'minuto' : 'minutos'
+      }`;
     } else {
-      if (diff > 30 * day) {
-        message = `Vence el ${due.toLocaleDateString('es-MX', {
-          day: 'numeric',
-          month: 'long',
-          year: 'numeric',
-        })}`;
-      } else if (diff >= day) {
-        const days = Math.ceil(diff / day);
-
-        message = `Queda${days > 1 ? 'n' : ''} ${days} ${days === 1 ? 'día' : 'días'}`;
-      } else if (diff >= hour) {
-        const hours = Math.ceil(diff / hour);
-
-        message = `Queda${hours > 1 ? 'n' : ''} ${hours} ${hours === 1 ? 'hora' : 'horas'}`;
-      } else if (diff >= minute) {
-        const minutes = Math.ceil(diff / minute);
-
-        message = `Queda${minutes > 1 ? 'n' : ''} ${minutes} ${minutes === 1 ? 'minuto' : 'minutos'}`;
-      } else {
-        message = 'Vence en unos segundos';
-      }
+      message = 'Vence en unos segundos';
     }
 
     return {
       hasDueDate: true,
-      expired: diff < 0,
-      acceptsLate:
-        assignment.lateSubmissionPolicy ===
-        LateSubmissionPolicy.ACCEPT_LATE,
+      expired: difference < 0,
+      acceptsLate: assignment.lateSubmissionPolicy === LateSubmissionPolicy.ACCEPT_LATE,
       message,
     };
   });
 
-  loading = signal(true);
+  readonly canPublish = computed(() => {
+    const assignment = this.assignment();
+
+    return !!assignment && !assignment.isPublished && !this.isPublishing();
+  });
+
+  ngOnInit(): void {
+    this.loadAssignment();
+  }
 
   ngAfterViewInit(): void {
-    this.renderIcon();
+    this.renderIcons();
   }
 
-  ngOnInit() {
-    const assignmentId = this.route.snapshot.paramMap.get('assignmentId')!;
+  loadAssignment(): void {
+    const assignmentId = this.route.snapshot.paramMap.get('assignmentId');
 
-    this.api.findOne(assignmentId).subscribe({
-      next: (assignment) => {
-        console.log('NEXT');
-        console.log(assignment);
+    if (!assignmentId) {
+      this.loading.set(false);
+      this.loadError.set('No se encontró el identificador de la actividad.');
+      return;
+    }
 
-        this.assignment.set(assignment);
+    this.loading.set(true);
+    this.loadError.set(null);
 
-        console.log('loading antes:', this.loading());
-        this.loading.set(false);
-        console.log('loading después:', this.loading());
-        this.renderIcon();
-      },
+    this.api
+      .findOne(assignmentId)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => {
+          this.loading.set(false);
+          this.renderIcons();
+        }),
+      )
+      .subscribe({
+        next: (assignment) => {
+          this.assignment.set(assignment);
+        },
+        error: (error) => {
+          this.assignment.set(null);
 
-      error: (err) => {
-        console.error('ERROR', err);
-        this.loading.set(false);
-        this.renderIcon();
-      },
-
-      complete: () => {
-        console.log('COMPLETE');
-      },
-    });
+          this.loadError.set(
+            this.getErrorMessage(error, 'No pudimos cargar la actividad. Intenta nuevamente.'),
+          );
+        },
+      });
   }
 
-  openReview(assigned: AssignedCase) {
-    if (!assigned.submission) return;
+  openReview(assignedCase: AssignedCase): void {
+    const submission = assignedCase.submission;
 
-    if (assigned.submission.status !== 'SUBMITTED') {
+    if (!submission || submission.status !== 'SUBMITTED') {
       return;
     }
 
     const classroomId = this.route.snapshot.paramMap.get('classroomId');
 
-    this.router.navigate(['/dashboard/teacher/reviews/crear', assigned.submission.id], {
+    this.router.navigate(['/dashboard/teacher/reviews/crear', submission.id], {
       queryParams: {
         classroomId,
       },
     });
   }
 
-  publish() {
+  publish(): void {
     const assignment = this.assignment();
 
-    if (!assignment) return;
+    if (!assignment || assignment.isPublished || this.isPublishing()) {
+      return;
+    }
 
-    this.api.publish(assignment.id).subscribe({
-      next: (updated) => {
-        this.assignment.set(updated);
-      },
-    });
+    this.publishError.set(null);
+    this.isPublishing.set(true);
+
+    this.api
+      .publish(assignment.id)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => {
+          this.isPublishing.set(false);
+          this.renderIcons();
+        }),
+      )
+      .subscribe({
+        next: (updatedAssignment) => {
+          this.assignment.set(updatedAssignment);
+        },
+        error: (error) => {
+          console.error('Error al publicar la actividad:', error);
+
+          this.publishError.set(this.getErrorMessage(error, 'No pudimos publicar la actividad.'));
+        },
+      });
   }
 
-  delete() {
+  deleteAssignment(): void {
     const assignment = this.assignment();
 
-    const classroomId = this.route.snapshot.paramMap.get('classroomId')!;
+    if (!assignment || this.isDeleting()) {
+      return;
+    }
 
-    if (!assignment) return;
+    const confirmed = window.confirm(
+      `¿Eliminar la actividad “${assignment.title}”? Esta acción no se puede deshacer.`,
+    );
 
-    if (!confirm('¿Eliminar actividad?')) return;
+    if (!confirmed) {
+      return;
+    }
 
-    this.api.delete(assignment.id).subscribe(() => {
-      this.router.navigate(['/dashboard/teacher/classroom', classroomId]);
-    });
+    const classroomId = this.route.snapshot.paramMap.get('classroomId');
+
+    if (!classroomId) {
+      this.deleteError.set('No se encontró el salón asociado a la actividad.');
+      return;
+    }
+
+    this.deleteError.set(null);
+    this.isDeleting.set(true);
+
+    this.api
+      .delete(assignment.id)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => {
+          this.isDeleting.set(false);
+          this.renderIcons();
+        }),
+      )
+      .subscribe({
+        next: () => {
+          this.router.navigate(['/dashboard/teacher/classroom', classroomId]);
+        },
+        error: (error) => {
+          this.deleteError.set(this.getErrorMessage(error, 'No pudimos eliminar la actividad.'));
+        },
+      });
   }
 
-  private renderIcon() {
+  private getErrorMessage(error: unknown, fallback: string): string {
+    if (typeof error === 'object' && error !== null && 'error' in error) {
+      const httpError = error as {
+        error?: {
+          message?: string | string[];
+        };
+      };
+
+      const message = httpError.error?.message;
+
+      if (Array.isArray(message)) {
+        return message.join(' ');
+      }
+
+      if (typeof message === 'string' && message.trim()) {
+        return message;
+      }
+    }
+
+    return fallback;
+  }
+
+  private renderIcons(): void {
     setTimeout(() => {
       createIcons({ icons });
     });

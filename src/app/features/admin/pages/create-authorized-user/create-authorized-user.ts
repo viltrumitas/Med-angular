@@ -1,12 +1,11 @@
-import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Router } from '@angular/router';
+import { finalize } from 'rxjs';
 
 import { AuthorizedUserFormComponent } from '../../components/authorized-user-form/authorized-user-form';
 import { createAuthorizedUserForm } from '../../forms/authorized-user.form';
 import { mapCreateAuthorizedUser } from '../../mappers/authorized-user.mapper';
 import { AdminApi } from '../../services/admin-api';
-import { createIcons, icons } from 'lucide';
 
 @Component({
   selector: 'app-create-authorized-user',
@@ -17,7 +16,6 @@ import { createIcons, icons } from 'lucide';
 })
 export class CreateAuthorizedUser {
   private readonly api = inject(AdminApi);
-  private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
 
   readonly form = createAuthorizedUserForm();
@@ -25,6 +23,9 @@ export class CreateAuthorizedUser {
   readonly isOpen = signal(true);
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
+
+  readonly created = output<void>();
+  readonly closeRequested = output<void>();
 
   createUser(): void {
     if (this.loading()) {
@@ -43,20 +44,21 @@ export class CreateAuthorizedUser {
 
     this.api
       .createAuthorizedUser(dto)
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => {
+          this.loading.set(false);
+        }),
+      )
       .subscribe({
         next: () => {
-          this.loading.set(false);
-          this.closeModal();
-          this.renderIcons();
+          this.created.emit();
         },
+
         error: (error) => {
           console.error('[CreateAuthorizedUser] Error al crear usuario:', error);
 
           this.error.set(error.error?.message ?? 'No se pudo crear el usuario autorizado.');
-          this.loading.set(false);
-
-          this.renderIcons();
         },
       });
   }
@@ -66,13 +68,6 @@ export class CreateAuthorizedUser {
       return;
     }
 
-    this.isOpen.set(false);
-    this.router.navigate(['/dashboard/admin/authorized-users']);
-  }
-
-  private renderIcons() {
-    setTimeout(() => {
-      createIcons({ icons });
-    });
+    this.closeRequested.emit();
   }
 }

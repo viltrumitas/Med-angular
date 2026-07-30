@@ -1,8 +1,10 @@
-import { Component, signal, inject, Output, EventEmitter, AfterViewInit } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, inject, Output, signal } from '@angular/core';
+import { finalize } from 'rxjs';
+import { createIcons, icons } from 'lucide';
+
+import { Modal } from '../../../../shared/components/modal/modal';
 import { ImportAuthorizedUsersResponseDto } from '../../dto/import-authorized-users-response-.dto';
 import { AdminApi } from '../../services/admin-api';
-import { Modal } from '../../../../shared/components/modal/modal';
-import { createIcons, icons } from 'lucide';
 
 @Component({
   selector: 'app-import-authorized-users',
@@ -22,87 +24,128 @@ export class ImportAuthorizedUsers implements AfterViewInit {
   readonly result = signal<ImportAuthorizedUsersResponseDto | null>(null);
 
   @Output()
-  closeRequested = new EventEmitter<void>();
+  readonly closeRequested = new EventEmitter<void>();
+
   @Output()
-  importCompleted = new EventEmitter<ImportAuthorizedUsersResponseDto>();
+  readonly importCompleted = new EventEmitter<ImportAuthorizedUsersResponseDto>();
 
   ngAfterViewInit(): void {
     this.renderIcons();
   }
 
-  private setSelectedFile(file: File) {
-    this.result.set(null);
-    this.error.set(null);
-
-    if (!file.name.toLowerCase().endsWith('.csv')) {
-      this.file.set(null);
-      this.error.set('Selecciona un archivo CSV válido.');
-      return;
-    }
-
-    this.file.set(file);
-  }
-
-  onFileSelected(event: Event) {
+  onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
+    const selectedFile = input.files?.item(0);
 
-    if (!input.files?.length) {
+    if (!selectedFile) {
       return;
     }
 
-    this.setSelectedFile(input.files[0]);
-    this.renderIcons();
+    this.setSelectedFile(selectedFile);
+
+    // Permite seleccionar nuevamente el mismo archivo.
+    input.value = '';
   }
 
-  importUsers() {
-    const file = this.file();
+  onDragOver(event: DragEvent): void {
+    event.preventDefault();
 
-    if (!file) {
+    if (this.loading()) {
+      return;
+    }
+
+    if (event.dataTransfer) {
+      event.dataTransfer.dropEffect = 'copy';
+    }
+
+    this.dragging.set(true);
+  }
+
+  onDragLeave(): void {
+    this.dragging.set(false);
+  }
+
+  onDrop(event: DragEvent): void {
+    event.preventDefault();
+    this.dragging.set(false);
+
+    if (this.loading()) {
+      return;
+    }
+
+    const selectedFile = event.dataTransfer?.files.item(0);
+
+    if (!selectedFile) {
+      return;
+    }
+
+    this.setSelectedFile(selectedFile);
+  }
+
+  importUsers(): void {
+    const selectedFile = this.file();
+
+    if (!selectedFile || this.loading()) {
       return;
     }
 
     this.error.set(null);
     this.loading.set(true);
+    this.dragging.set(false);
 
-    this.api.importAuthorizedUsers(file).subscribe({
-      next: (result) => {
-        this.result.set(result);
-        this.loading.set(false);
+    this.api
+      .importAuthorizedUsers(selectedFile)
+      .pipe(
+        finalize(() => {
+          this.loading.set(false);
+          this.renderIcons();
+        }),
+      )
+      .subscribe({
+        next: (response) => {
+          this.result.set(response);
 
-        if (result.success) {
-          this.importCompleted.emit(result);
-        }
+          if (response.success) {
+            this.importCompleted.emit(response);
+          }
 
-        this.renderIcons();
-      },
-      error: (err) => {
-        this.error.set(err.error?.message ?? 'No se pudo importar el archivo.');
-        this.loading.set(false);
-        this.renderIcons();
-      },
-    });
+          this.renderIcons();
+        },
+        error: (error) => {
+          const message = this.getErrorMessage(error, 'No se pudo importar el archivo.');
+
+          this.error.set(message);
+        },
+      });
   }
 
-  downloadTemplate() {
+  downloadTemplate(): void {
+    if (this.loading()) {
+      return;
+    }
+
+    this.error.set(null);
+
     this.api.downloadTemplate().subscribe({
-      next: blob => {
-        const url = URL.createObjectURL(blob);
+      next: (blob) => {
+        const objectUrl = URL.createObjectURL(blob);
+        const anchor = document.createElement('a');
 
-        const a = document.createElement('a');
+        anchor.href = objectUrl;
+        anchor.download = 'plantilla-usuarios-autorizados.csv';
+        anchor.style.display = 'none';
 
-        a.href = url;
-        a.download = 'plantilla-usuarios-autorizados.csv';
-        a.click();
+        document.body.appendChild(anchor);
+        anchor.click();
+        anchor.remove();
 
-        URL.revokeObjectURL(url);
+        URL.revokeObjectURL(objectUrl);
       },
+      error: (error) => {
+        console.error('Error al descargar la plantilla:', error);
 
-      error: err => {
-        console.error(err);
-
-        this.error.set(
-          'No se pudo descargar la plantilla.'
-        );
+        this.error.set('No se pudo descargar la plantilla CSV.');
+        this.renderIcons();
       },
     });
   }
@@ -123,43 +166,75 @@ export class ImportAuthorizedUsers implements AfterViewInit {
     }
   }
 
-  closeModal() {
+  closeModal(): void {
     if (this.loading()) {
       return;
     }
 
-    this.file.set(null);
-    this.result.set(null);
-    this.error.set(null);
-
+    this.resetState();
     this.closeRequested.emit();
   }
 
-  onDragOver(event: DragEvent) {
-    event.preventDefault();
-    this.dragging.set(true);
-  }
-
-  onDragLeave() {
+  private setSelectedFile(selectedFile: File): void {
+    this.result.set(null);
+    this.error.set(null);
     this.dragging.set(false);
-  }
 
-  onDrop(event: DragEvent) {
-    event.preventDefault();
-
-    this.dragging.set(false);
-    const files = event.dataTransfer?.files;
-
-    if (!files?.length) {
+    if (!this.isCsvFile(selectedFile)) {
+      this.file.set(null);
+      this.error.set('Selecciona un archivo válido en formato CSV.');
+      this.renderIcons();
       return;
     }
 
-    this.setSelectedFile(files[0]);
+    this.file.set(selectedFile);
     this.renderIcons();
   }
 
-  private renderIcons() {
-    setTimeout(() => {
+  private isCsvFile(file: File): boolean {
+    const extensionIsValid = file.name.toLowerCase().endsWith('.csv');
+
+    const mimeTypeIsValid =
+      !file.type ||
+      file.type === 'text/csv' ||
+      file.type === 'application/csv' ||
+      file.type === 'application/vnd.ms-excel';
+
+    return extensionIsValid && mimeTypeIsValid;
+  }
+
+  private getErrorMessage(error: unknown, fallback: string): string {
+    if (typeof error === 'object' && error !== null && 'error' in error) {
+      const httpError = error as {
+        error?: {
+          message?: string | string[];
+        };
+      };
+
+      const message = httpError.error?.message;
+
+      if (Array.isArray(message)) {
+        return message.join(' ');
+      }
+
+      if (typeof message === 'string' && message.trim()) {
+        return message;
+      }
+    }
+
+    return fallback;
+  }
+
+  private resetState(): void {
+    this.file.set(null);
+    this.result.set(null);
+    this.error.set(null);
+    this.dragging.set(false);
+    this.loading.set(false);
+  }
+
+  private renderIcons(): void {
+    window.setTimeout(() => {
       createIcons({ icons });
     });
   }

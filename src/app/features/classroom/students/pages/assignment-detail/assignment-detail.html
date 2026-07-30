@@ -1,302 +1,476 @@
 @if (loading()) {
-<section class="student-assignment__state" aria-live="polite">
-  <div class="student-assignment__spinner" aria-hidden="true"></div>
+  <section class="student-assignment-state" aria-live="polite" aria-busy="true">
+    <div class="student-assignment-state__spinner" aria-hidden="true"></div>
 
-  <div class="student-assignment__state-content">
-    <h2>Cargando actividad</h2>
+    <div class="student-assignment-state__content">
+      <span>Cargando información</span>
 
-    <p>Estamos obteniendo tus casos clínicos asignados...</p>
-  </div>
-</section>
+      <h2>Cargando actividad</h2>
+
+      <p>Estamos obteniendo tus casos clínicos asignados.</p>
+    </div>
+  </section>
+} @else if (loadError()) {
+  <section class="student-assignment-state student-assignment-state--error" role="alert">
+    <div class="student-assignment-state__icon" aria-hidden="true">
+      <i data-lucide="triangle-alert"></i>
+    </div>
+
+    <div class="student-assignment-state__content">
+      <span>No disponible</span>
+
+      <h2>No pudimos cargar la actividad</h2>
+
+      <p>{{ loadError() }}</p>
+    </div>
+
+    <button type="button" class="student-assignment-state__action" (click)="loadAssignment()">
+      <i data-lucide="refresh-cw" aria-hidden="true"></i>
+
+      <span>Intentar nuevamente</span>
+    </button>
+  </section>
 } @else {
-<main class="student-assignment">
-  <!-- =========================
+  <main class="student-assignment">
+    <!-- =========================
          HEADER
     ========================== -->
 
-  <header class="student-assignment__header">
-    <div class="student-assignment__header-content">
-      <div class="student-assignment__header-meta">
-        <span class="student-assignment__eyebrow"> Actividad académica </span>
+    <header class="student-assignment__header">
+      <div class="student-assignment__header-content">
+        <div class="student-assignment__header-meta">
+          <span class="student-assignment__eyebrow"> Actividad académica </span>
 
-        @if (assignmentStatus(); as status) {
-        <div class="student-assignment__availability"
-          [class.student-assignment__availability--warning]="status.type === 'warning'"
-          [class.student-assignment__availability--late]="status.type === 'late'"
-          [class.student-assignment__availability--closed]="status.type === 'closed'"
-          [class.student-assignment__availability--no-deadline]="status.type === 'no-deadline'">
-          <span></span>
+          @if (assignmentStatus(); as status) {
+            <div
+              class="student-assignment__availability"
+              [class.student-assignment__availability--available]="status.type === 'available'"
+              [class.student-assignment__availability--warning]="status.type === 'warning'"
+              [class.student-assignment__availability--late]="status.type === 'late'"
+              [class.student-assignment__availability--closed]="status.type === 'closed'"
+              [class.student-assignment__availability--no-deadline]="status.type === 'no-deadline'"
+            >
+              <span class="student-assignment__availability-dot" aria-hidden="true"></span>
 
-          <div>
-            <strong>{{ status.title }}</strong>
-
-            <small>{{ status.message }}</small>
-          </div>
-        </div>
-        }
-      </div>
-
-      <h1 class="student-assignment__title">Mis casos clínicos</h1>
-
-      <p class="student-assignment__description">
-        Revisa los casos asignados por tu profesor, completa tus respuestas y consulta el avance
-        de cada entrega.
-      </p>
-
-      @if (assignment(); as assignment) {
-      <section class="student-assignment__deadline">
-
-        @if (assignment.dueDate) {
-
-        <div class="student-assignment__deadline-item">
-          <i data-lucide="calendar-clock"></i>
-
-          <div>
-            <strong>Fecha límite: </strong>
-
-            <span>
-              {{ assignment.dueDate | date:'fullDate' }}
-            </span>
-
-            <span>
-              {{ assignment.dueDate | date:'shortTime' }}
-            </span>
-          </div>
+              <div>
+                <strong>{{ status.title }}</strong>
+                <small>{{ status.message }}</small>
+              </div>
+            </div>
+          }
         </div>
 
-        <div class="student-assignment__deadline-item">
-          <i data-lucide="shield-check"></i>
+        @if (assignment(); as assignment) {
+          <h1 class="student-assignment__title">
+            {{ assignment.title }}
+          </h1>
 
-          <div>
+          <p class="student-assignment__description">
+            {{
+              assignment.description ||
+                'Revisa los casos clínicos asignados y completa tus respuestas.'
+            }}
+          </p>
 
-            <strong>Política de entrega</strong>
+          <section class="student-assignment__deadline" aria-label="Configuración de entrega">
+            @if (assignment.dueDate) {
+              <article class="student-assignment__deadline-item">
+                <div class="student-assignment__deadline-icon" aria-hidden="true">
+                  <i data-lucide="calendar-clock"></i>
+                </div>
 
-            <span>
+                <div>
+                  <span>Fecha límite</span>
 
-              @if (assignment.lateSubmissionPolicy === 'ACCEPT_LATE') {
-              Se aceptan entregas después de la fecha límite.
-              } @else {
-              No se aceptan entregas después de la fecha límite.
-              }
+                  <strong>
+                    {{ assignment.dueDate | date: "EEEE d 'de' MMMM 'de' y" }}
+                  </strong>
 
-            </span>
+                  <small> A las {{ assignment.dueDate | date: 'shortTime' }} </small>
+                </div>
+              </article>
 
-          </div>
+              <article class="student-assignment__deadline-item">
+                <div class="student-assignment__deadline-icon" aria-hidden="true">
+                  <i data-lucide="shield-check"></i>
+                </div>
 
-        </div>
+                <div>
+                  <span>Política de entrega</span>
 
+                  <strong>
+                    @if (assignment.lateSubmissionPolicy === 'ACCEPT_LATE') {
+                      Entregas tardías permitidas
+                    } @else {
+                      Entregas tardías bloqueadas
+                    }
+                  </strong>
+
+                  <small>
+                    @if (assignment.lateSubmissionPolicy === 'ACCEPT_LATE') {
+                      Podrás enviar después de la fecha límite.
+                    } @else {
+                      No podrás enviar después de la fecha límite.
+                    }
+                  </small>
+                </div>
+              </article>
+            } @else {
+              <article class="student-assignment__deadline-item">
+                <div class="student-assignment__deadline-icon" aria-hidden="true">
+                  <i data-lucide="infinity"></i>
+                </div>
+
+                <div>
+                  <span>Fecha límite</span>
+                  <strong>Sin fecha límite</strong>
+                  <small>Puedes completar la actividad en cualquier momento.</small>
+                </div>
+              </article>
+            }
+          </section>
         } @else {
+          <h1 class="student-assignment__title">Mis casos clínicos</h1>
 
-        <div class="student-assignment__deadline-item">
-          <i data-lucide="infinity"></i>
+          <p class="student-assignment__description">
+            Revisa los casos asignados, completa tus respuestas y consulta el avance de cada
+            entrega.
+          </p>
+        }
+      </div>
 
-          <div>
-
-            <strong>Sin fecha límite</strong>
-
-            <span>
-              El docente no estableció una fecha de entrega.
-            </span>
-
-          </div>
-
+      <aside class="student-assignment__visual" aria-label="Resumen de casos">
+        <div class="student-assignment__visual-icon" aria-hidden="true">
+          <i data-lucide="clipboard-list"></i>
         </div>
 
-        }
+        <div class="student-assignment__visual-content">
+          <span>Casos disponibles</span>
+          <strong>{{ totalCases() }}</strong>
+          <small> {{ progress() }}% completado </small>
+        </div>
 
-      </section>
+        <div
+          class="student-assignment__visual-progress"
+          role="progressbar"
+          aria-label="Progreso de la actividad"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          [attr.aria-valuenow]="progress()"
+        >
+          <span [style.width.%]="progress()"></span>
+        </div>
+      </aside>
+
+      <div class="student-assignment__decoration" aria-hidden="true">
+        <span></span>
+      </div>
+    </header>
+
+    <!-- =========================
+         CLOSED MESSAGE
+    ========================== -->
+
+    @if (assignmentStatus(); as status) {
+      @if (status.type === 'closed') {
+        <section
+          class="student-assignment__notice student-assignment__notice--closed"
+          role="status"
+        >
+          <div class="student-assignment__notice-icon" aria-hidden="true">
+            <i data-lucide="lock-keyhole"></i>
+          </div>
+
+          <div>
+            <strong>La actividad ya no acepta nuevas entregas</strong>
+
+            <p>
+              Puedes consultar los casos que ya comenzaste, pero no podrás iniciar nuevas
+              respuestas.
+            </p>
+          </div>
+        </section>
+      } @else if (status.type === 'late') {
+        <section class="student-assignment__notice student-assignment__notice--late" role="status">
+          <div class="student-assignment__notice-icon" aria-hidden="true">
+            <i data-lucide="clock-alert"></i>
+          </div>
+
+          <div>
+            <strong>Las nuevas entregas se registrarán como tardías</strong>
+
+            <p>La fecha límite terminó, pero el docente todavía permite enviar tus respuestas.</p>
+          </div>
+        </section>
       }
-    </div>
+    }
 
-    <div class="student-assignment__visual" aria-hidden="true">
-      <div class="student-assignment__visual-icon">
-        <i data-lucide="clipboard-list"></i>
-      </div>
-
-      <div class="student-assignment__visual-content">
-        <span>Casos disponibles</span>
-
-        <strong>{{ totalCases() }}</strong>
-      </div>
-    </div>
-
-    <div class="student-assignment__decoration" aria-hidden="true">
-      <span></span>
-    </div>
-  </header>
-
-  <!-- =========================
+    <!-- =========================
          STATS
     ========================== -->
 
-  <section class="student-assignment__stats" aria-label="Resumen de la actividad">
-    <article class="student-case-stat student-case-stat--assigned">
-      <div class="student-case-stat__icon" aria-hidden="true">
-        <i data-lucide="briefcase-medical"></i>
+    <section class="student-assignment__stats" aria-label="Resumen de la actividad">
+      <article class="student-case-stat student-case-stat--assigned">
+        <div class="student-case-stat__icon" aria-hidden="true">
+          <i data-lucide="briefcase-medical"></i>
+        </div>
+
+        <div class="student-case-stat__content">
+          <span>Casos asignados</span>
+          <strong>{{ totalCases() }}</strong>
+          <small>Total disponible</small>
+        </div>
+      </article>
+
+      <article class="student-case-stat student-case-stat--completed">
+        <div class="student-case-stat__icon" aria-hidden="true">
+          <i data-lucide="circle-check"></i>
+        </div>
+
+        <div class="student-case-stat__content">
+          <span>Completados</span>
+          <strong>{{ completedCases() }}</strong>
+          <small>Enviados o revisados</small>
+        </div>
+      </article>
+
+      <article class="student-case-stat student-case-stat--reviewed">
+        <div class="student-case-stat__icon" aria-hidden="true">
+          <i data-lucide="badge-check"></i>
+        </div>
+
+        <div class="student-case-stat__content">
+          <span>Evaluados</span>
+          <strong>{{ reviewedCases() }}</strong>
+          <small>Con revisión disponible</small>
+        </div>
+      </article>
+
+      <article class="student-case-stat student-case-stat--pending">
+        <div class="student-case-stat__icon" aria-hidden="true">
+          <i data-lucide="clock-3"></i>
+        </div>
+
+        <div class="student-case-stat__content">
+          <span>Pendientes</span>
+          <strong>{{ pendingCases() }}</strong>
+          <small>Por iniciar o terminar</small>
+        </div>
+      </article>
+    </section>
+
+    <!-- =========================
+         PROGRESS
+    ========================== -->
+
+    <section class="student-progress">
+      <div class="student-progress__icon" aria-hidden="true">
+        <i data-lucide="chart-no-axes-column-increasing"></i>
       </div>
 
-      <div class="student-case-stat__content">
-        <span>Casos asignados</span>
+      <div class="student-progress__content">
+        <header class="student-progress__header">
+          <div>
+            <span class="student-progress__eyebrow"> Tu avance </span>
 
-        <strong>{{ totalCases() }}</strong>
+            <h2>Progreso de la actividad</h2>
 
-        <small>Total disponible</small>
+            <p>Completa todos los casos asignados para finalizar la actividad.</p>
+          </div>
+
+          <strong>{{ progress() }}%</strong>
+        </header>
+
+        <div
+          class="student-progress__track"
+          role="progressbar"
+          aria-label="Casos completados"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          [attr.aria-valuenow]="progress()"
+        >
+          <span [style.width.%]="progress()"></span>
+        </div>
+
+        <footer class="student-progress__footer">
+          <span class="student-progress__legend student-progress__legend--completed">
+            <span aria-hidden="true"></span>
+
+            {{ completedCases() }}
+            {{ completedCases() === 1 ? 'completado' : 'completados' }}
+          </span>
+
+          <span class="student-progress__legend student-progress__legend--pending">
+            <span aria-hidden="true"></span>
+
+            {{ pendingCases() }}
+            {{ pendingCases() === 1 ? 'pendiente' : 'pendientes' }}
+          </span>
+        </footer>
       </div>
-    </article>
+    </section>
 
-    <article class="student-case-stat student-case-stat--completed">
-      <div class="student-case-stat__icon" aria-hidden="true">
-        <i data-lucide="circle-check"></i>
-      </div>
-
-      <div class="student-case-stat__content">
-        <span>Completados</span>
-
-        <strong>{{ completedCases() }}</strong>
-
-        <small>Enviados o revisados</small>
-      </div>
-    </article>
-
-    <article class="student-case-stat student-case-stat--pending">
-      <div class="student-case-stat__icon" aria-hidden="true">
-        <i data-lucide="clock-3"></i>
-      </div>
-
-      <div class="student-case-stat__content">
-        <span>Pendientes</span>
-
-        <strong>{{ pendingCases() }}</strong>
-
-        <small>Por iniciar o terminar</small>
-      </div>
-    </article>
-  </section>
-
-  <!-- =========================
+    <!-- =========================
          CASES WORKSPACE
     ========================== -->
 
-  <section class="student-cases">
-    <header class="student-cases__header">
-      <div class="student-cases__heading">
-        <span class="student-cases__eyebrow"> Trabajo asignado </span>
+    <section class="student-cases">
+      <header class="student-cases__header">
+        <div class="student-cases__heading">
+          <span class="student-cases__eyebrow"> Trabajo asignado </span>
 
-        <h2>Mis casos</h2>
+          <h2>Mis casos clínicos</h2>
 
-        <p>Casos clínicos disponibles para resolver dentro de esta actividad.</p>
-      </div>
-
-      <span class="student-cases__count">
-        {{ totalCases() }}
-        {{ totalCases() === 1 ? 'caso' : 'casos' }}
-      </span>
-    </header>
-
-    @if (assignedCases().length === 0) {
-    <section class="student-cases__empty">
-      <div class="student-cases__empty-icon" aria-hidden="true">
-        <i data-lucide="folder-open"></i>
-      </div>
-
-      <div class="student-cases__empty-content">
-        <span>Sin asignaciones</span>
-
-        <h3>No hay casos asignados</h3>
-
-        <p>Tu profesor todavía no ha asignado casos clínicos para esta actividad.</p>
-      </div>
-    </section>
-    } @else {
-    <div class="student-cases__grid">
-      @for (item of assignedCases(); track item.id) {
-      <article class="student-case-card" [class.student-case-card--submitted]="item.submission?.status === 'SUBMITTED'"
-        [class.student-case-card--reviewed]="item.submission?.status === 'REVIEWED'" tabindex="0" role="button"
-        (click)="openCase(item.id)" (keydown.enter)="openCase(item.id)" (keydown.space)="openCase(item.id)">
-        <header class="student-case-card__header">
-          <div class="student-case-card__icon" aria-hidden="true">
-            <i data-lucide="stethoscope"></i>
-          </div>
-
-          @if (item.submission) {
-          <span class="student-case-status" [class.student-case-status--draft]="item.submission.status === 'DRAFT'"
-            [class.student-case-status--submitted]="item.submission.status === 'SUBMITTED'"
-            [class.student-case-status--reviewed]="item.submission.status === 'REVIEWED'">
-            <span></span>
-
-            @switch (item.submission.status) {
-            @case ('DRAFT') {
-            En progreso
-            }
-
-            @case ('SUBMITTED') {
-            Enviada
-            }
-
-            @case ('REVIEWED') {
-            Revisada
-            }
-
-            @default {
-            {{ item.submission.status }}
-            }
-            }
-          </span>
-          } @else {
-          <span class="student-case-status">
-            <span></span>
-            Sin iniciar
-          </span>
-          }
-        </header>
-
-        <div class="student-case-card__content">
-          <span class="student-case-card__eyebrow"> Caso clínico </span>
-
-          <h3>
-            {{ item.case.title }}
-          </h3>
-
-          <p>
-            {{
-            item.case.consult || 'Revisa el caso clínico asignado y completa tu respuesta.'
-            }}
-          </p>
+          <p>Selecciona un caso para comenzar, continuar o consultar tu evaluación.</p>
         </div>
 
-        <footer class="student-case-card__footer">
-          <div class="student-case-card__meta">
-            <i data-lucide="file-text"></i>
+        <span class="student-cases__count">
+          <i data-lucide="layers-3" aria-hidden="true"></i>
 
-            @if (!item.submission) {
-            <span>Pendiente de iniciar</span>
-            } @else if (item.submission.status === 'DRAFT') {
-            <span>Respuesta en progreso</span>
-            } @else if (item.submission.status === 'SUBMITTED') {
-            <span>Respuesta enviada</span>
-            } @else if (item.submission.status === 'REVIEWED') {
-            <span>Respuesta evaluada</span>
-            }
+          {{ totalCases() }}
+          {{ totalCases() === 1 ? 'caso' : 'casos' }}
+        </span>
+      </header>
+
+      @if (assignedCases().length === 0) {
+        <section class="student-cases__empty">
+          <div class="student-cases__empty-icon" aria-hidden="true">
+            <i data-lucide="folder-open"></i>
           </div>
 
-          <button type="button" class="student-case-card__action" (click)="$event.stopPropagation(); openCase(item.id)">
-            <span>
-              @if (!item.submission) {
-              Iniciar
-              } @else if (item.submission.status === 'REVIEWED') {
-              Consultar
-              } @else {
-              Continuar
-              }
-            </span>
+          <div class="student-cases__empty-content">
+            <span>Sin asignaciones</span>
 
-            <i data-lucide="arrow-up-right"></i>
-          </button>
-        </footer>
-      </article>
+            <h3>No hay casos asignados</h3>
+
+            <p>Tu profesor todavía no ha agregado casos clínicos a esta actividad.</p>
+          </div>
+        </section>
+      } @else {
+        <div class="student-cases__grid">
+          @for (item of assignedCases(); track item.id) {
+            <article
+              class="student-case-card"
+              [class.student-case-card--draft]="item.submission?.status === 'DRAFT'"
+              [class.student-case-card--submitted]="item.submission?.status === 'SUBMITTED'"
+              [class.student-case-card--reviewed]="item.submission?.status === 'REVIEWED'"
+              [class.student-case-card--disabled]="!canOpenCase(item)"
+              [attr.tabindex]="canOpenCase(item) ? 0 : -1"
+              [attr.role]="canOpenCase(item) ? 'button' : null"
+              [attr.aria-disabled]="!canOpenCase(item)"
+              [attr.aria-label]="getCaseActionLabel(item) + ': ' + item.case.title"
+              (click)="openCase(item)"
+              (keydown.enter)="openCase(item)"
+              (keydown.space)="$event.preventDefault(); openCase(item)"
+            >
+              <header class="student-case-card__header">
+                <div class="student-case-card__icon" aria-hidden="true">
+                  <i data-lucide="stethoscope"></i>
+                </div>
+
+                @if (item.submission) {
+                  <span
+                    class="student-case-status"
+                    [class.student-case-status--draft]="item.submission.status === 'DRAFT'"
+                    [class.student-case-status--submitted]="item.submission.status === 'SUBMITTED'"
+                    [class.student-case-status--reviewed]="item.submission.status === 'REVIEWED'"
+                  >
+                    <span aria-hidden="true"></span>
+
+                    @switch (item.submission.status) {
+                      @case ('DRAFT') {
+                        En progreso
+                      }
+
+                      @case ('SUBMITTED') {
+                        Enviada
+                      }
+
+                      @case ('REVIEWED') {
+                        Evaluada
+                      }
+
+                      @default {
+                        {{ item.submission.status }}
+                      }
+                    }
+                  </span>
+                } @else if (!canOpenCase(item)) {
+                  <span class="student-case-status student-case-status--closed">
+                    <i data-lucide="lock" aria-hidden="true"></i>
+                    Cerrada
+                  </span>
+                } @else {
+                  <span class="student-case-status">
+                    <span aria-hidden="true"></span>
+                    Sin iniciar
+                  </span>
+                }
+              </header>
+
+              <div class="student-case-card__content">
+                <span class="student-case-card__eyebrow"> Caso clínico </span>
+
+                <h3>{{ item.case.title }}</h3>
+
+                <p>
+                  {{
+                    item.case.consult || 'Revisa el caso clínico asignado y completa tu respuesta.'
+                  }}
+                </p>
+
+                @if (item.case.area) {
+                  <span class="student-case-card__area">
+                    <i data-lucide="activity" aria-hidden="true"></i>
+                    {{ item.case.area }}
+                  </span>
+                }
+              </div>
+
+              <footer class="student-case-card__footer">
+                <div class="student-case-card__meta">
+                  <i
+                    [attr.data-lucide]="
+                      item.submission?.status === 'REVIEWED'
+                        ? 'badge-check'
+                        : item.submission?.status === 'SUBMITTED'
+                          ? 'send'
+                          : item.submission?.status === 'DRAFT'
+                            ? 'file-pen-line'
+                            : 'file-text'
+                    "
+                    aria-hidden="true"
+                  ></i>
+
+                  @if (!item.submission) {
+                    <span>Pendiente de iniciar</span>
+                  } @else if (item.submission.status === 'DRAFT') {
+                    <span>Respuesta en progreso</span>
+                  } @else if (item.submission.status === 'SUBMITTED') {
+                    <span>Respuesta enviada</span>
+                  } @else if (item.submission.status === 'REVIEWED') {
+                    <span>Evaluación disponible</span>
+                  }
+                </div>
+
+                <button
+                  type="button"
+                  class="student-case-card__action"
+                  [disabled]="!canOpenCase(item)"
+                  (click)="$event.stopPropagation(); openCase(item)"
+                >
+                  <span>{{ getCaseActionLabel(item) }}</span>
+
+                  <i
+                    [attr.data-lucide]="canOpenCase(item) ? 'arrow-up-right' : 'lock'"
+                    aria-hidden="true"
+                  ></i>
+                </button>
+              </footer>
+            </article>
+          }
+        </div>
       }
-    </div>
-    }
-  </section>
-</main>
+    </section>
+  </main>
 }

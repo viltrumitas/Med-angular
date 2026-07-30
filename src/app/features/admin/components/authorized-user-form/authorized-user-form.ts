@@ -1,5 +1,6 @@
-import { Component, input, output } from '@angular/core';
+import { afterRenderEffect, Component, input, output } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { createIcons, icons } from 'lucide';
 
 import { Modal } from '../../../../shared/components/modal/modal';
 import { AuthorizedUserForm } from '../../forms/authorized-user.form';
@@ -14,21 +15,31 @@ import { AuthorizedUserForm } from '../../forms/authorized-user.form';
 export class AuthorizedUserFormComponent {
   readonly form = input.required<AuthorizedUserForm>();
   readonly isOpen = input.required<boolean>();
-
   readonly submitLabel = input('Guardar usuario');
   readonly submitting = input(false);
   readonly error = input<string | null>(null);
-
   readonly submitted = output<void>();
   readonly closeRequested = output<void>();
 
+  constructor() {
+    afterRenderEffect(() => {
+      this.isOpen();
+      this.submitting();
+      this.error();
+
+      createIcons({ icons });
+    });
+  }
+
   submit(): void {
-    if (this.submitting()) {
+    if (!this.isOpen() || this.submitting()) {
       return;
     }
 
-    if (this.form().invalid) {
-      this.form().markAllAsTouched();
+    const currentForm = this.form();
+
+    if (currentForm.invalid) {
+      currentForm.markAllAsTouched();
       return;
     }
 
@@ -36,7 +47,7 @@ export class AuthorizedUserFormComponent {
   }
 
   onCancel(): void {
-    if (this.submitting()) {
+    if (!this.isOpen() || this.submitting()) {
       return;
     }
 

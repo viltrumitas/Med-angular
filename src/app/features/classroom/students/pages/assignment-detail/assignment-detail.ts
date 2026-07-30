@@ -1,18 +1,27 @@
-import { AfterViewInit, Component, inject, OnInit, signal, computed } from '@angular/core';
-
+import {
+  AfterViewInit,
+  Component,
+  DestroyRef,
+  OnInit,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { finalize } from 'rxjs';
 import { createIcons, icons } from 'lucide';
 
-import { AssignedCaseApiService } from '../../../../assigned-case/services/assigned-case-api.service';
-import { AssignedStudentCase } from '../../../../assigned-case/models/assigned-case.model';
 import { LateSubmissionPolicy } from '../../../../../core/enum/late-submission-policy';
 
-import { DatePipe } from '@angular/common';
+import { AssignedStudentCase } from '../../../../assigned-case/models/assigned-case.model';
+import { AssignedCaseApiService } from '../../../../assigned-case/services/assigned-case-api.service';
 
 @Component({
   selector: 'app-assignment-detail',
   standalone: true,
-  imports: [DatePipe,],
+  imports: [DatePipe],
   templateUrl: './assignment-detail.html',
   styleUrl: './assignment-detail.scss',
 })
@@ -20,12 +29,44 @@ export class AssignmentDetail implements OnInit, AfterViewInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly assignedApi = inject(AssignedCaseApiService);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly assignedCases = signal<AssignedStudentCase[]>([]);
+  readonly loading = signal(true);
+  readonly loadError = signal<string | null>(null);
+  readonly assignment = computed(() => this.assignedCases()[0]?.assignment ?? null);
+  readonly totalCases = computed(() => this.assignedCases().length);
+  readonly completedCases = computed(() => {
+    return this.assignedCases().filter((assignedCase) => {
+      const status = assignedCase.submission?.status;
 
-  readonly assignment = computed(() =>
-    this.assignedCases()[0]?.assignment ?? null,
-  );
+      return status === 'SUBMITTED' || status === 'REVIEWED';
+    }).length;
+  });
+
+  readonly reviewedCases = computed(() => {
+    return this.assignedCases().filter(
+      (assignedCase) => assignedCase.submission?.status === 'REVIEWED',
+    ).length;
+  });
+
+  readonly pendingCases = computed(() => {
+    return this.assignedCases().filter((assignedCase) => {
+      const status = assignedCase.submission?.status;
+
+      return !status || status === 'DRAFT';
+    }).length;
+  });
+
+  readonly progress = computed(() => {
+    const total = this.totalCases();
+
+    if (total === 0) {
+      return 0;
+    }
+
+    return Math.round((this.completedCases() / total) * 100);
+  });
 
   readonly assignmentStatus = computed(() => {
     const assignment = this.assignment();
@@ -39,99 +80,174 @@ export class AssignmentDetail implements OnInit, AfterViewInit {
         type: 'no-deadline',
         title: 'Sin fecha límite',
         message: 'Puedes completar esta actividad en cualquier momento.',
+        isClosed: false,
+        acceptsLate: false,
       };
     }
 
-    const now = new Date();
-    const due = new Date(assignment.dueDate);
+    const dueDate = new Date(assignment.dueDate);
+    const difference = dueDate.getTime() - Date.now();
+    const minute = 60 * 1000;
+    const hour = 60 * minute;
+    const day = 24 * hour;
 
-    const diff = due.getTime() - now.getTime();
+    if (difference >= 0) {
+      let message: string;
 
-    const minutes = Math.floor(diff / 60000);
-    const hours = Math.floor(diff / 3600000);
-    const days = Math.floor(diff / 86400000);
+      if (difference >= 30 * day) {
+        message = `Vence el ${dueDate.toLocaleDateString('es-MX', {
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric',
+        })}`;
+      } else if (difference >= day) {
+        const days = Math.ceil(difference / day);
 
-    if (diff >= 0) {
-      let message = '';
+        message = days === 1 ? 'Vence mañana' : `Vence en ${days} días`;
+      } else if (difference >= hour) {
+        const hours = Math.ceil(difference / hour);
 
-      if (days >= 2) {
-        message = `Vence en ${days} días`;
-      } else if (days === 1) {
-        message = 'Vence mañana';
-      } else if (hours >= 2) {
-        message = `Vence en ${hours} horas`;
-      } else if (hours === 1) {
-        message = 'Vence en 1 hora';
-      } else if (minutes > 1) {
-        message = `Vence en ${minutes} minutos`;
+        message = hours === 1 ? 'Vence en 1 hora' : `Vence en ${hours} horas`;
+      } else if (difference >= minute) {
+        const minutes = Math.ceil(difference / minute);
+
+        message = minutes === 1 ? 'Vence en 1 minuto' : `Vence en ${minutes} minutos`;
       } else {
-        message = 'Está por vencer';
+        message = 'Vence en unos segundos';
       }
 
       return {
-        type: hours < 24 ? 'warning' : 'available',
+        type: difference < day ? 'warning' : 'available',
         title: 'Disponible',
         message,
+        isClosed: false,
+        acceptsLate: false,
       };
     }
 
-    if (assignment.lateSubmissionPolicy === 'ACCEPT_LATE') {
+    const acceptsLate = assignment.lateSubmissionPolicy === LateSubmissionPolicy.ACCEPT_LATE;
+
+    if (acceptsLate) {
       return {
         type: 'late',
         title: 'Entrega tardía',
-        message:
-          'La fecha límite expiró, pero todavía puedes entregar.',
+        message: 'La fecha límite expiró, pero todavía puedes enviar tus respuestas.',
+        isClosed: false,
+        acceptsLate: true,
       };
     }
 
     return {
       type: 'closed',
       title: 'Actividad cerrada',
-      message:
-        'El docente ya no acepta entregas para esta actividad.',
+      message: 'La fecha límite terminó y el docente ya no acepta nuevas entregas.',
+      isClosed: true,
+      acceptsLate: false,
     };
   });
 
-  readonly loading = signal(true);
-  readonly totalCases = computed(() => this.assignedCases().length);
-
-  readonly completedCases = computed(
-    () => this.assignedCases().filter((item) => item.submission?.status === 'SUBMITTED').length,
-  );
-  readonly pendingCases = computed(
-    () => this.assignedCases().filter((item) => !item.submission).length,
-  );
-
-  ngOnInit() {
-    const assignmentId = this.route.snapshot.paramMap.get('assignmentId');
-
-    if (!assignmentId) return;
-
-    this.assignedApi.findMyAssignedCasesByAssignment(assignmentId).subscribe({
-      next: (cases) => {
-        console.log('[Student Assignment]', cases);
-        this.assignedCases.set(cases);
-        this.loading.set(false);
-
-        this.renderIcon();
-      },
-
-      error: (err) => {
-        console.error(err);
-        this.loading.set(false);
-      },
-    });
+  ngOnInit(): void {
+    this.loadAssignment();
   }
 
   ngAfterViewInit(): void {
-    this.renderIcon();
+    this.renderIcons();
   }
 
-  openCase(id: string) {
-    this.router.navigate(['/dashboard/student/assigned-cases', id]);
+  loadAssignment(): void {
+    const assignmentId = this.route.snapshot.paramMap.get('assignmentId');
+
+    if (!assignmentId) {
+      this.loading.set(false);
+      this.loadError.set('No se encontró el identificador de la actividad.');
+      return;
+    }
+
+    this.loading.set(true);
+    this.loadError.set(null);
+
+    this.assignedApi
+      .findMyAssignedCasesByAssignment(assignmentId)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => {
+          this.loading.set(false);
+          this.renderIcons();
+        }),
+      )
+      .subscribe({
+        next: (assignedCases) => {
+          this.assignedCases.set(assignedCases);
+        },
+        error: (error) => {
+          this.assignedCases.set([]);
+
+          this.loadError.set(
+            this.getErrorMessage(error, 'No pudimos cargar la actividad. Intenta nuevamente.'),
+          );
+        },
+      });
   }
 
-  private renderIcon() {
+  canOpenCase(assignedCase: AssignedStudentCase): boolean {
+    const status = this.assignmentStatus();
+
+    if (!status?.isClosed) {
+      return true;
+    }
+
+    return !!assignedCase.submission;
+  }
+
+  openCase(assignedCase: AssignedStudentCase): void {
+    if (!this.canOpenCase(assignedCase)) {
+      return;
+    }
+
+    this.router.navigate(['/dashboard/student/assigned-cases', assignedCase.id]);
+  }
+
+  getCaseActionLabel(assignedCase: AssignedStudentCase): string {
+    const status = assignedCase.submission?.status;
+
+    switch (status) {
+      case 'DRAFT':
+        return 'Continuar actividad';
+
+      case 'SUBMITTED':
+        return 'Ver entrega';
+
+      case 'REVIEWED':
+        return 'Ver evaluación';
+
+      default:
+        return this.canOpenCase(assignedCase) ? 'Comenzar actividad' : 'Actividad cerrada';
+    }
+  }
+
+  private getErrorMessage(error: unknown, fallback: string): string {
+    if (typeof error === 'object' && error !== null && 'error' in error) {
+      const httpError = error as {
+        error?: {
+          message?: string | string[];
+        };
+      };
+
+      const message = httpError.error?.message;
+
+      if (Array.isArray(message)) {
+        return message.join(' ');
+      }
+
+      if (typeof message === 'string' && message.trim()) {
+        return message;
+      }
+    }
+
+    return fallback;
+  }
+
+  private renderIcons(): void {
     setTimeout(() => {
       createIcons({ icons });
     });

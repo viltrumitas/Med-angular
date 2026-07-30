@@ -14,16 +14,16 @@ import { finalize, startWith } from 'rxjs';
 import { createIcons, icons } from 'lucide';
 
 import { ErrorService } from '../../../../core/services/error.service';
+import { ButtonComponent } from '../../../../shared/components/button/button';
 import { InputComponent } from '../../../../shared/components/input/input';
 import { TextareaComponent } from '../../../../shared/components/text-area/text-area';
 
 import { createAssignmentForm } from '../../../assignments/forms/create-assignment-form';
 import { mapCreateAssignment } from '../../../assignments/mappers/create-assignment.mapper';
 import { AssignmentApi } from '../../../assignments/services/assignment-api';
-import { CaseResponseDto } from '../../../cases/dto/case-response.dto';
 
+import { CaseResponseDto } from '../../../cases/dto/case-response.dto';
 import { ClassroomApi } from '../../service/clasroom-api.service';
-import { ButtonComponent } from '../../../../shared/components/button/button';
 
 @Component({
   selector: 'app-assignment-create',
@@ -47,7 +47,7 @@ export class AssignmentCreate implements AfterViewInit {
   readonly casesLoadError = signal<string | null>(null);
   readonly submitError = signal<string | null>(null);
 
-  private readonly initialFormValue = this.assignmentForm.getRawValue();
+  private readonly initialFormValue = structuredClone(this.assignmentForm.getRawValue());
 
   private readonly selectedCaseIds = toSignal(
     this.assignmentForm.controls.caseIds.valueChanges.pipe(
@@ -58,31 +58,11 @@ export class AssignmentCreate implements AfterViewInit {
     },
   );
 
-  readonly selectedCasesCount = computed(() => this.selectedCaseIds().length);
+  readonly selectedCasesCount = computed(() => this.selectedCaseIds()?.length ?? 0);
+  readonly hasSelectedCases = computed(() => this.selectedCasesCount() > 0);
+  readonly interactionDisabled = computed(() => this.isSubmitting() || this.isLoadingCases());
 
-<<<<<<< HEAD
-  @Output()
-  created = new EventEmitter<void>();
-
-  // =========================
-  // LIFECYCLE
-  // =========================
-
-  ngOnInit(): void {
-    this.assignmentForm.controls.hasDueDate.valueChanges.subscribe(
-      enabled => {
-        if (!enabled) {
-          this.assignmentForm.patchValue({
-            dueDate: null,
-            lateSubmissionPolicy:
-              LateSubmissionPolicy.ACCEPT_LATE,
-          });
-        }
-      }
-    );
-=======
   constructor() {
->>>>>>> d036172 (v1)
     this.loadCases();
   }
 
@@ -91,12 +71,12 @@ export class AssignmentCreate implements AfterViewInit {
   }
 
   toggleCase(caseId: string): void {
-    if (this.isSubmitting()) {
+    if (this.interactionDisabled()) {
       return;
     }
 
     const control = this.assignmentForm.controls.caseIds;
-    const currentIds = control.value;
+    const currentIds = control.value ?? [];
 
     const updatedIds = currentIds.includes(caseId)
       ? currentIds.filter((id) => id !== caseId)
@@ -105,15 +85,14 @@ export class AssignmentCreate implements AfterViewInit {
     control.setValue(updatedIds);
     control.markAsTouched();
     control.markAsDirty();
+    control.updateValueAndValidity();
 
     this.submitError.set(null);
     this.errorService.clear();
-
-    this.renderIcons();
   }
 
   isCaseSelected(caseId: string): boolean {
-    return this.selectedCaseIds().includes(caseId);
+    return this.selectedCaseIds()?.includes(caseId) ?? false;
   }
 
   submitAssignment(): void {
@@ -126,8 +105,9 @@ export class AssignmentCreate implements AfterViewInit {
 
     const caseIdsControl = this.assignmentForm.controls.caseIds;
 
-    if (caseIdsControl.value.length === 0) {
+    if (!caseIdsControl.value?.length) {
       caseIdsControl.markAsTouched();
+      caseIdsControl.markAsDirty();
 
       this.submitError.set('Selecciona al menos un caso clínico para crear la actividad.');
 
@@ -136,6 +116,9 @@ export class AssignmentCreate implements AfterViewInit {
 
     if (this.assignmentForm.invalid) {
       this.assignmentForm.markAllAsTouched();
+
+      this.submitError.set('Revisa los campos marcados antes de crear la actividad.');
+
       return;
     }
 
@@ -159,9 +142,12 @@ export class AssignmentCreate implements AfterViewInit {
           this.resetForm();
           this.created.emit();
         },
-        error: () => {
+        error: (error) => {
           this.submitError.set(
-            'No pudimos crear la actividad. Revisa la información e intenta nuevamente.',
+            this.getErrorMessage(
+              error,
+              'No pudimos crear la actividad. Revisa la información e intenta nuevamente.',
+            ),
           );
         },
       });
@@ -189,21 +175,50 @@ export class AssignmentCreate implements AfterViewInit {
         next: (cases) => {
           this.cases.set(cases);
         },
-        error: () => {
+        error: (error) => {
           this.cases.set([]);
 
-          this.casesLoadError.set('No pudimos cargar tus casos publicados. Intenta nuevamente.');
+          this.casesLoadError.set(
+            this.getErrorMessage(
+              error,
+              'No pudimos cargar tus casos publicados. Intenta nuevamente.',
+            ),
+          );
         },
       });
   }
 
   private resetForm(): void {
-    this.assignmentForm.reset(this.initialFormValue);
+    this.assignmentForm.reset(structuredClone(this.initialFormValue));
 
     this.assignmentForm.markAsPristine();
     this.assignmentForm.markAsUntouched();
+    this.assignmentForm.updateValueAndValidity();
 
     this.submitError.set(null);
+    this.errorService.clear();
+  }
+
+  private getErrorMessage(error: unknown, fallback: string): string {
+    if (typeof error === 'object' && error !== null && 'error' in error) {
+      const httpError = error as {
+        error?: {
+          message?: string | string[];
+        };
+      };
+
+      const message = httpError.error?.message;
+
+      if (Array.isArray(message)) {
+        return message.join(' ');
+      }
+
+      if (typeof message === 'string' && message.trim()) {
+        return message;
+      }
+    }
+
+    return fallback;
   }
 
   private renderIcons(): void {

@@ -1,16 +1,18 @@
-import { Component, inject, OnInit, signal, computed } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
+import { createIcons, icons } from 'lucide';
+
+import { ImportAuthorizedUsers } from '../../components/import-authorized-users/import-authorized-users';
+import { CreateAuthorizedUser } from '../create-authorized-user/create-authorized-user';
 
 import { AdminApi } from '../../services/admin-api';
 import { AuthorizedUserSummaryDto } from '../../dto/authorized-user-summary.dto';
 import { ImportAuthorizedUsersResponseDto } from '../../dto/import-authorized-users-response-.dto';
-import { createIcons, icons } from 'lucide';
-import { ImportAuthorizedUsers } from '../../components/import-authorized-users/import-authorized-users';
 
 @Component({
   selector: 'app-authorized-users',
   standalone: true,
-  imports: [ImportAuthorizedUsers],
+  imports: [ImportAuthorizedUsers, CreateAuthorizedUser],
   templateUrl: './authorized-users.html',
   styleUrl: './authorized-users.scss',
 })
@@ -22,7 +24,10 @@ export class AuthorizedUsers implements OnInit {
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
   readonly search = signal('');
+
   readonly importOpen = signal(false);
+  readonly createOpen = signal(false);
+
   readonly filteredUsers = computed(() => {
     const value = this.search().toLowerCase().trim();
 
@@ -39,12 +44,12 @@ export class AuthorizedUsers implements OnInit {
     });
   });
 
-  updateSearch(value: string) {
-    this.search.set(value);
-  }
-
   ngOnInit(): void {
     this.loadUsers();
+  }
+
+  updateSearch(value: string): void {
+    this.search.set(value);
   }
 
   loadUsers(): void {
@@ -58,18 +63,26 @@ export class AuthorizedUsers implements OnInit {
         this.renderIcons();
       },
 
-      error: (err) => {
-        console.error(err);
+      error: (error) => {
+        console.error(error);
 
         this.error.set('No se pudieron cargar los usuarios.');
-
         this.loading.set(false);
       },
     });
   }
 
-  createUser(): void {
-    this.router.navigate(['/dashboard/admin/authorized-users/new']);
+  openCreateModal(): void {
+    this.createOpen.set(true);
+  }
+
+  closeCreateModal(): void {
+    this.createOpen.set(false);
+  }
+
+  onUserCreated(): void {
+    this.createOpen.set(false);
+    this.loadUsers();
   }
 
   editUser(id: string): void {
@@ -88,32 +101,28 @@ export class AuthorizedUsers implements OnInit {
         this.loadUsers();
       },
 
-      error: (err) => {
-        console.error(err);
+      error: (error) => {
+        console.error(error);
 
         this.error.set('No se pudo eliminar el usuario.');
       },
     });
   }
 
-  openImportModal() {
-    console.log('Abrir modal');
+  openImportModal(): void {
     this.importOpen.set(true);
   }
 
-  closeImportModal() {
+  closeImportModal(): void {
     this.importOpen.set(false);
   }
 
-  onImportCompleted(result: ImportAuthorizedUsersResponseDto) {
-
-    this.loadUsers();
-
+  onImportCompleted(result: ImportAuthorizedUsersResponseDto): void {
     console.log(result);
-
+    this.loadUsers();
   }
 
-  private renderIcons() {
+  private renderIcons(): void {
     setTimeout(() => {
       createIcons({ icons });
     });

@@ -13,11 +13,11 @@ export interface StudentAssignmentDetailModel {
   title: string;
 
   description: string | null;
-  
+
   classroom: {
     id: string;
     name: string;
-  }
+  };
 
   assignedCases: {
     id: string;

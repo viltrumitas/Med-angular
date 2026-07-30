@@ -12,7 +12,7 @@
     <div class="section-heading">
       <div class="section-number" aria-hidden="true">1</div>
 
-      <div>
+      <div class="section-heading__content">
         <h3>Información de la actividad</h3>
 
         <p>
@@ -27,24 +27,27 @@
         <app-input
           formControlName="title"
           type="text"
-          placeHolderText="Ej. Evaluación inicial del paciente"
           labelText="Título"
+          placeHolderText="Ej. Evaluación inicial del paciente"
+          autocomplete="off"
         />
 
         @if (assignmentForm.controls.title.invalid && assignmentForm.controls.title.touched) {
-          <div class="field-error">
-            <i data-lucide="circle-alert"></i>
+          <div class="field-error" role="alert">
+            <i data-lucide="circle-alert" aria-hidden="true"></i>
 
-            <span> El título es obligatorio. </span>
+            <span>El título es obligatorio.</span>
           </div>
         }
       </div>
 
-      <app-text-area
-        formControlName="description"
-        labelText="Descripción"
-        placeHolderText="Describe brevemente el objetivo de la actividad..."
-      />
+      <div class="field-group">
+        <app-text-area
+          formControlName="description"
+          labelText="Descripción"
+          placeHolderText="Describe brevemente el objetivo de la actividad..."
+        />
+      </div>
     </div>
   </section>
 
@@ -54,38 +57,75 @@
 
   <section class="form-section">
     <div class="section-heading">
-      <div class="section-number">2</div>
+      <div class="section-number" aria-hidden="true">2</div>
 
-      <div>
+      <div class="section-heading__content">
         <h3>Configuración de entrega</h3>
 
-        <p>Define si esta actividad tendrá fecha límite.</p>
+        <p>Define si la actividad tendrá una fecha límite y cómo se manejarán los retrasos.</p>
       </div>
     </div>
 
     <div class="delivery-settings">
-      <label class="checkbox-option">
+      <label
+        class="due-date-toggle"
+        [class.due-date-toggle--active]="assignmentForm.controls.hasDueDate.value"
+      >
         <input type="checkbox" formControlName="hasDueDate" />
 
-        <span> Esta actividad tiene fecha límite </span>
+        <span class="due-date-toggle__control" aria-hidden="true">
+          <span></span>
+        </span>
+
+        <span class="due-date-toggle__icon" aria-hidden="true">
+          <i data-lucide="calendar-clock"></i>
+        </span>
+
+        <span class="due-date-toggle__content">
+          <strong>Agregar fecha límite</strong>
+
+          <small>
+            Establece el momento máximo para que los estudiantes envíen sus respuestas.
+          </small>
+        </span>
       </label>
 
       @if (assignmentForm.controls.hasDueDate.value) {
-        <div class="form-fields">
-          <div class="field-group">
-            <label> Fecha límite </label>
+        <div class="delivery-fields">
+          <div class="native-field">
+            <label for="assignment-due-date">Fecha y hora límite</label>
 
-            <input type="datetime-local" formControlName="dueDate" />
+            <div class="native-control">
+              <i data-lucide="calendar-days" aria-hidden="true"></i>
+
+              <input id="assignment-due-date" type="datetime-local" formControlName="dueDate" />
+            </div>
+
+            @if (
+              assignmentForm.controls.dueDate.invalid && assignmentForm.controls.dueDate.touched
+            ) {
+              <div class="field-error" role="alert">
+                <i data-lucide="circle-alert" aria-hidden="true"></i>
+
+                <span>Selecciona una fecha límite válida.</span>
+              </div>
+            }
           </div>
 
-          <div class="field-group">
-            <label> Política de entrega </label>
+          <div class="native-field">
+            <label for="late-submission-policy">Política de entrega</label>
 
-            <select formControlName="lateSubmissionPolicy">
-              <option value="ACCEPT_LATE">Aceptar entregas tardías</option>
+            <div class="native-control native-control--select">
+              <i data-lucide="shield-check" aria-hidden="true"></i>
 
-              <option value="REJECT_LATE">No aceptar después de la fecha límite</option>
-            </select>
+              <select id="late-submission-policy" formControlName="lateSubmissionPolicy">
+                <option value="ACCEPT_LATE">Aceptar entregas tardías</option>
+
+                <option value="REJECT_LATE">No aceptar después de la fecha límite</option>
+              </select>
+
+              <i class="native-control__caret" data-lucide="chevron-down" aria-hidden="true"></i>
+            </div>
           </div>
         </div>
       }
@@ -99,12 +139,12 @@
   <section class="form-section cases-section">
     <div class="section-heading cases-heading">
       <div class="heading-main">
-        <div class="section-number" aria-hidden="true">2</div>
+        <div class="section-number" aria-hidden="true">3</div>
 
-        <div>
+        <div class="section-heading__content">
           <h3>Selecciona los casos clínicos</h3>
 
-          <p>Elige los casos que formarán parte de esta actividad.</p>
+          <p>Elige uno o varios casos que formarán parte de esta actividad.</p>
         </div>
       </div>
 
@@ -113,9 +153,12 @@
         [class.selection-counter--active]="selectedCasesCount() > 0"
         aria-live="polite"
       >
-        {{ selectedCasesCount() }}
+        <i data-lucide="check-circle-2" aria-hidden="true"></i>
 
-        {{ selectedCasesCount() === 1 ? 'seleccionado' : 'seleccionados' }}
+        <span>
+          {{ selectedCasesCount() }}
+          {{ selectedCasesCount() === 1 ? 'seleccionado' : 'seleccionados' }}
+        </span>
       </span>
     </div>
 
@@ -151,12 +194,15 @@
           <p>{{ casesLoadError() }}</p>
         </div>
 
-        <app-button
-          type="button"
-          text="Intentar de nuevo"
-          variant="secondary"
-          (clicked)="loadCases()"
-        />
+        <div class="cases-state__action">
+          <app-button
+            type="button"
+            text="Intentar de nuevo"
+            variant="secondary"
+            [disabled]="isLoadingCases()"
+            (clicked)="loadCases()"
+          />
+        </div>
       </div>
     }
 
@@ -178,10 +224,6 @@
           </p>
         </div>
       </div>
-
-      <h4>No hay casos disponibles</h4>
-
-      <p>Necesitas tener casos clínicos publicados antes de poder agregarlos a una actividad.</p>
     }
 
     <!-- =========================
@@ -195,7 +237,11 @@
             type="button"
             class="case-card"
             [class.case-card--selected]="isCaseSelected(clinicalCase.id)"
+            [class.case-card--disabled]="isSubmitting()"
             [attr.aria-pressed]="isCaseSelected(clinicalCase.id)"
+            [attr.aria-label]="
+              (isCaseSelected(clinicalCase.id) ? 'Quitar ' : 'Seleccionar ') + clinicalCase.title
+            "
             [disabled]="isSubmitting()"
             (click)="toggleCase(clinicalCase.id)"
           >
@@ -213,6 +259,8 @@
               </div>
 
               <span class="area-badge">
+                <i data-lucide="stethoscope" aria-hidden="true"></i>
+
                 {{ clinicalCase.area }}
               </span>
             </div>
@@ -226,7 +274,7 @@
         }
       </div>
 
-      @if (assignmentForm.controls.caseIds.invalid && assignmentForm.controls.caseIds.touched) {
+      @if (assignmentForm.controls.caseIds.touched && selectedCasesCount() === 0) {
         <div class="cases-validation" role="alert">
           <i data-lucide="circle-alert" aria-hidden="true"></i>
 
@@ -242,9 +290,15 @@
 
   @if (submitError()) {
     <div class="assignment-form__error" role="alert">
-      <i data-lucide="triangle-alert" aria-hidden="true"></i>
+      <div class="assignment-form__error-icon" aria-hidden="true">
+        <i data-lucide="triangle-alert"></i>
+      </div>
 
-      <span>{{ submitError() }}</span>
+      <div>
+        <strong>No se pudo crear la actividad</strong>
+
+        <span>{{ submitError() }}</span>
+      </div>
     </div>
   }
 
@@ -258,50 +312,36 @@
         <i data-lucide="clipboard-check"></i>
       </div>
 
-      <div>
+      <div class="footer-summary__content">
         <strong>
           {{ selectedCasesCount() }}
-
           {{ selectedCasesCount() === 1 ? 'caso incluido' : 'casos incluidos' }}
         </strong>
 
-        <span> Podrás gestionar la actividad después de crearla. </span>
+        <span>Podrás gestionar la actividad después de crearla.</span>
       </div>
     </div>
 
-    <<<<<<< HEAD
     <button
       type="submit"
       class="submit-button"
-      [disabled]="assignmentForm.invalid || selectedCasesCount() === 0 || isSubmitting()"
+      [disabled]="
+        assignmentForm.invalid ||
+        selectedCasesCount() === 0 ||
+        isSubmitting() ||
+        isLoadingCases() ||
+        !!casesLoadError()
+      "
     >
       @if (isSubmitting()) {
-        <span class="button-spinner"></span>
+        <span class="button-spinner" aria-hidden="true"></span>
 
-        <span> Creando... </span>
+        <span>Creando actividad...</span>
       } @else {
-        <span> Crear actividad </span>
+        <span>Crear actividad</span>
 
-        <i data-lucide="arrow-right"></i>
+        <i data-lucide="arrow-right" aria-hidden="true"></i>
       }
     </button>
-    =======
-    <div class="footer-action">
-      <app-button
-        type="submit"
-        text="Crear actividad"
-        loadingText="Creando actividad..."
-        variant="primary"
-        [loading]="isSubmitting()"
-        [disabled]="
-          assignmentForm.invalid ||
-          selectedCasesCount() === 0 ||
-          isSubmitting() ||
-          isLoadingCases() ||
-          !!casesLoadError()
-        "
-      />
-    </div>
-    >>>>>>> d036172 (v1)
   </footer>
 </form>
