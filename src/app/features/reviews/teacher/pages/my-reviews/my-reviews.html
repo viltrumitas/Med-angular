@@ -73,16 +73,99 @@
       </div>
 
       <div class="review-history__counter">
-        <strong>{{ reviews().length }}</strong>
+        <strong>{{ filteredReviews().length }}</strong>
 
-        <span>
-          {{ reviews().length === 1 ? 'evaluación' : 'evaluaciones' }}
-        </span>
+        <p class="review-history__results">
+          Mostrando {{ filteredReviews().length }}
+          de {{ reviews().length }} evaluaciones.
+        </p>
       </div>
     </header>
 
+    <!-- =========================
+        Filtros
+    ========================== -->
+
+    <div class="review-history__filters">
+
+      <!-- =========================
+        Barra de busqueda
+    ========================== -->
+      <input type="text" placeholder="Buscar por nombre, apellido o matricula..." [value]="search()"
+        (input)="search.set($any($event.target).value)">
+
+      <!-- =========================
+        Filtrar por actividad
+    ========================== -->
+      <select [value]="selectedAssignments()" (change)="selectedAssignments.set($any($event.target).value)">
+        @for (assignment of assignments(); track assignment) {
+        <option [value]="assignment">
+          {{ assignment === 'ALL' ? 'Todas las actividades' : assignment }}
+        </option>
+        }
+      </select>
+
+      <!-- =========================
+        Filtrar por caso
+    ========================== -->
+
+      <select [value]="selectedCase()" (change)="selectedCase.set($any($event.target).value)">
+        @for (clinicalCase of cases(); track clinicalCase) {
+        <option [value]="clinicalCase">
+          {{
+          clinicalCase === 'ALL'
+          ? 'Todos los casos'
+          : clinicalCase
+          }}
+        </option>
+        }
+      </select>
+
+      <!-- =========================
+        Ordenar
+    ========================== -->
+
+      <select [value]="sortBy()" (change)="sortBy.set($any($event.target).value)">
+        <option value="newest">
+          Más recientes
+        </option>
+
+        <option value="oldest">
+          Más antiguas
+        </option>
+
+        <option value="student">
+          Apellido (A-Z)
+        </option>
+
+        <option value="scoreDesc">
+          Mayor calificación
+        </option>
+
+        <option value="scoreAsc">
+          Menor calificación
+        </option>
+      </select>
+
+      <!-- =========================
+        Filtrar por tipo de entrega
+    ========================== -->
+      <select [value]="deliveryFilter()" (change)="deliveryFilter.set($any($event.target).value)">
+        <option value="ALL">
+          Todas las entregas
+        </option>
+        <option value="ON_TIME">
+          A tiempo
+        </option>
+        <option value="LATE">
+          Tardias
+        </option>
+      </select>
+
+    </div>
+
     <div class="review-history__grid">
-      @for (r of reviews(); track r.id) {
+      @for (r of filteredReviews(); track r.id) {
       <article class="review-card" tabindex="0" role="button" (click)="openReview(r.id)"
         (keydown.enter)="openReview(r.id)" (keydown.space)="openReview(r.id)">
         <header class="review-card__header">

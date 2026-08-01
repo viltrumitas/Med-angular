@@ -59,6 +59,9 @@ export class AssignmentMapper {
         ? {
             id: dto.submission.id,
             status: dto.submission.status,
+            submissionTiming: dto.submission.submissionTiming,
+            submittedAt: dto.submission.submittedAt,
+            reviewId: dto.submission.reviewId,
           }
         : null,
 

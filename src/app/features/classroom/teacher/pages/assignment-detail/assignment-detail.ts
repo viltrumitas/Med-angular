@@ -16,6 +16,8 @@ import { LateSubmissionPolicy } from '../../../../../core/enum/late-submission-p
 import { AssignmentApi } from '../../../../assignments/services/assignment-api';
 import { AssignedCase } from '../../../models/assigned-case.model';
 import { AssignmentDetail as AssignmentDetailModel } from '../../../models/assignment-detail.model';
+import { SubmissionStatus } from '../../../../../core/models/submission-status.enum';
+import { SubmissionTiming } from '../../../../../core/enum/submission-timing';
 
 @Component({
   selector: 'app-assignment-detail',
@@ -30,6 +32,9 @@ export class AssignmentDetailPage implements OnInit, AfterViewInit {
   private readonly api = inject(AssignmentApi);
   private readonly destroyRef = inject(DestroyRef);
 
+  // exponer enum del submission timing
+  protected readonly SubmissionTiming = SubmissionTiming;
+
   readonly assignment = signal<AssignmentDetailModel | null>(null);
   readonly loading = signal(true);
   readonly loadError = signal<string | null>(null);
@@ -43,6 +48,11 @@ export class AssignmentDetailPage implements OnInit, AfterViewInit {
 
     return new Set(assignedCases.map((assignedCase) => assignedCase.case.id)).size;
   });
+
+  // filtro para mostrar tarjetas de alumnos
+  readonly trackingFilter = signal<
+    'ALL' | 'PENDING' | 'ON_TIME' | 'LATE' | 'REVIEWED'
+  >('ALL');
 
   readonly totalCompleted = computed(() => {
     const assignedCases = this.assignment()?.assignedCases ?? [];
@@ -150,9 +160,8 @@ export class AssignmentDetailPage implements OnInit, AfterViewInit {
     } else if (difference >= minute) {
       const minutes = Math.ceil(difference / minute);
 
-      message = `Queda${minutes === 1 ? '' : 'n'} ${minutes} ${
-        minutes === 1 ? 'minuto' : 'minutos'
-      }`;
+      message = `Queda${minutes === 1 ? '' : 'n'} ${minutes} ${minutes === 1 ? 'minuto' : 'minutos'
+        }`;
     } else {
       message = 'Vence en unos segundos';
     }
@@ -171,8 +180,80 @@ export class AssignmentDetailPage implements OnInit, AfterViewInit {
     return !!assignment && !assignment.isPublished && !this.isPublishing();
   });
 
+  // Pendientes (sin entregar o en borrador)
+  readonly pendingStudents = computed(() => {
+    return (this.assignment()?.assignedCases ?? []).filter((assigned) => {
+      const status = assigned.submission?.status;
+
+      return !status || status === SubmissionStatus.DRAFT;
+    });
+  });
+
+  // Entregadas a tiempo (incluye SUBMITTED y REVIEWED)
+  readonly onTimeStudents = computed(() => {
+    return (this.assignment()?.assignedCases ?? []).filter(
+      (assigned) =>
+        assigned.submission?.submissionTiming === SubmissionTiming.ON_TIME,
+    );
+  });
+
+  // Entregadas tarde (incluye SUBMITTED y REVIEWED)
+  readonly lateStudents = computed(() => {
+    return (this.assignment()?.assignedCases ?? []).filter(
+      (assigned) =>
+        assigned.submission?.submissionTiming === SubmissionTiming.LATE,
+    );
+  });
+
+  // Evaluadas
+  readonly reviewedStudents = computed(() => {
+    return (this.assignment()?.assignedCases ?? []).filter(
+      (assigned) => assigned.submission?.status === SubmissionStatus.REVIEWED,
+    );
+  });
+
+  // crear la lista filtrada
+  readonly filteredAssignedCases = computed(() => {
+    const assignedCases = this.assignment()?.assignedCases ?? [];
+
+    switch (this.trackingFilter()) {
+      case 'PENDING':
+        return this.pendingStudents();
+
+      case 'ON_TIME':
+        return this.onTimeStudents();
+
+      case 'LATE':
+        return this.lateStudents();
+
+      case 'REVIEWED':
+        return this.reviewedStudents();
+
+      default:
+        return assignedCases
+    }
+  })
+
+  // filtro para filtrar secciones
+  setTrackingFilter(
+    filter: 'ALL' | 'PENDING' | 'ON_TIME' | 'LATE' | 'REVIEWED',
+  ): void {
+    this.trackingFilter.set(filter);
+    this.renderIcons();
+
+    document
+      .getElementById('assignment-tracking')
+      ?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+  }
+
+
+
   ngOnInit(): void {
     this.loadAssignment();
+    this.renderIcons()
   }
 
   ngAfterViewInit(): void {

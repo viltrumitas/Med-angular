@@ -21,15 +21,15 @@
   ========================== -->
 
   @if (loading()) {
-    <section class="pending-state" aria-live="polite">
-      <div class="pending-state__spinner" aria-hidden="true"></div>
+  <section class="pending-state" aria-live="polite">
+    <div class="pending-state__spinner" aria-hidden="true"></div>
 
-      <div class="pending-state__content">
-        <h2>Cargando entregas</h2>
+    <div class="pending-state__content">
+      <h2>Cargando entregas</h2>
 
-        <p>Estamos obteniendo las respuestas que tienes pendientes por evaluar.</p>
-      </div>
-    </section>
+      <p>Estamos obteniendo las respuestas que tienes pendientes por evaluar.</p>
+    </div>
+  </section>
   }
 
   <!-- =========================
@@ -37,28 +37,28 @@
   ========================== -->
 
   @else if (submissions().length === 0) {
-    <section class="pending-state pending-state--empty">
-      <div class="pending-state__illustration" aria-hidden="true">
-        <div class="pending-state__document">
-          <span></span>
-          <span></span>
-          <span></span>
+  <section class="pending-state pending-state--empty">
+    <div class="pending-state__illustration" aria-hidden="true">
+      <div class="pending-state__document">
+        <span></span>
+        <span></span>
+        <span></span>
 
-          <div class="pending-state__check"></div>
-        </div>
+        <div class="pending-state__check"></div>
       </div>
+    </div>
 
-      <div class="pending-state__content">
-        <span class="pending-state__eyebrow"> Todo al día </span>
+    <div class="pending-state__content">
+      <span class="pending-state__eyebrow"> Todo al día </span>
 
-        <h2>No tienes entregas pendientes</h2>
+      <h2>No tienes entregas pendientes</h2>
 
-        <p>
-          Todas las respuestas asignadas ya fueron evaluadas. Las nuevas entregas aparecerán
-          automáticamente en esta sección.
-        </p>
-      </div>
-    </section>
+      <p>
+        Todas las respuestas asignadas ya fueron evaluadas. Las nuevas entregas aparecerán
+        automáticamente en esta sección.
+      </p>
+    </div>
+  </section>
   }
 
   <!-- =========================
@@ -66,34 +66,96 @@
   ========================== -->
 
   @else {
-    <section class="pending-workspace">
-      <header class="pending-workspace__header">
-        <div>
-          <span class="pending-workspace__eyebrow"> Bandeja de revisión </span>
+  <section class="pending-workspace">
+    <header class="pending-workspace__header">
+      <div>
+        <span class="pending-workspace__eyebrow"> Bandeja de revisión </span>
 
-          <h2>Entregas por evaluar</h2>
+        <h2>Entregas por evaluar</h2>
 
-          <p>Selecciona una entrega para consultar las respuestas del estudiante.</p>
-        </div>
-
-        <div class="pending-workspace__counter">
-          <strong>
-            {{ submissions().length }}
-          </strong>
-
-          <span>
-            {{ submissions().length === 1 ? 'pendiente' : 'pendientes' }}
-          </span>
-        </div>
-      </header>
-
-      <div class="pending-grid">
-        @for (submission of submissions(); track submission.id) {
-          <article class="pending-grid__item">
-            <app-review-card [submission]="submission" (viewSubmissions)="openSubmission($event)" />
-          </article>
-        }
+        <p>Selecciona una entrega para consultar las respuestas del estudiante.</p>
       </div>
-    </section>
+
+      <div class="pending-workspace__counter">
+        <p>
+          Mostrando {{ filteredSubmissions().length }}
+          de {{ submissions().length }} entregas.
+        </p>
+
+        <span>
+          {{ filteredSubmissions().length === 1 ? 'pendiente' : 'pendientes' }}
+        </span>
+      </div>
+    </header>
+
+    <!-- =========================
+      Filtros
+  ========================== -->
+    <div class="pending-history__filters">
+
+      <!-- =========================
+        Barra de busqueda
+    ========================== -->
+      <input type="text" placeholder="Buscar alumno..." [value]="search()"
+        (input)="search.set($any($event.target).value)">
+
+      <!-- =========================
+        Filtrar por actividad
+    ========================== -->
+      <select [value]="selectedAssignment()" (change)="selectedAssignment.set($any($event.target).value)">
+        @for (assignment of assignments(); track assignment) {
+        <option [value]="assignment">
+          {{ assignment === 'ALL' ? 'Todas las actividades' : assignment }}
+        </option>
+        }
+      </select>
+
+      <select [value]="selectedCase()" (change)="selectedCase.set($any($event.target).value)">
+        @for (clinicalCase of cases(); track clinicalCase) {
+        <option [value]="clinicalCase">
+          {{
+          clinicalCase === 'ALL'
+          ? 'Todos los casos'
+          : clinicalCase
+          }}
+        </option>
+        }
+      </select>
+
+      <!-- =========================
+        Ordenar
+    ========================== -->
+      <select [value]="sortBy()" (change)="sortBy.set($any($event.target).value)">
+        <option value="newest">Mas recientes</option>
+        <option value="oldest">Mas antiguas</option>
+        <option value="student">Apellido (A-Z)</option>
+      </select>
+
+      <!-- =========================
+        Filtrar por tipo de entrega
+    ========================== -->
+      <select [value]="deliveryFilter()" (change)="deliveryFilter.set($any($event.target).value)">
+        <option value="ALL">
+          Todas las entregas
+        </option>
+        <option value="ON_TIME">
+          A tiempo
+        </option>
+        <option value="LATE">
+          Tardias
+        </option>
+      </select>
+
+
+    </div>
+
+    <div class="pending-grid">
+      @for (submission of filteredSubmissions(); track submission.id) {
+      <article class="pending-grid__item">
+        <app-review-card [submission]="submission" (viewSubmissions)="openSubmission($event)" />
+      </article>
+      }
+    </div>
+  </section>
   }
 </section>
