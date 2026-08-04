@@ -419,10 +419,10 @@
                   }}
                 </p>
 
-                @if (item.case.area) {
+                @if (item.case.medicalArea.name) {
                   <span class="student-case-card__area">
                     <i data-lucide="activity" aria-hidden="true"></i>
-                    {{ item.case.area }}
+                    {{ item.case.medicalArea?.name }}
                   </span>
                 }
               </div>

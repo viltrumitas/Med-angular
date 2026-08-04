@@ -61,7 +61,7 @@ export function mapCreateCase(form: CaseFormValue): CreateCaseModel {
         : null,
     },
 
-    area: form.medicalArea.area,
+    medicalAreaId: form.medicalArea.medicalAreaId,
 
     publishCase: {
       isPublished: form.publishCase.isPublished,

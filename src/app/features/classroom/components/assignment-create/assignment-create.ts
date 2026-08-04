@@ -9,7 +9,7 @@ import {
   signal,
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormControl } from '@angular/forms';
 import { finalize, startWith } from 'rxjs';
 import { createIcons, icons } from 'lucide';
 
@@ -25,13 +25,32 @@ import { AssignmentApi } from '../../../assignments/services/assignment-api';
 import { CaseResponseDto } from '../../../cases/dto/case-response.dto';
 import { ClassroomApi } from '../../service/clasroom-api.service';
 
+import { SelectComponent } from '../../../../shared/components/select/select';
+
+// types para filtros en la seleccion de casos
+type UsageFilter =
+  | 'ALL'
+  | 'NEVER_USED'
+  | 'LOW_USAGE'
+  | 'HIGH_USAGE'
+  | 'RECENT';
+
+type SortMode =
+  | 'RECOMMENDED'
+  | 'TITLE'
+  | 'LOW_USAGE'
+  | 'HIGH_USAGE'
+  | 'NEWEST';
+
+
 @Component({
   selector: 'app-assignment-create',
   standalone: true,
-  imports: [ReactiveFormsModule, InputComponent, TextareaComponent, ButtonComponent],
+  imports: [ReactiveFormsModule, InputComponent, TextareaComponent, ButtonComponent, SelectComponent,],
   templateUrl: './assignment-create.html',
   styleUrl: './assignment-create.scss',
 })
+
 export class AssignmentCreate implements AfterViewInit {
   private readonly assignmentApi = inject(AssignmentApi);
   private readonly classroomApi = inject(ClassroomApi);
@@ -46,6 +65,27 @@ export class AssignmentCreate implements AfterViewInit {
   readonly isSubmitting = signal(false);
   readonly casesLoadError = signal<string | null>(null);
   readonly submitError = signal<string | null>(null);
+
+
+
+  // signal para ventanas extendibles
+  readonly expandedAreas = signal(new Set<string>());
+
+  // signal para la barra de busqueda
+  readonly search = signal('');
+
+  // form para cada filtro
+  readonly areaControl = new FormControl('ALL', {
+    nonNullable: true,
+  });
+
+  readonly usageControl = new FormControl<UsageFilter>('ALL', {
+    nonNullable: true,
+  });
+
+  readonly sortControl = new FormControl<SortMode>('RECOMMENDED', {
+    nonNullable: true,
+  });
 
   private readonly initialFormValue = structuredClone(this.assignmentForm.getRawValue());
 
@@ -62,8 +102,288 @@ export class AssignmentCreate implements AfterViewInit {
   readonly hasSelectedCases = computed(() => this.selectedCasesCount() > 0);
   readonly interactionDisabled = computed(() => this.isSubmitting() || this.isLoadingCases());
 
+  readonly selectedArea = toSignal(
+    this.areaControl.valueChanges.pipe(
+      startWith(this.areaControl.value),
+    ),
+    {
+      initialValue: this.areaControl.value,
+    },
+  );
+
+  readonly usageFilter = toSignal(
+    this.usageControl.valueChanges.pipe(
+      startWith(this.usageControl.value),
+    ),
+    {
+      initialValue: this.usageControl.value,
+    },
+  );
+
+  readonly sortMode = toSignal(
+    this.sortControl.valueChanges.pipe(
+      startWith(this.sortControl.value),
+    ),
+    {
+      initialValue: this.sortControl.value,
+    },
+  );
+
   constructor() {
     this.loadCases();
+  }
+
+  // barra de busqueda
+  updateSearch(value: string): void {
+    this.search.set(value.trim().toLowerCase());
+  }
+
+  // crear las options en el componente
+  readonly areaOptions = computed(() => [
+    {
+      label: 'Todas las áreas',
+      value: 'ALL',
+    },
+    ...this.availableAreas().map(area => ({
+      label: area.name,
+      value: area.id,
+    })),
+  ]);
+
+  readonly usageOptions = [
+    {
+      label: 'Todos',
+      value: 'ALL',
+    },
+    {
+      label: 'Nunca usados',
+      value: 'NEVER_USED',
+    },
+    {
+      label: 'Poco usados',
+      value: 'LOW_USAGE',
+    },
+    {
+      label: 'Muy usados',
+      value: 'HIGH_USAGE',
+    },
+    {
+      label: 'Usados recientemente',
+      value: 'RECENT',
+    },
+  ];
+
+  readonly sortOptions = [
+    {
+      label: 'Recomendados',
+      value: 'RECOMMENDED',
+    },
+    {
+      label: 'Menor uso',
+      value: 'LOW_USAGE',
+    },
+    {
+      label: 'Mayor uso',
+      value: 'HIGH_USAGE',
+    },
+    {
+      label: 'Más recientes',
+      value: 'NEWEST',
+    },
+    {
+      label: 'Título (A-Z)',
+      value: 'TITLE',
+    },
+  ];
+
+  // crea las areas disponibles
+  readonly availableAreas = computed(() => {
+    const map = new Map<string, { id: string; name: string }>();
+
+    this.cases().forEach((clinicalCase) => {
+      if (clinicalCase.medicalArea) {
+        map.set(clinicalCase.medicalArea.id, {
+          id: clinicalCase.medicalArea.id,
+          name: clinicalCase.medicalArea.name,
+        });
+      }
+    });
+
+    return [...map.values()].sort((a, b) =>
+      a.name.localeCompare(b.name),
+    );
+  });
+
+  // filtrar antes de agrupar
+  readonly filteredCases = computed(() => {
+    const term = this.search();
+    const usage = this.usageFilter();
+    let cases = [...this.cases()];
+
+    // =========================
+    // BÚSQUEDA
+    // =========================
+
+    if (term) {
+      cases = cases.filter((clinicalCase) =>
+        clinicalCase.title?.toLowerCase().includes(term) ||
+        clinicalCase.patientName?.toLowerCase().includes(term) ||
+        clinicalCase.consult?.toLowerCase().includes(term) ||
+        clinicalCase.medicalArea?.name.toLowerCase().includes(term)
+      );
+    }
+
+    // =========================
+    // FILTRO POR AREA
+    // =========================
+    const selectedArea = this.selectedArea();
+    if (selectedArea !== 'ALL') {
+      cases = cases.filter(
+        c => c.medicalArea.id === selectedArea
+      );
+    }
+
+
+    // =========================
+    // FILTRO DE USO
+    // =========================
+
+    if (usage !== 'ALL') {
+      cases = cases.filter(c => {
+        switch (usage) {
+          case 'NEVER_USED':
+            return c.usage.neverUsed;
+
+          case 'LOW_USAGE':
+            return c.usage.totalAssignments <= 2;
+
+          case 'HIGH_USAGE':
+            return c.usage.totalAssignments >= 5;
+
+          case 'RECENT':
+            return !!c.usage.lastUsedAt;
+
+          default:
+            return true;
+        }
+      });
+    }
+
+    // =========================
+    // ORDENAMIENTO
+    // =========================
+
+    const sort = this.sortMode();
+
+    cases.sort((a, b) => {
+      switch (sort) {
+        case 'TITLE':
+          return a.title.localeCompare(b.title);
+
+        case 'LOW_USAGE':
+          return a.usage.totalAssignments - b.usage.totalAssignments;
+
+        case 'HIGH_USAGE':
+          return b.usage.totalAssignments - a.usage.totalAssignments;
+
+        case 'NEWEST':
+          return (
+            new Date(b.createdAt).getTime() -
+            new Date(a.createdAt).getTime()
+          );
+
+        case 'RECOMMENDED':
+        default:
+          if (a.usage.neverUsed !== b.usage.neverUsed) {
+            return a.usage.neverUsed ? -1 : 1;
+          }
+
+          if (a.usage.totalAssignments !== b.usage.totalAssignments) {
+            return (
+              a.usage.totalAssignments -
+              b.usage.totalAssignments
+            );
+          }
+
+          return (
+            new Date(a.createdAt).getTime() -
+            new Date(b.createdAt).getTime()
+          );
+      }
+    });
+
+    return cases;
+  });
+
+
+
+  // agrupar casos por area
+
+  readonly groupedCases = computed(() => {
+    const groups = new Map<
+      string,
+      {
+        areaId: string;
+        area: string;
+        cases: CaseResponseDto[];
+      }
+    >();
+
+    this.filteredCases().forEach((clinicalCase) => {
+      const areaId = clinicalCase.medicalArea?.id ?? 'no-area';
+      const areaName = clinicalCase.medicalArea?.name ?? 'Sin área';
+
+      if (!groups.has(areaId)) {
+        groups.set(areaId, {
+          areaId,
+          area: areaName,
+          cases: [],
+        });
+      }
+
+      groups.get(areaId)!.cases.push(clinicalCase);
+    });
+
+    return Array.from(groups.values()).sort((a, b) =>
+      a.area.localeCompare(b.area),
+    );
+  });
+
+  // boton para limpiar filtros
+  readonly activeFiltersCount = computed(() => {
+    let count = 0;
+
+    if (this.search()) count++;
+    if (this.selectedArea() !== 'ALL') count++;
+    if (this.usageFilter() !== 'ALL') count++;
+    if (this.sortMode() !== 'RECOMMENDED') count++;
+
+    return count;
+  });
+
+  clearFilters(): void {
+    this.search.set('');
+
+    this.areaControl.setValue('ALL');
+    this.usageControl.setValue('ALL');
+    this.sortControl.setValue('RECOMMENDED');
+  }
+
+  // toggle area, (ventanas)
+  toggleArea(areaId: string) {
+    const current = new Set(this.expandedAreas());
+
+    if (current.has(areaId)) {
+      current.delete(areaId);
+    } else {
+      current.add(areaId);
+    }
+
+    this.expandedAreas.set(current);
+  }
+
+  isExpanded(areaId: string) {
+    return this.expandedAreas().has(areaId);
   }
 
   ngAfterViewInit(): void {

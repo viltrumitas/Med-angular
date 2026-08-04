@@ -607,8 +607,8 @@ $transition-base: 280ms cubic-bezier(0.4, 0, 0.2, 1);
 
   min-width: 220px;
 
-  > i,
-  > svg {
+  >i,
+  >svg {
     position: absolute;
     top: 50%;
     left: 0.8rem;
@@ -1044,6 +1044,18 @@ $transition-base: 280ms cubic-bezier(0.4, 0, 0.2, 1);
 
     border-color: $primary;
   }
+}
+
+.cases-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.area-group__header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
 // ==========================================================================
@@ -1489,6 +1501,7 @@ $transition-base: 280ms cubic-bezier(0.4, 0, 0.2, 1);
 // ==========================================================================
 
 @media (prefers-reduced-motion: reduce) {
+
   .state-container,
   .empty-state,
   .no-results,

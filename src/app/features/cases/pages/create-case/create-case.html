@@ -212,7 +212,10 @@
         </header>
 
         <div class="form-section__content">
-          <app-medical-area [group]="caseForm.controls.medicalArea" />
+          <app-medical-area 
+            [group]="caseForm.controls.medicalArea" 
+            [areas]="medicalAreas()"
+          />
         </div>
       </section>
 

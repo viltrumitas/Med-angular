@@ -8,4 +8,9 @@ export interface CaseSummaryModel {
   isPublished: boolean;
 
   createdAt: string;
+
+  medicalArea: {
+    id: string;
+    name: string;
+  } | null;
 }

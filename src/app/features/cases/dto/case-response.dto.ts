@@ -1,13 +1,13 @@
 import { TeacherModel } from './teacher-response.dto';
 import { CincinnatiModel } from '../models/cincinnati.model';
 import { Gender } from '../models/patient.model';
-import { Area } from '../models/area.model';
 import { Glasgow } from '../models/glasgow.model';
+import { CaseUsage } from '../models/case-usage.model';
 
 export interface CaseResponseDto {
   id: string;
 
-  title: string | null;
+  title: string;
 
   teacher: TeacherModel | null;
 
@@ -35,7 +35,13 @@ export interface CaseResponseDto {
 
   glasgow: Glasgow | null;
 
-  area: Area;
+  medicalArea: {
+    id: string;
+    name: string;
+    description?: string;
+  };
+
+  usage: CaseUsage;
 
   isPublished: boolean | null;
 

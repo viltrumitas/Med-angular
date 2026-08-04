@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, inject } from '@angular/core';
+import { AfterViewInit, Component, inject, OnInit, signal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { GeneralSection } from '../../components/general-section/general-section';
 import { createCaseForm } from '../../forms/case.form';
@@ -12,6 +12,8 @@ import { mapCreateCase } from '../../mappers/create-case.mapper';
 import { MedicalArea } from '../../components/medical-area/medical-area';
 import { Router } from '@angular/router';
 import { createIcons, icons } from 'lucide';
+import { MedicalAreaApi } from '../../../medical-areas/services/medical-area-api.service';
+import { MedicalAreaResponseDto } from '../../../medical-areas/dto/medical-area-response.dto';
 
 @Component({
   selector: 'app-create-case',
@@ -28,14 +30,22 @@ import { createIcons, icons } from 'lucide';
   templateUrl: './create-case.html',
   styleUrl: './create-case.scss',
 })
-export class CreateCase implements AfterViewInit {
+export class CreateCase implements OnInit, AfterViewInit {
   private readonly caseService = inject(CasesApi);
   private readonly router = inject(Router);
+  private medicalAreaService = inject(MedicalAreaApi);
+
+  // signal para medical area
+  medicalAreas = signal<MedicalAreaResponseDto[]>([]);
 
   readonly caseForm = createCaseForm();
 
   ngAfterViewInit(): void {
     createIcons({ icons });
+  }
+
+  ngOnInit() {
+    this.loadMedicalAreas();
   }
 
   submitCase() {
@@ -55,6 +65,17 @@ export class CreateCase implements AfterViewInit {
         console.log('[CreateCase] Error al crear el caso', err);
       },
     });
+  }
+
+  loadMedicalAreas() {
+    this.medicalAreaService.findALl().subscribe({
+      next: (areas) => {
+        this.medicalAreas.set(areas);
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    })
   }
 
   cancel(): void {

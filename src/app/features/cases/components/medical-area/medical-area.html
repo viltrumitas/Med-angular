@@ -1,12 +1,7 @@
-<div class="section" [formGroup]="group">
+<div [formGroup]="group()">
   <app-select
-    formControlName="area"
-    labelText="Area"
-    [options]="[
-      { label: 'Pediatria', value: 'PEDIATRICS' },
-      { label: 'Trauma', value: 'TRAUMA' },
-      { label: 'Gineco Obstretics', value: 'GYNECO_OBSTETRICS' },
-      { label: 'Emergencia Adulto', value: 'ADULT_EMERGENCY' },
-    ]"
+    labelText="Área médica"
+    [options]="areaOptions()"
+    formControlName="medicalAreaId"
   />
 </div>

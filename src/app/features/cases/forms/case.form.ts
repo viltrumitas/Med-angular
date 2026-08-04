@@ -70,9 +70,9 @@ export function createCaseForm() {
     }),
 
     medicalArea: new FormGroup({
-      area: new FormControl<Area>('PEDIATRICS', {
+      medicalAreaId: new FormControl('', {
         nonNullable: true,
-        validators: Validators.required,
+        validators: [Validators.required],
       }),
     }),
 

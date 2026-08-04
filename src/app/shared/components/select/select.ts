@@ -5,6 +5,7 @@ import {
   forwardRef,
   input,
   signal,
+  output
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { SelectOption, SelectValue } from './models/select.model';
@@ -33,6 +34,7 @@ export class SelectComponent implements ControlValueAccessor {
   readonly disabled = signal(false);
   readonly selectId = input<string>();
   readonly generatedId = `app-select-${SelectComponent.nextId++}`;
+  readonly valueChange = output<SelectValue>();
 
   readonly resolvedId = computed(() => {
     return this.selectId() || this.generatedId;
@@ -63,6 +65,8 @@ export class SelectComponent implements ControlValueAccessor {
 
     this.value.set(value);
     this.onChange(value === '' ? null : value);
+
+    this.valueChange.emit(value === '' ? null : value);
   }
 
   handleBlur(): void {

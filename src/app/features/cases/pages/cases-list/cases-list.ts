@@ -33,6 +33,9 @@ export class CasesList implements OnInit, AfterViewInit {
   isLoading = signal(false);
   error = signal<string | null>(null);
 
+  // signal para ventanas que se colapsan
+  expandedAreas = signal<Set<string>>(new Set());
+
   // =========================
   // COMPUTED
   // =========================
@@ -97,6 +100,51 @@ export class CasesList implements OnInit, AfterViewInit {
     this.statusFilter.set('ALL');
 
     this.renderIcons();
+  }
+
+  // =========================
+  // Agrupar casos por area
+  // =========================
+  groupedCases = computed(() => {
+    const groups = new Map<string, {
+      areaId: string,
+      area: string;
+      cases: CaseSummaryModel[];
+    }>();
+
+    this.filteredCases().forEach((caso) => {
+      const areaId = caso.medicalArea?.id ?? 'none';
+      const areaName = caso.medicalArea?.name ?? 'Sin área';
+
+      if (!groups.has(areaId)) {
+        groups.set(areaId, {
+          areaId,
+          area: areaName,
+          cases: [],
+        });
+      }
+
+      groups.get(areaId)!.cases.push(caso);
+    });
+
+    return Array.from(groups.values()).sort((a, b) => a.area.localeCompare(b.area));
+  });
+
+  // toggle para ventanas desplegables
+  toggleArea(areaId: string) {
+    const current = new Set(this.expandedAreas());
+
+    if (current.has(areaId)) {
+      current.delete(areaId);
+    } else {
+      current.add(areaId);
+    }
+
+    this.expandedAreas.set(current);
+  }
+
+  isAreaExpanded(areaId: string) {
+    return this.expandedAreas().has(areaId);
   }
 
   // =========================
