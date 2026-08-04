@@ -1,78 +1,88 @@
-<article class="submission-card">
+@let item = submission();
+
+<article
+  class="submission-card"
+  [class.submission-card--late]="item.submissionTiming === 'LATE'"
+  role="button"
+  tabindex="0"
+  (click)="open()"
+  (keydown.enter)="open()"
+  (keydown.space)="$event.preventDefault(); open()"
+>
+  <!-- =========================
+       HEADER
+  ========================== -->
+
   <header class="submission-card__header">
-    <div class="submission-card__student">
-      <span class="submission-card__avatar" aria-hidden="true">
-        {{ submission.student.firstName.charAt(0) }}
-        {{ submission.student.lastName.charAt(0) }}
-      </span>
-
-      <div class="submission-card__student-info">
-        <span class="submission-card__eyebrow">Estudiante</span>
-
-        <h2>
-          {{ submission.student.firstName }}
-          {{ submission.student.lastName }}
-        </h2>
-      </div>
+    <div
+      class="submission-card__icon"
+      [class.submission-card__icon--late]="item.submissionTiming === 'LATE'"
+      aria-hidden="true"
+    >
+      <i [attr.data-lucide]="item.submissionTiming === 'LATE' ? 'clock-alert' : 'file-check-2'"></i>
     </div>
 
-    @if (submission.status === 'SUBMITTED') {
-    <span class="submission-card__status">
+    <span
+      class="submission-card__status"
+      [class.submission-card__status--late]="item.submissionTiming === 'LATE'"
+    >
       <span class="submission-card__status-dot"></span>
-      Entregado
+
+      {{ item.submissionTiming === 'LATE' ? 'Entrega tardía' : 'A tiempo' }}
     </span>
-    }
   </header>
 
+  <!-- =========================
+       CONTENT
+  ========================== -->
+
   <div class="submission-card__content">
-    <div class="submission-card__field">
+    <span class="submission-card__eyebrow"> Estudiante </span>
+
+    <h3 class="submission-card__student-name">
+      {{ item.student.firstName }}
+      {{ item.student.lastName }}
+    </h3>
+
+    <span class="submission-card__matricula"> Matrícula {{ item.student.matricula }} </span>
+
+    <div class="submission-card__assignment">
       <span>Actividad</span>
 
-      <h3>
-        {{ submission.assignment.title }}
-      </h3>
+      <strong>
+        {{ item.assignment.title }}
+      </strong>
     </div>
 
-    <div class="submission-card__field">
-      <span>Caso clínico</span>
+    <p class="submission-card__case">
+      <i data-lucide="briefcase-medical" aria-hidden="true"></i>
 
-      <p>
-        {{ submission.case.title }}
-      </p>
-    </div>
-
-    <div class="submission-card__field">
-      <span>Estado de entrega</span>
-
-      <span class="submission-card__timing-badge"
-        [class.submission-card__timing-badge--late]="submission.submissionTiming === 'LATE'"
-        [class.submission-card__timing-badge--ontime]="submission.submissionTiming === 'ON_TIME'">
-        <i [attr.data-lucide]="
-        submission.submissionTiming === 'LATE'
-          ? 'clock-alert'
-          : 'badge-check'
-      "></i>
-
-        {{
-        submission.submissionTiming === 'LATE'
-        ? 'Entrega tardía'
-        : 'Entrega a tiempo'
-        }}
-      </span>
-    </div>
+      <span>{{ item.case.title }}</span>
+    </p>
   </div>
 
+  <!-- =========================
+       FOOTER
+  ========================== -->
+
   <footer class="submission-card__footer">
-    <div class="submission-card__date">
-      <span>Enviado</span>
+    <div class="submission-card__meta">
+      <i data-lucide="calendar-check" aria-hidden="true"></i>
 
-      <time [attr.datetime]="submission.submittedAt">
-        {{ submission.submittedAt | date: 'dd MMM yyyy, HH:mm' }}
-      </time>
+      <span>
+        {{ item.submittedAt ?? item.createdAt | date: 'dd/MM/yyyy HH:mm' }}
+      </span>
     </div>
 
-    <div class="submission-card__actions">
-      <app-button text="Evaluar entrega" (clicked)="open()" />
-    </div>
+    <button
+      type="button"
+      class="submission-card__action"
+      aria-label="Evaluar entrega"
+      (click)="$event.stopPropagation(); open()"
+    >
+      <span>Evaluar</span>
+
+      <i data-lucide="arrow-up-right" aria-hidden="true"></i>
+    </button>
   </footer>
 </article>

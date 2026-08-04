@@ -5,13 +5,51 @@
 
   <header class="review-history__header">
     <div class="review-history__header-content">
-      <span class="review-history__eyebrow"> Historial académico </span>
+      <div class="review-history__header-meta">
+        <span class="review-history__eyebrow"> Historial académico </span>
+
+        <span class="review-history__status">
+          <span aria-hidden="true"></span>
+          Evaluaciones completadas
+        </span>
+      </div>
 
       <h1 class="review-history__title">Evaluaciones realizadas</h1>
 
       <p class="review-history__description">
         Consulta las entregas evaluadas y revisa el resultado obtenido por cada estudiante.
       </p>
+    </div>
+
+    <aside class="review-history__summary" aria-label="Resumen de evaluaciones">
+      <article class="review-history__summary-item">
+        <div class="review-history__summary-icon" aria-hidden="true">
+          <i data-lucide="clipboard-check"></i>
+        </div>
+
+        <div>
+          <span>Evaluaciones</span>
+          <strong>{{ totalReviews() }}</strong>
+        </div>
+      </article>
+
+      <article class="review-history__summary-item">
+        <div
+          class="review-history__summary-icon review-history__summary-icon--score"
+          aria-hidden="true"
+        >
+          <i data-lucide="chart-no-axes-column-increasing"></i>
+        </div>
+
+        <div>
+          <span>Promedio</span>
+          <strong>{{ averageScore() }} pts</strong>
+        </div>
+      </article>
+    </aside>
+
+    <div class="review-history__decoration" aria-hidden="true">
+      <span></span>
     </div>
   </header>
 
@@ -20,233 +58,411 @@
   ========================== -->
 
   @if (loading()) {
-  <section class="review-history__state" aria-live="polite">
-    <div class="review-history__loader" aria-hidden="true"></div>
+    <section class="review-history__state" aria-live="polite" aria-busy="true">
+      <div class="review-history__loader" aria-hidden="true"></div>
 
-    <div class="review-history__state-content">
-      <h2>Cargando evaluaciones</h2>
+      <div class="review-history__state-content">
+        <span class="review-history__state-label"> Preparando historial </span>
 
-      <p>Estamos obteniendo el historial de revisiones realizadas.</p>
-    </div>
-  </section>
-  }
+        <h2>Cargando evaluaciones</h2>
 
-  <!-- =========================
-       EMPTY
-  ========================== -->
-
-  @else if (reviews().length === 0) {
-  <section class="review-history__state review-history__state--empty">
-    <div class="review-history__empty-icon" aria-hidden="true">
-      <div class="review-history__empty-sheet">
-        <span></span>
-        <span></span>
-        <span></span>
-
-        <div class="review-history__empty-score">0</div>
+        <p>Estamos obteniendo el historial de revisiones realizadas.</p>
       </div>
-    </div>
-
-    <div class="review-history__state-content">
-      <span class="review-history__state-label"> Sin evaluaciones </span>
-
-      <h2>Aún no has realizado evaluaciones</h2>
-
-      <p>Las entregas que califiques aparecerán automáticamente en este historial.</p>
-    </div>
-  </section>
-  }
-
-  <!-- =========================
-       CONTENT
-  ========================== -->
-
-  @else {
-  <section class="review-history__workspace">
-    <header class="review-history__workspace-header">
-      <div>
-        <span class="review-history__workspace-eyebrow"> Revisiones completadas </span>
-
-        <h2>Historial de evaluaciones</h2>
-
-        <p>Selecciona una evaluación para consultar todos sus detalles.</p>
-      </div>
-
-      <div class="review-history__counter">
-        <strong>{{ filteredReviews().length }}</strong>
-
-        <p class="review-history__results">
-          Mostrando {{ filteredReviews().length }}
-          de {{ reviews().length }} evaluaciones.
-        </p>
-      </div>
-    </header>
-
+    </section>
+  } @else if (loadError()) {
     <!-- =========================
-        Filtros
+         ERROR
     ========================== -->
 
-    <div class="review-history__filters">
+    <section class="review-history__state review-history__state--error" role="alert">
+      <div class="review-history__error-icon" aria-hidden="true">
+        <i data-lucide="triangle-alert"></i>
+      </div>
 
-      <!-- =========================
-        Barra de busqueda
-    ========================== -->
-      <input type="text" placeholder="Buscar por nombre, apellido o matricula..." [value]="search()"
-        (input)="search.set($any($event.target).value)">
+      <div class="review-history__state-content">
+        <span class="review-history__state-label"> Error de carga </span>
 
-      <!-- =========================
-        Filtrar por actividad
-    ========================== -->
-      <select [value]="selectedAssignments()" (change)="selectedAssignments.set($any($event.target).value)">
-        @for (assignment of assignments(); track assignment) {
-        <option [value]="assignment">
-          {{ assignment === 'ALL' ? 'Todas las actividades' : assignment }}
-        </option>
-        }
-      </select>
+        <h2>No pudimos cargar las evaluaciones</h2>
 
-      <!-- =========================
-        Filtrar por caso
-    ========================== -->
+        <p>{{ loadError() }}</p>
+      </div>
 
-      <select [value]="selectedCase()" (change)="selectedCase.set($any($event.target).value)">
-        @for (clinicalCase of cases(); track clinicalCase) {
-        <option [value]="clinicalCase">
-          {{
-          clinicalCase === 'ALL'
-          ? 'Todos los casos'
-          : clinicalCase
-          }}
-        </option>
-        }
-      </select>
-
-      <!-- =========================
-        Ordenar
+      <button type="button" class="review-history__retry" (click)="loadReviews()">
+        <i data-lucide="refresh-cw" aria-hidden="true"></i>
+        <span>Intentar nuevamente</span>
+      </button>
+    </section>
+  } @else if (reviews().length === 0) {
+    <!-- =========================
+         EMPTY
     ========================== -->
 
-      <select [value]="sortBy()" (change)="sortBy.set($any($event.target).value)">
-        <option value="newest">
-          Más recientes
-        </option>
+    <section class="review-history__state review-history__state--empty">
+      <div class="review-history__empty-icon" aria-hidden="true">
+        <i data-lucide="clipboard-x"></i>
+      </div>
 
-        <option value="oldest">
-          Más antiguas
-        </option>
+      <div class="review-history__state-content">
+        <span class="review-history__state-label"> Sin evaluaciones </span>
 
-        <option value="student">
-          Apellido (A-Z)
-        </option>
+        <h2>Aún no has realizado evaluaciones</h2>
 
-        <option value="scoreDesc">
-          Mayor calificación
-        </option>
-
-        <option value="scoreAsc">
-          Menor calificación
-        </option>
-      </select>
-
-      <!-- =========================
-        Filtrar por tipo de entrega
+        <p>Las entregas que califiques aparecerán automáticamente en este historial.</p>
+      </div>
+    </section>
+  } @else {
+    <!-- =========================
+         STATISTICS
     ========================== -->
-      <select [value]="deliveryFilter()" (change)="deliveryFilter.set($any($event.target).value)">
-        <option value="ALL">
-          Todas las entregas
-        </option>
-        <option value="ON_TIME">
-          A tiempo
-        </option>
-        <option value="LATE">
-          Tardias
-        </option>
-      </select>
 
-    </div>
-
-    <div class="review-history__grid">
-      @for (r of filteredReviews(); track r.id) {
-      <article class="review-card" tabindex="0" role="button" (click)="openReview(r.id)"
-        (keydown.enter)="openReview(r.id)" (keydown.space)="openReview(r.id)">
-        <header class="review-card__header">
-          <div class="review-card__student">
-            <span class="review-card__avatar" aria-hidden="true">
-              {{ r.student.firstName.charAt(0) }}
-              {{ r.student.lastName.charAt(0) }}
-            </span>
-
-            <div class="review-card__student-info">
-              <span class="review-card__eyebrow"> Estudiante </span>
-
-              <h3>
-                {{ r.student.firstName }}
-                {{ r.student.lastName }}
-              </h3>
-            </div>
-          </div>
-
-          <div class="review-card__score">
-            <strong>{{ r.totalScore }}</strong>
-            <span>pts</span>
-          </div>
-        </header>
-
-        <div class="review-card__content">
-          <div class="review-card__field">
-            <span>Actividad</span>
-
-            <p>
-              {{ r.assignment.title }}
-            </p>
-          </div>
-
-          <div class="review-card__field">
-            <span>Caso clínico</span>
-
-            <p>
-              {{ r.case.title }}
-            </p>
-          </div>
-
-          <div class="review-card__field">
-            <span>Estado de entrega</span>
-
-            <span class="submission-card__timing-badge"
-              [class.submission-card__timing-badge--late]="r.submissionTiming === 'LATE'"
-              [class.submission-card__timing-badge--ontime]="r.submissionTiming === 'ON_TIME'">
-              <i [attr.data-lucide]="
-        r.submissionTiming === 'LATE'
-          ? 'clock-alert'
-          : 'badge-check'
-      "></i>
-
-              {{
-              r.submissionTiming === 'LATE'
-              ? 'Entrega tardía'
-              : 'Entrega a tiempo'
-              }}
-            </span>
-          </div>
+    <section class="review-history__metrics" aria-label="Estadísticas de evaluaciones">
+      <article class="review-metric">
+        <div class="review-metric__icon" aria-hidden="true">
+          <i data-lucide="files"></i>
         </div>
 
-        <footer class="review-card__footer">
-          <div class="review-card__date">
-            <span>Evaluada</span>
+        <div class="review-metric__content">
+          <span>Total</span>
+          <strong>{{ totalReviews() }}</strong>
+          <small>Evaluaciones realizadas</small>
+        </div>
+      </article>
 
-            <time [attr.datetime]="r.createdAt">
-              {{ r.createdAt | date: 'dd MMM yyyy, HH:mm' }}
-            </time>
+      <article class="review-metric review-metric--success">
+        <div class="review-metric__icon" aria-hidden="true">
+          <i data-lucide="circle-check"></i>
+        </div>
+
+        <div class="review-metric__content">
+          <span>A tiempo</span>
+          <strong>{{ onTimeReviews() }}</strong>
+          <small>Entregas puntuales</small>
+        </div>
+      </article>
+
+      <article class="review-metric review-metric--warning">
+        <div class="review-metric__icon" aria-hidden="true">
+          <i data-lucide="clock-alert"></i>
+        </div>
+
+        <div class="review-metric__content">
+          <span>Tardías</span>
+          <strong>{{ lateReviews() }}</strong>
+          <small>Fuera del plazo</small>
+        </div>
+      </article>
+
+      <article class="review-metric review-metric--score">
+        <div class="review-metric__icon" aria-hidden="true">
+          <i data-lucide="award"></i>
+        </div>
+
+        <div class="review-metric__content">
+          <span>Promedio</span>
+          <strong>{{ averageScore() }}</strong>
+          <small>Puntos obtenidos</small>
+        </div>
+      </article>
+    </section>
+
+    <!-- =========================
+         WORKSPACE
+    ========================== -->
+
+    <section class="review-history__workspace">
+      <header class="review-history__workspace-header">
+        <div>
+          <span class="review-history__workspace-eyebrow"> Revisiones completadas </span>
+
+          <h2>Historial de evaluaciones</h2>
+
+          <p>Selecciona una evaluación para consultar todos sus detalles.</p>
+        </div>
+
+        <div class="review-history__counter">
+          <strong>{{ filteredCount() }}</strong>
+
+          <span> de {{ totalReviews() }} </span>
+        </div>
+      </header>
+
+      <!-- =========================
+           FILTERS
+      ========================== -->
+
+      <section class="review-history__filters" aria-label="Filtros del historial">
+        <div class="review-history__filters-header">
+          <div>
+            <span class="review-history__filters-eyebrow"> Explorar historial </span>
+
+            <h3>Buscar y filtrar</h3>
           </div>
 
-          <span class="review-card__action">
-            Ver evaluación
+          @if (hasActiveFilters()) {
+            <button type="button" class="review-history__clear-filters" (click)="clearFilters()">
+              <i data-lucide="filter-x" aria-hidden="true"></i>
 
-            <span aria-hidden="true">→</span>
-          </span>
+              <span> Limpiar filtros </span>
+
+              <strong>{{ activeFiltersCount() }}</strong>
+            </button>
+          }
+        </div>
+
+        <div class="review-history__filters-grid">
+          <!-- SEARCH -->
+
+          <label class="filter-control filter-control--search" aria-label="Buscar evaluaciones">
+            <span class="filter-control__label"> Buscar estudiante </span>
+
+            <span class="filter-control__field">
+              <i data-lucide="search" aria-hidden="true"></i>
+
+              <input
+                type="search"
+                placeholder="Nombre, matrícula, actividad o caso..."
+                autocomplete="off"
+                [value]="search()"
+                (input)="updateSearch($event)"
+              />
+
+              @if (search()) {
+                <button
+                  type="button"
+                  class="filter-control__clear"
+                  aria-label="Limpiar búsqueda"
+                  (click)="clearSearch()"
+                >
+                  <i data-lucide="x" aria-hidden="true"></i>
+                </button>
+              }
+            </span>
+          </label>
+
+          <!-- ASSIGNMENT -->
+
+          <label class="filter-control">
+            <span class="filter-control__label"> Actividad </span>
+
+            <span class="filter-control__field">
+              <i data-lucide="clipboard-list" aria-hidden="true"></i>
+
+              <select [value]="selectedAssignment()" (change)="updateAssignment($event)">
+                @for (assignment of assignments(); track assignment) {
+                  <option [value]="assignment">
+                    {{ assignment === 'ALL' ? 'Todas las actividades' : assignment }}
+                  </option>
+                }
+              </select>
+
+              <i class="filter-control__chevron" data-lucide="chevron-down" aria-hidden="true"></i>
+            </span>
+          </label>
+
+          <!-- CASE -->
+
+          <label class="filter-control">
+            <span class="filter-control__label"> Caso clínico </span>
+
+            <span class="filter-control__field">
+              <i data-lucide="briefcase-medical" aria-hidden="true"></i>
+
+              <select [value]="selectedCase()" (change)="updateCase($event)">
+                @for (clinicalCase of cases(); track clinicalCase) {
+                  <option [value]="clinicalCase">
+                    {{ clinicalCase === 'ALL' ? 'Todos los casos' : clinicalCase }}
+                  </option>
+                }
+              </select>
+
+              <i class="filter-control__chevron" data-lucide="chevron-down" aria-hidden="true"></i>
+            </span>
+          </label>
+
+          <!-- DELIVERY -->
+
+          <label class="filter-control">
+            <span class="filter-control__label"> Tipo de entrega </span>
+
+            <span class="filter-control__field">
+              <i data-lucide="clock-3" aria-hidden="true"></i>
+
+              <select [value]="deliveryFilter()" (change)="updateDeliveryFilter($event)">
+                <option value="ALL">Todas las entregas</option>
+                <option value="ON_TIME">Entregas a tiempo</option>
+                <option value="LATE">Entregas tardías</option>
+              </select>
+
+              <i class="filter-control__chevron" data-lucide="chevron-down" aria-hidden="true"></i>
+            </span>
+          </label>
+
+          <!-- SORT -->
+
+          <label class="filter-control">
+            <span class="filter-control__label"> Ordenar por </span>
+
+            <span class="filter-control__field">
+              <i data-lucide="arrow-up-down" aria-hidden="true"></i>
+
+              <select [value]="sortBy()" (change)="updateSort($event)">
+                <option value="newest">Más recientes</option>
+                <option value="oldest">Más antiguas</option>
+                <option value="student">Estudiante A-Z</option>
+                <option value="scoreDesc">Mayor calificación</option>
+                <option value="scoreAsc">Menor calificación</option>
+              </select>
+
+              <i class="filter-control__chevron" data-lucide="chevron-down" aria-hidden="true"></i>
+            </span>
+          </label>
+        </div>
+
+        <footer class="review-history__filters-footer">
+          <div>
+            <i data-lucide="list-filter" aria-hidden="true"></i>
+
+            <span>
+              Mostrando
+              <strong>{{ filteredCount() }}</strong>
+              de
+              <strong>{{ totalReviews() }}</strong>
+              evaluaciones
+            </span>
+          </div>
+
+          @if (hasActiveFilters()) {
+            <span class="review-history__active-filters">
+              {{ activeFiltersCount() }}
+              {{ activeFiltersCount() === 1 ? 'filtro activo' : 'filtros activos' }}
+            </span>
+          }
         </footer>
-      </article>
+      </section>
+
+      <!-- =========================
+           FILTERED EMPTY
+      ========================== -->
+
+      @if (filteredReviews().length === 0) {
+        <section class="review-history__filtered-empty">
+          <div class="review-history__filtered-empty-icon" aria-hidden="true">
+            <i data-lucide="search-x"></i>
+          </div>
+
+          <div>
+            <span>Sin coincidencias</span>
+
+            <h3>No encontramos evaluaciones</h3>
+
+            <p>Modifica la búsqueda o restablece los filtros para mostrar más resultados.</p>
+          </div>
+
+          <button type="button" (click)="clearFilters()">Restablecer filtros</button>
+        </section>
+      } @else {
+        <!-- =========================
+             CARDS
+        ========================== -->
+
+        <div class="review-history__grid">
+          @for (review of filteredReviews(); track review.id) {
+            <article
+              class="review-card"
+              [class.review-card--late]="review.submissionTiming === 'LATE'"
+              role="button"
+              tabindex="0"
+              [attr.aria-label]="
+                'Ver evaluación de ' + review.student.firstName + ' ' + review.student.lastName
+              "
+              (click)="openReview(review.id)"
+              (keydown.enter)="openReview(review.id)"
+              (keydown.space)="$event.preventDefault(); openReview(review.id)"
+            >
+              <header class="review-card__header">
+                <div
+                  class="review-card__icon"
+                  [class.review-card__icon--late]="review.submissionTiming === 'LATE'"
+                  aria-hidden="true"
+                >
+                  <i
+                    [attr.data-lucide]="
+                      review.submissionTiming === 'LATE' ? 'clock-alert' : 'clipboard-check'
+                    "
+                  ></i>
+                </div>
+
+                <span
+                  class="review-card__status"
+                  [class.review-card__status--late]="review.submissionTiming === 'LATE'"
+                >
+                  <span class="review-card__status-dot"></span>
+
+                  {{ review.submissionTiming === 'LATE' ? 'Entrega tardía' : 'A tiempo' }}
+                </span>
+              </header>
+
+              <div class="review-card__content">
+                <span class="review-card__eyebrow"> Estudiante </span>
+
+                <h3 class="review-card__student-name">
+                  {{ review.student.firstName }}
+                  {{ review.student.lastName }}
+                </h3>
+
+                <span class="review-card__matricula">
+                  Matrícula {{ review.student.matricula }}
+                </span>
+
+                <div class="review-card__score">
+                  <div>
+                    <span>Puntaje obtenido</span>
+
+                    <strong>{{ review.totalScore }}</strong>
+                  </div>
+
+                  <small>pts</small>
+                </div>
+
+                <div class="review-card__assignment">
+                  <span>Actividad</span>
+
+                  <strong>
+                    {{ review.assignment.title }}
+                  </strong>
+                </div>
+
+                <p class="review-card__case">
+                  <i data-lucide="briefcase-medical" aria-hidden="true"></i>
+
+                  <span>{{ review.case.title }}</span>
+                </p>
+              </div>
+
+              <footer class="review-card__footer">
+                <div class="review-card__meta">
+                  <i data-lucide="calendar-check" aria-hidden="true"></i>
+
+                  <span>
+                    {{ review.createdAt | date: 'dd/MM/yyyy HH:mm' }}
+                  </span>
+                </div>
+
+                <button
+                  type="button"
+                  class="review-card__action"
+                  aria-label="Ver evaluación"
+                  (click)="$event.stopPropagation(); openReview(review.id)"
+                >
+                  <span>Ver evaluación</span>
+
+                  <i data-lucide="arrow-up-right" aria-hidden="true"></i>
+                </button>
+              </footer>
+            </article>
+          }
+        </div>
       }
-    </div>
-  </section>
+    </section>
   }
 </section>

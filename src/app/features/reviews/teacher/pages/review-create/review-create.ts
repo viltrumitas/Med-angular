@@ -1,6 +1,21 @@
-import { Component, inject, signal, OnInit, AfterViewInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  DestroyRef,
+  OnInit,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { createReviewForm } from '../../../forms/review.form';
+import { ActivatedRoute, Router } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { finalize, startWith } from 'rxjs';
+import { createIcons, icons } from 'lucide';
+import { ButtonComponent } from '../../../../../shared/components/button/button';
+import { TextareaComponent } from '../../../../../shared/components/text-area/text-area';
+import { CaseContent } from '../../../../cases/pages/case-content/case-content';
 import { SceneManagement } from '../../../components/scene-management/scene-management';
 import { PrimaryAssessment } from '../../../components/primary-assessment/primary-assessment';
 import { VitalSigns } from '../../../components/vital-signs/vital-signs';
@@ -10,16 +25,11 @@ import { FocusedAssessment } from '../../../components/focused-assessment/focuse
 import { Opqrst } from '../../../components/opqrst/opqrst';
 import { Sampler } from '../../../components/sampler/sampler';
 import { OtherInterventions } from '../../../components/other-interventions/other-interventions';
-import { ReviewApi } from '../../../services/review-api';
-import { Router, ActivatedRoute } from '@angular/router';
-import { mapCreateReview } from '../../../mappers/review-mapper';
-import { SubmissionResponseDto } from '../../../dto/submission-response.dto';
-import { ButtonComponent } from '../../../../../shared/components/button/button';
-import { CaseContent } from '../../../../cases/pages/case-content/case-content';
 import { SubmissionContent } from '../../../components/submission-content/submission-content';
-import { TextareaComponent } from '../../../../../shared/components/text-area/text-area';
-import { createIcons, icons } from 'lucide';
-import { DatePipe } from '@angular/common';
+import { SubmissionResponseDto } from '../../../dto/submission-response.dto';
+import { createReviewForm } from '../../../forms/review.form';
+import { mapCreateReview } from '../../../mappers/review-mapper';
+import { ReviewApi } from '../../../services/review-api';
 
 @Component({
   selector: 'app-review-create',
@@ -39,7 +49,7 @@ import { DatePipe } from '@angular/common';
     CaseContent,
     SubmissionContent,
     TextareaComponent,
-    DatePipe
+    DatePipe,
   ],
   templateUrl: './review-create.html',
   styleUrl: './review-create.scss',
@@ -48,93 +58,158 @@ export class ReviewCreate implements OnInit, AfterViewInit {
   private readonly api = inject(ReviewApi);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
 
-  totalScore = signal(0);
-  reviewForm = createReviewForm();
-  submission = signal<SubmissionResponseDto | null>(null);
-  classroomId = signal<string | null>(null);
-  loading = signal(true);
-  saving = signal(false);
-  caseExpanded = signal(false);
-  submissionExpanded = signal(true);
+  readonly reviewForm = createReviewForm();
+  readonly submission = signal<SubmissionResponseDto | null>(null);
+  readonly submissionId = signal<string | null>(null);
+  readonly classroomId = signal<string | null>(null);
+  readonly loading = signal(true);
+  readonly saving = signal(false);
+  readonly loadError = signal<string | null>(null);
+  readonly saveError = signal<string | null>(null);
+  readonly caseExpanded = signal(false);
+  readonly submissionExpanded = signal(true);
+  readonly totalScore = signal(0);
 
-  ngAfterViewInit(): void {
-    this.renderIcon();
-  }
+  readonly canSave = computed(() => {
+    return !!this.submission() && !this.loading() && !this.saving();
+  });
 
-  ngOnInit() {
-    const classroomId = this.route.snapshot.queryParamMap.get('classroomId');
+  ngOnInit(): void {
+    this.classroomId.set(this.route.snapshot.queryParamMap.get('classroomId'));
+
     const submissionId = this.route.snapshot.paramMap.get('submissionId');
 
-    this.classroomId.set(classroomId);
+    this.submissionId.set(submissionId);
+
+    this.reviewForm.valueChanges
+      .pipe(startWith(this.reviewForm.getRawValue()), takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.calculateTotalScore();
+      });
 
     if (!submissionId) {
-      this.router.navigate(['/dashboard/teacher/reviews']);
+      this.loading.set(false);
+      this.loadError.set('No se encontró el identificador de la entrega.');
       return;
     }
 
-    this.reviewForm.valueChanges.subscribe(() => {
-      this.calculateTotalScore();
-    });
+    this.loadSubmission();
+  }
 
-    this.calculateTotalScore();
-
-    this.api.getSubmissionById(submissionId).subscribe({
-      next: (submission) => {
-        this.submission.set(submission);
-        this.loading.set(false);
-        this.renderIcon();
-      },
-
-      error: () => {
-        this.loading.set(false);
-
-        this.router.navigate(['/dashboard/teacher/reviews']);
-      },
-    });
+  ngAfterViewInit(): void {
+    this.renderIcons();
   }
 
   toggleCase(): void {
     this.caseExpanded.update((value) => !value);
+    this.renderIcons();
   }
 
   toggleSubmission(): void {
     this.submissionExpanded.update((value) => !value);
+    this.renderIcons();
   }
 
-  save() {
+  loadSubmission(): void {
+    const submissionId = this.submissionId();
+
+    if (!submissionId || (this.loading() && this.submission())) {
+      return;
+    }
+
+    this.loading.set(true);
+    this.loadError.set(null);
+
+    this.api
+      .getSubmissionById(submissionId)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => {
+          this.loading.set(false);
+          this.renderIcons();
+        }),
+      )
+      .subscribe({
+        next: (submission) => {
+          this.submission.set(submission);
+        },
+        error: (error) => {
+          this.submission.set(null);
+
+          this.loadError.set(
+            this.getErrorMessage(error, 'No pudimos cargar la entrega para revisión.'),
+          );
+        },
+      });
+  }
+
+  save(): void {
+    if (!this.canSave()) {
+      return;
+    }
+
+    this.saveError.set(null);
+
     if (this.reviewForm.invalid) {
       this.reviewForm.markAllAsTouched();
+
+      this.saveError.set(
+        'Completa todos los apartados requeridos antes de finalizar la evaluación.',
+      );
+
+      this.renderIcons();
       return;
     }
 
     const submission = this.submission();
 
-    if (!submission) return;
-
-    this.saving.set(true);
+    if (!submission) {
+      return;
+    }
 
     const dto = mapCreateReview(this.reviewForm.getRawValue());
 
-    this.api.create(submission.id, dto).subscribe({
-      next: () => {
-        this.saving.set(false);
+    this.saving.set(true);
+    this.reviewForm.disable();
 
-        const classroomId = this.classroomId();
+    this.api
+      .create(submission.id, dto)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => {
+          this.saving.set(false);
+          this.reviewForm.enable();
+          this.renderIcons();
+        }),
+      )
+      .subscribe({
+        next: () => {
+          this.navigateToReviews();
+        },
+        error: (error) => {
+          this.saveError.set(
+            this.getErrorMessage(error, 'No pudimos guardar la evaluación. Intenta nuevamente.'),
+          );
+        },
+      });
+  }
 
-        if (classroomId) {
-          this.router.navigate(['/dashboard/teacher/reviews/my-reviews', classroomId]);
-        } else {
-          this.router.navigate(['/dashboard/teacher/reviews/my-reviews']);
-        }
-      },
+  cancel(): void {
+    this.navigateToReviews();
+  }
 
-      error: (err) => {
-        console.error(err);
+  private navigateToReviews(): void {
+    const classroomId = this.classroomId();
 
-        this.saving.set(false);
-      },
-    });
+    if (classroomId) {
+      this.router.navigate(['/dashboard/teacher/reviews/my-reviews', classroomId]);
+
+      return;
+    }
+
+    this.router.navigate(['/dashboard/teacher/reviews/my-reviews']);
   }
 
   private calculateTotalScore(): void {
@@ -152,14 +227,46 @@ export class ReviewCreate implements OnInit, AfterViewInit {
       value.otherInterventions,
     ];
 
-    const total = sections.reduce((total, section) => {
-      return total + Object.values(section).reduce((sum, score) => sum + Number(score), 0);
+    const total = sections.reduce((sectionTotal, section) => {
+      if (!section || typeof section !== 'object') {
+        return sectionTotal;
+      }
+
+      const sectionScore = Object.values(section).reduce((scoreTotal, score) => {
+        const numericScore = Number(score);
+
+        return scoreTotal + (Number.isFinite(numericScore) ? numericScore : 0);
+      }, 0);
+
+      return sectionTotal + sectionScore;
     }, 0);
 
     this.totalScore.set(total);
   }
 
-  private renderIcon() {
+  private getErrorMessage(error: unknown, fallback: string): string {
+    if (typeof error === 'object' && error !== null && 'error' in error) {
+      const httpError = error as {
+        error?: {
+          message?: string | string[];
+        };
+      };
+
+      const message = httpError.error?.message;
+
+      if (Array.isArray(message)) {
+        return message.join(' ');
+      }
+
+      if (typeof message === 'string' && message.trim()) {
+        return message;
+      }
+    }
+
+    return fallback;
+  }
+
+  private renderIcons(): void {
     setTimeout(() => {
       createIcons({ icons });
     });

@@ -44,8 +44,6 @@ export class ReviewDetailPage {
   }
 
   editReview(id: string) {
-    this.router.navigate([
-      `/dashboard/teacher/reviews`, id, 'edit'
-    ]);
+    this.router.navigate([`/dashboard/teacher/reviews`, id, 'edit']);
   }
 }

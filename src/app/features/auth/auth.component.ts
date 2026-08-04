@@ -9,6 +9,7 @@ import { createLoginForm, createRegisterForm } from './forms/auth.forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../core/services/auth.service';
 import { ErrorService } from '../../core/services/error.service';
+import { createIcons, icons } from 'lucide';
 
 @Component({
   selector: 'app-login',
@@ -46,7 +47,9 @@ export class AuthComponent {
       next: () => {
         this.router.navigate(this.authService.getDashboardRoute());
       },
-      error: () => {},
+      error: () => {
+        this.renderIcons();
+      },
     });
   }
 
@@ -69,7 +72,9 @@ export class AuthComponent {
       next: () => {
         this.router.navigate(this.authService.getDashboardRoute());
       },
-      error: () => {},
+      error: () => {
+        this.renderIcons();
+      },
     });
   }
 
@@ -82,5 +87,11 @@ export class AuthComponent {
   showLogin() {
     this.isActive = false;
     this.errorService.clear();
+  }
+
+  private renderIcons(): void {
+    setTimeout(() => {
+      createIcons({ icons });
+    });
   }
 }

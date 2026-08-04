@@ -1,51 +1,36 @@
-// ==========================================================================
-// VARIABLES
-// ==========================================================================
-
-$primary: #2563eb;
-$primary-dark: #1d4ed8;
-$primary-soft: #eff6ff;
-
-$teal: #0d9488;
-$teal-dark: #0f766e;
-$teal-soft: #f0fdfa;
-
-$text-primary: #0f172a;
-$text-secondary: #475569;
-$text-muted: #94a3b8;
-
-$border: #e2e8f0;
-$border-soft: #f1f5f9;
-
-$surface: #ffffff;
-$surface-soft: #f8fafc;
-
 $transition-fast: 180ms ease;
-$transition-base: 280ms cubic-bezier(0.4, 0, 0.2, 1);
+$transition-base: 260ms cubic-bezier(0.4, 0, 0.2, 1);
 
-// ==========================================================================
-// CARD
-// ==========================================================================
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+}
 
 .submission-card {
   position: relative;
 
   display: flex;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
   flex-direction: column;
 
-  min-width: 0;
-  height: 100%;
+  padding: 0.9rem;
 
   overflow: hidden;
 
-  border: 1px solid $border;
-  border-radius: 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.95rem;
 
-  background: linear-gradient(145deg, rgba($surface, 0.99), rgba($surface-soft, 0.94));
+  background: #ffffff;
 
   box-shadow:
-    0 6px 16px rgba($text-primary, 0.04),
-    inset 0 1px 0 rgba($surface, 0.9);
+    0 8px 20px rgba(15, 23, 42, 0.04),
+    inset 0 1px 0 #ffffff;
+
+  cursor: pointer;
 
   transition:
     transform $transition-base,
@@ -53,42 +38,40 @@ $transition-base: 280ms cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow $transition-base;
 
   &::before {
-    content: '';
-
     position: absolute;
     top: 0;
-    right: 0;
     left: 0;
 
+    width: 100%;
     height: 3px;
 
-    background: linear-gradient(90deg, $primary, $teal);
+    background: linear-gradient(90deg, #2563eb, #0d9488);
 
-    opacity: 0;
-    transform: scaleX(0.45);
-    transform-origin: left;
-
-    transition:
-      opacity $transition-fast,
-      transform $transition-base;
+    content: '';
   }
 
   &:hover {
-    border-color: rgba($primary, 0.25);
-
-    transform: translateY(-3px);
+    border-color: rgba(37, 99, 235, 0.24);
 
     box-shadow:
-      0 14px 28px rgba($text-primary, 0.08),
-      0 5px 12px rgba($primary, 0.05);
+      0 13px 26px rgba(15, 23, 42, 0.07),
+      inset 0 1px 0 #ffffff;
 
+    transform: translateY(-2px);
+  }
+
+  &:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, 0.18);
+    outline-offset: 0.15rem;
+  }
+
+  &--late {
     &::before {
-      opacity: 1;
-      transform: scaleX(1);
+      background: linear-gradient(90deg, #f97316, #f59e0b);
     }
 
-    .submission-card__avatar {
-      transform: rotate(-3deg) scale(1.04);
+    &:hover {
+      border-color: rgba(234, 88, 12, 0.25);
     }
   }
 }
@@ -99,114 +82,72 @@ $transition-base: 280ms cubic-bezier(0.4, 0, 0.2, 1);
 
 .submission-card__header {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
 
-  gap: 0.8rem;
-
-  padding: 0.9rem;
-
-  border-bottom: 1px solid $border-soft;
-}
-
-.submission-card__student {
-  display: flex;
-  align-items: center;
-
   gap: 0.65rem;
-
-  min-width: 0;
 }
 
-.submission-card__avatar {
-  flex: 0 0 auto;
-
+.submission-card__icon {
   display: grid;
+  width: 2.2rem;
+  height: 2.2rem;
+  flex: 0 0 auto;
   place-items: center;
 
-  width: 2.4rem;
-  height: 2.4rem;
+  border: 1px solid rgba(37, 99, 235, 0.13);
+  border-radius: 0.65rem;
 
-  border: 1px solid rgba($primary, 0.14);
-  border-radius: 0.75rem;
+  background: #eff6ff;
+  color: #2563eb;
 
-  background: $primary-soft;
-  color: $primary-dark;
+  i,
+  svg {
+    width: 0.95rem;
+    height: 0.95rem;
+  }
 
-  font-size: 0.72rem;
-  font-weight: 850;
-  letter-spacing: -0.02em;
+  &--late {
+    border-color: rgba(234, 88, 12, 0.14);
 
-  box-shadow: 0 7px 16px rgba($primary, 0.1);
-
-  transition: transform $transition-base;
-}
-
-.submission-card__student-info {
-  min-width: 0;
-
-  h2 {
-    margin: 0.18rem 0 0;
-
-    overflow: hidden;
-
-    color: $text-primary;
-
-    font-size: 0.95rem;
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    line-height: 1.3;
-
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    background: #fff7ed;
+    color: #ea580c;
   }
 }
 
-.submission-card__eyebrow {
-  display: block;
-
-  color: $primary;
-
-  font-size: 0.62rem;
-  font-weight: 800;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-}
-
-// ==========================================================================
-// STATUS
-// ==========================================================================
-
 .submission-card__status {
-  flex: 0 0 auto;
-
   display: inline-flex;
   align-items: center;
 
   gap: 0.35rem;
 
-  padding: 0.38rem 0.55rem;
+  padding: 0.28rem 0.5rem;
 
-  border: 1px solid rgba($teal, 0.15);
   border-radius: 999px;
 
-  background: $teal-soft;
-  color: $teal-dark;
+  background: #f0fdfa;
+  color: #0f766e;
 
-  font-size: 0.63rem;
+  font-size: 0.58rem;
   font-weight: 800;
-  line-height: 1;
+  white-space: nowrap;
+
+  &--late {
+    background: #fff7ed;
+    color: #c2410c;
+  }
 }
 
 .submission-card__status-dot {
-  width: 0.4rem;
-  height: 0.4rem;
+  width: 0.38rem;
+  height: 0.38rem;
 
   border-radius: 50%;
 
-  background: $teal;
+  background: currentColor;
 
-  box-shadow: 0 0 0 3px rgba($teal, 0.1);
+  box-shadow: 0 0 0 3px currentColor;
+  opacity: 0.85;
 }
 
 // ==========================================================================
@@ -214,59 +155,109 @@ $transition-base: 280ms cubic-bezier(0.4, 0, 0.2, 1);
 // ==========================================================================
 
 .submission-card__content {
-  flex: 1;
-
-  display: grid;
-
-  gap: 0.8rem;
-
-  padding: 0.85rem 0.9rem;
+  min-width: 0;
+  margin-top: 0.75rem;
 }
 
-.submission-card__field {
-  min-width: 0;
+.submission-card__eyebrow {
+  display: block;
 
-  > span {
+  color: #2563eb;
+
+  font-size: 0.54rem;
+  font-weight: 850;
+  letter-spacing: 0.065em;
+  text-transform: uppercase;
+}
+
+.submission-card__student-name {
+  overflow: hidden;
+
+  margin: 0.18rem 0 0;
+
+  color: #0f172a;
+
+  font-size: 0.95rem;
+  font-weight: 850;
+  letter-spacing: -0.025em;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.submission-card__matricula {
+  display: block;
+
+  margin-top: 0.12rem;
+
+  color: #94a3b8;
+
+  font-size: 0.58rem;
+  font-weight: 650;
+}
+
+.submission-card__assignment {
+  min-width: 0;
+  margin-top: 0.7rem;
+  padding-top: 0.65rem;
+
+  border-top: 1px solid #e2e8f0;
+
+  span {
     display: block;
 
-    margin-bottom: 0.25rem;
+    color: #94a3b8;
 
-    color: $text-muted;
-
-    font-size: 0.62rem;
+    font-size: 0.51rem;
     font-weight: 800;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.045em;
     text-transform: uppercase;
   }
 
-  h3,
-  p {
+  strong {
     display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
 
-    margin: 0;
+    margin-top: 0.12rem;
+
+    color: #334155;
+
+    font-size: 0.68rem;
+    font-weight: 800;
+    line-height: 1.4;
+  }
+}
+
+.submission-card__case {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+
+  gap: 0.35rem;
+
+  margin: 0.5rem 0 0;
+
+  color: #64748b;
+
+  font-size: 0.62rem;
+  line-height: 1.4;
+
+  i,
+  svg {
+    width: 0.75rem;
+    height: 0.75rem;
+    flex: 0 0 auto;
+
+    color: #2563eb;
+  }
+
+  span {
     overflow: hidden;
 
-    -webkit-box-orient: vertical;
-  }
-
-  h3 {
-    color: $text-primary;
-
-    font-size: 0.86rem;
-    font-weight: 750;
-    line-height: 1.4;
-
-    -webkit-line-clamp: 2;
-  }
-
-  p {
-    color: $text-secondary;
-
-    font-size: 0.8rem;
-    font-weight: 600;
-    line-height: 1.45;
-
-    -webkit-line-clamp: 2;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 
@@ -279,64 +270,85 @@ $transition-base: 280ms cubic-bezier(0.4, 0, 0.2, 1);
   align-items: center;
   justify-content: space-between;
 
-  gap: 0.8rem;
+  gap: 0.6rem;
 
-  padding: 0.75rem 0.9rem;
-
-  border-top: 1px solid $border-soft;
-
-  background: rgba($surface-soft, 0.78);
+  margin-top: auto;
+  padding-top: 0.7rem;
 }
 
-.submission-card__date {
+.submission-card__meta {
+  display: flex;
   min-width: 0;
+  align-items: center;
 
-  span {
-    display: block;
+  gap: 0.35rem;
 
-    margin-bottom: 0.18rem;
+  color: #64748b;
 
-    color: $text-muted;
+  font-size: 0.58rem;
+  font-weight: 650;
 
-    font-size: 0.58rem;
-    font-weight: 800;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
+  i,
+  svg {
+    width: 0.75rem;
+    height: 0.75rem;
+    flex: 0 0 auto;
+
+    color: #0d9488;
   }
 
-  time {
-    display: block;
-
+  span {
     overflow: hidden;
-
-    color: $text-secondary;
-
-    font-size: 0.68rem;
-    font-weight: 650;
 
     text-overflow: ellipsis;
     white-space: nowrap;
   }
 }
 
-.submission-card__actions {
+.submission-card__action {
+  display: inline-flex;
+  min-height: 2rem;
   flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
 
-  app-button {
-    display: block;
+  gap: 0.3rem;
+
+  padding: 0.38rem 0.55rem;
+
+  border: 1px solid rgba(37, 99, 235, 0.14);
+  border-radius: 0.58rem;
+
+  background: #eff6ff;
+  color: #1d4ed8;
+
+  font: inherit;
+  font-size: 0.58rem;
+  font-weight: 850;
+
+  cursor: pointer;
+
+  transition:
+    background $transition-fast,
+    color $transition-fast,
+    transform $transition-fast;
+
+  i,
+  svg {
+    width: 0.75rem;
+    height: 0.75rem;
   }
 
-  // Ajusta internamente el botón compartido sin modificar su componente.
-  ::ng-deep button {
-    min-height: 2.35rem;
-    padding: 0.58rem 0.75rem;
+  &:hover {
+    background: #2563eb;
+    color: #ffffff;
 
-    border-radius: 0.7rem;
+    transform: translateY(-1px);
+  }
 
-    font-size: 0.72rem;
-    font-weight: 800;
-
-    white-space: nowrap;
+  &:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, 0.18);
+    outline-offset: 0.12rem;
   }
 }
 
@@ -344,42 +356,24 @@ $transition-base: 280ms cubic-bezier(0.4, 0, 0.2, 1);
 // RESPONSIVE
 // ==========================================================================
 
-@media (max-width: 640px) {
-  .submission-card__header {
-    padding: 0.85rem;
-  }
-
-  .submission-card__content {
-    padding: 0.8rem 0.85rem;
+@media (max-width: 400px) {
+  .submission-card {
+    padding: 0.8rem;
   }
 
   .submission-card__footer {
-    align-items: stretch;
+    align-items: flex-start;
     flex-direction: column;
-
-    padding: 0.75rem 0.85rem;
   }
 
-  .submission-card__actions {
+  .submission-card__action {
     width: 100%;
-
-    app-button {
-      width: 100%;
-    }
-
-    ::ng-deep button {
-      width: 100%;
-    }
   }
 }
 
-// ==========================================================================
-// REDUCED MOTION
-// ==========================================================================
-
 @media (prefers-reduced-motion: reduce) {
   .submission-card,
-  .submission-card__avatar {
+  .submission-card__action {
     transition: none;
   }
 }

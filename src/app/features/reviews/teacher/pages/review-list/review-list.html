@@ -5,7 +5,16 @@
 
   <header class="pending-header">
     <div class="pending-header__content">
-      <span class="pending-header__eyebrow"> Evaluación académica </span>
+      <div class="pending-header__meta">
+        <span class="pending-header__eyebrow"> Evaluación académica </span>
+
+        <span class="pending-header__status">
+          <span aria-hidden="true"></span>
+
+          {{ totalPending() }}
+          {{ totalPending() === 1 ? 'entrega pendiente' : 'entregas pendientes' }}
+        </span>
+      </div>
 
       <h1>Mis pendientes</h1>
 
@@ -14,6 +23,48 @@
         estudiante.
       </p>
     </div>
+
+    <div class="pending-header__summary" aria-label="Resumen de entregas">
+      <article class="pending-header__stat pending-header__stat--total">
+        <div class="pending-header__stat-icon" aria-hidden="true">
+          <i data-lucide="inbox"></i>
+        </div>
+
+        <div>
+          <span>Total</span>
+          <strong>{{ totalPending() }}</strong>
+          <small>Por evaluar</small>
+        </div>
+      </article>
+
+      <article class="pending-header__stat pending-header__stat--ontime">
+        <div class="pending-header__stat-icon" aria-hidden="true">
+          <i data-lucide="circle-check"></i>
+        </div>
+
+        <div>
+          <span>A tiempo</span>
+          <strong>{{ totalOnTime() }}</strong>
+          <small>Dentro del plazo</small>
+        </div>
+      </article>
+
+      <article class="pending-header__stat pending-header__stat--late">
+        <div class="pending-header__stat-icon" aria-hidden="true">
+          <i data-lucide="clock-alert"></i>
+        </div>
+
+        <div>
+          <span>Tardías</span>
+          <strong>{{ totalLate() }}</strong>
+          <small>Fuera del plazo</small>
+        </div>
+      </article>
+    </div>
+
+    <div class="pending-header__decoration" aria-hidden="true">
+      <span></span>
+    </div>
   </header>
 
   <!-- =========================
@@ -21,15 +72,42 @@
   ========================== -->
 
   @if (loading()) {
-  <section class="pending-state" aria-live="polite">
-    <div class="pending-state__spinner" aria-hidden="true"></div>
+    <section class="pending-state" aria-live="polite" aria-busy="true">
+      <div class="pending-state__spinner" aria-hidden="true"></div>
 
-    <div class="pending-state__content">
-      <h2>Cargando entregas</h2>
+      <div class="pending-state__content">
+        <span class="pending-state__eyebrow"> Preparando bandeja </span>
 
-      <p>Estamos obteniendo las respuestas que tienes pendientes por evaluar.</p>
-    </div>
-  </section>
+        <h2>Cargando entregas</h2>
+
+        <p>Estamos obteniendo las respuestas que tienes pendientes por evaluar.</p>
+      </div>
+    </section>
+  }
+
+  <!-- =========================
+       LOAD ERROR
+  ========================== -->
+
+  @else if (loadError()) {
+    <section class="pending-state pending-state--error" role="alert">
+      <div class="pending-state__icon" aria-hidden="true">
+        <i data-lucide="triangle-alert"></i>
+      </div>
+
+      <div class="pending-state__content">
+        <span class="pending-state__eyebrow"> Error de carga </span>
+
+        <h2>No pudimos cargar las entregas</h2>
+
+        <p>{{ loadError() }}</p>
+      </div>
+
+      <button type="button" class="pending-state__action" (click)="loadSubmissions()">
+        <i data-lucide="refresh-cw" aria-hidden="true"></i>
+        <span>Intentar nuevamente</span>
+      </button>
+    </section>
   }
 
   <!-- =========================
@@ -37,28 +115,30 @@
   ========================== -->
 
   @else if (submissions().length === 0) {
-  <section class="pending-state pending-state--empty">
-    <div class="pending-state__illustration" aria-hidden="true">
-      <div class="pending-state__document">
-        <span></span>
-        <span></span>
-        <span></span>
+    <section class="pending-state pending-state--empty">
+      <div class="pending-state__illustration" aria-hidden="true">
+        <div class="pending-state__document">
+          <span></span>
+          <span></span>
+          <span></span>
 
-        <div class="pending-state__check"></div>
+          <div class="pending-state__check">
+            <i data-lucide="check"></i>
+          </div>
+        </div>
       </div>
-    </div>
 
-    <div class="pending-state__content">
-      <span class="pending-state__eyebrow"> Todo al día </span>
+      <div class="pending-state__content">
+        <span class="pending-state__eyebrow"> Todo al día </span>
 
-      <h2>No tienes entregas pendientes</h2>
+        <h2>No tienes entregas pendientes</h2>
 
-      <p>
-        Todas las respuestas asignadas ya fueron evaluadas. Las nuevas entregas aparecerán
-        automáticamente en esta sección.
-      </p>
-    </div>
-  </section>
+        <p>
+          Todas las respuestas asignadas ya fueron evaluadas. Las nuevas entregas aparecerán
+          automáticamente en esta sección.
+        </p>
+      </div>
+    </section>
   }
 
   <!-- =========================
@@ -66,96 +146,212 @@
   ========================== -->
 
   @else {
-  <section class="pending-workspace">
-    <header class="pending-workspace__header">
-      <div>
-        <span class="pending-workspace__eyebrow"> Bandeja de revisión </span>
+    <section class="pending-workspace">
+      <header class="pending-workspace__header">
+        <div>
+          <span class="pending-workspace__eyebrow"> Bandeja de revisión </span>
 
-        <h2>Entregas por evaluar</h2>
+          <h2>Entregas por evaluar</h2>
 
-        <p>Selecciona una entrega para consultar las respuestas del estudiante.</p>
+          <p>Selecciona una entrega para consultar las respuestas del estudiante.</p>
+        </div>
+
+        <div class="pending-workspace__counter">
+          <span>Resultados visibles</span>
+
+          <strong>
+            {{ visibleCount() }}
+            <small>/ {{ totalPending() }}</small>
+          </strong>
+        </div>
+      </header>
+
+      <!-- =========================
+           DELIVERY CHIPS
+      ========================== -->
+
+      <div class="delivery-filters" role="group" aria-label="Filtrar por tipo de entrega">
+        <button
+          type="button"
+          class="delivery-filter"
+          [class.delivery-filter--active]="deliveryFilter() === 'ALL'"
+          [attr.aria-pressed]="deliveryFilter() === 'ALL'"
+          (click)="updateDeliveryFilter('ALL')"
+        >
+          <i data-lucide="layers-3" aria-hidden="true"></i>
+
+          <span>Todas</span>
+
+          <strong>{{ totalPending() }}</strong>
+        </button>
+
+        <button
+          type="button"
+          class="delivery-filter delivery-filter--ontime"
+          [class.delivery-filter--active]="deliveryFilter() === 'ON_TIME'"
+          [attr.aria-pressed]="deliveryFilter() === 'ON_TIME'"
+          (click)="updateDeliveryFilter('ON_TIME')"
+        >
+          <i data-lucide="circle-check" aria-hidden="true"></i>
+
+          <span>A tiempo</span>
+
+          <strong>{{ totalOnTime() }}</strong>
+        </button>
+
+        <button
+          type="button"
+          class="delivery-filter delivery-filter--late"
+          [class.delivery-filter--active]="deliveryFilter() === 'LATE'"
+          [attr.aria-pressed]="deliveryFilter() === 'LATE'"
+          (click)="updateDeliveryFilter('LATE')"
+        >
+          <i data-lucide="clock-alert" aria-hidden="true"></i>
+
+          <span>Tardías</span>
+
+          <strong>{{ totalLate() }}</strong>
+        </button>
       </div>
 
-      <div class="pending-workspace__counter">
-        <p>
-          Mostrando {{ filteredSubmissions().length }}
-          de {{ submissions().length }} entregas.
-        </p>
-
-        <span>
-          {{ filteredSubmissions().length === 1 ? 'pendiente' : 'pendientes' }}
-        </span>
-      </div>
-    </header>
-
-    <!-- =========================
-      Filtros
-  ========================== -->
-    <div class="pending-history__filters">
-
       <!-- =========================
-        Barra de busqueda
-    ========================== -->
-      <input type="text" placeholder="Buscar alumno..." [value]="search()"
-        (input)="search.set($any($event.target).value)">
+           FILTERS
+      ========================== -->
 
-      <!-- =========================
-        Filtrar por actividad
-    ========================== -->
-      <select [value]="selectedAssignment()" (change)="selectedAssignment.set($any($event.target).value)">
-        @for (assignment of assignments(); track assignment) {
-        <option [value]="assignment">
-          {{ assignment === 'ALL' ? 'Todas las actividades' : assignment }}
-        </option>
+      <section class="pending-filters" aria-label="Filtros de entregas">
+        <div class="pending-filters__search">
+          <label for="submission-search"> Buscar estudiante </label>
+
+          <div class="filter-control filter-control--search">
+            <i data-lucide="search" aria-hidden="true"></i>
+
+            <input
+              id="submission-search"
+              type="search"
+              placeholder="Nombre o matrícula..."
+              autocomplete="off"
+              [value]="search()"
+              (input)="updateSearch($event)"
+            />
+
+            @if (search()) {
+              <button
+                type="button"
+                class="filter-control__clear"
+                aria-label="Limpiar búsqueda"
+                (click)="search.set('')"
+              >
+                <i data-lucide="x" aria-hidden="true"></i>
+              </button>
+            }
+          </div>
+        </div>
+
+        <div class="pending-filters__field">
+          <label for="assignment-filter"> Actividad </label>
+
+          <div class="filter-control filter-control--select">
+            <i data-lucide="clipboard-list" aria-hidden="true"></i>
+
+            <select
+              id="assignment-filter"
+              [value]="selectedAssignment()"
+              (change)="updateAssignment($event)"
+            >
+              @for (assignment of assignments(); track assignment) {
+                <option [value]="assignment">
+                  {{ assignment === 'ALL' ? 'Todas las actividades' : assignment }}
+                </option>
+              }
+            </select>
+
+            <i class="filter-control__chevron" data-lucide="chevron-down" aria-hidden="true"></i>
+          </div>
+        </div>
+
+        <div class="pending-filters__field">
+          <label for="case-filter"> Caso clínico </label>
+
+          <div class="filter-control filter-control--select">
+            <i data-lucide="briefcase-medical" aria-hidden="true"></i>
+
+            <select id="case-filter" [value]="selectedCase()" (change)="updateCase($event)">
+              @for (clinicalCase of cases(); track clinicalCase) {
+                <option [value]="clinicalCase">
+                  {{ clinicalCase === 'ALL' ? 'Todos los casos' : clinicalCase }}
+                </option>
+              }
+            </select>
+
+            <i class="filter-control__chevron" data-lucide="chevron-down" aria-hidden="true"></i>
+          </div>
+        </div>
+
+        <div class="pending-filters__field">
+          <label for="sort-filter"> Ordenar por </label>
+
+          <div class="filter-control filter-control--select">
+            <i data-lucide="arrow-up-down" aria-hidden="true"></i>
+
+            <select id="sort-filter" [value]="sortBy()" (change)="updateSort($event)">
+              <option value="newest">Más recientes</option>
+              <option value="oldest">Más antiguas</option>
+              <option value="student">Apellido (A–Z)</option>
+              <option value="dueDate">Fecha límite</option>
+              <option value="priority">Prioridad de revisión</option>
+            </select>
+
+            <i class="filter-control__chevron" data-lucide="chevron-down" aria-hidden="true"></i>
+          </div>
+        </div>
+
+        @if (hasActiveFilters()) {
+          <button type="button" class="pending-filters__reset" (click)="clearFilters()">
+            <i data-lucide="filter-x" aria-hidden="true"></i>
+
+            <span>Limpiar filtros</span>
+          </button>
         }
-      </select>
-
-      <select [value]="selectedCase()" (change)="selectedCase.set($any($event.target).value)">
-        @for (clinicalCase of cases(); track clinicalCase) {
-        <option [value]="clinicalCase">
-          {{
-          clinicalCase === 'ALL'
-          ? 'Todos los casos'
-          : clinicalCase
-          }}
-        </option>
-        }
-      </select>
+      </section>
 
       <!-- =========================
-        Ordenar
-    ========================== -->
-      <select [value]="sortBy()" (change)="sortBy.set($any($event.target).value)">
-        <option value="newest">Mas recientes</option>
-        <option value="oldest">Mas antiguas</option>
-        <option value="student">Apellido (A-Z)</option>
-      </select>
+           FILTERED EMPTY
+      ========================== -->
 
-      <!-- =========================
-        Filtrar por tipo de entrega
-    ========================== -->
-      <select [value]="deliveryFilter()" (change)="deliveryFilter.set($any($event.target).value)">
-        <option value="ALL">
-          Todas las entregas
-        </option>
-        <option value="ON_TIME">
-          A tiempo
-        </option>
-        <option value="LATE">
-          Tardias
-        </option>
-      </select>
+      @if (filteredSubmissions().length === 0) {
+        <section class="pending-results-empty">
+          <div class="pending-results-empty__icon" aria-hidden="true">
+            <i data-lucide="search-x"></i>
+          </div>
 
+          <div>
+            <span>Sin coincidencias</span>
 
-    </div>
+            <h3>No encontramos entregas con estos filtros</h3>
 
-    <div class="pending-grid">
-      @for (submission of filteredSubmissions(); track submission.id) {
-      <article class="pending-grid__item">
-        <app-review-card [submission]="submission" (viewSubmissions)="openSubmission($event)" />
-      </article>
+            <p>Modifica la búsqueda o elimina algunos filtros para volver a ver resultados.</p>
+          </div>
+
+          <button type="button" class="pending-results-empty__action" (click)="clearFilters()">
+            Restablecer filtros
+          </button>
+        </section>
+      } @else {
+        <!-- =========================
+             GRID
+        ========================== -->
+
+        <div class="pending-grid">
+          @for (submission of filteredSubmissions(); track submission.id) {
+            <article class="pending-grid__item">
+              <app-review-card
+                [submission]="submission"
+                (viewSubmissions)="openSubmission($event)"
+              />
+            </article>
+          }
+        </div>
       }
-    </div>
-  </section>
+    </section>
   }
 </section>

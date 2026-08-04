@@ -1,24 +1,21 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-
-import { SubmissionsListItem } from '../../models/submissions-list.model';
-import { ButtonComponent } from '../../../../shared/components/button/button';
+import { Component, input, output } from '@angular/core';
 import { DatePipe } from '@angular/common';
+
+import { ButtonComponent } from '../../../../shared/components/button/button';
+import { SubmissionsListItem } from '../../models/submissions-list.model';
 
 @Component({
   selector: 'app-review-card',
   standalone: true,
-  imports: [ButtonComponent, DatePipe],
+  imports: [DatePipe],
   templateUrl: './review-card.html',
   styleUrl: './review-card.scss',
 })
 export class SubmissionCard {
-  @Input({ required: true })
-  submission!: SubmissionsListItem;
+  readonly submission = input.required<SubmissionsListItem>();
+  readonly viewSubmissions = output<string>();
 
-  @Output()
-  viewSubmissions = new EventEmitter<string>();
-
-  open() {
-    this.viewSubmissions.emit(this.submission.id);
+  open(): void {
+    this.viewSubmissions.emit(this.submission().id);
   }
 }
