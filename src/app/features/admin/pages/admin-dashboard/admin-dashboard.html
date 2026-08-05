@@ -36,9 +36,7 @@
         <p>Estamos obteniendo el resumen general del sistema...</p>
       </div>
     </section>
-  } @else {
-    @let s = summary()!;
-
+  } @else if (summary(); as s) {
     <!-- =========================
          SUMMARY HEADER
     ========================== -->
@@ -105,6 +103,14 @@
         icon="chart-column"
         route="/dashboard/admin/statistics"
       />
+    </section>
+  } @else {
+    <section class="state-container state-container--error" role="status">
+      <div class="state-content">
+        <h2>No se pudo cargar el panel</h2>
+
+        <p>Revisa el mensaje de error e inténtalo nuevamente.</p>
+      </div>
     </section>
   }
 </section>

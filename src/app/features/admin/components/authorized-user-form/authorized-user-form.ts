@@ -17,7 +17,6 @@ export class AuthorizedUserFormComponent {
   readonly isOpen = input.required<boolean>();
   readonly submitLabel = input('Guardar usuario');
   readonly submitting = input(false);
-  readonly error = input<string | null>(null);
   readonly submitted = output<void>();
   readonly closeRequested = output<void>();
 
@@ -25,7 +24,6 @@ export class AuthorizedUserFormComponent {
     afterRenderEffect(() => {
       this.isOpen();
       this.submitting();
-      this.error();
 
       createIcons({ icons });
     });

@@ -78,12 +78,10 @@ export class CasesList implements OnInit, AfterViewInit {
   onSearch(event: Event): void {
     const input = event.target as HTMLInputElement;
     this.searchTerm.set(input.value);
-    this.renderIcons();
   }
 
   clearSearch(): void {
     this.searchTerm.set('');
-    this.renderIcons();
   }
 
   // =========================
@@ -91,26 +89,25 @@ export class CasesList implements OnInit, AfterViewInit {
   // =========================
   setStatusFilter(filter: CaseStatusFilter): void {
     this.statusFilter.set(filter);
-
-    this.renderIcons();
   }
 
   clearFilters(): void {
     this.searchTerm.set('');
     this.statusFilter.set('ALL');
-
-    this.renderIcons();
   }
 
   // =========================
   // Agrupar casos por area
   // =========================
   groupedCases = computed(() => {
-    const groups = new Map<string, {
-      areaId: string,
-      area: string;
-      cases: CaseSummaryModel[];
-    }>();
+    const groups = new Map<
+      string,
+      {
+        areaId: string;
+        area: string;
+        cases: CaseSummaryModel[];
+      }
+    >();
 
     this.filteredCases().forEach((caso) => {
       const areaId = caso.medicalArea?.id ?? 'none';
@@ -144,6 +141,7 @@ export class CasesList implements OnInit, AfterViewInit {
   }
 
   isAreaExpanded(areaId: string) {
+    this.renderIcons();
     return this.expandedAreas().has(areaId);
   }
 

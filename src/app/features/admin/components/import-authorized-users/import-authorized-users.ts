@@ -5,6 +5,7 @@ import { createIcons, icons } from 'lucide';
 import { Modal } from '../../../../shared/components/modal/modal';
 import { ImportAuthorizedUsersResponseDto } from '../../dto/import-authorized-users-response-.dto';
 import { AdminApi } from '../../services/admin-api';
+import { ErrorService } from '../../../../core/services/error.service';
 
 @Component({
   selector: 'app-import-authorized-users',
@@ -15,10 +16,11 @@ import { AdminApi } from '../../services/admin-api';
 })
 export class ImportAuthorizedUsers implements AfterViewInit {
   private readonly api = inject(AdminApi);
+  private readonly errorService = inject(ErrorService);
 
   readonly isOpen = signal(true);
   readonly loading = signal(false);
-  readonly error = signal<string | null>(null);
+  readonly fileError = signal<string | null>(null);
   readonly file = signal<File | null>(null);
   readonly dragging = signal(false);
   readonly result = signal<ImportAuthorizedUsersResponseDto | null>(null);
@@ -43,7 +45,6 @@ export class ImportAuthorizedUsers implements AfterViewInit {
 
     this.setSelectedFile(selectedFile);
 
-    // Permite seleccionar nuevamente el mismo archivo.
     input.value = '';
   }
 
@@ -89,7 +90,8 @@ export class ImportAuthorizedUsers implements AfterViewInit {
       return;
     }
 
-    this.error.set(null);
+    this.fileError.set(null);
+    this.errorService.clear();
     this.loading.set(true);
     this.dragging.set(false);
 
@@ -111,11 +113,8 @@ export class ImportAuthorizedUsers implements AfterViewInit {
 
           this.renderIcons();
         },
-        error: (error) => {
-          const message = this.getErrorMessage(error, 'No se pudo importar el archivo.');
 
-          this.error.set(message);
-        },
+        error: () => {},
       });
   }
 
@@ -124,7 +123,8 @@ export class ImportAuthorizedUsers implements AfterViewInit {
       return;
     }
 
-    this.error.set(null);
+    this.fileError.set(null);
+    this.errorService.clear();
 
     this.api.downloadTemplate().subscribe({
       next: (blob) => {
@@ -141,12 +141,8 @@ export class ImportAuthorizedUsers implements AfterViewInit {
 
         URL.revokeObjectURL(objectUrl);
       },
-      error: (error) => {
-        console.error('Error al descargar la plantilla:', error);
 
-        this.error.set('No se pudo descargar la plantilla CSV.');
-        this.renderIcons();
-      },
+      error: () => {},
     });
   }
 
@@ -172,17 +168,19 @@ export class ImportAuthorizedUsers implements AfterViewInit {
     }
 
     this.resetState();
+    this.errorService.clear();
     this.closeRequested.emit();
   }
 
   private setSelectedFile(selectedFile: File): void {
     this.result.set(null);
-    this.error.set(null);
+    this.fileError.set(null);
+    this.errorService.clear();
     this.dragging.set(false);
 
     if (!this.isCsvFile(selectedFile)) {
       this.file.set(null);
-      this.error.set('Selecciona un archivo válido en formato CSV.');
+      this.fileError.set('Selecciona un archivo válido en formato CSV.');
       this.renderIcons();
       return;
     }
@@ -203,32 +201,10 @@ export class ImportAuthorizedUsers implements AfterViewInit {
     return extensionIsValid && mimeTypeIsValid;
   }
 
-  private getErrorMessage(error: unknown, fallback: string): string {
-    if (typeof error === 'object' && error !== null && 'error' in error) {
-      const httpError = error as {
-        error?: {
-          message?: string | string[];
-        };
-      };
-
-      const message = httpError.error?.message;
-
-      if (Array.isArray(message)) {
-        return message.join(' ');
-      }
-
-      if (typeof message === 'string' && message.trim()) {
-        return message;
-      }
-    }
-
-    return fallback;
-  }
-
   private resetState(): void {
     this.file.set(null);
     this.result.set(null);
-    this.error.set(null);
+    this.fileError.set(null);
     this.dragging.set(false);
     this.loading.set(false);
   }

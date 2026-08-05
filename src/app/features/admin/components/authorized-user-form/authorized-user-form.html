@@ -10,7 +10,7 @@
       </div>
 
       <div class="form-header__content">
-        <span class="form-header__eyebrow"> Administración de usuarios </span>
+        <span class="form-header__eyebrow">Administración de usuarios</span>
 
         <h2>{{ submitLabel() }}</h2>
 
@@ -35,20 +35,9 @@
     ========================== -->
 
     <section class="form-body">
-      @if (error()) {
-        <div class="form-alert" role="alert">
-          <i data-lucide="triangle-alert"></i>
-
-          <div>
-            <strong>No se pudo guardar el usuario</strong>
-            <p>{{ error() }}</p>
-          </div>
-        </div>
-      }
-
       <div class="form-section-header">
         <div>
-          <span class="form-section-header__eyebrow"> Información personal </span>
+          <span class="form-section-header__eyebrow">Información personal</span>
 
           <h3>Datos del usuario</h3>
 

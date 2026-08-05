@@ -20,7 +20,6 @@ $warning-dark: #b45309;
 $warning-soft: #fffbeb;
 
 $danger: #dc2626;
-$danger-dark: #b91c1c;
 $danger-soft: #fef2f2;
 
 $text-primary: #0f172a;
@@ -35,6 +34,16 @@ $surface-soft: #f8fafc;
 
 $transition-fast: 180ms ease;
 $transition-base: 280ms cubic-bezier(0.4, 0, 0.2, 1);
+
+// ==========================================================================
+// HOST
+// ==========================================================================
+
+:host {
+  display: block;
+
+  width: 100%;
+}
 
 // ==========================================================================
 // PAGE
@@ -172,7 +181,7 @@ $transition-base: 280ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 // ==========================================================================
-// CREATE BUTTON
+// BUTTONS
 // ==========================================================================
 
 .create-case-button,
@@ -314,9 +323,9 @@ $transition-base: 280ms cubic-bezier(0.4, 0, 0.2, 1);
 // ==========================================================================
 
 .error-state {
-  background: radial-gradient(circle at 50% 0%, rgba($danger, 0.08), transparent 42%), $surface;
-
   border-color: rgba($danger, 0.16);
+
+  background: radial-gradient(circle at 50% 0%, rgba($danger, 0.08), transparent 42%), $surface;
 
   .state-icon {
     border-color: rgba($danger, 0.16);
@@ -607,8 +616,8 @@ $transition-base: 280ms cubic-bezier(0.4, 0, 0.2, 1);
 
   min-width: 220px;
 
-  >i,
-  >svg {
+  > i,
+  > svg {
     position: absolute;
     top: 50%;
     left: 0.8rem;
@@ -935,6 +944,284 @@ $transition-base: 280ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 // ==========================================================================
+// CASE GROUPS
+// ==========================================================================
+
+.cases-groups {
+  display: flex;
+  flex-direction: column;
+
+  gap: 1rem;
+
+  animation: cases-enter 400ms ease both;
+}
+
+.area-group {
+  position: relative;
+
+  overflow: hidden;
+
+  border: 1px solid $border;
+  border-radius: 1.15rem;
+
+  background: rgba($surface, 0.96);
+
+  box-shadow:
+    0 8px 22px rgba($text-primary, 0.045),
+    inset 0 1px 0 rgba($surface, 0.9);
+
+  transition:
+    border-color $transition-fast,
+    box-shadow $transition-base;
+
+  &--expanded {
+    border-color: rgba($primary, 0.2);
+
+    box-shadow:
+      0 12px 30px rgba($text-primary, 0.065),
+      0 4px 12px rgba($primary, 0.035);
+  }
+}
+
+.area-group__header {
+  margin: 0;
+}
+
+.area-group__trigger {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+
+  gap: 0.85rem;
+
+  width: 100%;
+  min-height: 4.7rem;
+  padding: 0.85rem 1rem;
+
+  border: 0;
+
+  background:
+    radial-gradient(circle at 95% 0%, rgba($teal, 0.08), transparent 32%),
+    linear-gradient(135deg, rgba($surface, 0.98), rgba($surface-soft, 0.94));
+
+  color: inherit;
+
+  font: inherit;
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    background $transition-fast,
+    box-shadow $transition-fast;
+
+  &::after {
+    content: '';
+
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    height: 1px;
+
+    background: linear-gradient(90deg, transparent, rgba($primary, 0.12), transparent);
+
+    opacity: 0;
+
+    transition: opacity $transition-fast;
+  }
+
+  &:hover {
+    background:
+      radial-gradient(circle at 95% 0%, rgba($teal, 0.12), transparent 34%),
+      linear-gradient(135deg, rgba($surface, 1), rgba($primary-soft, 0.62));
+
+    .area-group__icon {
+      border-color: rgba($primary, 0.22);
+
+      background: $primary-soft;
+      color: $primary;
+
+      transform: rotate(-3deg) scale(1.03);
+    }
+
+    .area-group__chevron {
+      border-color: rgba($primary, 0.2);
+
+      background: $primary-soft;
+      color: $primary;
+    }
+  }
+
+  &--expanded {
+    background:
+      radial-gradient(circle at 95% 0%, rgba($teal, 0.11), transparent 34%),
+      linear-gradient(135deg, rgba($surface, 1), rgba($primary-soft, 0.68));
+
+    &::after {
+      opacity: 1;
+    }
+
+    .area-group__icon {
+      border-color: rgba($teal, 0.2);
+
+      background: $teal-soft;
+      color: $teal-dark;
+    }
+  }
+
+  &:focus-visible {
+    z-index: 1;
+
+    outline: 3px solid rgba($primary, 0.18);
+    outline-offset: -3px;
+  }
+}
+
+.area-group__icon {
+  flex: 0 0 auto;
+
+  display: grid;
+  place-items: center;
+
+  width: 2.75rem;
+  height: 2.75rem;
+
+  border: 1px solid rgba($teal, 0.15);
+  border-radius: 0.82rem;
+
+  background: $teal-soft;
+  color: $teal-dark;
+
+  box-shadow:
+    0 6px 14px rgba($teal, 0.08),
+    inset 0 1px 0 rgba($surface, 0.8);
+
+  transition:
+    transform $transition-base,
+    border-color $transition-fast,
+    background $transition-fast,
+    color $transition-fast;
+
+  i,
+  svg {
+    width: 1.25rem;
+    height: 1.25rem;
+
+    stroke-width: 2;
+  }
+}
+
+.area-group__content {
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.2rem;
+
+  min-width: 0;
+}
+
+.area-group__title {
+  overflow: hidden;
+
+  color: $text-primary;
+
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  line-height: 1.3;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.area-group__description {
+  color: $text-muted;
+
+  font-size: 0.72rem;
+  font-weight: 650;
+  line-height: 1.35;
+}
+
+.area-group__summary {
+  flex: 0 0 auto;
+
+  display: flex;
+  align-items: center;
+
+  gap: 0.55rem;
+}
+
+.area-group__count {
+  display: grid;
+  place-items: center;
+
+  min-width: 2rem;
+  height: 1.75rem;
+  padding-inline: 0.5rem;
+
+  border: 1px solid rgba($teal, 0.15);
+  border-radius: 999px;
+
+  background: $teal-soft;
+  color: $teal-dark;
+
+  font-size: 0.68rem;
+  font-weight: 850;
+}
+
+.area-group__chevron {
+  display: grid;
+  place-items: center;
+
+  width: 2rem;
+  height: 2rem;
+
+  border: 1px solid $border;
+  border-radius: 0.62rem;
+
+  background: $surface;
+  color: $text-muted;
+
+  transition:
+    transform $transition-base,
+    border-color $transition-fast,
+    background $transition-fast,
+    color $transition-fast;
+
+  i,
+  svg {
+    width: 1rem;
+    height: 1rem;
+
+    stroke-width: 2.2;
+  }
+
+  &--expanded {
+    border-color: rgba($primary, 0.18);
+
+    background: $primary-soft;
+    color: $primary;
+
+    transform: rotate(180deg);
+  }
+}
+
+.area-group__cases {
+  padding: 1rem;
+
+  border-top: 1px solid $border-soft;
+
+  background: radial-gradient(circle at 0% 0%, rgba($primary, 0.045), transparent 26%), $surface;
+
+  animation: area-content-enter 260ms ease both;
+}
+
+// ==========================================================================
 // CASES GRID
 // ==========================================================================
 
@@ -998,6 +1285,7 @@ $transition-base: 280ms cubic-bezier(0.4, 0, 0.2, 1);
     background: linear-gradient(90deg, $primary, $teal);
 
     opacity: 0;
+
     transform: scaleX(0.45);
     transform-origin: left;
 
@@ -1017,6 +1305,7 @@ $transition-base: 280ms cubic-bezier(0.4, 0, 0.2, 1);
 
     &::before {
       opacity: 1;
+
       transform: scaleX(1);
     }
 
@@ -1039,23 +1328,11 @@ $transition-base: 280ms cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   &:focus-visible {
+    border-color: $primary;
+
     outline: 3px solid rgba($primary, 0.2);
     outline-offset: 3px;
-
-    border-color: $primary;
   }
-}
-
-.cases-groups {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-}
-
-.area-group__header {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
 }
 
 // ==========================================================================
@@ -1454,6 +1731,7 @@ $transition-base: 280ms cubic-bezier(0.4, 0, 0.2, 1);
     width: 100%;
 
     overflow-x: auto;
+
     scrollbar-width: none;
 
     &::-webkit-scrollbar {
@@ -1476,6 +1754,45 @@ $transition-base: 280ms cubic-bezier(0.4, 0, 0.2, 1);
     padding: 1.5rem 1.15rem;
 
     border-radius: 1.15rem;
+  }
+
+  .area-group {
+    border-radius: 1rem;
+  }
+
+  .area-group__trigger {
+    gap: 0.7rem;
+
+    min-height: 4.25rem;
+    padding: 0.75rem;
+  }
+
+  .area-group__icon {
+    width: 2.45rem;
+    height: 2.45rem;
+
+    border-radius: 0.72rem;
+  }
+
+  .area-group__title {
+    font-size: 0.88rem;
+  }
+
+  .area-group__description {
+    font-size: 0.67rem;
+  }
+
+  .area-group__count {
+    display: none;
+  }
+
+  .area-group__chevron {
+    width: 1.85rem;
+    height: 1.85rem;
+  }
+
+  .area-group__cases {
+    padding: 0.75rem;
   }
 
   .cases-grid {
@@ -1501,12 +1818,13 @@ $transition-base: 280ms cubic-bezier(0.4, 0, 0.2, 1);
 // ==========================================================================
 
 @media (prefers-reduced-motion: reduce) {
-
   .state-container,
   .empty-state,
   .no-results,
   .stats-grid,
   .cases-toolbar,
+  .cases-groups,
+  .area-group__cases,
   .case-card,
   .spinner {
     animation: none;
@@ -1515,6 +1833,10 @@ $transition-base: 280ms cubic-bezier(0.4, 0, 0.2, 1);
   .create-case-button,
   .empty-action,
   .stat-card,
+  .area-group,
+  .area-group__trigger,
+  .area-group__icon,
+  .area-group__chevron,
   .case-link,
   .case-icon,
   .arrow,
@@ -1537,11 +1859,27 @@ $transition-base: 280ms cubic-bezier(0.4, 0, 0.2, 1);
 @keyframes cases-enter {
   from {
     opacity: 0;
+
     transform: translateY(8px);
   }
 
   to {
     opacity: 1;
+
+    transform: translateY(0);
+  }
+}
+
+@keyframes area-content-enter {
+  from {
+    opacity: 0;
+
+    transform: translateY(-5px);
+  }
+
+  to {
+    opacity: 1;
+
     transform: translateY(0);
   }
 }
@@ -1549,11 +1887,13 @@ $transition-base: 280ms cubic-bezier(0.4, 0, 0.2, 1);
 @keyframes case-card-enter {
   from {
     opacity: 0;
+
     transform: translateY(10px);
   }
 
   to {
     opacity: 1;
+
     transform: translateY(0);
   }
 }

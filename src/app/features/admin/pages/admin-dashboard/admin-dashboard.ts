@@ -4,6 +4,7 @@ import { StatisticsResponseDto } from '../../dto/statistics-response.dto';
 import { AdminCard } from '../../components/admin-card/admin-card';
 import { StatisticCard } from '../../components/statistic-card/statistic-card';
 import { createIcons, icons } from 'lucide';
+import { finalize, pipe } from 'rxjs';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -19,17 +20,26 @@ export class AdminDashboard implements OnInit {
   readonly summary = signal<StatisticsResponseDto | null>(null);
 
   ngOnInit() {
-    this.api.getStatistics().subscribe({
-      next: (stats) => {
-        this.summary.set(stats);
-        this.loading.set(false);
-        this.renderIcon();
-      },
-    });
+    this.api
+      .getStatistics()
+      .pipe(
+        finalize(() => {
+          this.loading.set(false);
+        }),
+      )
+      .subscribe({
+        next: (stats) => {
+          this.summary.set(stats);
+          this.renderIcons();
+        },
+        error: () => {
+          this.renderIcons();
+        },
+      });
   }
 
-  private renderIcon() {
-    setInterval(() => {
+  private renderIcons() {
+    setTimeout(() => {
       createIcons({ icons });
     });
   }

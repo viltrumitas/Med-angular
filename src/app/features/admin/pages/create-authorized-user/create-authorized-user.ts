@@ -1,11 +1,12 @@
 import { Component, DestroyRef, inject, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize } from 'rxjs';
-
+import { ErrorService } from '../../../../core/services/error.service';
 import { AuthorizedUserFormComponent } from '../../components/authorized-user-form/authorized-user-form';
 import { createAuthorizedUserForm } from '../../forms/authorized-user.form';
 import { mapCreateAuthorizedUser } from '../../mappers/authorized-user.mapper';
 import { AdminApi } from '../../services/admin-api';
+import { createIcons, icons } from 'lucide';
 
 @Component({
   selector: 'app-create-authorized-user',
@@ -17,13 +18,11 @@ import { AdminApi } from '../../services/admin-api';
 export class CreateAuthorizedUser {
   private readonly api = inject(AdminApi);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly errorService = inject(ErrorService);
 
   readonly form = createAuthorizedUserForm();
-
   readonly isOpen = signal(true);
   readonly loading = signal(false);
-  readonly error = signal<string | null>(null);
-
   readonly created = output<void>();
   readonly closeRequested = output<void>();
 
@@ -39,8 +38,8 @@ export class CreateAuthorizedUser {
 
     const dto = mapCreateAuthorizedUser(this.form.getRawValue());
 
+    this.errorService.clear();
     this.loading.set(true);
-    this.error.set(null);
 
     this.api
       .createAuthorizedUser(dto)
@@ -53,12 +52,11 @@ export class CreateAuthorizedUser {
       .subscribe({
         next: () => {
           this.created.emit();
+          this.renderIcons();
         },
 
-        error: (error) => {
-          console.error('[CreateAuthorizedUser] Error al crear usuario:', error);
-
-          this.error.set(error.error?.message ?? 'No se pudo crear el usuario autorizado.');
+        error: () => {
+          this.renderIcons();
         },
       });
   }
@@ -68,6 +66,13 @@ export class CreateAuthorizedUser {
       return;
     }
 
+    this.errorService.clear();
     this.closeRequested.emit();
+  }
+
+  private renderIcons(): void {
+    setTimeout(() => {
+      createIcons({ icons });
+    });
   }
 }

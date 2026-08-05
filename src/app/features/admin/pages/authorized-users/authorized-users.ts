@@ -1,13 +1,12 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { createIcons, icons } from 'lucide';
-
 import { ImportAuthorizedUsers } from '../../components/import-authorized-users/import-authorized-users';
 import { CreateAuthorizedUser } from '../create-authorized-user/create-authorized-user';
-
 import { AdminApi } from '../../services/admin-api';
 import { AuthorizedUserSummaryDto } from '../../dto/authorized-user-summary.dto';
 import { ImportAuthorizedUsersResponseDto } from '../../dto/import-authorized-users-response-.dto';
+import { ErrorService } from '../../../../core/services/error.service';
 
 @Component({
   selector: 'app-authorized-users',
@@ -19,12 +18,11 @@ import { ImportAuthorizedUsersResponseDto } from '../../dto/import-authorized-us
 export class AuthorizedUsers implements OnInit {
   private readonly adminApi = inject(AdminApi);
   private readonly router = inject(Router);
+  private readonly errorService = inject(ErrorService);
 
   readonly users = signal<AuthorizedUserSummaryDto[]>([]);
   readonly loading = signal(true);
-  readonly error = signal<string | null>(null);
   readonly search = signal('');
-
   readonly importOpen = signal(false);
   readonly createOpen = signal(false);
 
@@ -54,7 +52,7 @@ export class AuthorizedUsers implements OnInit {
 
   loadUsers(): void {
     this.loading.set(true);
-    this.error.set(null);
+    this.errorService.clear();
 
     this.adminApi.getAuthorizedUsers().subscribe({
       next: (users) => {
@@ -63,11 +61,9 @@ export class AuthorizedUsers implements OnInit {
         this.renderIcons();
       },
 
-      error: (error) => {
-        console.error(error);
-
-        this.error.set('No se pudieron cargar los usuarios.');
+      error: () => {
         this.loading.set(false);
+        this.renderIcons();
       },
     });
   }
@@ -96,15 +92,16 @@ export class AuthorizedUsers implements OnInit {
       return;
     }
 
+    this.errorService.clear();
+
     this.adminApi.deleteAuthorizedUser(id).subscribe({
       next: () => {
         this.loadUsers();
+        this.renderIcons();
       },
 
-      error: (error) => {
-        console.error(error);
-
-        this.error.set('No se pudo eliminar el usuario.');
+      error: () => {
+        this.renderIcons();
       },
     });
   }

@@ -28,29 +28,23 @@ import { ClassroomApi } from '../../service/clasroom-api.service';
 import { SelectComponent } from '../../../../shared/components/select/select';
 
 // types para filtros en la seleccion de casos
-type UsageFilter =
-  | 'ALL'
-  | 'NEVER_USED'
-  | 'LOW_USAGE'
-  | 'HIGH_USAGE'
-  | 'RECENT';
+type UsageFilter = 'ALL' | 'NEVER_USED' | 'LOW_USAGE' | 'HIGH_USAGE' | 'RECENT';
 
-type SortMode =
-  | 'RECOMMENDED'
-  | 'TITLE'
-  | 'LOW_USAGE'
-  | 'HIGH_USAGE'
-  | 'NEWEST';
-
+type SortMode = 'RECOMMENDED' | 'TITLE' | 'LOW_USAGE' | 'HIGH_USAGE' | 'NEWEST';
 
 @Component({
   selector: 'app-assignment-create',
   standalone: true,
-  imports: [ReactiveFormsModule, InputComponent, TextareaComponent, ButtonComponent, SelectComponent,],
+  imports: [
+    ReactiveFormsModule,
+    InputComponent,
+    TextareaComponent,
+    ButtonComponent,
+    SelectComponent,
+  ],
   templateUrl: './assignment-create.html',
   styleUrl: './assignment-create.scss',
 })
-
 export class AssignmentCreate implements AfterViewInit {
   private readonly assignmentApi = inject(AssignmentApi);
   private readonly classroomApi = inject(ClassroomApi);
@@ -65,8 +59,6 @@ export class AssignmentCreate implements AfterViewInit {
   readonly isSubmitting = signal(false);
   readonly casesLoadError = signal<string | null>(null);
   readonly submitError = signal<string | null>(null);
-
-
 
   // signal para ventanas extendibles
   readonly expandedAreas = signal(new Set<string>());
@@ -103,27 +95,21 @@ export class AssignmentCreate implements AfterViewInit {
   readonly interactionDisabled = computed(() => this.isSubmitting() || this.isLoadingCases());
 
   readonly selectedArea = toSignal(
-    this.areaControl.valueChanges.pipe(
-      startWith(this.areaControl.value),
-    ),
+    this.areaControl.valueChanges.pipe(startWith(this.areaControl.value)),
     {
       initialValue: this.areaControl.value,
     },
   );
 
   readonly usageFilter = toSignal(
-    this.usageControl.valueChanges.pipe(
-      startWith(this.usageControl.value),
-    ),
+    this.usageControl.valueChanges.pipe(startWith(this.usageControl.value)),
     {
       initialValue: this.usageControl.value,
     },
   );
 
   readonly sortMode = toSignal(
-    this.sortControl.valueChanges.pipe(
-      startWith(this.sortControl.value),
-    ),
+    this.sortControl.valueChanges.pipe(startWith(this.sortControl.value)),
     {
       initialValue: this.sortControl.value,
     },
@@ -144,7 +130,7 @@ export class AssignmentCreate implements AfterViewInit {
       label: 'Todas las áreas',
       value: 'ALL',
     },
-    ...this.availableAreas().map(area => ({
+    ...this.availableAreas().map((area) => ({
       label: area.name,
       value: area.id,
     })),
@@ -209,9 +195,7 @@ export class AssignmentCreate implements AfterViewInit {
       }
     });
 
-    return [...map.values()].sort((a, b) =>
-      a.name.localeCompare(b.name),
-    );
+    return [...map.values()].sort((a, b) => a.name.localeCompare(b.name));
   });
 
   // filtrar antes de agrupar
@@ -225,11 +209,12 @@ export class AssignmentCreate implements AfterViewInit {
     // =========================
 
     if (term) {
-      cases = cases.filter((clinicalCase) =>
-        clinicalCase.title?.toLowerCase().includes(term) ||
-        clinicalCase.patientName?.toLowerCase().includes(term) ||
-        clinicalCase.consult?.toLowerCase().includes(term) ||
-        clinicalCase.medicalArea?.name.toLowerCase().includes(term)
+      cases = cases.filter(
+        (clinicalCase) =>
+          clinicalCase.title?.toLowerCase().includes(term) ||
+          clinicalCase.patientName?.toLowerCase().includes(term) ||
+          clinicalCase.consult?.toLowerCase().includes(term) ||
+          clinicalCase.medicalArea?.name.toLowerCase().includes(term),
       );
     }
 
@@ -238,18 +223,15 @@ export class AssignmentCreate implements AfterViewInit {
     // =========================
     const selectedArea = this.selectedArea();
     if (selectedArea !== 'ALL') {
-      cases = cases.filter(
-        c => c.medicalArea.id === selectedArea
-      );
+      cases = cases.filter((c) => c.medicalArea.id === selectedArea);
     }
-
 
     // =========================
     // FILTRO DE USO
     // =========================
 
     if (usage !== 'ALL') {
-      cases = cases.filter(c => {
+      cases = cases.filter((c) => {
         switch (usage) {
           case 'NEVER_USED':
             return c.usage.neverUsed;
@@ -287,10 +269,7 @@ export class AssignmentCreate implements AfterViewInit {
           return b.usage.totalAssignments - a.usage.totalAssignments;
 
         case 'NEWEST':
-          return (
-            new Date(b.createdAt).getTime() -
-            new Date(a.createdAt).getTime()
-          );
+          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
 
         case 'RECOMMENDED':
         default:
@@ -299,23 +278,15 @@ export class AssignmentCreate implements AfterViewInit {
           }
 
           if (a.usage.totalAssignments !== b.usage.totalAssignments) {
-            return (
-              a.usage.totalAssignments -
-              b.usage.totalAssignments
-            );
+            return a.usage.totalAssignments - b.usage.totalAssignments;
           }
 
-          return (
-            new Date(a.createdAt).getTime() -
-            new Date(b.createdAt).getTime()
-          );
+          return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
       }
     });
 
     return cases;
   });
-
-
 
   // agrupar casos por area
 
@@ -344,9 +315,7 @@ export class AssignmentCreate implements AfterViewInit {
       groups.get(areaId)!.cases.push(clinicalCase);
     });
 
-    return Array.from(groups.values()).sort((a, b) =>
-      a.area.localeCompare(b.area),
-    );
+    return Array.from(groups.values()).sort((a, b) => a.area.localeCompare(b.area));
   });
 
   // boton para limpiar filtros
@@ -357,6 +326,8 @@ export class AssignmentCreate implements AfterViewInit {
     if (this.selectedArea() !== 'ALL') count++;
     if (this.usageFilter() !== 'ALL') count++;
     if (this.sortMode() !== 'RECOMMENDED') count++;
+
+    this.renderIcons();
 
     return count;
   });
@@ -383,6 +354,7 @@ export class AssignmentCreate implements AfterViewInit {
   }
 
   isExpanded(areaId: string) {
+    this.renderIcons();
     return this.expandedAreas().has(areaId);
   }
 
@@ -542,7 +514,7 @@ export class AssignmentCreate implements AfterViewInit {
   }
 
   private renderIcons(): void {
-    queueMicrotask(() => {
+    setTimeout(() => {
       createIcons({ icons });
     });
   }
