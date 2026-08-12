@@ -34,4 +34,10 @@ export const adminRoutes: Routes = [
     loadComponent: () =>
       import('../../admin/pages/statistics/statistics').then((c) => c.Statistics),
   },
+
+  {
+    path: 'medical-areas',
+    loadComponent: () =>
+      import('../../admin/pages/medical-areas/medical-areas').then(c => c.MedicalAreas),
+  },
 ];

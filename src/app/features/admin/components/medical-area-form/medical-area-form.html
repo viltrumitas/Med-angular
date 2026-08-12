@@ -1,0 +1,157 @@
+<app-modal [isOpen]="isOpen()" [preventClose]="submitting()" (closed)="onCancel()">
+  <form class="medical-area-form" [formGroup]="form()" (ngSubmit)="submit()" novalidate>
+    <!-- =========================
+         HEADER
+    ========================== -->
+
+    <header class="form-header">
+      <div class="form-header__icon" aria-hidden="true">
+        <i data-lucide="stethoscope"></i>
+      </div>
+
+      <div class="form-header__content">
+        <span class="form-header__eyebrow">Administración</span>
+
+        <h2>{{ submitLabel() }}</h2>
+
+        <p>
+          Registra una nueva área médica para clasificar los casos clínicos dentro de MedCases.
+        </p>
+      </div>
+
+      <button
+        type="button"
+        class="form-header__close"
+        aria-label="Cerrar modal"
+        [disabled]="submitting()"
+        (click)="onCancel()"
+      >
+        <i data-lucide="x"></i>
+      </button>
+    </header>
+
+    <!-- =========================
+         BODY
+    ========================== -->
+
+    <section class="form-body">
+      <div class="form-section-header">
+        <div>
+          <span class="form-section-header__eyebrow">
+            Información general
+          </span>
+
+          <h3>Área médica</h3>
+
+          <p>
+            Define el nombre del área médica que estará disponible para los casos clínicos.
+          </p>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div
+          class="form-field form-field--full"
+          [class.form-field--invalid]="
+            form().controls.name.invalid &&
+            form().controls.name.touched
+          "
+        >
+          <label for="medical-area-name">
+            Nombre
+            <span aria-hidden="true">*</span>
+          </label>
+
+          <div class="input-control">
+            <i data-lucide="stethoscope"></i>
+
+            <input
+              id="medical-area-name"
+              type="text"
+              formControlName="name"
+              placeholder="Ej. Cardiología"
+              autocomplete="off"
+            />
+          </div>
+
+          <label for="medical-area-name">
+            Descripcion
+            <span aria-hidden="true">*</span>
+          </label>
+
+          <div class="input-control">
+            <i data-lucide="stethoscope"></i>
+
+            <input
+              id="medical-area-name"
+              type="text"
+              formControlName="description"
+              autocomplete="off"
+            />
+          </div>
+
+          <small class="field-help">
+            Este nombre será utilizado para clasificar los casos clínicos.
+          </small>
+
+          @if (form().controls.name.invalid &&
+          form().controls.name.touched) {
+            <small class="field-error">
+              <i data-lucide="circle-alert"></i>
+
+              Ingresa un nombre para el área médica.
+            </small>
+          }
+        </div>
+      </div>
+
+      <aside class="role-info">
+        <div class="role-info__icon" aria-hidden="true">
+          <i data-lucide="info"></i>
+        </div>
+
+        <div>
+          <strong>Organización de los casos</strong>
+
+          <p>
+            Las áreas médicas permiten clasificar y filtrar los casos clínicos para facilitar su
+            administración y asignación.
+          </p>
+        </div>
+      </aside>
+    </section>
+
+    <!-- =========================
+         ACTIONS
+    ========================== -->
+
+    <footer class="form-actions">
+      <button
+        type="button"
+        class="form-button form-button--secondary"
+        [disabled]="submitting()"
+        (click)="onCancel()"
+      >
+        <i data-lucide="x"></i>
+
+        <span>Cancelar</span>
+      </button>
+
+      <button
+        type="submit"
+        class="form-button form-button--primary"
+        [disabled]="submitting()"
+      >
+        @if (submitting()) {
+          <span class="form-button__spinner" aria-hidden="true"></span>
+
+          <span>Guardando...</span>
+        } @else {
+          <i data-lucide="save"></i>
+
+          <span>{{ submitLabel() }}</span>
+        }
+      </button>
+    </footer>
+  </form>
+</app-modal>

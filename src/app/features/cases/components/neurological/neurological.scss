@@ -50,6 +50,33 @@ s .neurological-scale {
   }
 }
 
+.total {
+  margin-top: 1.5rem;
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  background: var(--bg-glass);
+
+  &__label {
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  &__value {
+    font-size: 1.4rem;
+  }
+
+  &__pending {
+    font-size: 0.85rem;
+    opacity: 0.65;
+  }
+}
+
 // ==========================================================================
 // SCALE HEADER
 // ==========================================================================

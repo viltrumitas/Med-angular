@@ -4,7 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MedicalAreaForm } from '../../forms/case.form';
 import { SelectComponent } from '../../../../shared/components/select/select';
 
-import { MedicalAreaResponseDto } from '../../../medical-areas/dto/medical-area-response.dto';
+import { MedicalAreaResponseDto } from '../../../admin/pages/medical-areas/dto/medical-area-response.dto'; 
 
 @Component({
   selector: 'app-medical-area',

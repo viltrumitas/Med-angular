@@ -345,8 +345,29 @@
               </div>
 
               <strong class="glasgow-card__value">
-                {{ c.glasgow ?? 'N/A' }}
+                {{ c.glasgow?.total ?? 'N/A' }} / 15
               </strong>
+
+              @if (c.glasgow) {
+              <div class="glasgow-card__breakdown">
+
+                <div>
+                  <span>Ocular</span>
+                  <strong>{{ c.glasgow.ocular }}</strong>
+                </div>
+
+                <div>
+                  <span>Verbal</span>
+                  <strong>{{ c.glasgow.verbal }}</strong>
+                </div>
+
+                <div>
+                  <span>Motora</span>
+                  <strong>{{ c.glasgow.motora }}</strong>
+                </div>
+
+              </div>
+              }
             </article>
 
             <article class="cincinnati-card">

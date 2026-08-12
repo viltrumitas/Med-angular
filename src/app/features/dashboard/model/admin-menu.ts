@@ -14,6 +14,18 @@ export const ADMIN_MENU: SidebarItem[] = [
   },
 
   {
+    name: 'Areas medicas',
+    path: '/dashboard/admin/medical-areas',
+    icon: 'briefcase-medical',
+  },
+
+  {
+    name: 'Estadisticas',
+    path: '/dashboard/admin/statistics',
+    icon: 'chart-column',
+  },
+
+  {
     name: 'Cerrar Sesion',
     action: 'logout',
     icon: 'log-out',

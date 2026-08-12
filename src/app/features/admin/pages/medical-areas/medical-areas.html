@@ -1,0 +1,251 @@
+<section class="medical-areas-page">
+  <!-- =========================
+       HEADER
+  ========================== -->
+
+  <header class="page-header">
+    <div class="header-content">
+      <span class="header-eyebrow">Administración</span>
+
+      <h1>Áreas médicas</h1>
+
+      <p>
+        Administra las áreas médicas disponibles para clasificar los casos clínicos dentro de
+        MedCases.
+      </p>
+    </div>
+
+    <div class="header-btn-container">
+      <button type="button" class="create-area-button" (click)="openCreateModal()">
+        <i data-lucide="plus"></i>
+
+        <span>Nueva área</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- =========================
+       LOADING
+  ========================== -->
+
+  @if (loading()) {
+  <section class="state-container" aria-live="polite">
+    <div class="spinner" aria-hidden="true"></div>
+
+    <div class="state-content">
+      <h2>Cargando áreas médicas</h2>
+
+      <p>Estamos obteniendo las áreas médicas registradas...</p>
+    </div>
+  </section>
+  }
+
+  <!-- =========================
+       CONTENT
+  ========================== -->
+
+  @else {
+
+  <!-- =========================
+         SUMMARY
+    ========================== -->
+
+  <section class="summary-grid" aria-label="Resumen de áreas médicas">
+    <article class="summary-card">
+      <div class="summary-icon total">
+        <i data-lucide="stethoscope"></i>
+      </div>
+
+      <div class="summary-content">
+        <span>Total de áreas</span>
+
+        <strong>
+          {{ medicalAreas().length }}
+        </strong>
+
+        <small>Áreas médicas registradas</small>
+      </div>
+    </article>
+
+    <article class="summary-card">
+      <div class="summary-icon results">
+        <i data-lucide="list-filter"></i>
+      </div>
+
+      <div class="summary-content">
+        <span>Resultados visibles</span>
+
+        <strong>
+          {{ filteredAreas().length }}
+        </strong>
+
+        <small>Coincidencias con la búsqueda</small>
+      </div>
+    </article>
+  </section>
+
+  <!-- =========================
+         TOOLBAR
+    ========================== -->
+
+  <section class="users-toolbar">
+    <div class="search-field">
+      <i data-lucide="search"></i>
+
+      <input type="search" placeholder="Buscar área médica..." [value]="search()"
+        (input)="updateSearch($any($event.target).value)" />
+
+      @if (search()) {
+      <button type="button" class="clear-search" (click)="updateSearch('')">
+        <i data-lucide="x"></i>
+      </button>
+      }
+    </div>
+
+    <div class="toolbar-info">
+      <strong>
+        {{ filteredAreas().length }}
+      </strong>
+
+      <span>
+        {{ filteredAreas().length === 1 ? 'área' : 'áreas' }}
+      </span>
+    </div>
+  </section>
+
+  <!-- =========================
+         EMPTY
+    ========================== -->
+
+  @if (medicalAreas().length === 0) {
+
+  <section class="empty-state">
+    <div class="empty-icon">
+      <i data-lucide="stethoscope"></i>
+    </div>
+
+    <h2>No hay áreas médicas</h2>
+
+    <p>
+      Crea la primera área médica para comenzar a clasificar los casos clínicos.
+    </p>
+
+    <div class="empty-actions">
+      <button type="button" class="empty-action" (click)="openCreateModal()">
+        <i data-lucide="plus"></i>
+
+        <span>Crear primera área</span>
+      </button>
+    </div>
+  </section>
+
+  }
+
+  <!-- =========================
+         NO RESULTS
+    ========================== -->
+
+  @else if (filteredAreas().length === 0) {
+
+  <section class="no-results">
+    <div class="no-results-icon">
+      <i data-lucide="search-x"></i>
+    </div>
+
+    <h2>No encontramos áreas médicas</h2>
+
+    <p>
+      No hay resultados para
+      <strong>"{{ search() }}"</strong>.
+    </p>
+
+    <button type="button" class="clear-results-button" (click)="updateSearch('')">
+      <i data-lucide="rotate-ccw"></i>
+
+      <span>Limpiar búsqueda</span>
+    </button>
+  </section>
+
+  }
+
+  <!-- =========================
+         TABLE
+    ========================== -->
+
+  @else {
+
+  <section class="users-card">
+    <header class="table-header">
+      <div>
+        <span class="table-eyebrow">Catálogo</span>
+
+        <h2>Áreas médicas</h2>
+
+        <p>
+          Consulta y administra las áreas médicas disponibles.
+        </p>
+      </div>
+
+      <div class="table-counter">
+        {{ filteredAreas().length }}
+      </div>
+    </header>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Nombre</th>
+
+            <th>Acciones</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          @for (area of filteredAreas(); track area.id) {
+
+          <tr>
+
+            <td data-label="Nombre">
+              {{ area.name }}
+            </td>
+
+            <td data-label="Acciones">
+              <div class="actions">
+
+                <button type="button" (click)="openEditModal(area)" class="action-button action-button--edit">
+                  <i data-lucide="pencil"></i>
+
+                  <span>Editar</span>
+                </button>
+
+                <button type="button" (click)="deleteMedicalArea(area.id)" class="action-button action-button--delete">
+                  <i data-lucide="trash-2"></i>
+
+                  <span>Eliminar</span>
+                </button>
+
+              </div>
+            </td>
+
+          </tr>
+
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  }
+
+  }
+
+  <!-- =========================
+       CREATE MODAL
+  ========================== -->
+
+  <app-medical-area-form [form]="medicalAreaForm" [isOpen]="createOpen()" [submitting]="submitting()"
+    [submitLabel]="selectedArea() ? 'Guardar cambios' : 'Crear área'" (submitted)="submitMedicalArea()"
+    (closeRequested)="closeCreateModal()" />
+
+</section>

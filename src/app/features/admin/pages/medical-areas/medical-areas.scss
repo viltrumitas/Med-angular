@@ -1,0 +1,204 @@
+.medical-areas-page {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.header-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.header-eyebrow {
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.header-content h1 {
+  margin: 0;
+}
+
+.header-content p {
+  margin: 0;
+  max-width: 650px;
+}
+
+.header-btn-container {
+  display: flex;
+  gap: 1rem;
+}
+
+.create-area-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* =========================
+   SUMMARY
+========================= */
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.summary-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.summary-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.summary-content {
+  display: flex;
+  flex-direction: column;
+  gap: .25rem;
+}
+
+/* =========================
+   TOOLBAR
+========================= */
+
+.users-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.search-field {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  flex: 1;
+  max-width: 420px;
+}
+
+.search-field input {
+  flex: 1;
+}
+
+.toolbar-info {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+
+/* =========================
+   STATES
+========================= */
+
+.state-container,
+.empty-state,
+.no-results {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.empty-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* =========================
+   TABLE
+========================= */
+
+.users-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 1rem;
+  text-align: left;
+}
+
+.actions {
+  display: flex;
+  gap: .75rem;
+}
+
+.action-button {
+  display: flex;
+  align-items: center;
+  gap: .35rem;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 768px) {
+  .page-header,
+  .users-toolbar,
+  .table-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .header-btn-container {
+    width: 100%;
+  }
+
+  .create-area-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .search-field {
+    max-width: 100%;
+  }
+
+  .toolbar-info {
+    justify-content: center;
+  }
+}

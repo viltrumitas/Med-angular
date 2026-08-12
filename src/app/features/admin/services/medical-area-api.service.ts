@@ -3,10 +3,9 @@ import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { environment } from "../../../../environments/environment";
 
-import { CreateMedicalAreaDto } from "../dto/create-medical-area.dto";
-import { UpdateMedicalAreaDto } from "../dto/update-medical-area.dto";
-import { MedicalAreaResponseDto } from "../dto/medical-area-response.dto";
-import { appConfig } from "../../../app.config";
+import { CreateMedicalAreaDto } from "../pages/medical-areas/dto/create-medical-area.dto";
+import { UpdateMedicalAreaDto } from "../pages/medical-areas/dto/update-medical-area.dto";
+import { MedicalAreaResponseDto } from "../pages/medical-areas/dto/medical-area-response.dto";
 
 @Service()
 export class MedicalAreaApi {

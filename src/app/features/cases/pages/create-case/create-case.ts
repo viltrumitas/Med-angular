@@ -12,8 +12,8 @@ import { mapCreateCase } from '../../mappers/create-case.mapper';
 import { MedicalArea } from '../../components/medical-area/medical-area';
 import { Router } from '@angular/router';
 import { createIcons, icons } from 'lucide';
-import { MedicalAreaApi } from '../../../medical-areas/services/medical-area-api.service';
-import { MedicalAreaResponseDto } from '../../../medical-areas/dto/medical-area-response.dto';
+import { MedicalAreaApi } from '../../../admin/services/medical-area-api.service';
+import { MedicalAreaResponseDto } from '../../../admin/pages/medical-areas/dto/medical-area-response.dto';
 
 @Component({
   selector: 'app-create-case',
@@ -47,7 +47,7 @@ export class CreateCase implements OnInit, AfterViewInit {
   ngOnInit() {
     this.loadMedicalAreas();
   }
-
+ 
   submitCase() {
     if (this.caseForm.invalid) {
       this.caseForm.markAllAsTouched();

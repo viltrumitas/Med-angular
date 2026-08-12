@@ -1,6 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit, signal } from '@angular/core';
 import { NeurologicalForm } from '../../forms/case.form';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { SelectComponent } from '../../../../shared/components/select/select';
 import { Checkbox } from '../../../../shared/components/checkbox/checkbox';
 
@@ -10,9 +10,27 @@ import { Checkbox } from '../../../../shared/components/checkbox/checkbox';
   templateUrl: './neurological.html',
   styleUrl: './neurological.scss',
 })
-export class Neurological {
+export class Neurological implements OnInit {
   @Input()
   group!: NeurologicalForm;
+
+  readonly glasgowTotal = signal<number | null>(null);
+
+  ngOnInit(): void {
+    this.group.controls.glasgow.valueChanges.subscribe(
+      ({ ocular, verbal, motora }) => {
+        if (
+          ocular != null &&
+          verbal != null &&
+          motora != null
+        ) {
+          this.glasgowTotal.set(ocular + verbal + motora);
+        } else {
+          this.glasgowTotal.set(null);
+        }
+      }
+    );
+  }
 
   readonly cincinnatiOptions = [
     {
@@ -48,4 +66,8 @@ export class Neurological {
     { label: '2 : Reflejo Extensor', value: 2 },
     { label: '1 : Nulo', value: 1 },
   ];
+
+  get glasgow(): FormGroup {
+    return this.group.controls.glasgow;
+  }
 }
