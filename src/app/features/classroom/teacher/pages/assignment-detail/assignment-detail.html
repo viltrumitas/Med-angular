@@ -8,23 +8,6 @@
       <p>Estamos obteniendo los detalles y las entregas asociadas.</p>
     </div>
   </section>
-} @else if (loadError()) {
-  <section class="assignment-detail-state assignment-detail-state--error" role="alert">
-    <div class="assignment-detail-state__icon" aria-hidden="true">
-      <i data-lucide="triangle-alert"></i>
-    </div>
-
-    <div class="assignment-detail-state__content">
-      <span>No disponible</span>
-      <h2>No pudimos cargar la actividad</h2>
-      <p>{{ loadError() }}</p>
-    </div>
-
-    <button type="button" class="state-action" (click)="loadAssignment()">
-      <i data-lucide="refresh-cw" aria-hidden="true"></i>
-      <span>Intentar nuevamente</span>
-    </button>
-  </section>
 } @else if (assignment(); as assignment) {
   <main class="assignment-detail">
     <!-- =========================

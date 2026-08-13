@@ -8,6 +8,7 @@ import { Modal } from '../../../../shared/components/modal/modal';
 import { createAuthorizedUserForm } from '../../forms/authorized-user.form';
 import { mapUpdateAuthorizedUser } from '../../mappers/authorized-user.mapper';
 import { AdminApi } from '../../services/admin-api';
+import { ErrorService } from '../../../../core/services/error.service';
 
 @Component({
   selector: 'app-edit-authorized-user',
@@ -21,13 +22,12 @@ export class EditAuthorizedUser implements OnInit {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly errorService = inject(ErrorService);
 
   readonly form = createAuthorizedUserForm();
-
   readonly isModalOpen = signal(true);
   readonly loading = signal(true);
   readonly saving = signal(false);
-
   readonly loadError = signal<string | null>(null);
   readonly submitError = signal<string | null>(null);
 
@@ -53,6 +53,7 @@ export class EditAuthorizedUser implements OnInit {
       return;
     }
 
+    this.errorService.clear();
     this.loading.set(true);
     this.loadError.set(null);
 
@@ -71,13 +72,7 @@ export class EditAuthorizedUser implements OnInit {
           this.loading.set(false);
           this.renderIcons();
         },
-        error: (error) => {
-          console.error('[EditAuthorizedUser] Error al cargar usuario:', error);
-
-          this.loadError.set(
-            error.error?.message ?? 'No se pudo cargar la información del usuario.',
-          );
-
+        error: () => {
           this.loading.set(false);
           this.renderIcons();
         },
@@ -94,6 +89,7 @@ export class EditAuthorizedUser implements OnInit {
       return;
     }
 
+    this.errorService.clear();
     this.saving.set(true);
     this.submitError.set(null);
 
@@ -108,13 +104,7 @@ export class EditAuthorizedUser implements OnInit {
           this.closeModal();
           this.renderIcons();
         },
-        error: (error) => {
-          console.error('[EditAuthorizedUser] Error al actualizar usuario:', error);
-
-          this.submitError.set(
-            error.error?.message ?? 'No se pudo actualizar el usuario autorizado.',
-          );
-
+        error: () => {
           this.saving.set(false);
           this.renderIcons();
         },

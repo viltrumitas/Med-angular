@@ -12,19 +12,15 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule, FormControl } from '@angular/forms';
 import { finalize, startWith } from 'rxjs';
 import { createIcons, icons } from 'lucide';
-
 import { ErrorService } from '../../../../core/services/error.service';
 import { ButtonComponent } from '../../../../shared/components/button/button';
 import { InputComponent } from '../../../../shared/components/input/input';
 import { TextareaComponent } from '../../../../shared/components/text-area/text-area';
-
 import { createAssignmentForm } from '../../../assignments/forms/create-assignment-form';
 import { mapCreateAssignment } from '../../../assignments/mappers/create-assignment.mapper';
 import { AssignmentApi } from '../../../assignments/services/assignment-api';
-
 import { CaseResponseDto } from '../../../cases/dto/case-response.dto';
 import { ClassroomApi } from '../../service/clasroom-api.service';
-
 import { SelectComponent } from '../../../../shared/components/select/select';
 
 // types para filtros en la seleccion de casos

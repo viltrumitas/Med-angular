@@ -22,28 +22,13 @@ export class MedicalAreas implements OnInit {
   private readonly medicalAreaApi = inject(MedicalAreaApi);
   private readonly errorService = inject(ErrorService);
 
-  // ==========================================================================
-  // FORM
-  // ==========================================================================
-
   readonly medicalAreaForm = createMedicalAreaForm();
-
-  // ==========================================================================
-  // STATE
-  // ==========================================================================
-
   readonly medicalAreas = signal<MedicalAreaResponseDto[]>([]);
   readonly loading = signal(true);
   readonly submitting = signal(false);
-
   readonly search = signal('');
   readonly createOpen = signal(false);
-
   readonly selectedArea = signal<MedicalAreaResponseDto | null>(null);
-
-  // ==========================================================================
-  // COMPUTED
-  // ==========================================================================
 
   readonly filteredAreas = computed(() => {
     const searchValue = this.search().trim().toLowerCase();
@@ -55,25 +40,13 @@ export class MedicalAreas implements OnInit {
     return this.medicalAreas().filter((area) => area.name.toLowerCase().includes(searchValue));
   });
 
-  // ==========================================================================
-  // LIFECYCLE
-  // ==========================================================================
-
   ngOnInit(): void {
     this.loadMedicalAreas();
   }
 
-  // ==========================================================================
-  // SEARCH
-  // ==========================================================================
-
   updateSearch(value: string): void {
     this.search.set(value);
   }
-
-  // ==========================================================================
-  // LOAD
-  // ==========================================================================
 
   loadMedicalAreas(): void {
     this.loading.set(true);
@@ -97,10 +70,6 @@ export class MedicalAreas implements OnInit {
         },
       });
   }
-
-  // ==========================================================================
-  // CREATE
-  // ==========================================================================
 
   createMedicalArea(): void {
     if (this.medicalAreaForm.invalid) {

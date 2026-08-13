@@ -5,11 +5,7 @@ import { createIcons, icons } from 'lucide';
 import { ClassroomTeacherModel } from '../../models/classroom-teacher.model';
 import { ClassroomStudentModel } from '../../models/classroom-student.model';
 
-
-type ClassroomCardModel =
-  | ClassroomTeacherModel
-  | ClassroomStudentModel;
-
+type ClassroomCardModel = ClassroomTeacherModel | ClassroomStudentModel;
 
 @Component({
   selector: 'app-classroom-card',
@@ -19,32 +15,23 @@ type ClassroomCardModel =
   styleUrl: './classroom-card.scss',
 })
 export class ClassroomCardComponent implements AfterViewInit {
-
   classroom = input.required<ClassroomCardModel>();
-
 
   isTeacherClassroom(): boolean {
     return 'code' in this.classroom();
   }
 
-
   get teacherClassroom(): ClassroomTeacherModel | null {
     const classroom = this.classroom();
 
-    return 'code' in classroom
-      ? classroom
-      : null;
+    return 'code' in classroom ? classroom : null;
   }
-
 
   get studentClassroom(): ClassroomStudentModel | null {
     const classroom = this.classroom();
 
-    return 'teacher' in classroom
-      ? classroom
-      : null;
+    return 'teacher' in classroom ? classroom : null;
   }
-
 
   ngAfterViewInit(): void {
     createIcons({ icons });

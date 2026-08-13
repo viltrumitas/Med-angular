@@ -18,6 +18,7 @@ import { AssignedCase } from '../../../models/assigned-case.model';
 import { AssignmentDetail as AssignmentDetailModel } from '../../../models/assignment-detail.model';
 import { SubmissionStatus } from '../../../../../core/models/submission-status.enum';
 import { SubmissionTiming } from '../../../../../core/enum/submission-timing';
+import { ErrorService } from '../../../../../core/services/error.service';
 
 @Component({
   selector: 'app-assignment-detail',
@@ -31,13 +32,12 @@ export class AssignmentDetailPage implements OnInit, AfterViewInit {
   private readonly router = inject(Router);
   private readonly api = inject(AssignmentApi);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly errorService = inject(ErrorService);
 
-  // exponer enum del submission timing
   protected readonly SubmissionTiming = SubmissionTiming;
 
   readonly assignment = signal<AssignmentDetailModel | null>(null);
   readonly loading = signal(true);
-  readonly loadError = signal<string | null>(null);
   readonly isPublishing = signal(false);
   readonly publishError = signal<string | null>(null);
   readonly isDeleting = signal(false);
@@ -50,9 +50,7 @@ export class AssignmentDetailPage implements OnInit, AfterViewInit {
   });
 
   // filtro para mostrar tarjetas de alumnos
-  readonly trackingFilter = signal<
-    'ALL' | 'PENDING' | 'ON_TIME' | 'LATE' | 'REVIEWED'
-  >('ALL');
+  readonly trackingFilter = signal<'ALL' | 'PENDING' | 'ON_TIME' | 'LATE' | 'REVIEWED'>('ALL');
 
   readonly totalCompleted = computed(() => {
     const assignedCases = this.assignment()?.assignedCases ?? [];
@@ -160,8 +158,9 @@ export class AssignmentDetailPage implements OnInit, AfterViewInit {
     } else if (difference >= minute) {
       const minutes = Math.ceil(difference / minute);
 
-      message = `Queda${minutes === 1 ? '' : 'n'} ${minutes} ${minutes === 1 ? 'minuto' : 'minutos'
-        }`;
+      message = `Queda${minutes === 1 ? '' : 'n'} ${minutes} ${
+        minutes === 1 ? 'minuto' : 'minutos'
+      }`;
     } else {
       message = 'Vence en unos segundos';
     }
@@ -192,16 +191,14 @@ export class AssignmentDetailPage implements OnInit, AfterViewInit {
   // Entregadas a tiempo (incluye SUBMITTED y REVIEWED)
   readonly onTimeStudents = computed(() => {
     return (this.assignment()?.assignedCases ?? []).filter(
-      (assigned) =>
-        assigned.submission?.submissionTiming === SubmissionTiming.ON_TIME,
+      (assigned) => assigned.submission?.submissionTiming === SubmissionTiming.ON_TIME,
     );
   });
 
   // Entregadas tarde (incluye SUBMITTED y REVIEWED)
   readonly lateStudents = computed(() => {
     return (this.assignment()?.assignedCases ?? []).filter(
-      (assigned) =>
-        assigned.submission?.submissionTiming === SubmissionTiming.LATE,
+      (assigned) => assigned.submission?.submissionTiming === SubmissionTiming.LATE,
     );
   });
 
@@ -230,30 +227,24 @@ export class AssignmentDetailPage implements OnInit, AfterViewInit {
         return this.reviewedStudents();
 
       default:
-        return assignedCases
+        return assignedCases;
     }
-  })
+  });
 
   // filtro para filtrar secciones
-  setTrackingFilter(
-    filter: 'ALL' | 'PENDING' | 'ON_TIME' | 'LATE' | 'REVIEWED',
-  ): void {
+  setTrackingFilter(filter: 'ALL' | 'PENDING' | 'ON_TIME' | 'LATE' | 'REVIEWED'): void {
     this.trackingFilter.set(filter);
     this.renderIcons();
 
-    document
-      .getElementById('assignment-tracking')
-      ?.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-      });
+    document.getElementById('assignment-tracking')?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+    });
   }
-
-
 
   ngOnInit(): void {
     this.loadAssignment();
-    this.renderIcons()
+    this.renderIcons();
   }
 
   ngAfterViewInit(): void {
@@ -265,12 +256,11 @@ export class AssignmentDetailPage implements OnInit, AfterViewInit {
 
     if (!assignmentId) {
       this.loading.set(false);
-      this.loadError.set('No se encontró el identificador de la actividad.');
       return;
     }
 
     this.loading.set(true);
-    this.loadError.set(null);
+    this.errorService.clear();
 
     this.api
       .findOne(assignmentId)
@@ -285,12 +275,8 @@ export class AssignmentDetailPage implements OnInit, AfterViewInit {
         next: (assignment) => {
           this.assignment.set(assignment);
         },
-        error: (error) => {
+        error: () => {
           this.assignment.set(null);
-
-          this.loadError.set(
-            this.getErrorMessage(error, 'No pudimos cargar la actividad. Intenta nuevamente.'),
-          );
         },
       });
   }

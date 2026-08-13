@@ -33,7 +33,6 @@ export class ClassroomDetail implements OnInit, AfterViewInit {
 
   readonly classroom = signal<ClassroomTeacherDetailModel | null>(null);
   readonly loading = signal(true);
-  readonly loadError = signal<string | null>(null);
 
   readonly pendingReviews = signal<SubmissionsListItem[]>([]);
   readonly loadingPendingReviews = signal(false);
@@ -55,12 +54,10 @@ export class ClassroomDetail implements OnInit, AfterViewInit {
 
     if (!classroomId) {
       this.loading.set(false);
-      this.loadError.set('No se encontró el identificador de la clase.');
       return;
     }
 
     this.errorService.clear();
-    this.loadError.set(null);
     this.loading.set(true);
 
     this.api
@@ -80,7 +77,6 @@ export class ClassroomDetail implements OnInit, AfterViewInit {
         error: () => {
           this.classroom.set(null);
           this.pendingReviews.set([]);
-          this.loadError.set('No pudimos cargar la información de la clase. Intenta nuevamente.');
         },
       });
   }

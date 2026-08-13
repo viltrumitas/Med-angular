@@ -1,21 +1,23 @@
 @if (errorService.error(); as error) {
-  <div class="error-alert" role="alert" aria-live="assertive">
-    <div class="error-alert__icon">
+  <dialog
+    #errorDialog
+    class="error-alert"
+    role="alert"
+    aria-live="assertive"
+    (cancel)="onCancel($event)"
+  >
+    <div class="error-alert__icon" aria-hidden="true">
       <i data-lucide="triangle-alert"></i>
     </div>
 
     <div class="error-alert__content">
       <strong>{{ error.title }}</strong>
+
       <p>{{ error.message }}</p>
     </div>
 
-    <button
-      type="button"
-      class="error-alert__close"
-      aria-label="Cerrar mensaje"
-      (click)="errorService.clear()"
-    >
+    <button type="button" class="error-alert__close" aria-label="Cerrar mensaje" (click)="close()">
       <i data-lucide="x"></i>
     </button>
-  </div>
+  </dialog>
 }

@@ -10,12 +10,8 @@ import { RouterLink } from '@angular/router';
 })
 export class AdminCard {
   readonly title = input.required<string>();
-
   readonly description = input.required<string>();
-
   readonly route = input.required<string>();
-
   readonly icon = input<string>('dashboard');
-
   readonly disabled = input(false);
 }

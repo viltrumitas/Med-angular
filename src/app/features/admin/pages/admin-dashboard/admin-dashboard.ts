@@ -4,7 +4,7 @@ import { StatisticsResponseDto } from '../../dto/statistics-response.dto';
 import { AdminCard } from '../../components/admin-card/admin-card';
 import { StatisticCard } from '../../components/statistic-card/statistic-card';
 import { createIcons, icons } from 'lucide';
-import { finalize, pipe } from 'rxjs';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-admin-dashboard',

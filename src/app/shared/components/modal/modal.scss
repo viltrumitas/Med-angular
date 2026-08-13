@@ -5,25 +5,18 @@
 .modal {
   position: fixed;
   inset: 0;
-  z-index: 1000;
-
+  z-index: 9999;
   width: 100dvw;
   max-width: none;
   height: 100dvh;
   max-height: none;
-
   margin: 0;
   padding: 2rem;
-
   border: 0;
-
   background: transparent;
   color: inherit;
-
   overflow: hidden;
-
   opacity: 0;
-
   transition: opacity 180ms ease;
 
   &::backdrop {

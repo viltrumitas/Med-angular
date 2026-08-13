@@ -7,21 +7,16 @@ import { MedicalAreaForm } from '../../forms/medical-area.form';
 @Component({
   selector: 'app-medical-area-form',
   standalone: true,
-  imports: [ReactiveFormsModule, Modal, ],
+  imports: [ReactiveFormsModule, Modal],
   templateUrl: './medical-area-form.html',
   styleUrl: './medical-area-form.scss',
 })
-export class MedicalAreaFormComponent implements AfterViewInit{
+export class MedicalAreaFormComponent implements AfterViewInit {
   readonly form = input.required<MedicalAreaForm>();
-
   readonly isOpen = input.required<boolean>();
-
   readonly submitLabel = input('Guardar area');
-
   readonly submitting = input(false);
-
   readonly submitted = output<void>();
-
   readonly closeRequested = output<void>();
 
   ngAfterViewInit(): void {

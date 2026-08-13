@@ -5,6 +5,7 @@ import { createIcons, icons } from 'lucide';
 import { AdminApi } from '../../services/admin-api';
 import { StatisticsResponseDto } from '../../dto/statistics-response.dto';
 import { StatisticCard } from '../../components/statistic-card/statistic-card';
+import { ErrorService } from '../../../../core/services/error.service';
 
 @Component({
   selector: 'app-statistics',
@@ -16,10 +17,10 @@ import { StatisticCard } from '../../components/statistic-card/statistic-card';
 export class Statistics implements OnInit {
   private readonly api = inject(AdminApi);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly errorService = inject(ErrorService);
 
   readonly statistics = signal<StatisticsResponseDto | null>(null);
   readonly loading = signal(true);
-  readonly error = signal<string | null>(null);
 
   ngOnInit(): void {
     this.loadStatistics();
@@ -27,7 +28,7 @@ export class Statistics implements OnInit {
 
   loadStatistics(): void {
     this.loading.set(true);
-    this.error.set(null);
+    this.errorService.clear();
 
     this.api
       .getStatistics()
@@ -39,13 +40,8 @@ export class Statistics implements OnInit {
 
           this.renderIcons();
         },
-        error: (error) => {
-          console.error('[Statistics] Error al cargar las estadísticas:', error);
-
-          this.error.set('No se pudieron cargar las estadísticas. Inténtalo nuevamente.');
-
+        error: () => {
           this.loading.set(false);
-
           this.renderIcons();
         },
       });

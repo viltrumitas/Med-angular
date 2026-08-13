@@ -16,37 +16,6 @@
   }
 
   <!-- =========================
-       ERROR
-  ========================== -->
-
-  @else if (loadError()) {
-    <section class="classroom-detail__state classroom-detail__state--error" role="alert">
-      <div
-        class="classroom-detail__state-icon classroom-detail__state-icon--error"
-        aria-hidden="true"
-      >
-        <i data-lucide="triangle-alert"></i>
-      </div>
-
-      <div class="classroom-detail__state-content">
-        <span class="classroom-detail__state-label"> Error de carga </span>
-
-        <h2>No pudimos cargar la clase</h2>
-
-        <p>{{ loadError() }}</p>
-      </div>
-
-      <app-button
-        type="button"
-        text="Intentar de nuevo"
-        variant="secondary"
-        icon="refresh-cw"
-        (clicked)="loadClassroom()"
-      />
-    </section>
-  }
-
-  <!-- =========================
        CONTENT
   ========================== -->
 

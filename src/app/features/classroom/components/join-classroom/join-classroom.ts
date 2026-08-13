@@ -1,13 +1,4 @@
-import {
-  afterNextRender,
-  AfterViewInit,
-  Component,
-  effect,
-  inject,
-  input,
-  output,
-  signal,
-} from '@angular/core';
+import { AfterViewInit, Component, inject, input, output, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { createIcons, icons } from 'lucide';
@@ -15,6 +6,7 @@ import { createIcons, icons } from 'lucide';
 import { ClassroomApi } from '../../service/clasroom-api.service';
 import { JoinClassroomForm } from '../../forms/join-class.fom';
 import { Modal } from '../../../../shared/components/modal/modal';
+import { ErrorService } from '../../../../core/services/error.service';
 
 @Component({
   selector: 'app-join-classroom',
@@ -24,12 +16,12 @@ import { Modal } from '../../../../shared/components/modal/modal';
 })
 export class JoinClassroom implements AfterViewInit {
   private readonly classroomApi = inject(ClassroomApi);
+  private readonly errorService = inject(ErrorService);
 
   readonly isOpen = input.required<boolean>();
   readonly closeRequested = output<void>();
   readonly joined = output<void>();
   readonly isSubmitting = signal(false);
-  readonly errorMessage = signal<string | null>(null);
 
   readonly form = new FormGroup<JoinClassroomForm>({
     code: new FormControl('', {
@@ -48,7 +40,6 @@ export class JoinClassroom implements AfterViewInit {
       return;
     }
 
-    this.errorMessage.set(null);
     this.isSubmitting.set(true);
 
     const { code } = this.form.getRawValue();
@@ -72,28 +63,11 @@ export class JoinClassroom implements AfterViewInit {
 
   private handleError(error: HttpErrorResponse): void {
     this.isSubmitting.set(false);
-    this.errorMessage.set(this.mapError(error));
-  }
-
-  private mapError(error: HttpErrorResponse): string {
-    if (error.status === 404) {
-      return 'No existe ningún salón con ese código.';
-    }
-
-    if (error.status === 409) {
-      return 'Ya estás inscrito en este salón.';
-    }
-
-    if (typeof error.error?.message === 'string') {
-      return error.error.message;
-    }
-
-    return 'Ocurrió un error al unirte al salón. Intenta de nuevo.';
+    this.errorService.handle(error);
   }
 
   private resetForm(): void {
     this.form.reset();
-    this.errorMessage.set(null);
   }
 
   private renderIcons(): void {
