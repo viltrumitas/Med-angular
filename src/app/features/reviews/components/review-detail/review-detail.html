@@ -4,15 +4,15 @@
   ========================== -->
 
   @if (loading()) {
-  <section class="review-detail-state" aria-live="polite">
-    <div class="review-detail-state__spinner" aria-hidden="true"></div>
+    <section class="review-detail-state" aria-live="polite">
+      <div class="review-detail-state__spinner" aria-hidden="true"></div>
 
-    <div class="review-detail-state__content">
-      <h2>Cargando evaluación</h2>
+      <div class="review-detail-state__content">
+        <h2>Cargando evaluación</h2>
 
-      <p>Estamos obteniendo los resultados de la evaluación clínica.</p>
-    </div>
-  </section>
+        <p>Estamos obteniendo los resultados de la evaluación clínica.</p>
+      </div>
+    </section>
   }
 
   <!-- =========================
@@ -20,225 +20,223 @@
   ========================== -->
 
   @else if (review(); as r) {
-  <div class="review-detail">
-    <!-- =========================
+    <div class="review-detail">
+      <!-- =========================
            HEADER
       ========================== -->
 
-    <header class="review-detail__header">
-      <div class="review-detail__heading">
-        <span class="review-detail__eyebrow"> Evaluación completada </span>
+      <header class="review-detail__header">
+        <div class="review-detail__heading">
+          <span class="review-detail__eyebrow"> Evaluación completada </span>
 
-        <h1>Evaluación clínica</h1>
+          <h1>Evaluación clínica</h1>
 
-        <p>
-          {{ r.case.title }}
-        </p>
-      </div>
+          <p>
+            {{ r.case.title }}
+          </p>
+        </div>
 
-      <div class="review-detail__actions">
-        @if (canEdit()) {
-        <button type="button" class="review-detail__edit-button" (click)="onEdit(r.id)">
-          <i data-lucide="pen-line"></i>
+        <div class="review-detail__actions">
+          @if (canEdit()) {
+            <button type="button" class="review-detail__edit-button" (click)="onEdit(r.id)">
+              <i data-lucide="pen-line"></i>
 
-          <span>
-            Editar evaluación
-          </span>
-        </button>
-        }
+              <span> Editar evaluación </span>
+            </button>
+          }
 
-        <div class="review-detail__score">
-          <span>Puntaje total</span>
+          <div class="review-detail__score">
+            <span>Puntaje total</span>
 
-          <div>
-            <strong>{{ r.totalScore }}</strong>
-            <small>pts</small>
+            <div>
+              <strong>{{ r.totalScore }}</strong>
+              <small>pts</small>
+            </div>
           </div>
         </div>
-      </div>
-    </header>
+      </header>
 
-    <!-- =========================
+      <!-- =========================
          Entrega pendiente o a tiempo
     ========================== -->
 
-    <section class="submission-info">
-      <header class="submission-info__header">
-        <i data-lucide="clock-3"></i>
+      <section class="submission-info">
+        <header class="submission-info__header">
+          <i data-lucide="clock-3"></i>
 
-        <div>
-          <h3>Información de la entrega</h3>
-          <p>Datos de envío del estudiante.</p>
+          <div>
+            <h3>Información de la entrega</h3>
+            <p>Datos de envío del estudiante.</p>
+          </div>
+        </header>
+
+        <div class="submission-info__grid">
+          <article class="submission-info__item">
+            <span>Estado</span>
+
+            <strong
+              [class.submission-info__status--late]="r.submissionTiming === 'LATE'"
+              [class.submission-info__status--ontime]="r.submissionTiming === 'ON_TIME'"
+            >
+              @if (r.submissionTiming === 'LATE') {
+                🟠 Entrega tardía
+              } @else {
+                🟢 Entrega a tiempo
+              }
+            </strong>
+          </article>
+
+          <article class="submission-info__item">
+            <span>Fecha límite</span>
+
+            <strong>
+              @if (r.assignment.dueDate) {
+                {{ r.assignment.dueDate | date: 'd MMM y · HH:mm' }}
+              } @else {
+                Sin fecha límite
+              }
+            </strong>
+          </article>
+
+          <article class="submission-info__item">
+            <span>Entregado</span>
+
+            <strong>
+              {{ r.submittedAt | date: 'd MMM y · HH:mm' }}
+            </strong>
+          </article>
         </div>
-      </header>
+      </section>
 
-      <div class="submission-info__grid">
-
-        <article class="submission-info__item">
-          <span>Estado</span>
-
-          <strong [class.submission-info__status--late]="r.submissionTiming === 'LATE'"
-            [class.submission-info__status--ontime]="r.submissionTiming === 'ON_TIME'">
-            @if (r.submissionTiming === 'LATE') {
-            🟠 Entrega tardía
-            } @else {
-            🟢 Entrega a tiempo
-            }
-          </strong>
-        </article>
-
-        <article class="submission-info__item">
-          <span>Fecha límite</span>
-
-          <strong>
-            @if (r.assignment.dueDate) {
-            {{ r.assignment.dueDate | date:"d MMM y · HH:mm" }}
-            } @else {
-            Sin fecha límite
-            }
-          </strong>
-        </article>
-
-        <article class="submission-info__item">
-          <span>Entregado</span>
-
-          <strong>
-            {{ r.submittedAt | date:"d MMM y · HH:mm" }}
-          </strong>
-        </article>
-
-      </div>
-    </section>
-
-    <!-- =========================
+      <!-- =========================
            SUMMARY
       ========================== -->
 
-    <section class="review-summary">
-      <header class="review-summary__header">
-        <div>
-          <span class="review-summary__eyebrow"> Información general </span>
-
-          <h2>Resumen de la evaluación</h2>
-        </div>
-      </header>
-
-      <div class="review-summary__grid">
-        <article class="review-summary__item review-summary__item--student">
-          <span class="review-summary__avatar" aria-hidden="true">
-            {{ r.student.firstName.charAt(0) }}
-            {{ r.student.lastName.charAt(0) }}
-          </span>
-
+      <section class="review-summary">
+        <header class="review-summary__header">
           <div>
-            <span class="review-summary__label">Estudiante</span>
+            <span class="review-summary__eyebrow"> Información general </span>
+
+            <h2>Resumen de la evaluación</h2>
+          </div>
+        </header>
+
+        <div class="review-summary__grid">
+          <article class="review-summary__item review-summary__item--student">
+            <span class="review-summary__avatar" aria-hidden="true">
+              {{ r.student.firstName.charAt(0) }}
+              {{ r.student.lastName.charAt(0) }}
+            </span>
+
+            <div>
+              <span class="review-summary__label">Estudiante</span>
+
+              <strong>
+                {{ r.student.firstName }}
+                {{ r.student.lastName }}
+              </strong>
+            </div>
+          </article>
+
+          <article class="review-summary__item">
+            <span class="review-summary__label">Actividad</span>
 
             <strong>
-              {{ r.student.firstName }}
-              {{ r.student.lastName }}
+              {{ r.assignment.title }}
             </strong>
-          </div>
-        </article>
+          </article>
 
-        <article class="review-summary__item">
-          <span class="review-summary__label">Actividad</span>
+          <article class="review-summary__item">
+            <span class="review-summary__label">Fecha de evaluación</span>
 
-          <strong>
-            {{ r.assignment.title }}
-          </strong>
-        </article>
+            <time [attr.datetime]="r.createdAt">
+              {{ r.createdAt | date: 'dd MMM yyyy, HH:mm' }}
+            </time>
+          </article>
+        </div>
+      </section>
 
-        <article class="review-summary__item">
-          <span class="review-summary__label">Fecha de evaluación</span>
-
-          <time [attr.datetime]="r.createdAt">
-            {{ r.createdAt | date: 'dd MMM yyyy, HH:mm' }}
-          </time>
-        </article>
-      </div>
-    </section>
-
-    <!-- =========================
+      <!-- =========================
            FEEDBACK
       ========================== -->
 
-    <section class="review-feedback">
-      <header class="review-feedback__header">
-        <div class="review-feedback__icon" aria-hidden="true">
-          <i data-lucide="message-square-text"></i>
-        </div>
+      <section class="review-feedback">
+        <header class="review-feedback__header">
+          <div class="review-feedback__icon" aria-hidden="true">
+            <i data-lucide="message-square-text"></i>
+          </div>
 
-        <div>
-          <span class="review-feedback__eyebrow"> Comentarios del evaluador </span>
+          <div>
+            <span class="review-feedback__eyebrow"> Comentarios del evaluador </span>
 
-          <h2>Retroalimentación general</h2>
-        </div>
-      </header>
+            <h2>Retroalimentación general</h2>
+          </div>
+        </header>
 
-      @if (r.feedback) {
-      <p class="review-feedback__content">
-        {{ r.feedback }}
-      </p>
-      } @else {
-      <p class="review-feedback__content review-feedback__content--empty">
-        No se registraron comentarios generales para esta evaluación.
-      </p>
-      }
-    </section>
+        @if (r.feedback) {
+          <p class="review-feedback__content">
+            {{ r.feedback }}
+          </p>
+        } @else {
+          <p class="review-feedback__content review-feedback__content--empty">
+            No se registraron comentarios generales para esta evaluación.
+          </p>
+        }
+      </section>
 
-    <!-- =========================
+      <!-- =========================
            RUBRIC
       ========================== -->
 
-    <section class="review-rubric">
-      <header class="review-rubric__header">
-        <div>
-          <span class="review-rubric__eyebrow"> Desglose de resultados </span>
+      <section class="review-rubric">
+        <header class="review-rubric__header">
+          <div>
+            <span class="review-rubric__eyebrow"> Desglose de resultados </span>
 
-          <h2>Evaluación por secciones</h2>
+            <h2>Evaluación por secciones</h2>
 
-          <p>Consulta el puntaje asignado a cada criterio de la rúbrica clínica.</p>
-        </div>
-
-        <div class="review-rubric__count">
-          <strong>{{ sections().length }}</strong>
-
-          <span>
-            {{ sections().length === 1 ? 'sección' : 'secciones' }}
-          </span>
-        </div>
-      </header>
-
-      <div class="review-rubric__grid">
-        @for (section of sections(); track section.key) {
-        <article class="rubric-card">
-          <header class="rubric-card__header">
-            <span class="rubric-card__number">
-              {{ $index + 1 }}
-            </span>
-
-            <h3>
-              {{ sectionLabel(section.key) }}
-            </h3>
-          </header>
-
-          <div class="rubric-card__items">
-            @for (item of getEntries(section.value, section.key); track item[0]) {
-            <div class="rubric-card__item">
-              <span>
-                {{ label(item[0]) }}
-              </span>
-
-              <strong>
-                {{ item[1] }}
-              </strong>
-            </div>
-            }
+            <p>Consulta el puntaje asignado a cada criterio de la rúbrica clínica.</p>
           </div>
-        </article>
-        }
-      </div>
-    </section>
-  </div>
+
+          <div class="review-rubric__count">
+            <strong>{{ sections().length }}</strong>
+
+            <span>
+              {{ sections().length === 1 ? 'sección' : 'secciones' }}
+            </span>
+          </div>
+        </header>
+
+        <div class="review-rubric__grid">
+          @for (section of sections(); track section.key) {
+            <article class="rubric-card">
+              <header class="rubric-card__header">
+                <span class="rubric-card__number">
+                  {{ $index + 1 }}
+                </span>
+
+                <h3>
+                  {{ sectionLabel(section.key) }}
+                </h3>
+              </header>
+
+              <div class="rubric-card__items">
+                @for (item of getEntries(section.value, section.key); track item[0]) {
+                  <div class="rubric-card__item">
+                    <span>
+                      {{ label(item[0]) }}
+                    </span>
+
+                    <strong>
+                      {{ item[1] }}
+                    </strong>
+                  </div>
+                }
+              </div>
+            </article>
+          }
+        </div>
+      </section>
+    </div>
   }
 </section>

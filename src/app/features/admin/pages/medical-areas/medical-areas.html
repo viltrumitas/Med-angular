@@ -1,22 +1,22 @@
-<section class="medical-areas-page">
+<section class="medical-areas">
   <!-- =========================
        HEADER
   ========================== -->
 
-  <header class="page-header">
-    <div class="header-content">
-      <span class="header-eyebrow">Administración</span>
+  <header class="medical-areas__header">
+    <div class="medical-areas__header-content">
+      <span class="medical-areas__eyebrow">Administración</span>
 
-      <h1>Áreas médicas</h1>
+      <h1 class="medical-areas__title">Áreas médicas</h1>
 
-      <p>
+      <p class="medical-areas__description">
         Administra las áreas médicas disponibles para clasificar los casos clínicos dentro de
         MedCases.
       </p>
     </div>
 
-    <div class="header-btn-container">
-      <button type="button" class="create-area-button" (click)="openCreateModal()">
+    <div class="medical-areas__header-actions">
+      <button type="button" class="medical-areas__primary-action" (click)="openCreateModal()">
         <i data-lucide="plus"></i>
 
         <span>Nueva área</span>
@@ -29,15 +29,19 @@
   ========================== -->
 
   @if (loading()) {
-  <section class="state-container" aria-live="polite">
-    <div class="spinner" aria-hidden="true"></div>
+    <section class="medical-areas__state" aria-live="polite">
+      <div class="medical-areas__state-icon" aria-hidden="true">
+        <div class="medical-areas__spinner"></div>
+      </div>
 
-    <div class="state-content">
-      <h2>Cargando áreas médicas</h2>
+      <div class="medical-areas__state-content">
+        <span class="medical-areas__state-eyebrow">Catálogo</span>
 
-      <p>Estamos obteniendo las áreas médicas registradas...</p>
-    </div>
-  </section>
+        <h2>Cargando áreas médicas</h2>
+
+        <p>Estamos obteniendo las áreas médicas registradas...</p>
+      </div>
+    </section>
   }
 
   <!-- =========================
@@ -45,207 +49,232 @@
   ========================== -->
 
   @else {
-
-  <!-- =========================
+    <!-- =========================
          SUMMARY
     ========================== -->
 
-  <section class="summary-grid" aria-label="Resumen de áreas médicas">
-    <article class="summary-card">
-      <div class="summary-icon total">
-        <i data-lucide="stethoscope"></i>
+    <section class="medical-areas__summary" aria-label="Resumen de áreas médicas">
+      <article class="medical-areas__summary-card">
+        <div class="medical-areas__summary-icon medical-areas__summary-icon--primary">
+          <i data-lucide="stethoscope"></i>
+        </div>
+
+        <div class="medical-areas__summary-content">
+          <span>Total de áreas</span>
+
+          <strong>
+            {{ medicalAreas().length }}
+          </strong>
+
+          <small>Áreas médicas registradas</small>
+        </div>
+      </article>
+
+      <article class="medical-areas__summary-card">
+        <div class="medical-areas__summary-icon medical-areas__summary-icon--secondary">
+          <i data-lucide="list-filter"></i>
+        </div>
+
+        <div class="medical-areas__summary-content">
+          <span>Resultados visibles</span>
+
+          <strong>
+            {{ filteredAreas().length }}
+          </strong>
+
+          <small>Coincidencias con la búsqueda</small>
+        </div>
+      </article>
+    </section>
+
+    <!-- =========================
+         TOOLBAR
+    ========================== -->
+
+    <section class="medical-areas__toolbar">
+      <div class="medical-areas__search">
+        <i class="medical-areas__search-icon" data-lucide="search" aria-hidden="true"></i>
+
+        <input
+          type="search"
+          placeholder="Buscar área médica..."
+          [value]="search()"
+          aria-label="Buscar área médica"
+          (input)="updateSearch($any($event.target).value)"
+        />
+
+        @if (search()) {
+          <button
+            type="button"
+            class="medical-areas__search-clear"
+            aria-label="Limpiar búsqueda"
+            (click)="updateSearch('')"
+          >
+            <i data-lucide="x"></i>
+          </button>
+        }
       </div>
 
-      <div class="summary-content">
-        <span>Total de áreas</span>
-
-        <strong>
-          {{ medicalAreas().length }}
-        </strong>
-
-        <small>Áreas médicas registradas</small>
-      </div>
-    </article>
-
-    <article class="summary-card">
-      <div class="summary-icon results">
-        <i data-lucide="list-filter"></i>
-      </div>
-
-      <div class="summary-content">
-        <span>Resultados visibles</span>
-
+      <div class="medical-areas__results">
         <strong>
           {{ filteredAreas().length }}
         </strong>
 
-        <small>Coincidencias con la búsqueda</small>
+        <span>
+          {{ filteredAreas().length === 1 ? 'área' : 'áreas' }}
+        </span>
       </div>
-    </article>
-  </section>
+    </section>
 
-  <!-- =========================
-         TOOLBAR
+    <!-- =========================
+         EMPTY STATE
     ========================== -->
 
-  <section class="users-toolbar">
-    <div class="search-field">
-      <i data-lucide="search"></i>
+    @if (medicalAreas().length === 0) {
+      <section class="medical-areas__empty">
+        <div class="medical-areas__empty-icon">
+          <i data-lucide="stethoscope"></i>
+        </div>
 
-      <input type="search" placeholder="Buscar área médica..." [value]="search()"
-        (input)="updateSearch($any($event.target).value)" />
+        <div class="medical-areas__empty-content">
+          <span class="medical-areas__empty-eyebrow">Catálogo vacío</span>
 
-      @if (search()) {
-      <button type="button" class="clear-search" (click)="updateSearch('')">
-        <i data-lucide="x"></i>
-      </button>
-      }
-    </div>
+          <h2>No hay áreas médicas</h2>
 
-    <div class="toolbar-info">
-      <strong>
-        {{ filteredAreas().length }}
-      </strong>
+          <p>Crea la primera área médica para comenzar a clasificar los casos clínicos.</p>
+        </div>
 
-      <span>
-        {{ filteredAreas().length === 1 ? 'área' : 'áreas' }}
-      </span>
-    </div>
-  </section>
+        <div class="medical-areas__empty-actions">
+          <button type="button" class="medical-areas__secondary-action" (click)="openCreateModal()">
+            <i data-lucide="plus"></i>
 
-  <!-- =========================
-         EMPTY
-    ========================== -->
+            <span>Crear primera área</span>
+          </button>
+        </div>
+      </section>
+    }
 
-  @if (medicalAreas().length === 0) {
-
-  <section class="empty-state">
-    <div class="empty-icon">
-      <i data-lucide="stethoscope"></i>
-    </div>
-
-    <h2>No hay áreas médicas</h2>
-
-    <p>
-      Crea la primera área médica para comenzar a clasificar los casos clínicos.
-    </p>
-
-    <div class="empty-actions">
-      <button type="button" class="empty-action" (click)="openCreateModal()">
-        <i data-lucide="plus"></i>
-
-        <span>Crear primera área</span>
-      </button>
-    </div>
-  </section>
-
-  }
-
-  <!-- =========================
+    <!-- =========================
          NO RESULTS
     ========================== -->
 
-  @else if (filteredAreas().length === 0) {
+    @else if (filteredAreas().length === 0) {
+      <section class="medical-areas__empty medical-areas__empty--search">
+        <div class="medical-areas__empty-icon">
+          <i data-lucide="search-x"></i>
+        </div>
 
-  <section class="no-results">
-    <div class="no-results-icon">
-      <i data-lucide="search-x"></i>
-    </div>
+        <div class="medical-areas__empty-content">
+          <span class="medical-areas__empty-eyebrow">Sin coincidencias</span>
 
-    <h2>No encontramos áreas médicas</h2>
+          <h2>No encontramos áreas médicas</h2>
 
-    <p>
-      No hay resultados para
-      <strong>"{{ search() }}"</strong>.
-    </p>
+          <p>
+            No hay resultados para
+            <strong>"{{ search() }}"</strong>.
+          </p>
+        </div>
 
-    <button type="button" class="clear-results-button" (click)="updateSearch('')">
-      <i data-lucide="rotate-ccw"></i>
+        <div class="medical-areas__empty-actions">
+          <button type="button" class="medical-areas__secondary-action" (click)="updateSearch('')">
+            <i data-lucide="rotate-ccw"></i>
 
-      <span>Limpiar búsqueda</span>
-    </button>
-  </section>
+            <span>Limpiar búsqueda</span>
+          </button>
+        </div>
+      </section>
+    }
 
-  }
-
-  <!-- =========================
-         TABLE
+    <!-- =========================
+         CATALOG
     ========================== -->
 
-  @else {
+    @else {
+      <section class="medical-areas__catalog">
+        <header class="medical-areas__catalog-header">
+          <div class="medical-areas__catalog-heading">
+            <span class="medical-areas__catalog-eyebrow">Catálogo</span>
 
-  <section class="users-card">
-    <header class="table-header">
-      <div>
-        <span class="table-eyebrow">Catálogo</span>
+            <h2>Áreas médicas</h2>
 
-        <h2>Áreas médicas</h2>
+            <p>Consulta y administra las áreas médicas disponibles.</p>
+          </div>
 
-        <p>
-          Consulta y administra las áreas médicas disponibles.
-        </p>
-      </div>
+          <div class="medical-areas__catalog-counter">
+            <strong>
+              {{ filteredAreas().length }}
+            </strong>
 
-      <div class="table-counter">
-        {{ filteredAreas().length }}
-      </div>
-    </header>
+            <span>
+              {{ filteredAreas().length === 1 ? 'área' : 'áreas' }}
+            </span>
+          </div>
+        </header>
 
-    <div class="table-wrapper">
-      <table>
-        <thead>
-          <tr>
-            <th>Nombre</th>
+        <div class="medical-areas__table-wrapper">
+          <table class="medical-areas__table">
+            <thead>
+              <tr>
+                <th scope="col">Nombre</th>
+                <th scope="col">Acciones</th>
+              </tr>
+            </thead>
 
-            <th>Acciones</th>
-          </tr>
-        </thead>
+            <tbody>
+              @for (area of filteredAreas(); track area.id) {
+                <tr>
+                  <td data-label="Nombre">
+                    <div class="medical-areas__name">
+                      <div class="medical-areas__name-icon">
+                        <i data-lucide="stethoscope"></i>
+                      </div>
 
-        <tbody>
-          @for (area of filteredAreas(); track area.id) {
+                      <span>{{ area.name }}</span>
+                    </div>
+                  </td>
 
-          <tr>
+                  <td data-label="Acciones">
+                    <div class="medical-areas__actions">
+                      <button
+                        type="button"
+                        class="medical-areas__action medical-areas__action--edit"
+                        (click)="openEditModal(area)"
+                      >
+                        <i data-lucide="pencil"></i>
 
-            <td data-label="Nombre">
-              {{ area.name }}
-            </td>
+                        <span>Editar</span>
+                      </button>
 
-            <td data-label="Acciones">
-              <div class="actions">
+                      <button
+                        type="button"
+                        class="medical-areas__action medical-areas__action--delete"
+                        (click)="deleteMedicalArea(area.id)"
+                      >
+                        <i data-lucide="trash-2"></i>
 
-                <button type="button" (click)="openEditModal(area)" class="action-button action-button--edit">
-                  <i data-lucide="pencil"></i>
-
-                  <span>Editar</span>
-                </button>
-
-                <button type="button" (click)="deleteMedicalArea(area.id)" class="action-button action-button--delete">
-                  <i data-lucide="trash-2"></i>
-
-                  <span>Eliminar</span>
-                </button>
-
-              </div>
-            </td>
-
-          </tr>
-
-          }
-        </tbody>
-      </table>
-    </div>
-  </section>
-
-  }
-
+                        <span>Eliminar</span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
+    }
   }
 
   <!-- =========================
-       CREATE MODAL
+       FORM MODAL
   ========================== -->
 
-  <app-medical-area-form [form]="medicalAreaForm" [isOpen]="createOpen()" [submitting]="submitting()"
-    [submitLabel]="selectedArea() ? 'Guardar cambios' : 'Crear área'" (submitted)="submitMedicalArea()"
-    (closeRequested)="closeCreateModal()" />
-
+  <app-medical-area-form
+    [form]="medicalAreaForm"
+    [isOpen]="createOpen()"
+    [submitting]="submitting()"
+    [submitLabel]="selectedArea() ? 'Guardar cambios' : 'Crear área'"
+    (submitted)="submitMedicalArea()"
+    (closeRequested)="closeCreateModal()"
+  />
 </section>

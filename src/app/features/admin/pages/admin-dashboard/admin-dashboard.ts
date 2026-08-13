@@ -25,6 +25,7 @@ export class AdminDashboard implements OnInit {
       .pipe(
         finalize(() => {
           this.loading.set(false);
+          this.renderIcons();
         }),
       )
       .subscribe({

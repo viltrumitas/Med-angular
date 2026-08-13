@@ -16,7 +16,6 @@ interface ReviewSection {
   styleUrl: './review-detail.scss',
 })
 export class ReviewDetail implements AfterViewInit {
-
   readonly review = input<ReviewResponseDto | null>(null);
 
   readonly canEdit = input(false);
@@ -24,7 +23,6 @@ export class ReviewDetail implements AfterViewInit {
   readonly loading = input(false);
 
   readonly edit = output<string>();
-
 
   private readonly labels: Record<string, string> = {
     // Manejo de escena

@@ -4,24 +4,22 @@
          HEADER
     ========================== -->
 
-    <header class="form-header">
-      <div class="form-header__icon" aria-hidden="true">
+    <header class="medical-area-form__header">
+      <div class="medical-area-form__header-icon" aria-hidden="true">
         <i data-lucide="stethoscope"></i>
       </div>
 
-      <div class="form-header__content">
-        <span class="form-header__eyebrow">Administración</span>
+      <div class="medical-area-form__header-content">
+        <span class="medical-area-form__eyebrow">Administración</span>
 
         <h2>{{ submitLabel() }}</h2>
 
-        <p>
-          Registra una nueva área médica para clasificar los casos clínicos dentro de MedCases.
-        </p>
+        <p>Registra una nueva área médica para clasificar los casos clínicos dentro de MedCases.</p>
       </div>
 
       <button
         type="button"
-        class="form-header__close"
+        class="medical-area-form__close"
         aria-label="Cerrar modal"
         [disabled]="submitting()"
         (click)="onCancel()"
@@ -34,27 +32,24 @@
          BODY
     ========================== -->
 
-    <section class="form-body">
-      <div class="form-section-header">
-        <div>
-          <span class="form-section-header__eyebrow">
-            Información general
-          </span>
+    <section class="medical-area-form__body">
+      <div class="medical-area-form__section-header">
+        <span class="medical-area-form__section-eyebrow"> Información general </span>
 
-          <h3>Área médica</h3>
+        <h3>Área médica</h3>
 
-          <p>
-            Define el nombre del área médica que estará disponible para los casos clínicos.
-          </p>
-        </div>
+        <p>Define la información del área médica que estará disponible para los casos clínicos.</p>
       </div>
 
-      <div class="form-grid">
+      <div class="medical-area-form__grid">
+        <!-- =========================
+             NAME
+        ========================== -->
+
         <div
-          class="form-field form-field--full"
-          [class.form-field--invalid]="
-            form().controls.name.invalid &&
-            form().controls.name.touched
+          class="medical-area-form__field"
+          [class.medical-area-form__field--invalid]="
+            form().controls.name.invalid && form().controls.name.touched
           "
         >
           <label for="medical-area-name">
@@ -62,8 +57,8 @@
             <span aria-hidden="true">*</span>
           </label>
 
-          <div class="input-control">
-            <i data-lucide="stethoscope"></i>
+          <div class="medical-area-form__input-control">
+            <i data-lucide="stethoscope" aria-hidden="true"></i>
 
             <input
               id="medical-area-name"
@@ -74,43 +69,66 @@
             />
           </div>
 
-          <label for="medical-area-name">
-            Descripcion
-            <span aria-hidden="true">*</span>
-          </label>
-
-          <div class="input-control">
-            <i data-lucide="stethoscope"></i>
-
-            <input
-              id="medical-area-name"
-              type="text"
-              formControlName="description"
-              autocomplete="off"
-            />
-          </div>
-
-          <small class="field-help">
+          <small class="medical-area-form__field-help">
             Este nombre será utilizado para clasificar los casos clínicos.
           </small>
 
-          @if (form().controls.name.invalid &&
-          form().controls.name.touched) {
-            <small class="field-error">
-              <i data-lucide="circle-alert"></i>
+          @if (form().controls.name.invalid && form().controls.name.touched) {
+            <small class="medical-area-form__field-error">
+              <i data-lucide="circle-alert" aria-hidden="true"></i>
 
-              Ingresa un nombre para el área médica.
+              <span>Ingresa un nombre para el área médica.</span>
+            </small>
+          }
+        </div>
+
+        <!-- =========================
+             DESCRIPTION
+        ========================== -->
+
+        <div
+          class="medical-area-form__field"
+          [class.medical-area-form__field--invalid]="
+            form().controls.description.invalid && form().controls.description.touched
+          "
+        >
+          <label for="medical-area-description"> Descripción </label>
+
+          <div class="medical-area-form__input-control medical-area-form__input-control--textarea">
+            <i data-lucide="file-text" aria-hidden="true"></i>
+
+            <textarea
+              id="medical-area-description"
+              formControlName="description"
+              placeholder="Ej. Área encargada de enfermedades del corazón y sistema circulatorio."
+              rows="4"
+            ></textarea>
+          </div>
+
+          <small class="medical-area-form__field-help">
+            Agrega una breve descripción para identificar el área médica.
+          </small>
+
+          @if (form().controls.description.invalid && form().controls.description.touched) {
+            <small class="medical-area-form__field-error">
+              <i data-lucide="circle-alert" aria-hidden="true"></i>
+
+              <span>Revisa la descripción del área médica.</span>
             </small>
           }
         </div>
       </div>
 
-      <aside class="role-info">
-        <div class="role-info__icon" aria-hidden="true">
+      <!-- =========================
+           INFORMATION
+      ========================== -->
+
+      <aside class="medical-area-form__info">
+        <div class="medical-area-form__info-icon" aria-hidden="true">
           <i data-lucide="info"></i>
         </div>
 
-        <div>
+        <div class="medical-area-form__info-content">
           <strong>Organización de los casos</strong>
 
           <p>
@@ -125,10 +143,10 @@
          ACTIONS
     ========================== -->
 
-    <footer class="form-actions">
+    <footer class="medical-area-form__actions">
       <button
         type="button"
-        class="form-button form-button--secondary"
+        class="medical-area-form__button medical-area-form__button--secondary"
         [disabled]="submitting()"
         (click)="onCancel()"
       >
@@ -139,11 +157,11 @@
 
       <button
         type="submit"
-        class="form-button form-button--primary"
+        class="medical-area-form__button medical-area-form__button--primary"
         [disabled]="submitting()"
       >
         @if (submitting()) {
-          <span class="form-button__spinner" aria-hidden="true"></span>
+          <span class="medical-area-form__button-spinner" aria-hidden="true"></span>
 
           <span>Guardando...</span>
         } @else {

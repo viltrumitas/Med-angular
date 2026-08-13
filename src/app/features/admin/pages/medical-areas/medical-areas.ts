@@ -1,19 +1,20 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { createIcons, icons } from 'lucide';
+import { finalize } from 'rxjs';
 
 import { MedicalAreaApi } from '../../services/medical-area-api.service';
 import { MedicalAreaResponseDto } from './dto/medical-area-response.dto';
+import { UpdateMedicalAreaDto } from './dto/update-medical-area.dto';
+
 import { MedicalAreaFormComponent } from '../../components/medical-area-form/medical-area-form';
+import { createMedicalAreaForm } from '../../forms/medical-area.form';
 
 import { ErrorService } from '../../../../core/services/error.service';
-import { createMedicalAreaForm } from '../../forms/medical-area.form';
-import { finalize } from 'rxjs';
-import { UpdateMedicalAreaDto } from './dto/update-medical-area.dto';
 
 @Component({
   selector: 'app-medical-areas',
   standalone: true,
-  imports: [MedicalAreaFormComponent,],
+  imports: [MedicalAreaFormComponent],
   templateUrl: './medical-areas.html',
   styleUrl: './medical-areas.scss',
 })
@@ -21,59 +22,85 @@ export class MedicalAreas implements OnInit {
   private readonly medicalAreaApi = inject(MedicalAreaApi);
   private readonly errorService = inject(ErrorService);
 
+  // ==========================================================================
+  // FORM
+  // ==========================================================================
+
   readonly medicalAreaForm = createMedicalAreaForm();
 
-  readonly medicalAreas = signal<MedicalAreaResponseDto[]>([]);
+  // ==========================================================================
+  // STATE
+  // ==========================================================================
 
+  readonly medicalAreas = signal<MedicalAreaResponseDto[]>([]);
   readonly loading = signal(true);
+  readonly submitting = signal(false);
 
   readonly search = signal('');
-
   readonly createOpen = signal(false);
-
-  readonly submitting = signal(false);
 
   readonly selectedArea = signal<MedicalAreaResponseDto | null>(null);
 
-  readonly filteredAreas = computed(() => {
-    const value = this.search().toLowerCase().trim();
+  // ==========================================================================
+  // COMPUTED
+  // ==========================================================================
 
-    if (!value) {
+  readonly filteredAreas = computed(() => {
+    const searchValue = this.search().trim().toLowerCase();
+
+    if (!searchValue) {
       return this.medicalAreas();
     }
 
-    return this.medicalAreas().filter((area) =>
-      area.name.toLowerCase().includes(value),
-    );
+    return this.medicalAreas().filter((area) => area.name.toLowerCase().includes(searchValue));
   });
+
+  // ==========================================================================
+  // LIFECYCLE
+  // ==========================================================================
 
   ngOnInit(): void {
     this.loadMedicalAreas();
   }
 
+  // ==========================================================================
+  // SEARCH
+  // ==========================================================================
+
   updateSearch(value: string): void {
     this.search.set(value);
   }
 
+  // ==========================================================================
+  // LOAD
+  // ==========================================================================
+
   loadMedicalAreas(): void {
     this.loading.set(true);
-
     this.errorService.clear();
 
-    this.medicalAreaApi.findALl().subscribe({
-      next: (areas) => {
-        this.medicalAreas.set(areas);
+    this.medicalAreaApi
+      .findALl()
+      .pipe(
+        finalize(() => {
+          this.loading.set(false);
+          this.renderIcons();
+        }),
+      )
+      .subscribe({
+        next: (areas) => {
+          this.medicalAreas.set(areas);
+        },
 
-        this.loading.set(false);
-      },
-
-      error: () => {
-        this.loading.set(false);
-
-        this.renderIcons();
-      },
-    });
+        error: () => {
+          this.medicalAreas.set([]);
+        },
+      });
   }
+
+  // ==========================================================================
+  // CREATE
+  // ==========================================================================
 
   createMedicalArea(): void {
     if (this.medicalAreaForm.invalid) {
@@ -82,7 +109,6 @@ export class MedicalAreas implements OnInit {
     }
 
     this.submitting.set(true);
-
     this.errorService.clear();
 
     const dto = this.medicalAreaForm.getRawValue();
@@ -92,6 +118,7 @@ export class MedicalAreas implements OnInit {
       .pipe(
         finalize(() => {
           this.submitting.set(false);
+          this.renderIcons();
         }),
       )
       .subscribe({
@@ -102,7 +129,10 @@ export class MedicalAreas implements OnInit {
       });
   }
 
-  // edit area
+  // ==========================================================================
+  // UPDATE
+  // ==========================================================================
+
   updateMedicalArea(): void {
     if (this.medicalAreaForm.invalid) {
       this.medicalAreaForm.markAllAsTouched();
@@ -116,12 +146,15 @@ export class MedicalAreas implements OnInit {
     }
 
     this.submitting.set(true);
+    this.errorService.clear();
 
     const value = this.medicalAreaForm.getRawValue();
 
+    const description = value.description?.trim() ?? '';
+
     const dto: UpdateMedicalAreaDto = {
       name: value.name,
-      description: value.description.trim() === '' ? null : value.description,
+      description: description === '' ? null : description,
     };
 
     this.medicalAreaApi
@@ -129,21 +162,23 @@ export class MedicalAreas implements OnInit {
       .pipe(
         finalize(() => {
           this.submitting.set(false);
+          this.renderIcons();
         }),
       )
       .subscribe({
         next: () => {
-          this.loadMedicalAreas();
           this.closeCreateModal();
+          this.loadMedicalAreas();
         },
       });
   }
 
-  // remove area
+  // ==========================================================================
+  // DELETE
+  // ==========================================================================
+
   deleteMedicalArea(id: string): void {
-    const confirmDelete = confirm(
-      '¿Eliminar esta área médica?',
-    );
+    const confirmDelete = confirm('¿Eliminar esta área médica?');
 
     if (!confirmDelete) {
       return;
@@ -151,27 +186,35 @@ export class MedicalAreas implements OnInit {
 
     this.errorService.clear();
 
-    this.medicalAreaApi.remove(id).subscribe({
-      next: () => {
-        this.loadMedicalAreas();
-      },
-    });
+    this.medicalAreaApi
+      .remove(id)
+      .pipe(
+        finalize(() => {
+          this.renderIcons();
+        }),
+      )
+      .subscribe({
+        next: () => {
+          this.loadMedicalAreas();
+        },
+      });
   }
+
+  // ==========================================================================
+  // MODAL
+  // ==========================================================================
 
   openCreateModal(): void {
     this.selectedArea.set(null);
+
     this.medicalAreaForm.reset();
+
     this.createOpen.set(true);
+
+    this.renderIcons();
   }
 
-  closeCreateModal(): void {
-    this.medicalAreaForm.reset();
-    this.createOpen.set(false);
-  }
-
-  // modal para abrir el editar area medica
   openEditModal(area: MedicalAreaResponseDto): void {
-
     this.selectedArea.set(area);
 
     this.medicalAreaForm.patchValue({
@@ -180,27 +223,40 @@ export class MedicalAreas implements OnInit {
     });
 
     this.createOpen.set(true);
+
+    this.renderIcons();
   }
 
-  // cerrar edicion
-  closeEditModel(): void {
+  closeCreateModal(): void {
     this.selectedArea.set(null);
 
     this.medicalAreaForm.reset();
 
     this.createOpen.set(false);
+
+    this.renderIcons();
   }
 
-  // submit modal
+  // ==========================================================================
+  // SUBMIT
+  // ==========================================================================
+
   submitMedicalArea(): void {
     if (this.selectedArea()) {
       this.updateMedicalArea();
-    } else {
-      this.createMedicalArea();
+      return;
     }
+
+    this.createMedicalArea();
   }
 
+  // ==========================================================================
+  // ICONS
+  // ==========================================================================
+
   private renderIcons(): void {
-    
+    setTimeout(() => {
+      createIcons({ icons });
+    });
   }
 }

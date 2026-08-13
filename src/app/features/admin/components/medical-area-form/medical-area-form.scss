@@ -1,0 +1,745 @@
+$mobile: 640px;
+$tablet: 900px;
+$desktop: 1200px;
+$wide-desktop: 1450px;
+
+$primary: #2563eb;
+$primary-hover: #1d4ed8;
+$primary-soft: #eff6ff;
+
+$teal: #0d9488;
+$teal-dark: #0f766e;
+$teal-soft: #f0fdfa;
+
+$warning: #d97706;
+$warning-dark: #b45309;
+$warning-soft: #fffbeb;
+
+$danger: #dc2626;
+$danger-dark: #b91c1c;
+$danger-soft: #fef2f2;
+
+$violet: #7c3aed;
+$violet-dark: #6d28d9;
+$violet-soft: #f5f3ff;
+
+$text-primary: #0f172a;
+$text-secondary: #475569;
+$text-muted: #94a3b8;
+
+$border: #e2e8f0;
+$border-soft: #f1f5f9;
+
+$surface: #ffffff;
+$surface-soft: #f8fafc;
+
+$transition-fast: 180ms ease;
+$transition-base: 280ms cubic-bezier(0.4, 0, 0.2, 1);
+
+// ==========================================================================
+// MEDICAL AREA FORM
+// ==========================================================================
+
+.medical-area-form {
+  width: min(100%, 680px);
+
+  overflow: hidden;
+
+  color: $text-primary;
+
+  // ==========================================================================
+  // HEADER
+  // ==========================================================================
+
+  &__header {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+
+    gap: 0.9rem;
+
+    padding: 1.25rem 1.35rem;
+
+    border-bottom: 1px solid $border;
+
+    background:
+      radial-gradient(circle at 100% 0%, rgba($teal, 0.13), transparent 38%),
+      radial-gradient(circle at 0% 100%, rgba($primary, 0.08), transparent 42%),
+      linear-gradient(135deg, rgba($surface, 0.99), rgba($primary-soft, 0.72));
+  }
+
+  &__header-icon {
+    flex: 0 0 auto;
+
+    display: grid;
+    place-items: center;
+
+    width: 3rem;
+    height: 3rem;
+
+    border: 1px solid rgba($teal, 0.16);
+    border-radius: 0.85rem;
+
+    background:
+      radial-gradient(circle at 30% 20%, rgba($surface, 0.9), transparent 45%), $teal-soft;
+
+    color: $teal-dark;
+
+    box-shadow:
+      0 8px 18px rgba($teal, 0.1),
+      inset 0 1px 0 rgba($surface, 0.9);
+
+    i,
+    svg {
+      width: 1.35rem;
+      height: 1.35rem;
+
+      stroke-width: 2;
+    }
+  }
+
+  &__header-content {
+    flex: 1;
+    min-width: 0;
+
+    padding-right: 2rem;
+
+    h2 {
+      margin: 0.35rem 0 0;
+
+      color: $text-primary;
+
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: -0.035em;
+      line-height: 1.15;
+    }
+
+    p {
+      max-width: 510px;
+
+      margin: 0.5rem 0 0;
+
+      color: $text-secondary;
+
+      font-size: 0.78rem;
+      line-height: 1.55;
+    }
+  }
+
+  &__eyebrow,
+  &__section-eyebrow {
+    display: inline-flex;
+    align-items: center;
+
+    color: $teal-dark;
+
+    font-size: 0.62rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  &__eyebrow {
+    padding: 0.32rem 0.55rem;
+
+    border: 1px solid rgba($teal, 0.16);
+    border-radius: 999px;
+
+    background: rgba($teal-soft, 0.88);
+  }
+
+  // ==========================================================================
+  // CLOSE
+  // ==========================================================================
+
+  &__close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+
+    display: grid;
+    place-items: center;
+
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+
+    border: 1px solid transparent;
+    border-radius: 0.6rem;
+
+    background: transparent;
+    color: $text-muted;
+
+    cursor: pointer;
+
+    transition:
+      background $transition-fast,
+      border-color $transition-fast,
+      color $transition-fast,
+      transform $transition-fast;
+
+    i,
+    svg {
+      width: 1rem;
+      height: 1rem;
+
+      stroke-width: 2.2;
+    }
+
+    &:hover:not(:disabled) {
+      border-color: rgba($danger, 0.14);
+
+      background: $danger-soft;
+      color: $danger;
+
+      transform: rotate(4deg);
+    }
+
+    &:active:not(:disabled) {
+      transform: scale(0.94);
+    }
+
+    &:focus-visible {
+      outline: 3px solid rgba($primary, 0.16);
+      outline-offset: 2px;
+    }
+
+    &:disabled {
+      opacity: 0.45;
+
+      cursor: not-allowed;
+    }
+  }
+
+  // ==========================================================================
+  // BODY
+  // ==========================================================================
+
+  &__body {
+    padding: 1.25rem 1.35rem;
+
+    background: $surface;
+  }
+
+  // ==========================================================================
+  // SECTION HEADER
+  // ==========================================================================
+
+  &__section-header {
+    margin-bottom: 1rem;
+
+    h3 {
+      margin: 0.35rem 0 0;
+
+      color: $text-primary;
+
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    p {
+      max-width: 590px;
+
+      margin: 0.35rem 0 0;
+
+      color: $text-secondary;
+
+      font-size: 0.75rem;
+      line-height: 1.5;
+    }
+  }
+
+  // ==========================================================================
+  // GRID
+  // ==========================================================================
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 0.85rem;
+  }
+
+  // ==========================================================================
+  // FIELD
+  // ==========================================================================
+
+  &__field {
+    min-width: 0;
+
+    &--invalid {
+      .medical-area-form__input-control {
+        border-color: rgba($danger, 0.45);
+
+        background: $danger-soft;
+
+        box-shadow: 0 0 0 3px rgba($danger, 0.07);
+
+        &:focus-within {
+          border-color: rgba($danger, 0.65);
+          box-shadow: 0 0 0 3px rgba($danger, 0.1);
+        }
+      }
+
+      label {
+        color: $danger-dark;
+      }
+    }
+
+    label {
+      display: flex;
+      align-items: center;
+
+      gap: 0.2rem;
+
+      margin-bottom: 0.4rem;
+
+      color: $text-secondary;
+
+      font-size: 0.7rem;
+      font-weight: 800;
+
+      span {
+        color: $danger;
+      }
+    }
+  }
+
+  // ==========================================================================
+  // INPUT
+  // ==========================================================================
+
+  &__input-control {
+    position: relative;
+
+    display: flex;
+    align-items: flex-start;
+
+    min-height: 2.7rem;
+
+    border: 1px solid $border;
+    border-radius: 0.75rem;
+
+    background: $surface-soft;
+
+    transition:
+      border-color $transition-fast,
+      background $transition-fast,
+      box-shadow $transition-fast;
+
+    > i,
+    > svg {
+      flex: 0 0 auto;
+
+      width: 1rem;
+      height: 1rem;
+
+      margin: 0.78rem 0 0 0.8rem;
+
+      color: $text-muted;
+
+      stroke-width: 2;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      min-width: 0;
+
+      border: 0;
+      outline: 0;
+
+      background: transparent;
+      color: $text-primary;
+
+      font: inherit;
+      font-size: 0.78rem;
+    }
+
+    input {
+      min-height: 2.65rem;
+
+      padding: 0.65rem 0.8rem;
+    }
+
+    textarea {
+      min-height: 100px;
+
+      padding: 0.7rem 0.8rem;
+
+      resize: vertical;
+
+      line-height: 1.5;
+    }
+
+    &:hover {
+      border-color: #cbd5e1;
+
+      background: $surface;
+    }
+
+    &:focus-within {
+      border-color: rgba($primary, 0.55);
+
+      background: $surface;
+
+      box-shadow: 0 0 0 3px rgba($primary, 0.1);
+
+      > i,
+      > svg {
+        color: $primary;
+      }
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: $text-muted;
+    }
+  }
+
+  &__input-control--textarea {
+    align-items: flex-start;
+
+    > i,
+    > svg {
+      margin-top: 0.8rem;
+    }
+  }
+
+  // ==========================================================================
+  // HELP / ERROR
+  // ==========================================================================
+
+  &__field-help {
+    display: block;
+
+    margin-top: 0.4rem;
+
+    color: $text-muted;
+
+    font-size: 0.64rem;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  &__field-error {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 0.3rem;
+
+    margin-top: 0.4rem;
+
+    color: $danger;
+
+    font-size: 0.65rem;
+    font-weight: 700;
+    line-height: 1.4;
+
+    i,
+    svg {
+      flex: 0 0 auto;
+
+      width: 0.85rem;
+      height: 0.85rem;
+
+      margin-top: 0.05rem;
+
+      stroke-width: 2.3;
+    }
+  }
+
+  // ==========================================================================
+  // INFO
+  // ==========================================================================
+
+  &__info {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 0.7rem;
+
+    margin-top: 1rem;
+    padding: 0.8rem 0.85rem;
+
+    border: 1px solid rgba($teal, 0.14);
+    border-radius: 0.8rem;
+
+    background: linear-gradient(135deg, rgba($teal-soft, 0.92), rgba($surface, 0.95));
+
+    color: $text-secondary;
+  }
+
+  &__info-icon {
+    flex: 0 0 auto;
+
+    display: grid;
+    place-items: center;
+
+    width: 2rem;
+    height: 2rem;
+
+    border: 1px solid rgba($teal, 0.14);
+    border-radius: 0.6rem;
+
+    background: rgba($surface, 0.85);
+    color: $teal-dark;
+
+    i,
+    svg {
+      width: 1rem;
+      height: 1rem;
+
+      stroke-width: 2.2;
+    }
+  }
+
+  &__info-content {
+    min-width: 0;
+
+    strong {
+      display: block;
+
+      color: $teal-dark;
+
+      font-size: 0.7rem;
+      font-weight: 850;
+    }
+
+    p {
+      margin: 0.25rem 0 0;
+
+      color: $text-secondary;
+
+      font-size: 0.67rem;
+      line-height: 1.5;
+    }
+  }
+
+  // ==========================================================================
+  // ACTIONS
+  // ==========================================================================
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    gap: 0.6rem;
+
+    padding: 0.9rem 1.35rem;
+
+    border-top: 1px solid $border;
+
+    background: $surface-soft;
+  }
+
+  &__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 0.45rem;
+
+    min-height: 2.5rem;
+    padding: 0.65rem 0.9rem;
+
+    border: 1px solid transparent;
+    border-radius: 0.7rem;
+
+    font: inherit;
+    font-size: 0.72rem;
+    font-weight: 800;
+    line-height: 1;
+
+    cursor: pointer;
+
+    transition:
+      transform $transition-fast,
+      background $transition-fast,
+      border-color $transition-fast,
+      color $transition-fast,
+      box-shadow $transition-base;
+
+    i,
+    svg {
+      width: 0.95rem;
+      height: 0.95rem;
+
+      stroke-width: 2.2;
+    }
+
+    &:hover:not(:disabled) {
+      transform: translateY(-1px);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    &:focus-visible {
+      outline: 3px solid rgba($primary, 0.16);
+      outline-offset: 2px;
+    }
+
+    &:disabled {
+      opacity: 0.55;
+
+      cursor: not-allowed;
+    }
+
+    &--secondary {
+      border-color: $border;
+
+      background: $surface;
+      color: $text-secondary;
+
+      &:hover:not(:disabled) {
+        border-color: #cbd5e1;
+
+        background: $surface-soft;
+        color: $text-primary;
+      }
+    }
+
+    &--primary {
+      background: linear-gradient(135deg, $primary, $primary-hover);
+      color: $surface;
+
+      box-shadow:
+        0 8px 18px rgba($primary, 0.2),
+        inset 0 1px 0 rgba($surface, 0.2);
+
+      &:hover:not(:disabled) {
+        box-shadow:
+          0 11px 22px rgba($primary, 0.27),
+          inset 0 1px 0 rgba($surface, 0.2);
+      }
+    }
+  }
+
+  // ==========================================================================
+  // SUBMIT SPINNER
+  // ==========================================================================
+
+  &__button-spinner {
+    width: 0.9rem;
+    height: 0.9rem;
+
+    border: 2px solid rgba($surface, 0.35);
+    border-top-color: $surface;
+    border-radius: 50%;
+
+    animation: medical-area-form-spin 700ms linear infinite;
+  }
+}
+
+// ==========================================================================
+// RESPONSIVE
+// ==========================================================================
+
+@media (max-width: $mobile) {
+  .medical-area-form {
+    width: 100%;
+
+    &__header {
+      padding: 1rem;
+    }
+
+    &__header-icon {
+      width: 2.7rem;
+      height: 2.7rem;
+
+      border-radius: 0.75rem;
+
+      i,
+      svg {
+        width: 1.15rem;
+        height: 1.15rem;
+      }
+    }
+
+    &__header-content {
+      padding-right: 1.7rem;
+
+      h2 {
+        font-size: 1.15rem;
+      }
+
+      p {
+        font-size: 0.72rem;
+      }
+    }
+
+    &__close {
+      top: 0.75rem;
+      right: 0.75rem;
+    }
+
+    &__body {
+      padding: 1rem;
+    }
+
+    &__grid {
+      grid-template-columns: minmax(0, 1fr);
+
+      gap: 0.8rem;
+    }
+
+    &__section-header {
+      margin-bottom: 0.85rem;
+
+      h3 {
+        font-size: 0.95rem;
+      }
+
+      p {
+        font-size: 0.7rem;
+      }
+    }
+
+    &__info {
+      margin-top: 0.85rem;
+    }
+
+    &__actions {
+      padding: 0.8rem 1rem;
+    }
+
+    &__button {
+      flex: 1;
+
+      min-height: 2.45rem;
+    }
+  }
+}
+
+// ==========================================================================
+// REDUCED MOTION
+// ==========================================================================
+
+@media (prefers-reduced-motion: reduce) {
+  .medical-area-form {
+    &__close,
+    &__button {
+      transition: none;
+    }
+
+    &__button-spinner {
+      animation: none;
+    }
+  }
+}
+
+// ==========================================================================
+// ANIMATION
+// ==========================================================================
+
+@keyframes medical-area-form-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
