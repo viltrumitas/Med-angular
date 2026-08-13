@@ -14,16 +14,13 @@ import { ActivatedRoute } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize, interval, startWith } from 'rxjs';
 import { createIcons, icons } from 'lucide';
-
 import { LateSubmissionPolicy } from '../../../../core/enum/late-submission-policy';
-
 import { ButtonComponent } from '../../../../shared/components/button/button';
-
 import { CaseContent } from '../../../cases/pages/case-content/case-content';
 import { SubmissionsDetail } from '../../../submissions/components/submissions-detail/submissions-detail';
-
 import { AssignedStudentCase } from '../../models/assigned-case.model';
 import { AssignedCaseApiService } from '../../services/assigned-case-api.service';
+import { ErrorService } from '../../../../core/services/error.service';
 
 type AssignmentAvailability = 'NO_LIMIT' | 'AVAILABLE' | 'LATE_ALLOWED' | 'EXPIRED';
 
@@ -39,15 +36,12 @@ export class AssignedDetail implements OnInit, AfterViewInit {
   private readonly route = inject(ActivatedRoute);
   private readonly destroyRef = inject(DestroyRef);
   private readonly platformId = inject(PLATFORM_ID);
+  private readonly errorService = inject(ErrorService);
 
   readonly submissionDetail = viewChild(SubmissionsDetail);
-
   readonly assignedCase = signal<AssignedStudentCase | null>(null);
-
   readonly isLoading = signal(true);
   readonly isStartingSubmission = signal(false);
-  readonly error = signal<string | null>(null);
-
   readonly casePanelOpen = signal(true);
   readonly submissionPanelOpen = signal(true);
 
@@ -124,10 +118,10 @@ export class AssignedDetail implements OnInit, AfterViewInit {
 
     if (!assignedCaseId) {
       this.isLoading.set(false);
-      this.error.set('No se encontró el identificador del caso asignado.');
       return;
     }
 
+    this.errorService.clear();
     this.loadAssignedCase(assignedCaseId);
   }
 
@@ -162,7 +156,7 @@ export class AssignedDetail implements OnInit, AfterViewInit {
       return;
     }
 
-    this.error.set(null);
+    this.errorService.clear();
     this.isStartingSubmission.set(true);
 
     this.assignedApi
@@ -177,11 +171,10 @@ export class AssignedDetail implements OnInit, AfterViewInit {
       .subscribe({
         next: () => {
           this.loadAssignedCase(assignedCaseId, false);
+          this.renderIcons();
         },
-        error: (error) => {
-          this.error.set(
-            this.getErrorMessage(error, 'No se pudo iniciar la respuesta. Intenta nuevamente.'),
-          );
+        error: () => {
+          this.renderIcons();
         },
       });
   }
@@ -211,7 +204,7 @@ export class AssignedDetail implements OnInit, AfterViewInit {
       this.isLoading.set(true);
     }
 
-    this.error.set(null);
+    this.errorService.clear();
 
     this.assignedApi
       .findById(assignedCaseId)
@@ -232,12 +225,11 @@ export class AssignedDetail implements OnInit, AfterViewInit {
             this.configureResponsivePanels();
           }
         },
-        error: (error) => {
+        error: () => {
           if (showPageLoading) {
             this.assignedCase.set(null);
           }
-
-          this.error.set(this.getErrorMessage(error, 'No se pudo cargar el caso asignado.'));
+          this.renderIcons();
         },
       });
   }

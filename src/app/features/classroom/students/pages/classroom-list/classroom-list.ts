@@ -6,6 +6,7 @@ import { createIcons, icons } from 'lucide';
 import { ClassroomApi } from '../../../service/clasroom-api.service';
 import { ClassroomStudentModel } from '../../../models/classroom-student.model';
 import { JoinClassroom } from '../../../components/join-classroom/join-classroom';
+import { ErrorService } from '../../../../../core/services/error.service';
 
 @Component({
   selector: 'app-classroom-list',
@@ -16,16 +17,12 @@ import { JoinClassroom } from '../../../components/join-classroom/join-classroom
 })
 export class ClassroomList implements OnInit, AfterViewInit {
   private readonly api = inject(ClassroomApi);
-
   private readonly router = inject(Router);
+  private readonly errorService = inject(ErrorService);
 
   readonly classrooms = signal<ClassroomStudentModel[]>([]);
-
   readonly loading = signal(true);
-
   readonly isJoinModalOpen = signal(false);
-
-  readonly error = signal(false);
 
   ngOnInit() {
     this.loadClassrooms();
@@ -37,7 +34,6 @@ export class ClassroomList implements OnInit, AfterViewInit {
 
   loadClassrooms() {
     this.loading.set(true);
-    this.error.set(false);
 
     this.api.findMy<ClassroomStudentModel[]>().subscribe({
       next: (classrooms) => {
@@ -48,8 +44,8 @@ export class ClassroomList implements OnInit, AfterViewInit {
       },
 
       error: () => {
-        this.error.set(true);
         this.loading.set(false);
+        this.renderIcon();
       },
     });
   }

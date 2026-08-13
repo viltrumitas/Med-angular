@@ -15,30 +15,6 @@
         <p>Estamos obteniendo la información del caso asignado.</p>
       </div>
     </section>
-  } @else if (error() && !assignedCase()) {
-    <!-- =========================
-         PAGE ERROR
-    ========================== -->
-
-    <section class="student-case__state student-case__state--error" role="alert">
-      <div class="student-case__state-icon" aria-hidden="true">
-        <i data-lucide="triangle-alert"></i>
-      </div>
-
-      <div class="student-case__state-content">
-        <span class="student-case__state-label"> Error de carga </span>
-
-        <h2>No pudimos cargar el caso</h2>
-
-        <p>{{ error() }}</p>
-      </div>
-
-      <button type="button" class="student-case__retry" (click)="reload()">
-        <i data-lucide="refresh-cw" aria-hidden="true"></i>
-
-        <span>Intentar nuevamente</span>
-      </button>
-    </section>
   } @else if (assignedCase(); as item) {
     <!-- =========================
          HEADER
@@ -184,23 +160,6 @@
         <span></span>
       </div>
     </header>
-
-    <!-- =========================
-         ACTION ERROR
-    ========================== -->
-
-    @if (error()) {
-      <section class="student-case__action-error" role="alert">
-        <div class="student-case__action-error-icon" aria-hidden="true">
-          <i data-lucide="triangle-alert"></i>
-        </div>
-
-        <div>
-          <strong>No se pudo completar la acción</strong>
-          <p>{{ error() }}</p>
-        </div>
-      </section>
-    }
 
     <!-- =========================
          AVAILABILITY

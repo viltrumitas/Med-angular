@@ -179,34 +179,6 @@
     }
 
     <!-- =========================
-         CASES ERROR
-    ========================== -->
-
-    @else if (casesLoadError()) {
-      <div class="cases-state cases-state--error" role="alert">
-        <div class="cases-state__icon cases-state__icon--error" aria-hidden="true">
-          <i data-lucide="triangle-alert"></i>
-        </div>
-
-        <div class="cases-state__content">
-          <h4>No pudimos cargar los casos</h4>
-
-          <p>{{ casesLoadError() }}</p>
-        </div>
-
-        <div class="cases-state__action">
-          <app-button
-            type="button"
-            text="Intentar de nuevo"
-            variant="secondary"
-            [disabled]="isLoadingCases()"
-            (clicked)="loadCases()"
-          />
-        </div>
-      </div>
-    }
-
-    <!-- =========================
          CASES EMPTY
     ========================== -->
 
@@ -378,24 +350,6 @@
   </section>
 
   <!-- =========================
-       SUBMIT ERROR
-  ========================== -->
-
-  @if (submitError()) {
-    <div class="assignment-form__error" role="alert">
-      <div class="assignment-form__error-icon" aria-hidden="true">
-        <i data-lucide="triangle-alert"></i>
-      </div>
-
-      <div>
-        <strong>No se pudo crear la actividad</strong>
-
-        <span>{{ submitError() }}</span>
-      </div>
-    </div>
-  }
-
-  <!-- =========================
        FOOTER
   ========================== -->
 
@@ -419,11 +373,7 @@
       type="submit"
       class="submit-button"
       [disabled]="
-        assignmentForm.invalid ||
-        selectedCasesCount() === 0 ||
-        isSubmitting() ||
-        isLoadingCases() ||
-        !!casesLoadError()
+        assignmentForm.invalid || selectedCasesCount() === 0 || isSubmitting() || isLoadingCases()
       "
     >
       @if (isSubmitting()) {

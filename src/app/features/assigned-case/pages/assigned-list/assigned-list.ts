@@ -1,8 +1,10 @@
 import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { AssignedCaseApiService } from '../../services/assigned-case-api.service';
 import { AssignedStudentCase } from '../../models/assigned-case.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ErrorService } from '../../../../core/services/error.service';
+import { createIcons, icons } from 'lucide';
 
 @Component({
   selector: 'app-assigned-list',
@@ -13,13 +15,14 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 export class AssignedList implements OnInit {
   private readonly assignedApi = inject(AssignedCaseApiService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly errorService = inject(ErrorService);
 
   readonly assignedCase = signal<AssignedStudentCase[]>([]);
   readonly isLoading = signal(false);
-  readonly error = signal<string | null>(null);
 
   ngOnInit(): void {
     this.isLoading.set(true);
+    this.errorService.clear();
 
     this.assignedApi
       .findMyAssignedCase()
@@ -29,11 +32,15 @@ export class AssignedList implements OnInit {
           this.assignedCase.set(responde);
           this.isLoading.set(false);
         },
-        error: (err) => {
-          console.error('[AssignedCases] Error al cargar los casos asignados', err);
-          this.error.set('No se pudieron cargar tus casos asignados. Intenta de nuevo');
+        error: () => {
           this.isLoading.set(false);
         },
       });
+  }
+
+  private renderIcons(): void {
+    setTimeout(() => {
+      createIcons({ icons });
+    });
   }
 }

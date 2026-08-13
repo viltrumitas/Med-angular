@@ -12,11 +12,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize } from 'rxjs';
 import { createIcons, icons } from 'lucide';
-
 import { LateSubmissionPolicy } from '../../../../../core/enum/late-submission-policy';
-
 import { AssignedStudentCase } from '../../../../assigned-case/models/assigned-case.model';
 import { AssignedCaseApiService } from '../../../../assigned-case/services/assigned-case-api.service';
+import { ErrorService } from '../../../../../core/services/error.service';
 
 @Component({
   selector: 'app-assignment-detail',
@@ -30,10 +29,10 @@ export class AssignmentDetail implements OnInit, AfterViewInit {
   private readonly router = inject(Router);
   private readonly assignedApi = inject(AssignedCaseApiService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly errorService = inject(ErrorService);
 
   readonly assignedCases = signal<AssignedStudentCase[]>([]);
   readonly loading = signal(true);
-  readonly loadError = signal<string | null>(null);
   readonly assignment = computed(() => this.assignedCases()[0]?.assignment ?? null);
   readonly totalCases = computed(() => this.assignedCases().length);
   readonly completedCases = computed(() => {
@@ -159,12 +158,11 @@ export class AssignmentDetail implements OnInit, AfterViewInit {
 
     if (!assignmentId) {
       this.loading.set(false);
-      this.loadError.set('No se encontró el identificador de la actividad.');
       return;
     }
 
+    this.errorService.clear();
     this.loading.set(true);
-    this.loadError.set(null);
 
     this.assignedApi
       .findMyAssignedCasesByAssignment(assignmentId)
@@ -179,12 +177,9 @@ export class AssignmentDetail implements OnInit, AfterViewInit {
         next: (assignedCases) => {
           this.assignedCases.set(assignedCases);
         },
-        error: (error) => {
+        error: () => {
           this.assignedCases.set([]);
-
-          this.loadError.set(
-            this.getErrorMessage(error, 'No pudimos cargar la actividad. Intenta nuevamente.'),
-          );
+          this.renderIcons();
         },
       });
   }

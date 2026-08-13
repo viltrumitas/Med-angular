@@ -6,6 +6,7 @@ import { createIcons, icons } from 'lucide';
 import { ClassroomApi } from '../../../service/clasroom-api.service';
 import { ClassroomStudentDetailModel } from '../../../models/classroom-student-detail.model';
 import { AssignmentCard } from '../../../components/assignment-card/assignment-card';
+import { ErrorService } from '../../../../../core/services/error.service';
 
 @Component({
   selector: 'app-classroom-detail',
@@ -18,6 +19,7 @@ export class ClassroomDetail implements OnInit, AfterViewInit {
   private readonly api = inject(ClassroomApi);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly errorService = inject(ErrorService);
 
   readonly classroom = signal<ClassroomStudentDetailModel | null>(null);
 
@@ -44,6 +46,7 @@ export class ClassroomDetail implements OnInit, AfterViewInit {
 
       error: () => {
         this.loading.set(false);
+        this.renderIcon();
       },
     });
   }

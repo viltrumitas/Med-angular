@@ -31,13 +31,7 @@ type SortMode = 'RECOMMENDED' | 'TITLE' | 'LOW_USAGE' | 'HIGH_USAGE' | 'NEWEST';
 @Component({
   selector: 'app-assignment-create',
   standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    InputComponent,
-    TextareaComponent,
-    ButtonComponent,
-    SelectComponent,
-  ],
+  imports: [ReactiveFormsModule, InputComponent, TextareaComponent, SelectComponent],
   templateUrl: './assignment-create.html',
   styleUrl: './assignment-create.scss',
 })
@@ -53,8 +47,6 @@ export class AssignmentCreate implements AfterViewInit {
   readonly cases = signal<CaseResponseDto[]>([]);
   readonly isLoadingCases = signal(false);
   readonly isSubmitting = signal(false);
-  readonly casesLoadError = signal<string | null>(null);
-  readonly submitError = signal<string | null>(null);
 
   // signal para ventanas extendibles
   readonly expandedAreas = signal(new Set<string>());
@@ -375,7 +367,6 @@ export class AssignmentCreate implements AfterViewInit {
     control.markAsDirty();
     control.updateValueAndValidity();
 
-    this.submitError.set(null);
     this.errorService.clear();
   }
 
@@ -389,24 +380,17 @@ export class AssignmentCreate implements AfterViewInit {
     }
 
     this.errorService.clear();
-    this.submitError.set(null);
 
     const caseIdsControl = this.assignmentForm.controls.caseIds;
 
     if (!caseIdsControl.value?.length) {
       caseIdsControl.markAsTouched();
       caseIdsControl.markAsDirty();
-
-      this.submitError.set('Selecciona al menos un caso clínico para crear la actividad.');
-
       return;
     }
 
     if (this.assignmentForm.invalid) {
       this.assignmentForm.markAllAsTouched();
-
-      this.submitError.set('Revisa los campos marcados antes de crear la actividad.');
-
       return;
     }
 
@@ -430,13 +414,8 @@ export class AssignmentCreate implements AfterViewInit {
           this.resetForm();
           this.created.emit();
         },
-        error: (error) => {
-          this.submitError.set(
-            this.getErrorMessage(
-              error,
-              'No pudimos crear la actividad. Revisa la información e intenta nuevamente.',
-            ),
-          );
+        error: () => {
+          this.renderIcons();
         },
       });
   }
@@ -447,7 +426,6 @@ export class AssignmentCreate implements AfterViewInit {
     }
 
     this.errorService.clear();
-    this.casesLoadError.set(null);
     this.isLoadingCases.set(true);
 
     this.assignmentApi
@@ -466,12 +444,7 @@ export class AssignmentCreate implements AfterViewInit {
         error: (error) => {
           this.cases.set([]);
 
-          this.casesLoadError.set(
-            this.getErrorMessage(
-              error,
-              'No pudimos cargar tus casos publicados. Intenta nuevamente.',
-            ),
-          );
+          this.renderIcons();
         },
       });
   }
@@ -483,7 +456,6 @@ export class AssignmentCreate implements AfterViewInit {
     this.assignmentForm.markAsUntouched();
     this.assignmentForm.updateValueAndValidity();
 
-    this.submitError.set(null);
     this.errorService.clear();
   }
 

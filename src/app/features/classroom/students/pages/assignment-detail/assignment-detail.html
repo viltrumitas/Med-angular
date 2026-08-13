@@ -10,26 +10,6 @@
       <p>Estamos obteniendo tus casos clínicos asignados.</p>
     </div>
   </section>
-} @else if (loadError()) {
-  <section class="student-assignment-state student-assignment-state--error" role="alert">
-    <div class="student-assignment-state__icon" aria-hidden="true">
-      <i data-lucide="triangle-alert"></i>
-    </div>
-
-    <div class="student-assignment-state__content">
-      <span>No disponible</span>
-
-      <h2>No pudimos cargar la actividad</h2>
-
-      <p>{{ loadError() }}</p>
-    </div>
-
-    <button type="button" class="student-assignment-state__action" (click)="loadAssignment()">
-      <i data-lucide="refresh-cw" aria-hidden="true"></i>
-
-      <span>Intentar nuevamente</span>
-    </button>
-  </section>
 } @else {
   <main class="student-assignment">
     <!-- =========================
