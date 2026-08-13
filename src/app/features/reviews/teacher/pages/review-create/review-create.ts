@@ -227,19 +227,21 @@ export class ReviewCreate implements OnInit, AfterViewInit {
       value.otherInterventions,
     ];
 
-    const total = sections.reduce((sectionTotal, section) => {
-      if (!section || typeof section !== 'object') {
-        return sectionTotal;
+    let total = 0;
+
+    for (const section of sections) {
+      if (!section) {
+        continue;
       }
 
-      const sectionScore = Object.values(section).reduce((scoreTotal, score) => {
-        const numericScore = Number(score);
+      let sectionScore = 0;
 
-        return scoreTotal + (Number.isFinite(numericScore) ? numericScore : 0);
-      }, 0);
+      for (const score of Object.values(section)) {
+        sectionScore += Number(score ?? 0);
+      }
 
-      return sectionTotal + sectionScore;
-    }, 0);
+      total += sectionScore;
+    }
 
     this.totalScore.set(total);
   }

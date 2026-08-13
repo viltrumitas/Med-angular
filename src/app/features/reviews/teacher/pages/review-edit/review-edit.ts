@@ -167,7 +167,7 @@ export class ReviewEdit implements OnInit, AfterViewInit {
     });
   }
 
-  private calculateTotalScore() {
+  private calculateTotalScore(): void {
     const value = this.reviewForm.getRawValue();
 
     const sections = [
@@ -182,16 +182,15 @@ export class ReviewEdit implements OnInit, AfterViewInit {
       value.otherInterventions,
     ];
 
-    const total = sections.reduce((acc, section) => {
-      return acc +
-        Object.values(section)
-          .reduce(
-            (sum, v) => sum + Number(v),
-            0
-          );
-    }, 0);
+    let total = 0;
 
-    this.totalScore.set(total)
+    for (const section of sections) {
+      for (const score of Object.values(section)) {
+        total += score ?? 0;
+      }
+    }
+
+    this.totalScore.set(total);
   }
 
   private renderIcon() {

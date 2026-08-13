@@ -7,7 +7,12 @@
     <div class="scene-assessment__field">
       <span class="scene-assessment__number">01</span>
 
-      <app-input formControlName="sceneManagement" type="number" labelText="Manejo de la escena" />
+      <app-input 
+        formControlName="sceneManagement" 
+        type="number" 
+        labelText="Manejo de la escena" 
+        placeHolderText="0 - 2"
+      />
     </div>
 
     <div class="scene-assessment__field">
@@ -17,6 +22,7 @@
         formControlName="situationManagement"
         type="number"
         labelText="Manejo de la situación"
+        placeHolderText="0 - 2"
       />
     </div>
 
@@ -27,6 +33,7 @@
         formControlName="safetyManagement"
         type="number"
         labelText="Manejo de la seguridad"
+        placeHolderText="0 - 2"
       />
     </div>
 
@@ -37,6 +44,7 @@
         formControlName="resourceRequest"
         type="number"
         labelText="Solicitud de servicios y recursos adicionales"
+        placeHolderText="0 - 1"
       />
     </div>
 
@@ -47,6 +55,7 @@
         formControlName="overallImpression"
         type="number"
         labelText="Impresión general del paciente (AVDI)"
+        placeHolderText="0 - 1"
       />
     </div>
   </div>
