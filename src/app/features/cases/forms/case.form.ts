@@ -24,8 +24,7 @@ export function createCaseForm() {
         nonNullable: true,
       }),
 
-      gender: new FormControl<Gender>('OTHER', {
-        nonNullable: true,
+      gender: new FormControl<Gender | null>(null, {
         validators: [Validators.required],
       }),
 

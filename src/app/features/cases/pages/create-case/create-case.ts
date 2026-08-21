@@ -47,22 +47,32 @@ export class CreateCase implements OnInit, AfterViewInit {
   ngOnInit() {
     this.loadMedicalAreas();
   }
- 
+
   submitCase() {
     if (this.caseForm.invalid) {
       this.caseForm.markAllAsTouched();
       return;
     }
-    const data = mapCreateCase(this.caseForm.getRawValue());
-    console.log('enviado', data);
+
+    const formValue = this.caseForm.getRawValue();
+
+    console.log('FORM:', formValue.patient.gender);
+
+    const data = mapCreateCase(formValue);
+
+    console.log('MAPPED:', data.patient?.gender);
 
     this.caseService.createCase(data).subscribe({
       next: (res) => {
-        console.log('Caso Creado', res);
-        this.router.navigate(['/dashboard/teacher/cases']);
+        console.log('CREATED:', res);
+
+        this.router.navigate([
+          '/dashboard/teacher/cases',
+          res.id,
+        ]);
       },
       error: (err) => {
-        console.log('[CreateCase] Error al crear el caso', err);
+        console.error('[CreateCase] Error:', err);
       },
     });
   }

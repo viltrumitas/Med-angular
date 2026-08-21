@@ -150,6 +150,26 @@
 
           <button
             type="button"
+            id="evaluations-tab"
+            class="classroom-tabs__button"
+            role="tab"
+            aria-controls="evaluations-panel"
+            [attr.aria-selected]="activeTab() === 'evaluations'"
+            [tabindex]="activeTab() === 'evaluations' ? 0 : -1"
+            [class.classroom-tabs__button--active]="activeTab() === 'evaluations'"
+            (click)="changeTab('evaluations')"
+          >
+            <i data-lucide="clipboard-check" aria-hidden="true"></i>
+
+            <span>Evaluaciones</span>
+
+            <span class="classroom-tabs__count">
+              0
+            </span>
+          </button>
+
+          <button
+            type="button"
             id="pending-tab"
             class="classroom-tabs__button"
             role="tab"
@@ -201,6 +221,17 @@
               variant="primary"
               icon="plus"
               (clicked)="openCreateAssignment()"
+            />
+          </div>
+        }
+
+        @if (activeTab() === 'evaluations') {
+          <div class="button">
+            <app-button 
+              type="button"
+              text="Nueva evaluación"
+              variant="primary"
+              icon="plus"
             />
           </div>
         }
@@ -267,6 +298,63 @@
               }
             </div>
           }
+        </section>
+      }
+
+      @if (activeTab() === 'evaluations') {
+        <section
+          id="evaluations-panel"
+          class="classroom-panel"
+          role="tabpanel"
+          aria-labelledby="evaluations-tab"
+          tabindex="0"
+        >
+          <header class="classroom-panel__header">
+            <div class="classroom-panel__heading">
+              <span class="classroom-panel__eyebrow">
+                Evaluaciones
+              </span>
+
+              <h2>Evaluaciones de la clase</h2>
+
+              <p>
+                Gestiona las evaluaciones presenciales y registra
+                las calificaciones de tus estudiantes.
+              </p>
+            </div>
+
+            <span class="classroom-panel__count">
+              0
+            </span>
+          </header>
+
+          <section class="classroom-empty">
+            <div class="classroom-empty__icon" aria-hidden="true">
+              <i data-lucide="clipboard-check"></i>
+            </div>
+
+
+            <div class="classroom-empty__content">
+              <span class="classroom-empty__label">
+                Sin evaluaciones
+              </span>
+
+              <h3>Crea la primera evaluación</h3>
+
+              <p>
+                Programa una evaluación presencial para los estudiantes
+                de esta clase.
+              </p>
+            </div>
+
+            <div class="button">
+              <app-button 
+                type="button"
+                text="Crear evaluación"
+                variant="primary"
+                icon="plus"/>
+            </div>
+          </section>
         </section>
       }
 
@@ -474,7 +562,6 @@
       >
         <app-assignment-create
           [classroomId]="c.id"
-          (created)="onAssignmentCreated()"
           (cancelled)="closeCreateAssignment()"
         />
       </app-modal>

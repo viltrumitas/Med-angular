@@ -151,7 +151,7 @@
                 <span>Género</span>
 
                 <strong>
-                  {{ c.gender || 'No registrado' }}
+                  {{ c.gender ? genderLabels[c.gender] : 'No registrado' }}
                 </strong>
               </div>
 
@@ -384,7 +384,7 @@
                   </div>
 
                   <div class="neurological-item__content">
-                    <span>Devilidad muscular</span>
+                    <span>Debilidad muscular</span>
 
                     <strong>
                       {{ c.cincinnati?.armDrift || 'Sin registro' }}

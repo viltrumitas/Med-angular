@@ -39,7 +39,7 @@ export class AuthComponent {
     const value = this.loginForm.getRawValue();
 
     const data: LoginModel = {
-      matricula: Number(value.matricula),
+      identifier: value.identifier,
       password: value.password,
     };
 
@@ -65,6 +65,7 @@ export class AuthComponent {
 
     const data: RegisterModel = {
       matricula: Number(value.matricula),
+      email: value.email,
       password: value.password,
     };
 

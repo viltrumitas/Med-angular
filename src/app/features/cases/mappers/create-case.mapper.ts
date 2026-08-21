@@ -1,6 +1,11 @@
 import { CaseFormValue } from '../forms/case.form';
 import { CreateCaseModel } from '../dto/create-case.dto';
 export function mapCreateCase(form: CaseFormValue): CreateCaseModel {
+
+  if(!form.patient.gender) {
+    throw new Error('El genero es obligatorio');
+  }
+
   return {
     general: {
       ...form.general,

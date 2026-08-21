@@ -13,7 +13,7 @@
 
         <div class="auth-form__fields">
           <div class="auth-field">
-            <app-input placeHolderText="Matrícula" type="number" formControlName="matricula" />
+            <app-input placeHolderText="Matrícula o correo institucional" type="text" formControlName="identifier" />
           </div>
 
           <div class="auth-field">
@@ -53,6 +53,10 @@
         <div class="auth-form__fields auth-form__fields--register">
           <div class="auth-field">
             <app-input placeHolderText="Matrícula" type="number" formControlName="matricula" />
+          </div>
+
+          <div class="auth-field">
+            <app-input placeHolderText="Correo institucional" type="text" formControlName="email" />
           </div>
 
           <div class="auth-field">

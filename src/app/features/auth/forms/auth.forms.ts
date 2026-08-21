@@ -2,9 +2,11 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 export function createLoginForm() {
   return new FormGroup({
-    matricula: new FormControl('', {
+    identifier: new FormControl('', {
       nonNullable: true,
-      validators: [Validators.required, Validators.pattern(/^\d+$/)],
+      validators: [
+        Validators.required,
+      ]
     }),
     password: new FormControl('', {
       nonNullable: true,
@@ -18,6 +20,13 @@ export function createRegisterForm() {
     matricula: new FormControl('', {
       nonNullable: true,
       validators: [Validators.required, Validators.pattern(/^\d+$/)],
+    }),
+    email: new FormControl('', {
+      nonNullable: true,
+      validators: [
+        Validators.required,
+        Validators.email,
+      ],
     }),
     password: new FormControl('', {
       nonNullable: true,

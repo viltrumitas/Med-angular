@@ -1,4 +1,4 @@
-export type Gender = 'MALE' | 'FAMELE' | 'OTHER';
+export type Gender = 'MALE' | 'FEMALE' | 'OTHER';
 
 export interface PatientModel {
   patientName: string;

@@ -5,7 +5,6 @@ import {
   computed,
   inject,
   input,
-  output,
   signal,
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
@@ -13,7 +12,6 @@ import { ReactiveFormsModule, FormControl } from '@angular/forms';
 import { finalize, startWith } from 'rxjs';
 import { createIcons, icons } from 'lucide';
 import { ErrorService } from '../../../../core/services/error.service';
-import { ButtonComponent } from '../../../../shared/components/button/button';
 import { InputComponent } from '../../../../shared/components/input/input';
 import { TextareaComponent } from '../../../../shared/components/text-area/text-area';
 import { createAssignmentForm } from '../../../assignments/forms/create-assignment-form';
@@ -22,6 +20,7 @@ import { AssignmentApi } from '../../../assignments/services/assignment-api';
 import { CaseResponseDto } from '../../../cases/dto/case-response.dto';
 import { ClassroomApi } from '../../service/clasroom-api.service';
 import { SelectComponent } from '../../../../shared/components/select/select';
+import { Router } from '@angular/router';
 
 // types para filtros en la seleccion de casos
 type UsageFilter = 'ALL' | 'NEVER_USED' | 'LOW_USAGE' | 'HIGH_USAGE' | 'RECENT';
@@ -40,9 +39,10 @@ export class AssignmentCreate implements AfterViewInit {
   private readonly classroomApi = inject(ClassroomApi);
   private readonly errorService = inject(ErrorService);
   private readonly destroyRef = inject(DestroyRef);
+  // router para navegar a assignment-detail
+  private readonly router = inject(Router);
 
   readonly classroomId = input.required<string>();
-  readonly created = output<void>();
   readonly assignmentForm = createAssignmentForm();
   readonly cases = signal<CaseResponseDto[]>([]);
   readonly isLoadingCases = signal(false);
@@ -410,9 +410,13 @@ export class AssignmentCreate implements AfterViewInit {
         }),
       )
       .subscribe({
-        next: () => {
-          this.resetForm();
-          this.created.emit();
+        next: (assignment) => {
+          void this.router.navigate([
+            '/dashboard/teacher/classrooms',
+            this.classroomId(),
+            'assignments',
+            assignment.id,
+          ]);
         },
         error: () => {
           this.renderIcons();

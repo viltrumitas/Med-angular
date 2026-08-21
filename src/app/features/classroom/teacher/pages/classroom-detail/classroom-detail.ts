@@ -14,7 +14,7 @@ import { SubmissionApi } from '../../../../submissions/service/submission-api.se
 import { Modal } from '../../../../../shared/components/modal/modal';
 import { ButtonComponent } from '../../../../../shared/components/button/button';
 
-type ClassroomTab = 'assignments' | 'students' | 'pending';
+type ClassroomTab = 'assignments'| 'evaluations' | 'students' | 'pending';
 
 @Component({
   selector: 'app-classroom-detail',

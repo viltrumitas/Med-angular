@@ -3,6 +3,7 @@ import { CaseResponseDto } from '../../dto/case-response.dto';
 import { createIcons, icons } from 'lucide';
 import { CaseContentMode } from '../../models/case.content.model';
 import { CaseSectionKey } from '../../models/case-section-key.model';
+import { Gender } from '../../models/patient.model';
 
 @Component({
   selector: 'app-case-content',
@@ -18,6 +19,13 @@ export class CaseContent {
   readonly vitalsOpen = signal(true);
   readonly neurologicalOpen = signal(false);
   readonly findingsOpen = signal(false);
+
+  // transformar genero
+  readonly genderLabels: Record<Gender, string> = {
+    MALE: 'Hombre',
+    FEMALE: 'Mujer',
+    OTHER: 'Otro',
+  };
 
   toggleSection(section: CaseSectionKey): void {
     switch (section) {

@@ -1,4 +1,4 @@
 export interface LoginModel {
-  matricula: number;
+  identifier: string;
   password: string;
 }
